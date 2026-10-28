@@ -12,7 +12,7 @@ export function contentExtensions() {
     // ao reabrir uma página com imagem dentro de um item de lista.
     Image.configure({ inline: true }),
     TableKit.configure({ table: { resizable: false } }),
-    Placeholder.configure({ placeholder: "Escreva aqui. Cole um print com Ctrl+V." }),
+    Placeholder.configure({ placeholder: "Escreva aqui, ou digite / para inserir um bloco. Cole um print com Ctrl+V." }),
     Markdown.configure({ markedOptions: { gfm: true } }),
   ];
 }

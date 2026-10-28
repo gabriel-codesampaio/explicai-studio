@@ -1,31 +1,4 @@
-/* ---------- editor ---------- */
-.toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 8px 0;
-  background: var(--papel);
-  border-bottom: 1px solid var(--linha);
-}
-.toolbar .group { display: flex; gap: 2px; padding-right: 6px; margin-right: 2px; border-right: 1px solid var(--linha); }
-.toolbar .group:last-child { border-right: 0; }
-.tb {
-  min-width: 32px;
-  height: 30px;
-  padding: 0 8px;
-  border: 0;
-  border-radius: 6px;
-  background: none;
-  cursor: pointer;
-  font-size: 13.5px;
-  color: var(--grafite);
-}
-.tb:hover { background: var(--linha); color: var(--tinta); }
-.tb.on { background: var(--selecao); color: var(--cobalto); font-weight: 700; }
-
+/* Conteúdo do manual dentro do editor. É documento, não interface: por isso CSS próprio e não Tailwind. */
 .editor-content .tiptap { outline: none; padding: 18px 0 40px; min-height: 50vh; }
 .tiptap > * + * { margin-top: 0.75em; }
 .tiptap p { margin: 0; }

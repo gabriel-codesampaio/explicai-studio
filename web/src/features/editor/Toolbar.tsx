@@ -1,73 +1,58 @@
 import { useEditorState, type Editor } from "@tiptap/react";
+import { Bold, Code, ImageIcon, Italic, Link2, Table, TableColumnsSplit, TableRowsSplit, Trash2 } from "lucide-react";
+import { useRovingFocus } from "@/hooks/useRovingFocus";
+import { BlockTypeMenu } from "./BlockTypeMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
 
 interface Props {
   editor: Editor;
   onPickImage: () => void;
+  onEditLink: () => void;
 }
 
-export function Toolbar({ editor, onPickImage }: Props) {
+const Divider = () => <span className="mx-1 h-5 w-px bg-border" aria-hidden />;
+
+export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
   const s = useEditorState({
     editor,
     selector: ({ editor: e }) => ({
-      h1: e.isActive("heading", { level: 1 }),
-      h2: e.isActive("heading", { level: 2 }),
-      h3: e.isActive("heading", { level: 3 }),
       bold: e.isActive("bold"),
       italic: e.isActive("italic"),
       code: e.isActive("code"),
       link: e.isActive("link"),
-      bullet: e.isActive("bulletList"),
-      ordered: e.isActive("orderedList"),
-      quote: e.isActive("blockquote"),
-      codeBlock: e.isActive("codeBlock"),
       inTable: e.isActive("table"),
     }),
   });
   const chain = () => editor.chain().focus();
-
-  // shortcut: prompt do navegador; trocar por um campo no próprio editor junto com o menu "/".
-  const editLink = () => {
-    const current = editor.getAttributes("link").href as string | undefined;
-    const href = window.prompt("Endereço do link (deixe vazio para remover):", current ?? "https://");
-    if (href === null) return;
-    if (href.trim() === "") chain().unsetLink().run();
-    else chain().extendMarkRange("link").setLink({ href: href.trim() }).run();
-  };
+  const onKeyDown = useRovingFocus();
 
   return (
-    <div className="toolbar" role="toolbar" aria-label="Formatação">
-      <div className="group">
-        <Btn active={s.h1} label="Título 1" onClick={() => chain().toggleHeading({ level: 1 }).run()}>T1</Btn>
-        <Btn active={s.h2} label="Título 2" onClick={() => chain().toggleHeading({ level: 2 }).run()}>T2</Btn>
-        <Btn active={s.h3} label="Título 3" onClick={() => chain().toggleHeading({ level: 3 }).run()}>T3</Btn>
-      </div>
-      <div className="group">
-        <Btn active={s.bold} label="Negrito (Ctrl+B)" onClick={() => chain().toggleBold().run()}><b>N</b></Btn>
-        <Btn active={s.italic} label="Itálico (Ctrl+I)" onClick={() => chain().toggleItalic().run()}><i>I</i></Btn>
-        <Btn active={s.code} label="Código" onClick={() => chain().toggleCode().run()}>{"</>"}</Btn>
-        <Btn active={s.link} label="Link" onClick={editLink}>Link</Btn>
-      </div>
-      <div className="group">
-        <Btn active={s.bullet} label="Lista" onClick={() => chain().toggleBulletList().run()}>• Lista</Btn>
-        <Btn active={s.ordered} label="Passos numerados" onClick={() => chain().toggleOrderedList().run()}>1. Passos</Btn>
-        <Btn active={s.quote} label="Citação" onClick={() => chain().toggleBlockquote().run()}>❝</Btn>
-        <Btn active={s.codeBlock} label="Bloco de código" onClick={() => chain().toggleCodeBlock().run()}>{"{ }"}</Btn>
-      </div>
-      <div className="group">
-        <Btn label="Inserir imagem" onClick={onPickImage}>Imagem</Btn>
-        {s.inTable ? (
-          <>
-            <Btn label="Adicionar linha" onClick={() => chain().addRowAfter().run()}>+ Linha</Btn>
-            <Btn label="Adicionar coluna" onClick={() => chain().addColumnAfter().run()}>+ Coluna</Btn>
-            <Btn label="Remover tabela" onClick={() => chain().deleteTable().run()}>Remover tabela</Btn>
-          </>
-        ) : (
-          <Btn label="Inserir tabela" onClick={() => chain().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}>
-            Tabela
-          </Btn>
-        )}
-      </div>
+    <div
+      role="toolbar"
+      aria-label="Formatação"
+      onKeyDown={onKeyDown}
+      className="sticky top-0 z-10 -mx-2 flex flex-wrap items-center gap-0.5 border-b border-border bg-background/95 px-2 py-2 backdrop-blur-sm"
+    >
+      <BlockTypeMenu editor={editor} pickImage={onPickImage} />
+      <Divider />
+      <Btn icon={Bold} label="Negrito" shortcut="Ctrl+B" active={s.bold} onClick={() => chain().toggleBold().run()} />
+      <Btn icon={Italic} label="Itálico" shortcut="Ctrl+I" active={s.italic} onClick={() => chain().toggleItalic().run()} />
+      <Btn icon={Code} label="Código no texto" shortcut="Ctrl+E" active={s.code} onClick={() => chain().toggleCode().run()} />
+      <Btn icon={Link2} label="Link" shortcut="Ctrl+K" active={s.link} onClick={onEditLink} />
+      <Divider />
+      <Btn icon={ImageIcon} label="Imagem" showLabel onClick={onPickImage} />
+      {s.inTable ? (
+        <>
+          <Btn icon={TableRowsSplit} label="Adicionar linha" onClick={() => chain().addRowAfter().run()} />
+          <Btn icon={TableColumnsSplit} label="Adicionar coluna" onClick={() => chain().addColumnAfter().run()} />
+          <Btn icon={Trash2} label="Remover tabela" onClick={() => chain().deleteTable().run()} />
+        </>
+      ) : (
+        <Btn icon={Table} label="Tabela" onClick={() => chain().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} />
+      )}
+      <span className="ml-auto hidden text-xs text-muted-foreground lg:block">
+        Digite <kbd className="rounded border border-border bg-card px-1 font-mono">/</kbd> para inserir blocos
+      </span>
     </div>
   );
 }
