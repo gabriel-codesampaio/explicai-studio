@@ -11,6 +11,7 @@ meu-workspace/
     assets/
       tela-clientes.png        imagem
       tela-clientes.png.json   marcadores, destaques, setas e áreas clicáveis
+    .lixeira/                  páginas excluídas, até serem restauradas
 ```
 
 ## manual.json
@@ -61,6 +62,12 @@ O nome do arquivo acompanha o título: quando o título muda, o arquivo é renom
 ```
 
 Destinos de área clicável: `page` (outra página), `anchor` (seção de uma página) e `url` (só `http`, `https` ou `mailto`).
+
+## Lixeira
+
+Excluir uma página move o arquivo dela (e o das subpáginas) para `.lixeira/<id>/pages/`, junto com um `entry.json` que guarda a posição na árvore. Restaurar devolve tudo ao mesmo lugar. Se o pai também foi excluído, a página volta para a raiz. Se o nome do arquivo foi ocupado nesse meio tempo, ela ganha um nome novo. A lixeira não é esvaziada sozinha: dá para apagar a pasta `.lixeira/` à mão ou colocá-la no `.gitignore`.
+
+Uma página pode ficar sem título enquanto é escrita. O arquivo vira `sem-titulo.md` e é renomeado quando o título aparece.
 
 ## Regras
 

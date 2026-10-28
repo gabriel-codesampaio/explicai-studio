@@ -4,15 +4,16 @@ import path from "node:path";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { PAGES_DIR, readManual, updateManual } from "./manuals.js";
-import { required, slugify } from "./text.js";
-import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
+import { slugify } from "./text.js";
+import { childrenOf, clampIndex, findIn, findNode } from "./tree.js";
 import type { Page } from "./types.js";
 
+/** Página pode ficar sem título enquanto é escrita: a árvore mostra "Sem título" e o arquivo vira sem-titulo.md. */
 export async function addPage(
   dir: string,
   opts: { title: string; body?: string; parentId?: string | null; index?: number },
 ): Promise<Page> {
-  const title = required(opts.title, "título da página");
+  const title = opts.title.trim();
   const page: Page = { id: randomUUID(), title, body: opts.body ?? "", file: await newPageFile(dir, title) };
 
   await updateManual(dir, (meta) => {
@@ -37,7 +38,7 @@ export async function updatePage(dir: string, id: string, patch: { title?: strin
   const page = await readPage(dir, id);
   const next: Page = {
     ...page,
-    ...(patch.title === undefined ? {} : { title: required(patch.title, "título da página") }),
+    ...(patch.title === undefined ? {} : { title: patch.title.trim() }),
     ...(patch.body === undefined ? {} : { body: patch.body }),
   };
 
@@ -65,16 +66,6 @@ export async function movePage(dir: string, id: string, to: { parentId: string |
     const target = childrenOf(meta.pages, to.parentId);
     target.splice(clampIndex(to.index, target.length), 0, node);
   });
-}
-
-/** Remove a página e todas as subpáginas. Imagens ficam, porque outras páginas podem usar. */
-export async function removePage(dir: string, id: string): Promise<void> {
-  const removed = await updateManual(dir, (meta) => {
-    const { node, siblings } = findNode(meta.pages, id);
-    siblings.splice(siblings.indexOf(node), 1);
-    return flatten([node]);
-  });
-  for (const n of removed) await rm(resolveInside(dir, n.file), { force: true });
 }
 
 async function newPageFile(dir: string, title: string): Promise<string> {

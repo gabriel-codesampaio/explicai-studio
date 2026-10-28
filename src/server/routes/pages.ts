@@ -1,4 +1,4 @@
-import { addPage, movePage, readPage, removePage, updatePage } from "../../core/index.js";
+import { addPage, movePage, readPage, removePage, restorePage, updatePage } from "../../core/index.js";
 import { json, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir, optionalNumber, optionalString } from "../workspace.js";
@@ -42,8 +42,8 @@ export const pageRoutes: Route[] = [
     method: "DELETE",
     path: PAGE,
     handle: async (ctx) => {
-      await removePage(manualDir(ctx), ctx.params.id ?? "");
-      return json({ ok: true });
+      // O trashId permite desfazer: POST /api/manuals/:slug/trash/:trashId/restore
+      return json(await removePage(manualDir(ctx), ctx.params.id ?? ""));
     },
   },
   {
@@ -55,6 +55,14 @@ export const pageRoutes: Route[] = [
         parentId: optionalString(body.parentId) ?? null,
         index: optionalNumber(body.index) ?? 0,
       });
+      return json({ ok: true });
+    },
+  },
+  {
+    method: "POST",
+    path: "/api/manuals/:slug/trash/:trashId/restore",
+    handle: async (ctx) => {
+      await restorePage(manualDir(ctx), ctx.params.trashId ?? "");
       return json({ ok: true });
     },
   },
