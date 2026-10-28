@@ -1,9 +1,12 @@
+import { Extension } from "@tiptap/core";
 import FileHandler from "@tiptap/extension-file-handler";
 import { EditorContent, useEditor, type Editor as TiptapEditor } from "@tiptap/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";
 import { contentExtensions } from "./extensions";
+import { ImagePopover } from "./ImagePopover";
 import { IMAGE_TYPES, insertImages } from "./imageUpload";
+import { LinkPopover } from "./LinkPopover";
 import { SlashCommand } from "./slash/slashCommand";
 import { Toolbar } from "./Toolbar";
 
@@ -23,6 +26,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady }: Pr
   latest.current = { slug, onChange, onError };
   const fileInput = useRef<HTMLInputElement>(null);
   const pickImage = () => fileInput.current?.click();
+  const [linkOpen, setLinkOpen] = useState(false);
   const upload = (ed: TiptapEditor, files: File[], pos: number) =>
     void insertImages(ed, latest.current.slug, files, pos, latest.current.onError);
 
@@ -30,6 +34,15 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady }: Pr
     extensions: [
       ...contentExtensions(),
       SlashCommand.configure({ pickImage }),
+      Extension.create({
+        name: "linkShortcut",
+        addKeyboardShortcuts: () => ({
+          "Mod-k": () => {
+            setLinkOpen(true);
+            return true;
+          },
+        }),
+      }),
       FileHandler.configure({
         allowedMimeTypes: IMAGE_TYPES,
         onPaste: (ed, files) => upload(ed, files, ed.state.selection.anchor),
@@ -47,22 +60,11 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady }: Pr
     if (editor) onReady?.(editor);
   }, [editor, onReady]);
 
-  // shortcut: prompt do navegador; trocado pelo balão de link no próximo passo.
-  const editLink = () => {
-    if (!editor) return;
-    const current = editor.getAttributes("link").href as string | undefined;
-    const href = window.prompt("Endereço do link (deixe vazio para remover):", current ?? "https://");
-    if (href === null) return;
-    const chain = editor.chain().focus().extendMarkRange("link");
-    if (href.trim() === "") chain.unsetLink().run();
-    else chain.setLink({ href: href.trim() }).run();
-  };
-
   if (!editor) return null;
 
   return (
     <div>
-      <Toolbar editor={editor} onPickImage={pickImage} onEditLink={editLink} />
+      <Toolbar editor={editor} onPickImage={pickImage} onEditLink={() => setLinkOpen(true)} />
       <input
         ref={fileInput}
         type="file"
@@ -76,6 +78,8 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady }: Pr
         }}
       />
       <EditorContent editor={editor} className="editor-content" />
+      <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} />
+      <ImagePopover editor={editor} />
     </div>
   );
 }
