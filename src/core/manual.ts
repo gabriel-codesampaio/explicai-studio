@@ -76,7 +76,10 @@ export async function readPage(dir: string, id: string): Promise<Page> {
   return { id, title: typeof data.title === "string" ? data.title : "", body, file: node.file };
 }
 
-/** O nome do arquivo não muda quando o título muda: links e histórico do git continuam válidos. */
+/**
+ * Quando o título muda, o arquivo é renomeado para acompanhar, para a pasta continuar legível
+ * para pessoas e IAs. O id no frontmatter não muda, e é ele que as áreas clicáveis usam.
+ */
 export async function updatePage(dir: string, id: string, patch: { title?: string; body?: string }): Promise<Page> {
   const page = await readPage(dir, id);
   const next: Page = {
@@ -84,7 +87,20 @@ export async function updatePage(dir: string, id: string, patch: { title?: strin
     ...(patch.title === undefined ? {} : { title: required(patch.title, "título da página") }),
     ...(patch.body === undefined ? {} : { body: patch.body }),
   };
-  await atomicWrite(resolveInside(dir, page.file), joinFrontmatter({ id, title: next.title }, next.body));
+  const oldAbs = resolveInside(dir, page.file);
+
+  if (next.title !== page.title && slugify(next.title) !== slugify(page.title)) {
+    const newAbs = await uniquePath(path.join(dir, "pages"), slugify(next.title), ".md");
+    next.file = toPosix(path.relative(dir, newAbs));
+    await atomicWrite(newAbs, joinFrontmatter({ id, title: next.title }, next.body));
+    const meta = await readManual(dir);
+    findNode(meta.pages, id).node.file = next.file;
+    await writeMeta(dir, meta);
+    await rm(oldAbs, { force: true });
+    return next;
+  }
+
+  await atomicWrite(oldAbs, joinFrontmatter({ id, title: next.title }, next.body));
   return next;
 }
 

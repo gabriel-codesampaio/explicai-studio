@@ -7,3 +7,4 @@ coverage/
 # Claude Code: ajustes pessoais
 CLAUDE.local.md
 .claude/settings.local.json
+exemplos/

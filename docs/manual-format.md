@@ -43,7 +43,7 @@ title: Cadastrar cliente
 ![Tela de clientes](../assets/tela-clientes.png)
 ```
 
-O nome do arquivo vem do título na criação e não muda depois. Assim, links e o histórico do git continuam válidos.
+O nome do arquivo acompanha o título: quando o título muda, o arquivo é renomeado e o `manual.json` é atualizado. O `id` do frontmatter nunca muda, e é ele que as áreas clicáveis usam como destino.
 
 ## Anotações da imagem
 

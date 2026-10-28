@@ -64,12 +64,20 @@ describe("páginas", () => {
     expect(await readPage(dir, page.id)).toEqual(page);
   });
 
-  it("mantém o nome do arquivo quando o título muda", async () => {
+  it("renomeia o arquivo quando o título muda e mantém o id", async () => {
     const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
-    const page = await addPage(dir, { title: "Antigo" });
-    const updated = await updatePage(dir, page.id, { title: "Novo título", body: "texto" });
-    expect(updated.file).toBe(page.file);
-    expect(await readPage(dir, page.id)).toMatchObject({ title: "Novo título", body: "texto" });
+    const page = await addPage(dir, { title: "Nova página" });
+    const updated = await updatePage(dir, page.id, { title: "Cadastrar cliente", body: "texto" });
+
+    expect(updated.file).toBe("pages/cadastrar-cliente.md");
+    expect(await readPage(dir, page.id)).toMatchObject({ title: "Cadastrar cliente", body: "texto", file: updated.file });
+    await expect(readFile(path.join(dir, page.file), "utf8")).rejects.toThrow();
+  });
+
+  it("não renomeia quando o título muda só em maiúsculas ou acentos", async () => {
+    const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
+    const page = await addPage(dir, { title: "Visao geral" });
+    expect((await updatePage(dir, page.id, { title: "Visão Geral" })).file).toBe(page.file);
   });
 
   it("monta a árvore, move e remove com as subpáginas", async () => {

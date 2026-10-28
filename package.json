@@ -23,8 +23,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json && vite build --config web/vite.config.ts",
+    "start": "node dist/cli.js",
+    "dev:server": "tsx watch src/cli.ts exemplos --no-open",
+    "dev:web": "vite --config web/vite.config.ts",
+    "typecheck": "tsc --noEmit && tsc -p web/tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -32,8 +35,30 @@
     "yaml": "^2.9.1"
   },
   "devDependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@tiptap/extension-file-handler": "^3.32.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-table": "^3.32.0",
+    "@tiptap/extensions": "^3.32.0",
+    "@tiptap/markdown": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/react": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
     "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "happy-dom": "^21.0.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
+    "vite": "^8.3.5",
     "vitest": "^5.0.5"
+  },
+  "bin": {
+    "explicai": "dist/cli.js"
   }
 }
