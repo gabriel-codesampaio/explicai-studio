@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "web/src/styles/editor-content.css"
+        ],
+        "createdAt": "2026-10-28T20:22:38.389Z",
+        "reason": "Claude: régua de 2px neutra (--linha) marcando citação no conteúdo do manual, convenção tipográfica e não faixa de destaque em cartão"
+      }
+    ]
+  }
+}

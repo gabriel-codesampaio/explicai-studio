@@ -51,7 +51,7 @@ export function PageView({ studio, manual, page }: Props) {
                 editorRef.current?.commands.focus("start");
               }
             }}
-            className="w-full bg-transparent font-display text-[2.125rem] leading-tight font-extrabold tracking-tight [font-stretch:105%] outline-none placeholder:text-muted-foreground/70"
+            className="w-full bg-transparent font-display text-[2.125rem] leading-tight font-extrabold tracking-tight [font-stretch:105%] outline-none placeholder:text-muted-foreground"
           />
         </div>
 
