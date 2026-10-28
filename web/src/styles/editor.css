@@ -40,6 +40,8 @@
 .tiptap h2 { font-size: 23px; font-weight: 700; }
 .tiptap h3 { font-size: 19px; font-weight: 700; }
 .tiptap ul, .tiptap ol { padding-left: 1.4em; margin: 0; }
+.tiptap ul { list-style: disc; }
+.tiptap ol { list-style: decimal; }
 .tiptap li > p { margin: 0.15em 0; }
 .tiptap ol > li::marker { color: var(--cobalto); font-weight: 700; }
 .tiptap a { color: var(--cobalto); text-underline-offset: 0.2em; }

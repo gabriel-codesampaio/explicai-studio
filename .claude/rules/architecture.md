@@ -35,9 +35,16 @@ web/src/
   lib/             código sem React (API, rotas no hash, caminhos)
   hooks/           estado reutilizável (salvamento automático, dados do manual)
   features/        uma pasta por funcionalidade (editor, pages, manuals)
-  components/      peças visuais genéricas
-  styles/          tokens, base e um CSS por funcionalidade
+  components/      peças visuais genéricas do Explicaí
+  components/ui/   componentes do shadcn (Radix + Tailwind); ajuste o visual pelos tokens, não aqui
+  styles/          tokens.css (brand book → nomes do shadcn), base.css, editor-content.css
 ```
+
+## Tailwind + shadcn
+
+- O shadcn entra pelo comportamento (teclado, foco, leitor de tela). O visual vem do brand book via `styles/tokens.css`.
+- Nada de cinza zinco, Inter ou `rounded-lg` por padrão: use `font-display`, `font-sans`, `text-muted-foreground`, `bg-marca-faixa` e o `--radius` da marca.
+- Conteúdo do manual (títulos, listas, tabelas dentro do editor) fica em CSS próprio, porque é documento e não interface.
 
 ## Regras
 

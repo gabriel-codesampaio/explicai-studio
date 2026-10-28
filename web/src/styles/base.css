@@ -1,17 +1,43 @@
-* { box-sizing: border-box; }
-html, body, #root { height: 100%; }
-body {
-  margin: 0;
-  background: var(--papel);
-  color: var(--tinta);
-  font: 16px/1.6 var(--f-texto);
+/* Base da página e superfícies do navegador (seleção, cursor, rolagem, foco) no tema da marca. */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  * {
+    border-color: var(--border);
+    scrollbar-color: var(--linha) transparent;
+  }
+  ::selection {
+    background: var(--marca-faixa);
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  input,
+  textarea,
+  [contenteditable] {
+    caret-color: var(--cobalto);
+  }
 }
-button, input, select { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--cobalto); outline-offset: 2px; border-radius: 4px; }
-::selection { background: var(--realce); }
-
-.boot { display: grid; place-items: center; height: 100%; color: var(--grafite); }
 
 @media (prefers-reduced-motion: reduce) {
-  * { scroll-behavior: auto !important; transition: none !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

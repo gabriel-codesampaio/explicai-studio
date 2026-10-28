@@ -13,7 +13,9 @@
     "sourceMap": true,
     "rootDir": ".",
     "outDir": "dist",
-    "types": ["node"]
+    "types": ["node"],
+    // só para a CLI do shadcn achar web/src; o código do servidor não usa "@"
+    "paths": { "@/*": ["./web/src/*"] }
   },
   "include": ["src", "test"]
 }

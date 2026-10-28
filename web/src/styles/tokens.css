@@ -1,5 +1,9 @@
-/* Tokens do brand book do Explicaí: caneta azul, marca-texto e nanquim. */
+/*
+ * Tokens do brand book do Explicaí (caneta azul, marca-texto e nanquim) e o mapeamento
+ * para os nomes que os componentes do shadcn esperam. Mudou uma cor da marca? Mude aqui.
+ */
 :root {
+  /* marca */
   --papel: #f5f6fa;
   --superficie: #ffffff;
   --tinta: #151a33;
@@ -7,15 +11,38 @@
   --linha: #dce0eb;
   --cobalto: #2b4fe0;
   --sobre-cobalto: #ffffff;
-  --acento: #2b4fe0;
   --marca: #ffd43b;
-  --realce: rgba(255, 212, 59, 0.5);
+  --marca-faixa: rgba(255, 212, 59, 0.55);
   --coral: #c8411f;
-  --selecao: rgba(43, 79, 224, 0.1);
+  --acento: #2b4fe0;
 
-  --f-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  /* nomes do shadcn */
+  --background: var(--papel);
+  --foreground: var(--tinta);
+  --card: var(--superficie);
+  --card-foreground: var(--tinta);
+  --popover: var(--superficie);
+  --popover-foreground: var(--tinta);
+  --primary: var(--cobalto);
+  --primary-foreground: var(--sobre-cobalto);
+  --secondary: #e9ecf5;
+  --secondary-foreground: var(--tinta);
+  --muted: #eceef5;
+  --muted-foreground: var(--grafite);
+  --accent: rgba(43, 79, 224, 0.08);
+  --accent-foreground: var(--tinta);
+  --destructive: var(--coral);
+  --border: var(--linha);
+  --input: var(--linha);
+  --ring: var(--cobalto);
+  --radius: 6px;
+
+  /* apelidos usados pelo CSS antigo (layout.css, tree.css, editor.css); saem com eles */
   --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --f-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
   --f-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
+  --realce: var(--marca-faixa);
+  --selecao: var(--accent);
 
   color-scheme: light;
 }
@@ -25,14 +52,50 @@
     --papel: #0e1120;
     --superficie: #161a2e;
     --tinta: #eceef7;
-    --grafite: #9ca3bd;
+    --grafite: #a3aac4;
     --linha: #2a3050;
-    --cobalto: #7088ff;
+    --cobalto: #8098ff;
     --sobre-cobalto: #0e1120;
+    --marca-faixa: rgba(255, 212, 59, 0.3);
+    --coral: #ff8a70;
     --acento: #ffd43b;
-    --realce: rgba(255, 212, 59, 0.28);
-    --coral: #ff7f63;
-    --selecao: rgba(112, 136, 255, 0.16);
+
+    --secondary: #1d2238;
+    --muted: #1b2034;
+    --accent: rgba(128, 152, 255, 0.12);
     color-scheme: dark;
   }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-marca: var(--marca);
+  --color-marca-faixa: var(--marca-faixa);
+  --color-superficie: var(--superficie);
+
+  --font-sans: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
 }
