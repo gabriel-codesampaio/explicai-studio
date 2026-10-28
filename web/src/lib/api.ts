@@ -53,7 +53,10 @@ export const api = {
     call<Page>(`${manualUrl(slug)}/pages`, send("POST", { title, parentId })),
   getPage: (slug: string, id: string) => call<Page>(pageUrl(slug, id)),
   updatePage: (slug: string, id: string, patch: PagePatch) => call<Page>(pageUrl(slug, id), send("PUT", patch)),
-  removePage: (slug: string, id: string) => call<{ ok: true }>(pageUrl(slug, id), { method: "DELETE" }),
+  /** Move para a lixeira. O trashId desfaz a exclusão com `restorePage`. */
+  removePage: (slug: string, id: string) => call<{ trashId: string }>(pageUrl(slug, id), { method: "DELETE" }),
+  restorePage: (slug: string, trashId: string) =>
+    call<{ ok: true }>(`${manualUrl(slug)}/trash/${encodeURIComponent(trashId)}/restore`, { method: "POST" }),
   movePage: (slug: string, id: string, parentId: string | null, index: number) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/move`, send("POST", { parentId, index })),
 

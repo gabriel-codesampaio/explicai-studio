@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { api, errorMessage, type ManualDetail, type ManualSummary, type Page, type PagePatch, type TreeItem } from "../lib/api";
 import { readLocation, writeLocation } from "../lib/hashRoute";
 import { findItem, renameItem } from "../lib/tree";
@@ -9,17 +10,23 @@ export function useStudio() {
   const [manuals, setManuals] = useState<ManualSummary[] | null>(null);
   const [manual, setManual] = useState<ManualDetail | null>(null);
   const [page, setPage] = useState<Page | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [bootError, setBootError] = useState<string | null>(null);
+  /** true enquanto o formulário de novo manual está aberto na área principal. */
+  const [creatingManual, setCreatingManual] = useState(false);
 
-  const autosave = useAutosave((job) => api.updatePage(job.slug, job.id, job.patch), setError);
+  const autosave = useAutosave(async (job) => {
+    const saved = await api.updatePage(job.slug, job.id, job.patch);
+    // O arquivo muda de nome com o título; a linha de status mostra o caminho atual.
+    setPage((p) => (p && p.id === saved.id ? { ...p, file: saved.file } : p));
+  });
   const { flush } = autosave;
 
-  /** Roda a ação e mostra o erro na faixa do topo, em vez de deixar a promessa sem tratamento. */
+  /** Roda a ação e mostra o erro num aviso, em vez de deixar a promessa sem tratamento. */
   const run = useCallback(async (action: () => Promise<void>) => {
     try {
       await action();
     } catch (err) {
-      setError(errorMessage(err));
+      toast.error(errorMessage(err));
     }
   }, []);
 
@@ -28,27 +35,35 @@ export function useStudio() {
     writeLocation({ slug, pageId });
   }, []);
 
+  const refreshManual = useCallback(async (slug: string) => {
+    const detail = await api.getManual(slug);
+    setManual(detail);
+    return detail;
+  }, []);
+
   const openManual = useCallback(
     (slug: string, pageId: string | null = null) =>
       run(async () => {
         await flush();
-        const detail = await api.getManual(slug);
-        setManual(detail);
+        setCreatingManual(false);
+        const detail = await refreshManual(slug);
         const target = (pageId && findItem(detail.pages, pageId)?.id) || detail.pages[0]?.id || null;
         await showPage(slug, target);
       }),
-    [flush, run, showPage],
+    [flush, run, refreshManual, showPage],
   );
 
   useEffect(() => {
-    void run(async () => {
-      const list = await api.listManuals();
-      setManuals(list);
-      const { slug, pageId } = readLocation();
-      const start = list.find((m) => m.slug === slug) ?? list[0];
-      if (start) await openManual(start.slug, start.slug === slug ? pageId : null);
-    });
-  }, [openManual, run]);
+    api
+      .listManuals()
+      .then(async (list) => {
+        setManuals(list);
+        const { slug, pageId } = readLocation();
+        const start = list.find((m) => m.slug === slug) ?? list[0];
+        if (start) await openManual(start.slug, start.slug === slug ? pageId : null);
+      })
+      .catch((err: unknown) => setBootError(errorMessage(err, "Não foi possível abrir o Studio.")));
+  }, [openManual]);
 
   const selectPage = (id: string) =>
     run(async () => {
@@ -57,31 +72,46 @@ export function useStudio() {
       await showPage(manual.slug, id);
     });
 
+  /** Página nova nasce sem título, com o cursor no campo de título (ver PageView). */
   const addPage = (parentId: string | null) =>
     run(async () => {
       if (!manual) return;
       await flush();
-      const created = await api.addPage(manual.slug, "Nova página", parentId);
-      setManual(await api.getManual(manual.slug));
+      const created = await api.addPage(manual.slug, "", parentId);
+      await refreshManual(manual.slug);
       setPage(created);
       writeLocation({ slug: manual.slug, pageId: created.id });
     });
 
+  /** Exclui na hora e oferece "Desfazer": a página fica na lixeira do manual. */
   const removePage = (item: TreeItem) =>
     run(async () => {
       if (!manual) return;
+      const slug = manual.slug;
       autosave.discard(item.id);
-      await api.removePage(manual.slug, item.id);
-      const detail = await api.getManual(manual.slug);
-      setManual(detail);
-      if (page && !findItem(detail.pages, page.id)) await showPage(manual.slug, detail.pages[0]?.id ?? null);
+      const { trashId } = await api.removePage(slug, item.id);
+      const detail = await refreshManual(slug);
+      if (page && !findItem(detail.pages, page.id)) await showPage(slug, detail.pages[0]?.id ?? null);
+
+      toast(`"${item.title || "Sem título"}" foi para a lixeira.`, {
+        duration: 10_000,
+        action: {
+          label: "Desfazer",
+          onClick: () =>
+            void run(async () => {
+              await api.restorePage(slug, trashId);
+              await refreshManual(slug);
+              await showPage(slug, item.id);
+            }),
+        },
+      });
     });
 
   const movePage = (id: string, parentId: string | null, index: number) =>
     run(async () => {
       if (!manual) return;
       await api.movePage(manual.slug, id, parentId, index);
-      setManual(await api.getManual(manual.slug));
+      await refreshManual(manual.slug);
     });
 
   const createManual = (title: string) =>
@@ -105,10 +135,10 @@ export function useStudio() {
     manuals,
     manual,
     page,
-    error,
-    saveState: autosave.state,
-    setError,
-    clearError: () => setError(null),
+    bootError,
+    creatingManual,
+    setCreatingManual,
+    save: { state: autosave.state, savedAt: autosave.savedAt, retry: autosave.retry },
     openManual,
     selectPage,
     addPage,
@@ -116,6 +146,7 @@ export function useStudio() {
     movePage,
     createManual,
     editPage,
+    reportError: (message: string) => toast.error(message),
   };
 }
 

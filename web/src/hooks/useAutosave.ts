@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { errorMessage, type PagePatch } from "../lib/api";
+import type { PagePatch } from "../lib/api";
 
 export type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -11,14 +11,16 @@ interface Job {
 
 /**
  * Junta as mudanças de uma página e grava `delay` ms depois da última. `flush` grava na hora,
- * e é chamado antes de trocar de página para nada ficar para trás.
+ * e é chamado antes de trocar de página para nada ficar para trás. Se a gravação falha,
+ * a mudança continua pendente e `retry` tenta de novo.
  */
-export function useAutosave(save: (job: Job) => Promise<unknown>, onError: (message: string) => void, delay = 600) {
+export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
   const [state, setState] = useState<SaveState>("idle");
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
   const pending = useRef<Job | null>(null);
   const timer = useRef<number | undefined>(undefined);
-  const deps = useRef({ save, onError });
-  deps.current = { save, onError };
+  const saveRef = useRef(save);
+  saveRef.current = save;
 
   const flush = useCallback(async () => {
     window.clearTimeout(timer.current);
@@ -27,11 +29,15 @@ export function useAutosave(save: (job: Job) => Promise<unknown>, onError: (mess
     if (!job) return;
     setState("saving");
     try {
-      await deps.current.save(job);
+      await saveRef.current(job);
+      setSavedAt(new Date());
       setState(pending.current ? "saving" : "saved");
-    } catch (err) {
+    } catch {
+      // Devolve a mudança para a fila, sem perder o que foi digitado enquanto isso.
+      // O TypeScript estreita pending.current para null acima; durante o await ele pode ter mudado.
+      const newer = pending.current as Job | null;
+      pending.current = { ...job, patch: { ...job.patch, ...newer?.patch } };
       setState("error");
-      deps.current.onError(errorMessage(err, "Não foi possível salvar."));
     }
   }, []);
 
@@ -61,5 +67,5 @@ export function useAutosave(save: (job: Job) => Promise<unknown>, onError: (mess
     return () => window.removeEventListener("beforeunload", warn);
   }, [flush]);
 
-  return { state, queue, flush, discard };
+  return { state, savedAt, queue, flush, retry: flush, discard };
 }

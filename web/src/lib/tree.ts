@@ -52,3 +52,32 @@ export function dropTarget(
   const at = loc.siblings.filter((s) => s.id !== draggedId).findIndex((s) => s.id === targetId);
   return { parentId: loc.parentId, index: zone === "before" ? at : at + 1 };
 }
+
+export type Shift = "up" | "down" | "indent" | "outdent";
+
+/**
+ * Destino de "mover para cima / para baixo / para dentro da anterior / para fora", a alternativa
+ * de teclado ao arrastar. O índice segue a regra do servidor: a página sai antes de ser inserida.
+ */
+export function shiftTarget(items: TreeItem[], id: string, shift: Shift): { parentId: string | null; index: number } | null {
+  const loc = locate(items, id);
+  if (!loc) return null;
+  const i = loc.siblings.findIndex((s) => s.id === id);
+  switch (shift) {
+    case "up":
+      return i > 0 ? { parentId: loc.parentId, index: i - 1 } : null;
+    case "down":
+      return i < loc.siblings.length - 1 ? { parentId: loc.parentId, index: i + 1 } : null;
+    case "indent": {
+      const previous = loc.siblings[i - 1];
+      return previous ? { parentId: previous.id, index: Number.MAX_SAFE_INTEGER } : null;
+    }
+    case "outdent": {
+      if (!loc.parentId) return null;
+      const parentLoc = locate(items, loc.parentId);
+      if (!parentLoc) return null;
+      const parentIndex = parentLoc.siblings.findIndex((s) => s.id === loc.parentId);
+      return { parentId: parentLoc.parentId, index: parentIndex + 1 };
+    }
+  }
+}

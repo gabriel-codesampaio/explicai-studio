@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TreeItem } from "../src/lib/api";
-import { dropTarget, renameItem } from "../src/lib/tree";
+import { dropTarget, renameItem, shiftTarget } from "../src/lib/tree";
 
 const item = (id: string, children: TreeItem[] = []): TreeItem => ({ id, title: id, children });
 // a
@@ -36,5 +36,21 @@ describe("renomear na árvore", () => {
     const renamed = renameItem(pages, "a1", "Novo");
     expect(renamed[0]?.children[0]?.title).toBe("Novo");
     expect(pages[0]?.children[0]?.title).toBe("a1");
+  });
+});
+
+describe("mover pelo menu (alternativa ao arrastar)", () => {
+  it("sobe e desce entre irmãs, sem passar das pontas", () => {
+    expect(shiftTarget(pages, "b", "up")).toEqual({ parentId: null, index: 0 });
+    expect(shiftTarget(pages, "b", "down")).toEqual({ parentId: null, index: 2 });
+    expect(shiftTarget(pages, "a", "up")).toBeNull();
+    expect(shiftTarget(pages, "c", "down")).toBeNull();
+  });
+
+  it("entra na página anterior e sai para o nível de cima", () => {
+    expect(shiftTarget(pages, "b", "indent")).toEqual({ parentId: "a", index: Number.MAX_SAFE_INTEGER });
+    expect(shiftTarget(pages, "a", "indent")).toBeNull();
+    expect(shiftTarget(pages, "a1", "outdent")).toEqual({ parentId: null, index: 1 });
+    expect(shiftTarget(pages, "b", "outdent")).toBeNull();
   });
 });
