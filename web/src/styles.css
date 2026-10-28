@@ -295,7 +295,7 @@ button, input, select { font: inherit; color: inherit; }
   overflow-x: auto;
 }
 .tiptap pre code { background: none; border: 0; padding: 0; }
-.tiptap blockquote { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--marca); color: var(--grafite); }
+.tiptap blockquote { margin: 0; padding: 2px 0 2px 16px; border-left: 2px solid var(--linha); color: var(--grafite); font-style: italic; }
 .tiptap img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--linha); display: block; }
 .tiptap img.ProseMirror-selectednode { outline: 3px solid var(--cobalto); outline-offset: 2px; }
 .tiptap table { border-collapse: collapse; width: 100%; font-size: 15px; }
