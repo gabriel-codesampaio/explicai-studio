@@ -1,0 +1,38 @@
+/* Tokens do brand book do Explicaí: caneta azul, marca-texto e nanquim. */
+:root {
+  --papel: #f5f6fa;
+  --superficie: #ffffff;
+  --tinta: #151a33;
+  --grafite: #575e78;
+  --linha: #dce0eb;
+  --cobalto: #2b4fe0;
+  --sobre-cobalto: #ffffff;
+  --acento: #2b4fe0;
+  --marca: #ffd43b;
+  --realce: rgba(255, 212, 59, 0.5);
+  --coral: #c8411f;
+  --selecao: rgba(43, 79, 224, 0.1);
+
+  --f-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papel: #0e1120;
+    --superficie: #161a2e;
+    --tinta: #eceef7;
+    --grafite: #9ca3bd;
+    --linha: #2a3050;
+    --cobalto: #7088ff;
+    --sobre-cobalto: #0e1120;
+    --acento: #ffd43b;
+    --realce: rgba(255, 212, 59, 0.28);
+    --coral: #ff7f63;
+    --selecao: rgba(112, 136, 255, 0.16);
+    color-scheme: dark;
+  }
+}

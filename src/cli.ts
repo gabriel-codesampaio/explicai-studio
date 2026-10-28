@@ -4,7 +4,7 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { createStudioServer } from "./server/server.js";
+import { createStudioServer } from "./server/index.js";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,

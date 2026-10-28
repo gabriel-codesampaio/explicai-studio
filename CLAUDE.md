@@ -29,16 +29,19 @@ Rode `npm test` e `npm run typecheck` antes de dizer que uma tarefa está pronta
 
 ## Estrutura
 
+Mapa completo e regras de arquitetura (SOLID, KISS, DRY): `.claude/rules/architecture.md`.
+
 ```
-src/core/     formato do manual: ler, gravar, validar (sem dependência de navegador)
-src/server/   servidor local: API JSON em /api e imagens em /files, só para localhost
-src/cli.ts    comando `explicai`
-web/src/      editor (React + Tiptap). extensions.ts define o que vira Markdown
-test/         testes do núcleo, do servidor e da ida e volta do Markdown
-docs/         formato do manual e especificação
+src/core/      formato do manual: manuals, pages, assets, tree, fs (sem HTTP nem navegador)
+src/server/    servidor local: router + routes/ (um arquivo por recurso), só para localhost
+src/cli.ts     comando `explicai`
+web/src/       editor: lib/ (sem React), hooks/, features/, components/, layout/, styles/
+test/          núcleo, servidor e roteador
+web/test/      ida e volta do Markdown e lógica da árvore
+docs/          formato do manual e especificação
 ```
 
-Mudou `web/src/extensions.ts`? Rode `test/markdown.test.ts`: ele garante que abrir e salvar uma página não perde conteúdo.
+Mudou `web/src/features/editor/extensions.ts`? Rode `web/test/markdown.test.ts`: ele garante que abrir e salvar uma página não perde conteúdo.
 
 ## Decisões que não mudam sem conversar
 
