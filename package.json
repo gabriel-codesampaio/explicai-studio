@@ -4,10 +4,10 @@
   "description": "Construtor de manuais open source e gratuito. Do print ao manual pronto em PDF, HTML e Markdown.",
   "license": "MIT",
   "author": "Gabriel Sampaio",
-  "homepage": "https://github.com/gabriel-codesampaio/explicai",
+  "homepage": "https://github.com/gabriel-codesampaio/explicai-studio",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gabriel-codesampaio/explicai.git"
+    "url": "git+https://github.com/gabriel-codesampaio/explicai-studio.git"
   },
   "type": "module",
   "engines": {
