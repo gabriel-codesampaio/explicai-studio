@@ -81,3 +81,13 @@ export function shiftTarget(items: TreeItem[], id: string, shift: Shift): { pare
     }
   }
 }
+
+/** Páginas acima de `id`, da raiz até o pai, para o caminho no topo da página. */
+export function ancestorsOf(items: TreeItem[], id: string): TreeItem[] {
+  for (const item of items) {
+    if (item.id === id) return [];
+    const inner = ancestorsOf(item.children, id);
+    if (inner.length > 0 || findItem(item.children, id)) return [item, ...inner];
+  }
+  return [];
+}

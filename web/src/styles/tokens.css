@@ -37,12 +37,10 @@
   --ring: var(--cobalto);
   --radius: 6px;
 
-  /* apelidos usados pelo CSS antigo (layout.css, tree.css, editor.css); saem com eles */
-  --f-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
-  --f-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
-  --f-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
-  --realce: var(--marca-faixa);
-  --selecao: var(--accent);
+  /* fontes da marca (o @theme abaixo expõe como font-sans, font-display e font-mono) */
+  --fonte-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --fonte-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --fonte-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
 
   color-scheme: light;
 }
@@ -90,9 +88,9 @@
   --color-marca-faixa: var(--marca-faixa);
   --color-superficie: var(--superficie);
 
-  --font-sans: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
+  --font-sans: var(--fonte-texto);
+  --font-display: var(--fonte-display);
+  --font-mono: var(--fonte-mono);
 
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);

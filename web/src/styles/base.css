@@ -8,7 +8,7 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
+    font-family: var(--fonte-texto);
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -39,5 +39,29 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Wordmark do logo: o acento do "í" é desenhado aqui, como no brand book. */
+@layer components {
+  .wordmark {
+    font-family: var(--fonte-display);
+    font-weight: 800;
+    font-stretch: 112%;
+    font-variation-settings: "wdth" 112;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .wordmark .i { position: relative; display: inline-block; }
+  .wordmark .i::after {
+    content: "";
+    position: absolute;
+    left: 0.06em;
+    bottom: 0.77em;
+    width: 0.115em;
+    height: 0.19em;
+    background: var(--acento);
+    transform: skewX(-32deg);
+    transform-origin: bottom left;
   }
 }
