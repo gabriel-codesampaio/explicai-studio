@@ -1,0 +1,75 @@
+/* Base da página e superfícies do navegador (seleção, cursor, rolagem, foco) no tema da marca. */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--fonte-texto);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  * {
+    border-color: var(--border);
+    scrollbar-color: var(--linha) transparent;
+  }
+  ::selection {
+    background: var(--marca-faixa);
+    color: inherit;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  input,
+  textarea,
+  [contenteditable] {
+    caret-color: var(--cobalto);
+  }
+  /* O Tailwind 4 deixa botão com a seta comum; aqui volta a mãozinha de "dá para clicar". */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Wordmark do logo: o acento do "í" é desenhado aqui, como no brand book. */
+@layer components {
+  .wordmark {
+    font-family: var(--fonte-display);
+    font-weight: 800;
+    font-stretch: 112%;
+    font-variation-settings: "wdth" 112;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .wordmark .i {
+    position: relative;
+    display: inline-block;
+  }
+  .wordmark .i::after {
+    content: "";
+    position: absolute;
+    left: 0.06em;
+    bottom: 0.77em;
+    width: 0.115em;
+    height: 0.19em;
+    background: var(--acento);
+    transform: skewX(-32deg);
+    transform-origin: bottom left;
+  }
+}

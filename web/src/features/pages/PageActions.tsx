@@ -1,0 +1,109 @@
+import { ArrowDown, ArrowUp, IndentDecrease, IndentIncrease, MoreHorizontal, Move, Plus, Trash2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import type { TreeItem } from "@/lib/api";
+import { t, tn } from "@/lib/i18n";
+import { flattenItems, type Shift, shiftTarget } from "@/lib/tree";
+import { cn } from "@/lib/utils";
+
+export type PageAction = { kind: "addChild" } | { kind: "remove" } | { kind: "shift"; shift: Shift };
+
+interface Props {
+  item: TreeItem;
+  pages: TreeItem[];
+  /** Página aberta: as ações ficam à vista. */
+  selected: boolean;
+  /** O menu "⋯" é controlado pela árvore, que também abre ele pelo teclado (Shift+F10). */
+  menuOpen: boolean;
+  onMenuOpenChange: (open: boolean) => void;
+  onAction: (action: PageAction) => void;
+}
+
+/** As mesmas teclas valem na árvore (ver PageTree), por isso aparecem no menu. */
+const SHIFTS: { shift: Shift; label: string; keys: string; Icon: typeof ArrowUp }[] = [
+  { shift: "up", label: t("Para cima"), keys: "Alt+Shift+↑", Icon: ArrowUp },
+  { shift: "down", label: t("Para baixo"), keys: "Alt+Shift+↓", Icon: ArrowDown },
+  { shift: "indent", label: t("Para dentro da anterior"), keys: "Alt+Shift+→", Icon: IndentIncrease },
+  { shift: "outdent", label: t("Para fora"), keys: "Alt+Shift+←", Icon: IndentDecrease },
+];
+
+const iconButton =
+  "grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary";
+
+/**
+ * "+" para subpágina e o menu "⋯" da página. Aparecem ao passar o mouse, com o foco na linha
+ * e na página aberta, para quem chega não precisar adivinhar que eles existem. Em telas de toque,
+ * onde não existe "passar o mouse", ficam sempre à vista.
+ */
+export function PageActions({ item, pages, selected, menuOpen, onMenuOpenChange, onAction }: Props) {
+  const name = item.title || t("Sem título");
+  const sub = flattenItems(item.children).length;
+
+  return (
+    <span
+      className={cn(
+        "flex opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 has-[[data-state=open]]:opacity-100 pointer-coarse:opacity-100",
+        selected && "opacity-100",
+      )}
+    >
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            tabIndex={-1}
+            className={iconButton}
+            aria-label={t("Nova subpágina em {nome}", { nome: name })}
+            onClick={() => onAction({ kind: "addChild" })}
+          >
+            <Plus className="size-4" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>{t("Nova subpágina")}</TooltipContent>
+      </Tooltip>
+
+      <DropdownMenu open={menuOpen} onOpenChange={onMenuOpenChange}>
+        <DropdownMenuTrigger asChild>
+          <button type="button" tabIndex={-1} className={iconButton} aria-label={t("Mais ações para {nome}", { nome: name })}>
+            <MoreHorizontal className="size-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-64">
+          <DropdownMenuItem onSelect={() => onAction({ kind: "addChild" })}>
+            <Plus /> {t("Nova subpágina")}
+          </DropdownMenuItem>
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <Move className="size-4 text-muted-foreground" /> {t("Mover")}
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent className="w-64">
+              {SHIFTS.map(({ shift, label, keys, Icon }) => (
+                <DropdownMenuItem
+                  key={shift}
+                  disabled={!shiftTarget(pages, item.id, shift)}
+                  onSelect={() => onAction({ kind: "shift", shift })}
+                >
+                  <Icon /> {label}
+                  <DropdownMenuShortcut>{keys}</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem variant="destructive" onSelect={() => onAction({ kind: "remove" })}>
+            <Trash2 /> {sub ? tn(sub, "Excluir página e {n} subpágina", "Excluir página e {n} subpáginas") : t("Excluir página")}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </span>
+  );
+}

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "sourceMap": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "types": ["node"],
+    // só para a CLI do shadcn achar web/src; o código do servidor não usa "@"
+    "paths": { "@/*": ["./web/src/*"] }
+  },
+  "include": ["src", "test", "e2e", "playwright.config.ts"]
+}

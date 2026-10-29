@@ -1,0 +1,92 @@
+{
+  "name": "explicai",
+  "version": "0.1.0",
+  "description": "Construtor de manuais open source e gratuito. Do print ao manual pronto em PDF, HTML e Markdown.",
+  "license": "MIT",
+  "author": "Gabriel Sampaio",
+  "homepage": "https://github.com/gabriel-codesampaio/explicai-studio",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabriel-codesampaio/explicai-studio.git"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "exports": {
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json && vite build --config web/vite.config.ts",
+    "start": "node dist/cli.js",
+    "dev:server": "tsx watch src/cli.ts exemplos --no-open",
+    "dev:web": "vite --config web/vite.config.ts",
+    "typecheck": "tsc --noEmit && tsc -p web/tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "check": "npm run lint && npm run typecheck && npm test",
+    "test:e2e": "npm run build && playwright test",
+    "prepublishOnly": "npm run check && npm run build"
+  },
+  "dependencies": {
+    "marked": "^17.0.6",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.4",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tiptap/extension-file-handler": "^3.32.0",
+    "@tiptap/extension-image": "^3.32.0",
+    "@tiptap/extension-list": "^3.32.0",
+    "@tiptap/extension-table": "^3.32.0",
+    "@tiptap/extensions": "^3.32.0",
+    "@tiptap/markdown": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/react": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
+    "@tiptap/suggestion": "^3.32.0",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "happy-dom": "^21.0.4",
+    "lucide-react": "^1.63.0",
+    "radix-ui": "^1.8.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sonner": "^2.0.8",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  },
+  "bin": {
+    "explicai": "dist/cli.js"
+  },
+  "keywords": [
+    "manual",
+    "documentation",
+    "markdown",
+    "editor",
+    "screenshots",
+    "pdf",
+    "explicai"
+  ]
+}

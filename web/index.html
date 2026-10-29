@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Explicaí Studio</title>
+    <script>
+      // Tema antes da primeira pintura, para não piscar claro antes do escuro. Mesma leitura de src/lib/theme.ts.
+      (() => {
+        var a = {};
+        try { a = JSON.parse(localStorage.getItem("explicai:aparencia") || "{}"); } catch {}
+        var dark = a.mode === "dark" || (a.mode !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        document.documentElement.dataset.accent = a.accent || "cobalto";
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+/*
+ * Tokens do brand book do Explicaí (caneta azul, marca-texto e nanquim) e o mapeamento
+ * para os nomes que os componentes do shadcn esperam. Mudou uma cor da marca? Mude aqui.
+ */
+:root {
+  /* marca */
+  --papel: #f5f6fa;
+  --superficie: #ffffff;
+  --tinta: #151a33;
+  --grafite: #575e78;
+  --linha: #dce0eb;
+  --cobalto: #2b4fe0;
+  --sobre-cobalto: #ffffff;
+  --marca: #ffd43b;
+  --marca-faixa: rgba(255, 212, 59, 0.55);
+  --coral: #c8411f;
+  --acento: var(--cobalto);
+  /* Marcações sobre o print são conteúdo do manual: mesma cor em qualquer tema ou destaque do Studio. */
+  --anotacao: #2b4fe0;
+
+  /* nomes do shadcn */
+  --background: var(--papel);
+  --foreground: var(--tinta);
+  --card: var(--superficie);
+  --card-foreground: var(--tinta);
+  --popover: var(--superficie);
+  --popover-foreground: var(--tinta);
+  --primary: var(--cobalto);
+  --primary-foreground: var(--sobre-cobalto);
+  --secondary: #e9ecf5;
+  --secondary-foreground: var(--tinta);
+  --muted: #eceef5;
+  --muted-foreground: var(--grafite);
+  --accent: color-mix(in srgb, var(--cobalto) 8%, transparent);
+  --accent-foreground: var(--tinta);
+  --destructive: var(--coral);
+  --border: var(--linha);
+  --input: var(--linha);
+  --ring: var(--cobalto);
+  --radius: 6px;
+
+  /* fontes da marca (o @theme abaixo expõe como font-sans, font-display e font-mono) */
+  --fonte-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
+  --fonte-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --fonte-mono: "JetBrains Mono Variable", ui-monospace, Consolas, monospace;
+
+  color-scheme: light;
+}
+
+/* O tema vem de data-theme, que o index.html põe antes da primeira pintura (ver lib/theme.ts). */
+:root[data-theme="dark"] {
+  --papel: #0e1120;
+  --superficie: #161a2e;
+  --tinta: #eceef7;
+  --grafite: #a3aac4;
+  --linha: #2a3050;
+  --cobalto: #8098ff;
+  --sobre-cobalto: #0e1120;
+  --marca-faixa: rgba(255, 212, 59, 0.3);
+  --coral: #ff8a70;
+  --acento: #ffd43b;
+
+  --secondary: #1d2238;
+  --muted: #1b2034;
+  --accent: color-mix(in srgb, var(--cobalto) 12%, transparent);
+  color-scheme: dark;
+}
+
+/*
+ * Cores de destaque escolhidas em "Aparência". Elas trocam o cobalto, e o resto (botões, foco,
+ * marcadores) acompanha. Cada uma tem contraste AA com o texto sobre ela nos dois temas.
+ */
+:root[data-accent="esmeralda"] {
+  --cobalto: #0f7a55;
+}
+:root[data-accent="ameixa"] {
+  --cobalto: #7a3fc4;
+}
+:root[data-accent="grafite"] {
+  --cobalto: #3d4459;
+}
+:root[data-theme="dark"][data-accent="esmeralda"] {
+  --cobalto: #4cc79a;
+}
+:root[data-theme="dark"][data-accent="ameixa"] {
+  --cobalto: #b58cff;
+}
+:root[data-theme="dark"][data-accent="grafite"] {
+  --cobalto: #b4bbd3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-marca: var(--marca);
+  --color-anotacao: var(--anotacao);
+  --color-marca-faixa: var(--marca-faixa);
+  --color-superficie: var(--superficie);
+
+  --font-sans: var(--fonte-texto);
+  --font-display: var(--fonte-display);
+  --font-mono: var(--fonte-mono);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+}
