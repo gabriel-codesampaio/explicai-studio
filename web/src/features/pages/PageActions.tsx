@@ -22,6 +22,9 @@ interface Props {
   pages: TreeItem[];
   /** Página aberta: as ações ficam à vista. */
   selected: boolean;
+  /** O menu "⋯" é controlado pela árvore, que também abre ele pelo teclado (Shift+F10). */
+  menuOpen: boolean;
+  onMenuOpenChange: (open: boolean) => void;
   onAction: (action: PageAction) => void;
 }
 
@@ -41,7 +44,7 @@ const iconButton =
  * e na página aberta, para quem chega não precisar adivinhar que eles existem. Em telas de toque,
  * onde não existe "passar o mouse", ficam sempre à vista.
  */
-export function PageActions({ item, pages, selected, onAction }: Props) {
+export function PageActions({ item, pages, selected, menuOpen, onMenuOpenChange, onAction }: Props) {
   const name = item.title || "Sem título";
   const sub = flattenItems(item.children).length;
 
@@ -67,10 +70,9 @@ export function PageActions({ item, pages, selected, onAction }: Props) {
         <TooltipContent>Nova subpágina</TooltipContent>
       </Tooltip>
 
-      <DropdownMenu>
+      <DropdownMenu open={menuOpen} onOpenChange={onMenuOpenChange}>
         <DropdownMenuTrigger asChild>
-          {/* data-row-menu: Shift+F10 na árvore abre este menu pelo teclado. */}
-          <button type="button" tabIndex={-1} data-row-menu className={iconButton} aria-label={`Mais ações para ${name}`}>
+          <button type="button" tabIndex={-1} className={iconButton} aria-label={`Mais ações para ${name}`}>
             <MoreHorizontal className="size-4" />
           </button>
         </DropdownMenuTrigger>

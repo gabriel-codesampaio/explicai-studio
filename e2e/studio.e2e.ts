@@ -97,6 +97,11 @@ test("árvore pelo teclado: Alt+Shift+↓ desce a página", async ({ page, reque
     expect(tree.pages.map((p: { title: string }) => p.title)).toEqual(["Segunda", "Primeira"]);
   }).toPass();
   await expect(treePage(page, "Primeira")).toBeFocused();
+
+  await page.keyboard.press("Shift+F10");
+  await expect(page.getByRole("menuitem", { name: "Excluir página" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menuitem", { name: "Excluir página" })).toBeHidden();
 });
 
 test("link: recusa endereço inválido e liga a outra página do manual", async ({ page, request }) => {

@@ -26,10 +26,16 @@ function zoneAt(e: React.DragEvent<HTMLElement>): DropZone {
 
 export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Props) {
   const [hover, setHover] = useState<{ id: string; zone: DropZone } | null>(null);
-  const onKeyDown = useTreeKeyboard(pages, (id, shift) => {
-    const item = findItem(pages, id);
-    if (item) onAction(item, { kind: "shift", shift });
-  });
+  // Menu "⋯" aberto pelo teclado (Shift+F10) ou pelo clique; um por vez.
+  const [menuFor, setMenuFor] = useState<string | null>(null);
+  const { onKeyDown, root } = useTreeKeyboard(
+    pages,
+    (id, shift) => {
+      const item = findItem(pages, id);
+      if (item) onAction(item, { kind: "shift", shift });
+    },
+    setMenuFor,
+  );
   // Uma parada só do Tab: a página aberta (ou a primeira) recebe o foco ao entrar na árvore.
   const tabStop = selectedId && findItem(pages, selectedId) ? selectedId : pages[0]?.id;
 
@@ -41,7 +47,11 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
 
   const renderLevel = (items: TreeItem[], depth: number) => (
     // O teclado chega dos botões das páginas e sobe até a lista (ver useTreeKeyboard).
-    <ul className={cn(depth > 0 && "ml-3 border-l border-border pl-1")} onKeyDown={depth === 0 ? onKeyDown : undefined}>
+    <ul
+      ref={depth === 0 ? root : undefined}
+      className={cn(depth > 0 && "ml-3 border-l border-border pl-1")}
+      onKeyDown={depth === 0 ? onKeyDown : undefined}
+    >
       {items.map((item) => {
         const zone = hover?.id === item.id ? hover.zone : null;
         const selected = item.id === selectedId;
@@ -49,7 +59,6 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
           <li key={item.id}>
             {/* biome-ignore lint/a11y/noStaticElementInteractions: arrastar é atalho de mouse; pelo teclado, o menu "⋯" move a página */}
             <div
-              data-row
               className={cn(
                 "group relative flex items-center rounded-md pr-1 transition-colors hover:bg-muted",
                 zone === "inside" && "outline-2 -outline-offset-2 outline-dashed outline-primary",
@@ -99,7 +108,14 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                   </span>
                 )}
               </button>
-              <PageActions item={item} pages={pages} selected={selected} onAction={(action) => onAction(item, action)} />
+              <PageActions
+                item={item}
+                pages={pages}
+                selected={selected}
+                menuOpen={menuFor === item.id}
+                onMenuOpenChange={(open) => setMenuFor(open ? item.id : null)}
+                onAction={(action) => onAction(item, action)}
+              />
             </div>
             {item.children.length > 0 && renderLevel(item.children, depth + 1)}
           </li>

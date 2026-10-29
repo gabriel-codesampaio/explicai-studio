@@ -6,19 +6,24 @@ const SHIFT_KEYS: Record<string, Shift> = { ArrowUp: "up", ArrowDown: "down", Ar
 /**
  * Teclado na árvore de páginas: a árvore é uma parada só do Tab, as setas andam entre as páginas,
  * Alt+Shift+setas reordenam e Shift+F10 (ou a tecla de menu) abre o menu "⋯" da página.
- * Os botões das páginas levam `data-page-id`; a linha, `data-row`; o gatilho do menu, `data-row-menu`.
+ * Os botões das páginas levam `data-page-id`. Devolve o tratador de teclas e a ref da lista raiz.
  */
-export function useTreeKeyboard(pagesVersion: unknown, onShift: (id: string, shift: Shift) => void) {
+export function useTreeKeyboard(
+  pagesVersion: unknown,
+  onShift: (id: string, shift: Shift) => void,
+  onOpenMenu: (id: string) => void,
+) {
+  const root = useRef<HTMLUListElement>(null);
   // Depois de mover, a árvore é redesenhada; o foco volta para a página que foi movida.
   const refocus = useRef<string | null>(null);
   useEffect(() => {
     const id = refocus.current;
     if (!id || pagesVersion === undefined) return;
     refocus.current = null;
-    document.querySelector<HTMLElement>(`[data-page-id="${CSS.escape(id)}"]`)?.focus();
+    root.current?.querySelector<HTMLElement>(`[data-page-id="${CSS.escape(id)}"]`)?.focus();
   }, [pagesVersion]);
 
-  return (e: KeyboardEvent<HTMLElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
     const id = target.dataset.pageId;
     if (!id) return;
@@ -33,10 +38,7 @@ export function useTreeKeyboard(pagesVersion: unknown, onShift: (id: string, shi
 
     if ((e.shiftKey && e.key === "F10") || e.key === "ContextMenu") {
       e.preventDefault();
-      const trigger = target.closest("[data-row]")?.querySelector<HTMLElement>("[data-row-menu]");
-      trigger?.focus();
-      // O gatilho do Radix abre com Enter, não com click().
-      trigger?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      onOpenMenu(id);
       return;
     }
 
@@ -57,4 +59,6 @@ export function useTreeKeyboard(pagesVersion: unknown, onShift: (id: string, shi
     e.preventDefault();
     el.focus();
   };
+
+  return { onKeyDown, root };
 }
