@@ -187,7 +187,11 @@ test("marcação: arrasta o destaque com Selecionar e Desfazer volta ao lugar", 
   await dialog.getByRole("button", { name: "Selecionar" }).click();
   await dragFrom(at(0.2, 0.2), at(0.6, 0.2));
 
-  const leftOf = () => dialog.locator(".border-marca").first().evaluate((el) => (el as HTMLElement).style.left);
+  const leftOf = () =>
+    dialog
+      .locator(".border-marca")
+      .first()
+      .evaluate((el) => (el as HTMLElement).style.left);
   expect(Number.parseFloat(await leftOf())).toBeGreaterThan(40);
   await dialog.getByRole("button", { name: "Desfazer" }).click();
   expect(Number.parseFloat(await leftOf())).toBeLessThan(15);
