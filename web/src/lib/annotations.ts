@@ -93,3 +93,29 @@ export function removeAnnotation(ann: Annotations, id: string): Annotations {
 export function countAnnotations(ann: Annotations): number {
   return ann.markers.length + ann.highlights.length + ann.arrows.length + ann.hotspots.length;
 }
+
+export type Tool = "select" | AnnotationKind;
+
+/**
+ * Cria a forma desenhada entre `a` (onde o arraste começou) e `b` (onde terminou).
+ * Marcador é um clique; destaque, seta e área clicável precisam de arraste.
+ * Devolve null quando o arraste foi curto demais para virar forma.
+ */
+export function addShape(ann: Annotations, tool: AnnotationKind, a: Point, b: Point, target: HotspotTarget): Annotations | null {
+  if (tool === "marker") return addMarker(ann, a);
+  if (isTooSmall(a, b)) return null;
+  const id = newId(tool);
+  if (tool === "arrow") return { ...ann, arrows: [...ann.arrows, { id, from: clampPoint(a), to: clampPoint(b) }] };
+  const rect = rectFrom(a, b);
+  if (tool === "highlight") return { ...ann, highlights: [...ann.highlights, { id, ...rect }] };
+  return { ...ann, hotspots: [...ann.hotspots, { id, ...rect, target }] };
+}
+
+/** Atualiza um marcador ou área clicável pelo id (nome do marcador, destino da área). */
+export function updateMarker(ann: Annotations, id: string, label: string): Annotations {
+  return { ...ann, markers: ann.markers.map((m) => (m.id === id ? { ...m, label } : m)) };
+}
+
+export function updateHotspot(ann: Annotations, id: string, target: HotspotTarget): Annotations {
+  return { ...ann, hotspots: ann.hotspots.map((h) => (h.id === id ? { ...h, target } : h)) };
+}

@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { addMarker, assetPathFromSrc, emptyAnnotations, isTooSmall, rectFrom, removeAnnotation } from "../src/lib/annotations";
+import {
+  addMarker,
+  addShape,
+  assetPathFromSrc,
+  emptyAnnotations,
+  isTooSmall,
+  rectFrom,
+  removeAnnotation,
+} from "../src/lib/annotations";
 
 describe("marcações de imagem", () => {
   it("acha o arquivo da imagem a partir da URL do Studio", () => {
@@ -33,5 +41,17 @@ describe("marcações de imagem", () => {
       [1, 0.1],
       [2, 0.3],
     ]);
+  });
+
+  it("cria cada forma a partir do arraste e ignora arraste curto", () => {
+    const target = { type: "page" as const, pageId: "p1" };
+    const ann = emptyAnnotations();
+    const a = { x: 0.1, y: 0.1 };
+    const b = { x: 0.4, y: 0.3 };
+    expect(addShape(ann, "highlight", a, b, target)?.highlights).toHaveLength(1);
+    expect(addShape(ann, "arrow", a, b, target)?.arrows[0]).toMatchObject({ from: a, to: b });
+    expect(addShape(ann, "hotspot", a, b, target)?.hotspots[0]).toMatchObject({ target });
+    expect(addShape(ann, "highlight", a, { x: 0.101, y: 0.1 }, target)).toBeNull();
+    expect(addShape(ann, "marker", a, a, target)?.markers[0]).toMatchObject({ n: 1, x: 0.1, y: 0.1 });
   });
 });
