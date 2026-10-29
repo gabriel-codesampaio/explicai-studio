@@ -246,3 +246,28 @@ test("Aparência mostra só Tema e Idioma, e o Studio fica no cobalto mesmo com 
   expect(await page.evaluate(() => localStorage.getItem("explicai:aparencia"))).toBe('{"mode":"light"}');
   expect(errors).toEqual([]);
 });
+
+test("exportação mostra o nome de cada cor do manual", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Cores", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const colors = page.getByRole("dialog").getByRole("group", { name: "Cor do manual" });
+  // O botão não tem aria-label: o nome acessível é o texto visível ao lado da bolinha.
+  for (const name of ["Cobalto", "Esmeralda", "Ameixa", "Grafite"])
+    await expect(colors.getByRole("button", { name, exact: true })).toBeVisible();
+  await expect(colors.getByRole("button", { name: "Cobalto" })).toHaveAttribute("aria-pressed", "true");
+
+  await colors.getByRole("button", { name: "Ameixa" }).click();
+  await expect(colors.getByRole("button", { name: "Ameixa" })).toHaveAttribute("aria-pressed", "true");
+  await expect(colors.getByRole("button", { name: "Cobalto" })).toHaveAttribute("aria-pressed", "false");
+
+  await page.getByRole("dialog").getByRole("button", { name: "Exportar", exact: true }).click();
+  const link = page.getByRole("dialog").getByRole("link", { name: "Abrir o arquivo" });
+  await expect(link).toBeVisible();
+  const exported = await (await request.get((await link.getAttribute("href")) ?? "")).text();
+  expect(exported).toContain("--accent:#7a3fc4");
+  // O Studio continua no cobalto depois de escolher a cor do manual.
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--primary").trim())).toMatch(
+    /^#(2b4fe0|8098ff)$/,
+  );
+});

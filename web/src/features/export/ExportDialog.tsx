@@ -123,21 +123,27 @@ export function ExportDialog() {
 
         <fieldset>
           <legend className="mb-2 text-sm font-bold">{t("Cor do manual")}</legend>
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap gap-1.5">
             {ACCENTS.map((a) => (
               <button
                 key={a.id}
                 type="button"
                 aria-pressed={accent === a.swatch}
-                aria-label={a.label}
-                title={a.label}
                 onClick={() => void studio.setManualAccent(a.id === "cobalto" ? null : a.swatch)}
-                className="size-7 rounded-full ring-foreground ring-offset-2 ring-offset-background aria-pressed:ring-2"
-                style={{ background: a.swatch }}
-              />
+                className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs hover:bg-muted aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-bold"
+              >
+                <span className="size-3.5 rounded-full ring-1 ring-foreground/20" style={{ background: a.swatch }} aria-hidden />
+                {/* A cópia invisível em negrito reserva a largura: escolher a cor não empurra as vizinhas. */}
+                <span className="grid">
+                  <span className="invisible col-start-1 row-start-1 font-bold" aria-hidden>
+                    {a.label}
+                  </span>
+                  <span className="col-start-1 row-start-1">{a.label}</span>
+                </span>
+              </button>
             ))}
-            <span className="ml-1 text-xs text-muted-foreground">{t("Títulos, links e números dos passos.")}</span>
           </div>
+          <p className="mt-1.5 text-xs text-muted-foreground">{t("Títulos, links e números dos passos.")}</p>
         </fieldset>
 
         {error && (
