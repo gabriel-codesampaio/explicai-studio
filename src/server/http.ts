@@ -52,9 +52,11 @@ export async function readBody(req: IncomingMessage, limit: number): Promise<Uin
   let size = 0;
   for await (const chunk of req) {
     size += (chunk as Buffer).length;
-    if (size > limit) throw new HttpError(413, `Arquivo maior que ${limit / 1024 / 1024} MB.`);
-    chunks.push(chunk as Buffer);
+    // Passou do limite: continua lendo sem guardar. Parar no meio derruba a conexão e o navegador
+    // nunca recebe o 413. shortcut: lê o envio inteiro; tudo bem só porque o servidor é local.
+    if (size <= limit) chunks.push(chunk as Buffer);
   }
+  if (size > limit) throw new HttpError(413, `Arquivo maior que ${limit / 1024 / 1024} MB.`);
   return Buffer.concat(chunks);
 }
 

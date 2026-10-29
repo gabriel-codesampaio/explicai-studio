@@ -10,7 +10,8 @@ export const webRoutes: Route[] = [
     method: "GET",
     path: "/*",
     handle: async ({ opts, rest }) => {
-      if (!opts.webDir) throw new HttpError(404, "Não encontrado.");
+      // Chamada de API errada não pode receber o index.html do editor como resposta.
+      if (!opts.webDir || rest === "api" || rest.startsWith("api/")) throw new HttpError(404, "Não encontrado.");
       const target = resolveInside(opts.webDir, rest || "index.html");
       const isFile = await stat(target).then(
         (s) => s.isFile(),
