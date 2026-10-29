@@ -13,12 +13,15 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { TreeItem } from "@/lib/api";
 import { flattenItems, type Shift, shiftTarget } from "@/lib/tree";
+import { cn } from "@/lib/utils";
 
 export type PageAction = { kind: "addChild" } | { kind: "remove" } | { kind: "shift"; shift: Shift };
 
 interface Props {
   item: TreeItem;
   pages: TreeItem[];
+  /** Página aberta: as ações ficam à vista. */
+  selected: boolean;
   onAction: (action: PageAction) => void;
 }
 
@@ -34,15 +37,21 @@ const iconButton =
   "grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary";
 
 /**
- * "+" para subpágina e o menu "⋯" da página. Aparecem ao passar o mouse ou com o foco na linha,
- * e ficam sempre à vista em telas de toque, onde não existe "passar o mouse".
+ * "+" para subpágina e o menu "⋯" da página. Aparecem ao passar o mouse, com o foco na linha
+ * e na página aberta, para quem chega não precisar adivinhar que eles existem. Em telas de toque,
+ * onde não existe "passar o mouse", ficam sempre à vista.
  */
-export function PageActions({ item, pages, onAction }: Props) {
+export function PageActions({ item, pages, selected, onAction }: Props) {
   const name = item.title || "Sem título";
   const sub = flattenItems(item.children).length;
 
   return (
-    <span className="flex opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 has-[[data-state=open]]:opacity-100 pointer-coarse:opacity-100">
+    <span
+      className={cn(
+        "flex opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 has-[[data-state=open]]:opacity-100 pointer-coarse:opacity-100",
+        selected && "opacity-100",
+      )}
+    >
       <Tooltip>
         <TooltipTrigger asChild>
           <button

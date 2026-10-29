@@ -99,7 +99,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                   </span>
                 )}
               </button>
-              <PageActions item={item} pages={pages} onAction={(action) => onAction(item, action)} />
+              <PageActions item={item} pages={pages} selected={selected} onAction={(action) => onAction(item, action)} />
             </div>
             {item.children.length > 0 && renderLevel(item.children, depth + 1)}
           </li>

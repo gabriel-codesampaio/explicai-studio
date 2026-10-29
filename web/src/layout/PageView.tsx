@@ -39,7 +39,10 @@ export function PageView({ studio, manual, page }: Props) {
   return (
     <div className="flex flex-1 flex-col">
       <div className={GRID}>
-        <article className="mx-auto w-full max-w-[var(--medida)] min-w-0 px-5 pt-6 pb-24 sm:px-8 xl:col-start-2">
+        <article
+          lang={manual.language}
+          className="mx-auto w-full max-w-[var(--medida)] min-w-0 px-5 pt-6 pb-24 sm:px-8 xl:col-start-2"
+        >
           <div className="flex flex-wrap items-center gap-1">
             <nav
               aria-label="Caminho da página"
