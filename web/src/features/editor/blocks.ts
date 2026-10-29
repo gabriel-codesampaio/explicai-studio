@@ -1,5 +1,6 @@
 import type { Editor } from "@tiptap/react";
 import {
+  CircleCheck,
   Code2,
   Heading1,
   Heading2,
@@ -34,6 +35,34 @@ export interface Block {
 
 const chain = (editor: Editor) => editor.chain().focus();
 
+const RESULT_LABEL = "Resultado: ";
+
+/**
+ * Citação "**Resultado:** …" logo depois do bloco atual (dentro do passo, se estiver num).
+ * Na linha vazia deixada pelo "/", ocupa o lugar dela. O cursor fica pronto para escrever.
+ */
+function insertResult(editor: Editor) {
+  const { $from } = editor.state.selection;
+  const empty = $from.parent.content.size === 0;
+  const at = empty ? $from.before() : $from.after();
+  const result = {
+    type: "blockquote",
+    content: [
+      {
+        type: "paragraph",
+        content: [
+          { type: "text", marks: [{ type: "bold" }], text: RESULT_LABEL.trim() },
+          { type: "text", text: " " },
+        ],
+      },
+    ],
+  };
+  chain(editor)
+    .insertContentAt(empty ? { from: at, to: $from.after() } : at, result)
+    .setTextSelection(at + 2 + RESULT_LABEL.length)
+    .run();
+}
+
 /** Fonte única dos blocos: usada pelo seletor da barra de ferramentas e pelo menu "/". */
 export const BLOCKS: Block[] = [
   {
@@ -67,6 +96,15 @@ export const BLOCKS: Block[] = [
     isTextType: true,
     isActive: (e) => e.isActive("orderedList"),
     run: ({ editor }) => chain(editor).toggleOrderedList().run(),
+  },
+  {
+    id: "result",
+    label: "Resultado esperado",
+    hint: "O que a pessoa vê depois do passo",
+    icon: CircleCheck,
+    keywords: ["resultado", "esperado", "confirmacao", "passo"],
+    isTextType: false,
+    run: ({ editor }) => insertResult(editor),
   },
   {
     id: "bullets",

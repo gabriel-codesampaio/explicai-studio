@@ -46,15 +46,55 @@
 .tiptap ul {
   list-style: disc;
 }
-.tiptap ol {
-  list-style: decimal;
-}
 .tiptap li > p {
   margin: 0.15em 0;
 }
-.tiptap ol > li::marker {
-  color: var(--cobalto);
+/*
+ * Passos: número num círculo azul (o mesmo dos marcadores do print, que não muda com o tema),
+ * o print dentro do passo e o "Resultado:" em marca-texto. No arquivo continua lista numerada.
+ * shortcut: lista que começa em outro número (start) recomeça no 1 aqui; resolver quando aparecer.
+ */
+/* Só as listas do texto: a legenda da imagem também é uma <ol>, com o próprio número. */
+.tiptap > ol,
+.tiptap li > ol {
+  list-style: none;
+  counter-reset: passo;
+  padding-left: 2.25em;
+}
+:is(.tiptap > ol, .tiptap li > ol) > li {
+  counter-increment: passo;
+  position: relative;
+}
+:is(.tiptap > ol, .tiptap li > ol) > li + li {
+  margin-top: 0.6em;
+}
+:is(.tiptap > ol, .tiptap li > ol) > li::before {
+  content: counter(passo);
+  position: absolute;
+  left: -2.25em;
+  top: 0.12em;
+  display: grid;
+  place-items: center;
+  width: 1.55em;
+  height: 1.55em;
+  border-radius: 50%;
+  background: var(--anotacao);
+  color: #fff;
+  font-family: var(--fonte-mono);
+  font-size: 0.82em;
   font-weight: 700;
+}
+.tiptap li > :is(img, p > img, span > img, .react-renderer) {
+  margin-top: 0.5em;
+}
+.tiptap li > blockquote {
+  margin-top: 0.5em;
+  padding: 6px 12px;
+  border-left: 3px solid var(--marca);
+  border-radius: 0 6px 6px 0;
+  background: var(--marca-faixa);
+  color: var(--tinta);
+  font-style: normal;
 }
 .tiptap a {
   color: var(--cobalto);
