@@ -1,7 +1,8 @@
 import type { Editor as TiptapEditor } from "@tiptap/react";
 import { ChevronRight } from "lucide-react";
-import { Fragment, useCallback, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { Editor } from "@/features/editor/Editor";
+import { PageOutline } from "@/features/editor/PageOutline";
 import type { Studio } from "@/hooks/useStudio";
 import type { ManualDetail, Page } from "@/lib/api";
 import { ancestorsOf } from "@/lib/tree";
@@ -15,10 +16,7 @@ interface Props {
 }
 
 export function PageView({ studio, manual, page }: Props) {
-  const editorRef = useRef<TiptapEditor | null>(null);
-  const onReady = useCallback((ed: TiptapEditor) => {
-    editorRef.current = ed;
-  }, []);
+  const [editor, setEditor] = useState<TiptapEditor | null>(null);
   const [title, setTitle] = useState(page.title);
   const trail = [
     { key: manual.slug, name: manual.title },
@@ -27,38 +25,45 @@ export function PageView({ studio, manual, page }: Props) {
 
   return (
     <div className="flex min-h-full flex-col">
-      <article className="mx-auto w-full max-w-[52rem] flex-1 px-8 pt-6 pb-24">
-        <nav aria-label="Caminho da página" className="flex flex-wrap items-center gap-1 text-[13px] text-muted-foreground">
-          {trail.map(({ key, name }, i) => (
-            <Fragment key={key}>
-              {i > 0 && <ChevronRight className="size-3.5" aria-hidden />}
-              <span className="max-w-60 truncate">{name}</span>
-            </Fragment>
-          ))}
-        </nav>
+      <div className="flex flex-1 justify-center gap-6">
+        <article className="w-full max-w-[52rem] min-w-0 flex-1 px-8 pt-6 pb-24">
+          <nav aria-label="Caminho da página" className="flex flex-wrap items-center gap-1 text-[13px] text-muted-foreground">
+            {trail.map(({ key, name }, i) => (
+              <Fragment key={key}>
+                {i > 0 && <ChevronRight className="size-3.5" aria-hidden />}
+                <span className="max-w-60 truncate">{name}</span>
+              </Fragment>
+            ))}
+          </nav>
 
-        {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
-        <h1 className="sr-only">{title || "Sem título"}</h1>
-        <div className="mt-3 mb-3">
-          <PageTitle
-            initialTitle={page.title}
-            onChange={(next) => {
-              setTitle(next);
-              studio.editPage({ title: next });
-            }}
-            onEnter={() => editorRef.current?.commands.focus("start")}
+          {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
+          <h1 className="sr-only">{title || "Sem título"}</h1>
+          <div className="mt-3 mb-3">
+            <PageTitle
+              initialTitle={page.title}
+              onChange={(next) => {
+                setTitle(next);
+                studio.editPage({ title: next });
+              }}
+              onEnter={() => editor?.commands.focus("start")}
+            />
+          </div>
+
+          <Editor
+            slug={manual.slug}
+            initialMarkdown={page.body}
+            pages={manual.pages}
+            onChange={(body) => studio.editPage({ body })}
+            onError={studio.reportError}
+            onReady={setEditor}
           />
-        </div>
-
-        <Editor
-          slug={manual.slug}
-          initialMarkdown={page.body}
-          pages={manual.pages}
-          onChange={(body) => studio.editPage({ body })}
-          onError={studio.reportError}
-          onReady={onReady}
-        />
-      </article>
+        </article>
+        {editor && (
+          <aside className="sticky top-0 hidden max-h-svh w-56 shrink-0 self-start overflow-y-auto pt-24 pr-6 xl:block">
+            <PageOutline editor={editor} />
+          </aside>
+        )}
+      </div>
       <StatusBar
         path={`${manual.slug}/${page.file}`}
         state={studio.save.state}
