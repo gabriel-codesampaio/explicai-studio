@@ -30,6 +30,11 @@
   [contenteditable] {
     caret-color: var(--cobalto);
   }
+  /* O Tailwind 4 deixa botão com a seta comum; aqui volta a mãozinha de "dá para clicar". */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
