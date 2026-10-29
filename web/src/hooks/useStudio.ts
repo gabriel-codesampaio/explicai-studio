@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { api, errorMessage, type ManualDetail, type ManualSummary, type Page, type PagePatch, type TreeItem } from "../lib/api";
+import {
+  api,
+  type ExportFormat,
+  errorMessage,
+  type ManualDetail,
+  type ManualSummary,
+  type Page,
+  type PagePatch,
+  type TreeItem,
+} from "../lib/api";
 import { readLocation, writeLocation } from "../lib/hashRoute";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
 import { useAutosave } from "./useAutosave";
@@ -139,6 +148,21 @@ export function useStudio() {
       await refreshManual(manual.slug);
     });
 
+  /** Grava o que ainda está na fila e exporta. O diálogo mostra o resultado ou o erro. */
+  const exportManual = async (format: ExportFormat) => {
+    if (!manual) throw new Error("Abra um manual para exportar.");
+    await flush();
+    return api.exportManual(manual.slug, format);
+  };
+
+  /** Cor do manual exportado (`null` = a da marca). */
+  const setManualAccent = (accent: string | null) =>
+    run(async () => {
+      if (!manual) return;
+      await api.setTheme(manual.slug, accent);
+      await refreshManual(manual.slug);
+    });
+
   const movePage = (id: string, parentId: string | null, index: number) =>
     run(async () => {
       if (!manual) return;
@@ -181,6 +205,8 @@ export function useStudio() {
     saveVersion,
     restoreVersion,
     publishVersion,
+    exportManual,
+    setManualAccent,
     createManual,
     editPage,
     reportError: (message: string) => toast.error(message),

@@ -1,0 +1,150 @@
+import { Bot, Download, ExternalLink, FileText, Globe, type LucideIcon } from "lucide-react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useStudioContext } from "@/hooks/StudioContext";
+import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
+import { ACCENTS } from "@/lib/theme";
+import { cn } from "@/lib/utils";
+
+const FORMATS: { id: ExportFormat; label: string; hint: string; Icon: LucideIcon }[] = [
+  { id: "html", label: "Site (HTML)", hint: "Um arquivo para publicar ou abrir no navegador.", Icon: Globe },
+  { id: "pdf", label: "PDF", hint: "Para imprimir ou mandar por e-mail.", Icon: FileText },
+  { id: "markdown", label: "Markdown para IA", hint: "Um arquivo só, com a legenda dos prints em texto.", Icon: Bot },
+];
+
+/** Botão "Exportar manual" da barra lateral: escolhe o formato e a cor, exporta e mostra onde ficou. */
+export function ExportDialog() {
+  const studio = useStudioContext();
+  const [format, setFormat] = useState<ExportFormat>("html");
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<ExportResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const accent = studio.manual?.theme.accent ?? ACCENTS[0].swatch;
+
+  const run = async () => {
+    setBusy(true);
+    setError(null);
+    setResult(null);
+    try {
+      setResult(await studio.exportManual(format));
+    } catch (err) {
+      setError(errorMessage(err, "Não foi possível exportar o manual."));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Dialog
+      onOpenChange={(open) => {
+        if (!open) return;
+        setResult(null);
+        setError(null);
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button variant="outline" className="w-full justify-start">
+          <Download aria-hidden /> Exportar manual
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">Exportar manual</DialogTitle>
+          <DialogDescription>
+            Cada página entra com a versão marcada "No manual" ou, sem ela, com o texto atual.
+          </DialogDescription>
+        </DialogHeader>
+
+        <fieldset className="grid gap-2">
+          <legend className="mb-2 text-sm font-bold">Formato</legend>
+          {FORMATS.map(({ id, label, hint, Icon }) => (
+            <label
+              key={id}
+              className={cn(
+                "flex cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 has-focus-visible:outline-2 has-focus-visible:outline-ring",
+                format === id ? "border-primary bg-accent" : "border-border hover:bg-muted",
+              )}
+            >
+              <input
+                type="radio"
+                name="formato"
+                value={id}
+                checked={format === id}
+                onChange={() => setFormat(id)}
+                className="sr-only"
+              />
+              <Icon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+              <span className="grid leading-tight">
+                <span className="text-sm font-bold">{label}</span>
+                <span className="text-xs text-muted-foreground">{hint}</span>
+              </span>
+            </label>
+          ))}
+        </fieldset>
+
+        <fieldset>
+          <legend className="mb-2 text-sm font-bold">Cor do manual</legend>
+          <div className="flex items-center gap-2.5">
+            {ACCENTS.map((a) => (
+              <button
+                key={a.id}
+                type="button"
+                aria-pressed={accent === a.swatch}
+                aria-label={a.label}
+                title={a.label}
+                onClick={() => void studio.setManualAccent(a.id === "cobalto" ? null : a.swatch)}
+                className="size-7 rounded-full ring-foreground ring-offset-2 ring-offset-background aria-pressed:ring-2"
+                style={{ background: a.swatch }}
+              />
+            ))}
+            <span className="ml-1 text-xs text-muted-foreground">Títulos, links e números dos passos.</span>
+          </div>
+        </fieldset>
+
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
+        {result && (
+          <div role="status" className="grid gap-1 rounded-md border-l-4 border-marca bg-marca/15 px-3 py-2 text-sm">
+            <p>
+              Pronto: {result.pages} {result.pages === 1 ? "página exportada" : "páginas exportadas"} em{" "}
+              <code className="font-mono text-xs">{result.file}</code>, dentro da pasta do manual.
+            </p>
+            {result.warnings.length > 0 && (
+              <ul className="list-disc pl-5 text-destructive">
+                {result.warnings.map((w) => (
+                  <li key={w}>Ficou de fora: {w}</li>
+                ))}
+              </ul>
+            )}
+            <a
+              href={result.url}
+              target="_blank"
+              rel="noreferrer"
+              className="flex w-fit items-center gap-1 font-bold text-primary underline-offset-2 hover:underline"
+            >
+              <ExternalLink className="size-3.5" aria-hidden /> Abrir {result.format === "pdf" ? "o PDF" : "o arquivo"}
+            </a>
+          </div>
+        )}
+
+        <DialogFooter>
+          <Button onClick={() => void run()} disabled={busy}>
+            {busy ? "Exportando…" : "Exportar"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

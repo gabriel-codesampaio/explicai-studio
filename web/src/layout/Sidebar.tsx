@@ -1,5 +1,6 @@
 import { PanelLeftClose, Plus } from "lucide-react";
 import { Brand } from "@/components/Brand";
+import { ExportDialog } from "@/features/export/ExportDialog";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import type { PageAction } from "@/features/pages/PageActions";
@@ -55,6 +56,7 @@ export function Sidebar({ onCollapse, onNavigate }: Props) {
           onCreate={() => studio.setCreatingManual(true)}
         />
       )}
+      {manual && manual.pages.length > 0 && <ExportDialog />}
 
       {manual && (
         <nav aria-label="Páginas do manual" className="grid gap-1">

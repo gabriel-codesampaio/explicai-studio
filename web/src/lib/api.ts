@@ -20,7 +20,21 @@ export interface TreeItem {
 }
 
 export interface ManualDetail extends ManualSummary {
+  /** Cor do manual exportado; vazio = a da marca. */
+  theme: { accent?: string };
   pages: TreeItem[];
+}
+
+export type ExportFormat = "html" | "pdf" | "markdown";
+
+export interface ExportResult {
+  format: ExportFormat;
+  /** Arquivo gerado, relativo à pasta do manual. */
+  file: string;
+  /** Endereço para abrir o arquivo no navegador. */
+  url: string;
+  pages: number;
+  warnings: string[];
 }
 
 export interface Page {
@@ -101,6 +115,10 @@ export const api = {
   /** `null` volta a usar o texto atual no manual final. */
   publishVersion: (slug: string, id: string, versionId: string | null) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/published`, send("PUT", { versionId })),
+
+  exportManual: (slug: string, format: ExportFormat) => call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format })),
+  /** `null` volta à cor da marca. */
+  setTheme: (slug: string, accent: string | null) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", { accent })),
 
   getAnnotations: (slug: string, asset: string) =>
     call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`),
