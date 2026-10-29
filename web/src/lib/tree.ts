@@ -91,3 +91,8 @@ export function ancestorsOf(items: TreeItem[], id: string): TreeItem[] {
   }
   return [];
 }
+
+/** Todas as páginas em ordem de leitura, para listas de busca (ex.: link para outra página). */
+export function flattenItems(items: TreeItem[]): TreeItem[] {
+  return items.flatMap((i) => [i, ...flattenItems(i.children)]);
+}

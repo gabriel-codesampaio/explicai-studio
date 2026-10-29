@@ -1,14 +1,19 @@
 import type { Editor } from "@tiptap/react";
+import { FileText } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { normalizeHref } from "@/lib/links";
+import type { TreeItem } from "@/lib/api";
+import { checkHref, pageHref } from "@/lib/links";
+import { flattenItems } from "@/lib/tree";
 import { AnchoredPopover } from "./AnchoredPopover";
 
 interface Props {
   editor: Editor;
   open: boolean;
   onClose: () => void;
+  /** Páginas do manual, sugeridas enquanto se digita. */
+  pages: TreeItem[];
 }
 
 function selectionRect(editor: Editor): DOMRect {
@@ -18,26 +23,39 @@ function selectionRect(editor: Editor): DOMRect {
   return new DOMRect(start.left, start.top, Math.max(end.right - start.left, 1), end.bottom - start.top);
 }
 
-export function LinkPopover({ editor, open, onClose }: Props) {
+const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+export function LinkPopover({ editor, open, onClose, pages }: Props) {
   const current = (editor.getAttributes("link").href as string | undefined) ?? "";
-  const [href, setHref] = useState(current);
+  const [text, setText] = useState(current);
+  const [error, setError] = useState<string | null>(null);
   const [lastOpen, setLastOpen] = useState(false);
   // Ao abrir, começa com o link que já está no texto.
   if (open !== lastOpen) {
     setLastOpen(open);
-    if (open) setHref(current);
+    if (open) {
+      setText(current);
+      setError(null);
+    }
   }
 
+  const query = fold(text.trim());
+  const suggestions = query && !/[/:.#]/.test(query) ? flattenItems(pages).filter((p) => fold(p.title).includes(query)).slice(0, 5) : [];
+
+  const setLink = (href: string) => {
+    const chain = editor.chain().focus().extendMarkRange("link");
+    if (href) chain.setLink({ href }).run();
+    else chain.unsetLink().run();
+    onClose();
+  };
+  const apply = () => {
+    const result = checkHref(text);
+    if (result.ok) setLink(result.href);
+    else setError(result.error);
+  };
   const close = () => {
     onClose();
     editor.commands.focus();
-  };
-  const apply = () => {
-    const value = normalizeHref(href);
-    const chain = editor.chain().focus().extendMarkRange("link");
-    if (value) chain.setLink({ href: value }).run();
-    else chain.unsetLink().run();
-    onClose();
   };
 
   return (
@@ -46,13 +64,46 @@ export function LinkPopover({ editor, open, onClose }: Props) {
         className="grid gap-2"
         onSubmit={(e) => {
           e.preventDefault();
-          apply();
+          const first = suggestions[0];
+          if (first && !error && suggestions.length === 1) setLink(pageHref(first.file));
+          else apply();
         }}
       >
         <label htmlFor="link-href" className="text-sm font-bold">
-          Endereço do link
+          Link para uma página ou endereço
         </label>
-        <Input id="link-href" value={href} onChange={(e) => setHref(e.target.value)} placeholder="https://… ou #secao" />
+        <Input
+          id="link-href"
+          value={text}
+          aria-invalid={error !== null}
+          aria-describedby={error ? "link-error" : undefined}
+          onChange={(e) => {
+            setText(e.target.value);
+            setError(null);
+          }}
+          placeholder="Nome da página ou https://…"
+        />
+        {error && (
+          <p id="link-error" role="alert" className="text-xs text-destructive">
+            {error}
+          </p>
+        )}
+        {suggestions.length > 0 && (
+          <ul aria-label="Páginas do manual" className="grid gap-0.5">
+            {suggestions.map((p) => (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  onClick={() => setLink(pageHref(p.file))}
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent"
+                >
+                  <FileText className="size-4 shrink-0 text-primary" aria-hidden />
+                  <span className="truncate">{p.title || "Sem título"}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
         <div className="flex justify-between gap-2 pt-1">
           {current ? (
             <Button
@@ -60,10 +111,7 @@ export function LinkPopover({ editor, open, onClose }: Props) {
               variant="ghost"
               size="sm"
               className="text-destructive"
-              onClick={() => {
-                editor.chain().focus().extendMarkRange("link").unsetLink().run();
-                onClose();
-              }}
+              onClick={() => setLink("")}
             >
               Remover link
             </Button>

@@ -9,6 +9,7 @@ export interface ManualSummary {
 export interface TreeItem {
   id: string;
   title: string;
+  file: string;
   children: TreeItem[];
 }
 

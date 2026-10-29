@@ -74,6 +74,20 @@ describe("páginas", () => {
     await expect(readFile(path.join(dir, page.file), "utf8")).rejects.toThrow();
   });
 
+  it("atualiza os links das outras páginas quando um arquivo é renomeado", async () => {
+    const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
+    const alvo = await addPage(dir, { title: "Clientes" });
+    const outra = await addPage(dir, {
+      title: "Índice",
+      body: "Veja [clientes](./clientes.md), a [seção](clientes.md#cadastro) e [outra](./clientes-antigos.md).",
+    });
+
+    await updatePage(dir, alvo.id, { title: "Cadastro de clientes" });
+    expect((await readPage(dir, outra.id)).body).toBe(
+      "Veja [clientes](./cadastro-de-clientes.md), a [seção](./cadastro-de-clientes.md#cadastro) e [outra](./clientes-antigos.md).",
+    );
+  });
+
   it("não renomeia quando o título muda só em maiúsculas ou acentos", async () => {
     const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
     const page = await addPage(dir, { title: "Visao geral" });

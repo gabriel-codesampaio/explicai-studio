@@ -46,6 +46,10 @@ title: Cadastrar cliente
 
 O nome do arquivo acompanha o título: quando o título muda, o arquivo é renomeado e o `manual.json` é atualizado. O `id` do frontmatter nunca muda, e é ele que as áreas clicáveis usam como destino.
 
+## Links entre páginas
+
+Um link para outra página do manual é um link Markdown relativo ao arquivo: `[Cadastro](./cadastrar-cliente.md)`, ou `./cadastrar-cliente.md#campos` para uma seção. Todas as páginas ficam em `pages/`, então o caminho é sempre `./nome.md`. Quando uma página é renomeada, os links das outras páginas são atualizados.
+
 ## Anotações da imagem
 
 `assets/<imagem>.json`. Todas as coordenadas vão de 0 a 1, relativas à largura e à altura da imagem, para funcionarem em qualquer tamanho de tela.

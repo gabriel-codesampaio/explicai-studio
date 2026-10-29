@@ -7,6 +7,8 @@ import { manualDir, optionalString } from "../workspace.js";
 interface PageTreeItem {
   id: string;
   title: string;
+  /** Caminho do Markdown, usado para links entre páginas (./arquivo.md). */
+  file: string;
   children: PageTreeItem[];
 }
 
@@ -18,6 +20,7 @@ async function withTitles(dir: string, nodes: PageNode[]): Promise<PageTreeItem[
     nodes.map(async (n) => ({
       id: n.id,
       title: (await readPage(dir, n.id)).title,
+      file: n.file,
       children: await withTitles(dir, n.children),
     })),
   );

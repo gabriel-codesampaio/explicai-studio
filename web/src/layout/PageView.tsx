@@ -50,6 +50,7 @@ export function PageView({ studio, manual, page }: Props) {
         <Editor
           slug={manual.slug}
           initialMarkdown={page.body}
+          pages={manual.pages}
           onChange={(body) => studio.editPage({ body })}
           onError={studio.reportError}
           onReady={onReady}

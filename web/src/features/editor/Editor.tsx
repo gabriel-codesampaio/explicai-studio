@@ -2,6 +2,7 @@ import { Extension } from "@tiptap/core";
 import FileHandler from "@tiptap/extension-file-handler";
 import { EditorContent, useEditor, type Editor as TiptapEditor } from "@tiptap/react";
 import { useEffect, useRef, useState } from "react";
+import type { TreeItem } from "@/lib/api";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";
 import { contentExtensions } from "./extensions";
 import { ImagePopover } from "./ImagePopover";
@@ -16,11 +17,13 @@ interface Props {
   initialMarkdown: string;
   onChange: (markdown: string) => void;
   onError: (message: string) => void;
+  /** Páginas do manual, para o link entre páginas. */
+  pages: TreeItem[];
   /** Entrega a instância do editor ao pai (ex.: Enter no título leva o cursor para o texto). */
   onReady?: (editor: TiptapEditor) => void;
 }
 
-export function Editor({ slug, initialMarkdown, onChange, onError, onReady }: Props) {
+export function Editor({ slug, initialMarkdown, onChange, onError, onReady, pages }: Props) {
   // Os callbacks mudam a cada render; as extensões são criadas uma vez e leem sempre a versão atual.
   const latest = useRef({ slug, onChange, onError });
   latest.current = { slug, onChange, onError };
@@ -78,7 +81,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady }: Pr
         }}
       />
       <EditorContent editor={editor} className="editor-content" />
-      <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} />
+      <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} pages={pages} />
       <ImagePopover editor={editor} />
     </div>
   );

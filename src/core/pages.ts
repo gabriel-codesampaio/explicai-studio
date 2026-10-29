@@ -5,7 +5,7 @@ import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { PAGES_DIR, readManual, updateManual } from "./manuals.js";
 import { slugify } from "./text.js";
-import { childrenOf, clampIndex, findIn, findNode } from "./tree.js";
+import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
 import type { Page } from "./types.js";
 
 /** Página pode ficar sem título enquanto é escrita: a árvore mostra "Sem título" e o arquivo vira sem-titulo.md. */
@@ -49,11 +49,27 @@ export async function updatePage(dir: string, id: string, patch: { title?: strin
 
   next.file = await newPageFile(dir, next.title);
   await writePageFile(dir, next);
-  await updateManual(dir, (meta) => {
+  const others = await updateManual(dir, (meta) => {
     findNode(meta.pages, id).node.file = next.file;
+    return flatten(meta.pages).filter((n) => n.id !== id);
   });
   await rm(resolveInside(dir, page.file), { force: true });
+  await relink(dir, others.map((n) => n.file), page.file, next.file);
   return next;
+}
+
+/** Links entre páginas são `./arquivo.md`. Quando um arquivo muda de nome, as outras páginas acompanham. */
+async function relink(dir: string, files: string[], from: string, to: string): Promise<void> {
+  const name = (f: string) => path.posix.basename(f);
+  const escaped = name(from).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // ](arquivo.md  ou  ](./arquivo.md  seguido de ) ou de #âncora
+  const pattern = new RegExp(`(\\]\\()(?:\\./)?${escaped}(?=[)#])`, "g");
+  for (const file of files) {
+    const abs = resolveInside(dir, file);
+    const text = await readFile(abs, "utf8");
+    const updated = text.replace(pattern, `$1./${name(to)}`);
+    if (updated !== text) await atomicWrite(abs, updated);
+  }
 }
 
 export async function movePage(dir: string, id: string, to: { parentId: string | null; index: number }): Promise<void> {

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { TreeItem } from "../src/lib/api";
 import { dropTarget, renameItem, shiftTarget } from "../src/lib/tree";
 
-const item = (id: string, children: TreeItem[] = []): TreeItem => ({ id, title: id, children });
+const item = (id: string, children: TreeItem[] = []): TreeItem => ({ id, title: id, file: `pages/${id}.md`, children });
 // a
 // ├─ a1
 // b
