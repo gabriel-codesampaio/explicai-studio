@@ -7,6 +7,8 @@ export interface PageNode {
   id: string;
   /** Caminho relativo à pasta do manual, sempre em `pages/`. */
   file: string;
+  /** Versão escolhida para o manual final (arquivo em `.versoes/<id>/`). Sem ela, vale o texto atual. */
+  published?: string;
   children: PageNode[];
 }
 

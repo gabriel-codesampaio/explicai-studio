@@ -173,3 +173,26 @@ describe("arquivos do editor", () => {
     }
   });
 });
+
+describe("API de versões", () => {
+  it("guarda, lista, escolhe para o manual e restaura", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
+    const page = await (await fetch(`${base}/api/manuals/m/pages`, json("POST", { title: "P", body: "um" }))).json();
+    const url = `${base}/api/manuals/m/pages/${page.id}`;
+
+    const saved = await fetch(`${url}/versions`, json("POST", { note: "Primeira" }));
+    expect(saved.status).toBe(201);
+    const v1 = await saved.json();
+    await fetch(url, json("PUT", { body: "dois" }));
+
+    expect(await (await fetch(`${url}/versions`)).json()).toMatchObject([{ id: v1.id, note: "Primeira" }]);
+    expect(await (await fetch(`${url}/versions/${v1.id}`)).json()).toMatchObject({ body: "um" });
+
+    expect((await fetch(`${url}/published`, json("PUT", { versionId: v1.id }))).status).toBe(200);
+    expect((await fetch(`${url}/published`, json("PUT", {}))).status).toBe(400);
+    expect((await fetch(`${url}/published`, json("PUT", { versionId: "nao-existe" }))).status).toBe(404);
+
+    const restored = await (await fetch(`${url}/versions/${v1.id}/restore`, json("POST"))).json();
+    expect(restored.body).toBe("um");
+  });
+});

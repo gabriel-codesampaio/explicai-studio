@@ -4,13 +4,14 @@ import { matchRoute, type Route, type StudioOptions } from "./router.js";
 import { assetRoutes } from "./routes/assets.js";
 import { manualRoutes } from "./routes/manuals.js";
 import { pageRoutes } from "./routes/pages.js";
+import { versionRoutes } from "./routes/versions.js";
 import { webRoutes } from "./routes/web.js";
 import { assertLocalRequest } from "./security.js";
 
 export type { StudioOptions } from "./router.js";
 
 /** A ordem importa: a rota genérica do editor (`/*`) fica por último. */
-const routes: Route[] = [...manualRoutes, ...pageRoutes, ...assetRoutes, ...webRoutes];
+const routes: Route[] = [...manualRoutes, ...pageRoutes, ...versionRoutes, ...assetRoutes, ...webRoutes];
 
 export function createStudioServer(opts: StudioOptions): Server {
   return createServer(async (req, res) => {

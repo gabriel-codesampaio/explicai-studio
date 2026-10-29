@@ -12,6 +12,7 @@ meu-workspace/
       tela-clientes.png        imagem
       tela-clientes.png.json   marcadores, destaques, setas e áreas clicáveis
     .lixeira/                  páginas excluídas, até serem restauradas
+    .versoes/                  versões guardadas de cada página
 ```
 
 ## manual.json
@@ -23,13 +24,13 @@ meu-workspace/
   "language": "pt-BR",
   "pages": [
     { "id": "3f2c…", "file": "pages/visao-geral.md", "children": [
-      { "id": "9a1b…", "file": "pages/cadastrar-cliente.md", "children": [] }
+      { "id": "9a1b…", "file": "pages/cadastrar-cliente.md", "published": "2026-10-29T13-02-11-480Z", "children": [] }
     ] }
   ]
 }
 ```
 
-A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela.
+A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões).
 
 ## Página
 
@@ -72,6 +73,23 @@ Destinos de área clicável: `page` (outra página), `anchor` (seção de uma p�
 Excluir uma página move o arquivo dela (e o das subpáginas) para `.lixeira/<id>/pages/`, junto com um `entry.json` que guarda a posição na árvore. Restaurar devolve tudo ao mesmo lugar. Se o pai também foi excluído, a página volta para a raiz. Se o nome do arquivo foi ocupado nesse meio tempo, ela ganha um nome novo. A lixeira não é esvaziada sozinha: dá para apagar a pasta `.lixeira/` à mão ou colocá-la no `.gitignore`.
 
 Uma página pode ficar sem título enquanto é escrita. O arquivo vira `sem-titulo.md` e é renomeado quando o título aparece.
+
+## Versões
+
+"Guardar versão" copia a página para `.versoes/<id da página>/<data>.md`. A cópia tem o mesmo formato de uma página, com `savedAt` e `note` (o nome que a pessoa deu, pode ser vazio) no frontmatter:
+
+```markdown
+---
+id: 9a1b…
+title: Cadastrar cliente
+savedAt: 2026-10-29T13:02:11.480Z
+note: Revisado pelo suporte
+---
+
+Texto da página naquele momento.
+```
+
+O id da versão é o nome do arquivo sem `.md`. Quando `published` está no nó da página em `manual.json`, a exportação usa aquela versão. Sem ele, usa o texto atual. Restaurar uma versão troca o texto atual por ela e antes guarda o texto que estava lá como uma versão "Antes de restaurar". As versões acompanham a página na lixeira, porque ficam pelo id.
 
 ## Regras
 
