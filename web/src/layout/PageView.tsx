@@ -9,6 +9,7 @@ import { PinnedNotice } from "@/features/versions/PinnedNotice";
 import { VersionsPanel } from "@/features/versions/VersionsPanel";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { ManualDetail, Page } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { ancestorsOf, findItem } from "@/lib/tree";
 import { PageTitle } from "./PageTitle";
 import { StatusBar } from "./StatusBar";
@@ -34,7 +35,7 @@ export function PageView({ manual, page }: Props) {
   const pinned = Boolean(findItem(manual.pages, page.id)?.published);
   const trail = [
     { key: manual.slug, name: manual.title },
-    ...ancestorsOf(manual.pages, page.id).map((p) => ({ key: p.id, name: p.title || "Sem título" })),
+    ...ancestorsOf(manual.pages, page.id).map((p) => ({ key: p.id, name: p.title || t("Sem título") })),
   ];
 
   return (
@@ -46,7 +47,7 @@ export function PageView({ manual, page }: Props) {
         >
           <div className="flex flex-wrap items-center gap-1">
             <nav
-              aria-label="Caminho da página"
+              aria-label={t("Caminho da página")}
               className="mr-2 flex min-w-0 basis-full flex-wrap items-center gap-1 text-[13px] text-muted-foreground sm:basis-0 sm:flex-1"
             >
               {trail.map(({ key, name }, i) => (
@@ -71,7 +72,7 @@ export function PageView({ manual, page }: Props) {
           {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
 
           {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
-          <h1 className="sr-only">{title || "Sem título"}</h1>
+          <h1 className="sr-only">{title || t("Sem título")}</h1>
           <div className="mt-3 mb-3">
             <PageTitle
               initialTitle={page.title}

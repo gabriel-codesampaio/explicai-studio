@@ -1,6 +1,7 @@
 import { TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import type { TreeItem } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { statusOf } from "@/lib/status";
 import { type DropZone, dropTarget, findItem } from "@/lib/tree";
 import { cn } from "@/lib/utils";
@@ -101,7 +102,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                     !item.title && "italic text-muted-foreground",
                   )}
                 >
-                  {item.title || (item.problem ? item.file.split("/").pop() : "Sem título")}
+                  {item.title || (item.problem ? item.file.split("/").pop() : t("Sem título"))}
                 </span>
                 {item.status !== "rascunho" && (
                   <span title={statusOf(item.status).label} className="ml-1.5 inline-flex align-[1px]">

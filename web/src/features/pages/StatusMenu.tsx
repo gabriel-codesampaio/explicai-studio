@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { PageStatus } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { STATUSES, statusOf } from "@/lib/status";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +24,7 @@ export function StatusMenu({ status, onChange }: { status: PageStatus; onChange:
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          aria-label={`Status da página: ${statusOf(status).label}`}
+          aria-label={t("Status da página: {status}", { status: statusOf(status).label })}
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted"
         >
           <StatusDot status={status} /> {statusOf(status).label}
@@ -31,7 +32,7 @@ export function StatusMenu({ status, onChange }: { status: PageStatus; onChange:
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel className="text-xs text-muted-foreground">Etapa da página</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs text-muted-foreground">{t("Etapa da página")}</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={status} onValueChange={(v) => onChange(v as PageStatus)}>
           {STATUSES.map((s) => (
             <DropdownMenuRadioItem key={s.id} value={s.id} className="items-start">

@@ -9,6 +9,7 @@ import { TrashPanel } from "@/features/pages/TrashPanel";
 import { AppearancePanel } from "@/features/settings/AppearancePanel";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { shiftTarget } from "@/lib/tree";
 
 interface Props {
@@ -41,8 +42,8 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
         <button
           type="button"
           onClick={onCollapse}
-          aria-label="Esconder as páginas (Ctrl+\)"
-          title="Esconder as páginas (Ctrl+\)"
+          aria-label={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
+          title={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
           className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           <PanelLeftClose className="size-4" aria-hidden />
@@ -66,11 +67,11 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             onClick={onSearch}
             className="mb-1 flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
           >
-            <Search className="size-3.5" aria-hidden /> Buscar página
+            <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
             <kbd className="ml-auto rounded border border-border px-1 font-mono text-[11px]">Ctrl+P</kbd>
           </button>
           <div className="flex items-center justify-between px-2 text-[13px] text-muted-foreground">
-            <span>Páginas</span>
+            <span>{t("Páginas")}</span>
             <button
               type="button"
               onClick={() => {
@@ -79,11 +80,11 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               }}
               className="flex items-center gap-1 rounded-md px-1.5 py-1 font-bold text-primary hover:bg-accent"
             >
-              <Plus className="size-3.5" aria-hidden /> Nova página
+              <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
             </button>
           </div>
           {manual.pages.length === 0 ? (
-            <p className="px-2 text-sm text-muted-foreground">Nenhuma página ainda.</p>
+            <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
           ) : (
             <PageTree
               pages={manual.pages}

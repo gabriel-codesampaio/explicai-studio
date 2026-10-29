@@ -6,6 +6,7 @@ import { AnnotationEditor } from "@/features/annotations/AnnotationEditor";
 import { AnnotatedImage } from "@/features/annotations/annotatedImage";
 import { assetPathFromSrc } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";
 import { syncSelectionFromDom } from "./domSelection";
 import { contentExtensions } from "./extensions";
@@ -61,7 +62,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
     content: toEditorMarkdown(slug, initialMarkdown),
     contentType: "markdown",
     shouldRerenderOnTransaction: false,
-    editorProps: { attributes: { "aria-label": "Conteúdo da página", "aria-multiline": "true", role: "textbox" } },
+    editorProps: { attributes: { "aria-label": t("Conteúdo da página"), "aria-multiline": "true", role: "textbox" } },
     onUpdate: ({ editor: ed }) => latest.current.onChange(toDiskMarkdown(ed.getMarkdown())),
   });
 

@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { t } from "./i18n";
 
 /**
  * Aparência do Studio (claro/escuro e cor de destaque), guardada no navegador de quem usa.
@@ -9,10 +10,10 @@ export type Mode = "light" | "dark" | "system";
 
 /** Cores pré-definidas. A primeira é a da marca; as outras trocam o cobalto em tokens.css. */
 export const ACCENTS = [
-  { id: "cobalto", label: "Cobalto", swatch: "#2b4fe0" },
-  { id: "esmeralda", label: "Esmeralda", swatch: "#0f7a55" },
-  { id: "ameixa", label: "Ameixa", swatch: "#7a3fc4" },
-  { id: "grafite", label: "Grafite", swatch: "#3d4459" },
+  { id: "cobalto", label: t("Cobalto"), swatch: "#2b4fe0" },
+  { id: "esmeralda", label: t("Esmeralda"), swatch: "#0f7a55" },
+  { id: "ameixa", label: t("Ameixa"), swatch: "#7a3fc4" },
+  { id: "grafite", label: t("Grafite"), swatch: "#3d4459" },
 ] as const;
 
 export type Accent = (typeof ACCENTS)[number]["id"];

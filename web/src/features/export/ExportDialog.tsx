@@ -12,14 +12,15 @@ import {
 } from "@/components/ui/dialog";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
+import { t, tn } from "@/lib/i18n";
 import { ACCENTS } from "@/lib/theme";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 
 const FORMATS: { id: ExportFormat; label: string; hint: string; Icon: LucideIcon }[] = [
-  { id: "html", label: "Site (HTML)", hint: "Um arquivo para publicar ou abrir no navegador.", Icon: Globe },
-  { id: "pdf", label: "PDF", hint: "Para imprimir ou mandar por e-mail.", Icon: FileText },
-  { id: "markdown", label: "Markdown para IA", hint: "Um arquivo só, com a legenda dos prints em texto.", Icon: Bot },
+  { id: "html", label: t("Site (HTML)"), hint: t("Um arquivo para publicar ou abrir no navegador."), Icon: Globe },
+  { id: "pdf", label: "PDF", hint: t("Para imprimir ou mandar por e-mail."), Icon: FileText },
+  { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), Icon: Bot },
 ];
 
 /** Botão "Exportar manual" da barra lateral: escolhe o formato e a cor, exporta e mostra onde ficou. */
@@ -40,7 +41,7 @@ export function ExportDialog() {
     try {
       setResult(await studio.exportManual(format, onlyApproved));
     } catch (err) {
-      setError(errorMessage(err, "Não foi possível exportar o manual."));
+      setError(errorMessage(err, t("Não foi possível exportar o manual.")));
     } finally {
       setBusy(false);
     }
@@ -56,19 +57,19 @@ export function ExportDialog() {
     >
       <DialogTrigger asChild>
         <Button variant="outline" className="w-full justify-start">
-          <Download aria-hidden /> Exportar manual
+          <Download aria-hidden /> {t("Exportar manual")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">Exportar manual</DialogTitle>
+          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
           <DialogDescription>
-            Cada página entra com a versão marcada "No manual" ou, sem ela, com o texto atual.
+            {t('Cada página entra com a versão marcada "No manual" ou, sem ela, com o texto atual.')}
           </DialogDescription>
         </DialogHeader>
 
         <fieldset className="grid gap-2">
-          <legend className="mb-2 text-sm font-bold">Formato</legend>
+          <legend className="mb-2 text-sm font-bold">{t("Formato")}</legend>
           {FORMATS.map(({ id, label, hint, Icon }) => (
             <label
               key={id}
@@ -102,16 +103,19 @@ export function ExportDialog() {
             className="mt-0.5 size-4 accent-[var(--primary)]"
           />
           <span className="grid leading-tight">
-            <span className="font-bold">Só páginas aprovadas</span>
+            <span className="font-bold">{t("Só páginas aprovadas")}</span>
             <span className="text-xs text-muted-foreground">
-              {approved} {approved === 1 ? "página aprovada ou publicada" : "páginas aprovadas ou publicadas"} neste manual. As
-              outras ficam de fora.
+              {tn(
+                approved,
+                "{n} página aprovada ou publicada neste manual. As outras ficam de fora.",
+                "{n} páginas aprovadas ou publicadas neste manual. As outras ficam de fora.",
+              )}
             </span>
           </span>
         </label>
 
         <fieldset>
-          <legend className="mb-2 text-sm font-bold">Cor do manual</legend>
+          <legend className="mb-2 text-sm font-bold">{t("Cor do manual")}</legend>
           <div className="flex items-center gap-2.5">
             {ACCENTS.map((a) => (
               <button
@@ -125,7 +129,7 @@ export function ExportDialog() {
                 style={{ background: a.swatch }}
               />
             ))}
-            <span className="ml-1 text-xs text-muted-foreground">Títulos, links e números dos passos.</span>
+            <span className="ml-1 text-xs text-muted-foreground">{t("Títulos, links e números dos passos.")}</span>
           </div>
         </fieldset>
 
@@ -137,13 +141,13 @@ export function ExportDialog() {
         {result && (
           <div role="status" className="grid gap-1 rounded-md border-l-4 border-marca bg-marca/15 px-3 py-2 text-sm">
             <p>
-              Pronto: {result.pages} {result.pages === 1 ? "página exportada" : "páginas exportadas"} em{" "}
-              <code className="font-mono text-xs">{result.file}</code>, dentro da pasta do manual.
+              {tn(result.pages, "Pronto: {n} página exportada em", "Pronto: {n} páginas exportadas em")}{" "}
+              <code className="font-mono text-xs">{result.file}</code>, {t("dentro da pasta do manual.")}
             </p>
             {result.warnings.length > 0 && (
               <ul className="list-disc pl-5 text-destructive">
                 {result.warnings.map((w) => (
-                  <li key={w}>Ficou de fora: {w}</li>
+                  <li key={w}>{t("Ficou de fora: {motivo}", { motivo: w })}</li>
                 ))}
               </ul>
             )}
@@ -160,7 +164,7 @@ export function ExportDialog() {
 
         <DialogFooter>
           <Button onClick={() => void run()} disabled={busy}>
-            {busy ? "Exportando…" : "Exportar"}
+            {busy ? t("Exportando…") : t("Exportar")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,4 +1,5 @@
 import { type Ref, useImperativeHandle, useState } from "react";
+import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { Block } from "../blocks";
 
@@ -44,11 +45,11 @@ export function SlashMenu({ items, command, ref }: Props) {
   return (
     <div
       role="listbox"
-      aria-label="Inserir bloco"
+      aria-label={t("Inserir bloco")}
       className="z-50 max-h-80 w-72 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
     >
       {items.length === 0 ? (
-        <p className="px-3 py-2 text-sm text-muted-foreground">Nenhum bloco com esse nome.</p>
+        <p className="px-3 py-2 text-sm text-muted-foreground">{t("Nenhum bloco com esse nome.")}</p>
       ) : (
         items.map((item, i) => (
           <button

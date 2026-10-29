@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef } from "react";
+import { t } from "@/lib/i18n";
 
 interface Props {
   initialTitle: string;
@@ -28,9 +29,9 @@ export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
       name="title"
       ref={ref}
       rows={1}
-      aria-label="Título da página"
+      aria-label={t("Título da página")}
       defaultValue={initialTitle}
-      placeholder="Sem título"
+      placeholder={t("Sem título")}
       // biome-ignore lint/a11y/noAutofocus: página recém-criada abre com o cursor no título, que é o próximo passo de quem criou
       autoFocus={initialTitle === ""}
       onChange={(e) => {

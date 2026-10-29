@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ManualSummary } from "@/lib/api";
+import { t } from "@/lib/i18n";
 
 interface Props {
   manuals: ManualSummary[];
@@ -27,13 +28,13 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
         >
           <BookOpen className="size-4 shrink-0 text-primary" aria-hidden />
           <span className="min-w-0 flex-1 truncate font-display text-[15px] font-semibold [font-stretch:105%]">
-            {current?.title ?? "Escolha um manual"}
+            {current?.title ?? t("Escolha um manual")}
           </span>
           <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width) min-w-56">
-        <DropdownMenuLabel className="text-muted-foreground">Manuais nesta pasta</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-muted-foreground">{t("Manuais nesta pasta")}</DropdownMenuLabel>
         {manuals.map((m) => (
           <DropdownMenuItem key={m.slug} onSelect={() => onOpen(m.slug)}>
             <span className="min-w-0 flex-1 truncate">{m.title}</span>
@@ -42,7 +43,7 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={onCreate}>
-          <Plus /> Novo manual
+          <Plus /> {t("Novo manual")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

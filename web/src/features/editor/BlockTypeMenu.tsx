@@ -1,6 +1,7 @@
 import { type Editor, useEditorState } from "@tiptap/react";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { t } from "@/lib/i18n";
 import { BLOCKS } from "./blocks";
 
 const TEXT_TYPES = BLOCKS.filter((b) => b.isTextType);
@@ -21,7 +22,7 @@ export function BlockTypeMenu({ editor, pickImage }: { editor: Editor; pickImage
           type="button"
           data-roving
           tabIndex={0}
-          aria-label={`Tipo de bloco: ${active.label}`}
+          aria-label={t("Tipo de bloco: {tipo}", { tipo: active.label })}
           onMouseDown={(e) => e.preventDefault()}
           className="inline-flex h-8 w-52 items-center gap-2 rounded-md border border-border bg-card px-2.5 text-sm hover:bg-secondary data-[state=open]:bg-secondary"
         >

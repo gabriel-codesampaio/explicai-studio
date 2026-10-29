@@ -12,6 +12,7 @@ import {
   type TreeItem,
 } from "../lib/api";
 import { readLocation, writeLocation } from "../lib/hashRoute";
+import { locale, t, tn } from "../lib/i18n";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
 import { useAutosave } from "./useAutosave";
 
@@ -74,7 +75,7 @@ export function useStudio() {
         const start = list.find((m) => m.slug === slug) ?? list[0];
         if (start) await openManual(start.slug, start.slug === slug ? pageId : null);
       })
-      .catch((err: unknown) => setBootError(errorMessage(err, "Não foi possível abrir o Studio.")));
+      .catch((err: unknown) => setBootError(errorMessage(err, t("Não foi possível abrir o Studio."))));
   }, [openManual]);
 
   const selectPage = (id: string) =>
@@ -114,10 +115,13 @@ export function useStudio() {
       if (page && !findItem(detail.pages, page.id)) await showPage(slug, detail.pages[0]?.id ?? null);
 
       const sub = flattenItems(item.children).length;
-      const what = `"${item.title || "Sem título"}"${sub ? ` e ${sub} ${sub === 1 ? "subpágina" : "subpáginas"}` : ""}`;
-      toast(`${what} ${sub ? "foram" : "foi"} para a lixeira.`, {
+      const nome = item.title || t("Sem título");
+      const message = sub
+        ? tn(sub, '"{nome}" e {n} subpágina foram para a lixeira.', '"{nome}" e {n} subpáginas foram para a lixeira.', { nome })
+        : t('"{nome}" foi para a lixeira.', { nome });
+      toast(message, {
         duration: 10_000,
-        action: { label: "Desfazer", onClick: () => void restorePage(slug, trashId, item.id) },
+        action: { label: t("Desfazer"), onClick: () => void restorePage(slug, trashId, item.id) },
       });
     });
 
@@ -127,7 +131,7 @@ export function useStudio() {
       if (!manual || !page) return;
       await flush();
       await api.saveVersion(manual.slug, page.id, note);
-      toast.success("Versão guardada.");
+      toast.success(t("Versão guardada."));
     });
 
   const restoreVersion = (versionId: string) =>
@@ -138,7 +142,7 @@ export function useStudio() {
       await refreshManual(manual.slug);
       setPage(restored);
       setRevision((r) => r + 1);
-      toast('Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".');
+      toast(t('Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".'));
     });
 
   /** Escolhe a versão do manual final (`null` volta ao texto atual) e atualiza a árvore, que mostra a escolha. */
@@ -151,7 +155,7 @@ export function useStudio() {
 
   /** Grava o que ainda está na fila e exporta. O diálogo mostra o resultado ou o erro. */
   const exportManual = async (format: ExportFormat, onlyApproved: boolean) => {
-    if (!manual) throw new Error("Abra um manual para exportar.");
+    if (!manual) throw new Error(t("Abra um manual para exportar."));
     await flush();
     return api.exportManual(manual.slug, format, onlyApproved);
   };
@@ -183,7 +187,7 @@ export function useStudio() {
 
   const createManual = (title: string) =>
     run(async () => {
-      const created = await api.createManual(title, "pt-BR");
+      const created = await api.createManual(title, locale);
       setManuals(await api.listManuals());
       await openManual(created.slug);
     });

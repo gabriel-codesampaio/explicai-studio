@@ -1,10 +1,11 @@
 import type { Marker } from "@/lib/annotations";
+import { t } from "@/lib/i18n";
 
 /** Legenda numerada que acompanha a imagem: um item por marcador, na ordem dos números. */
 export function AnnotationLegend({ markers }: { markers: Marker[] }) {
   if (markers.length === 0) return null;
   return (
-    <ol className="mt-2 grid gap-1 text-[15px]" aria-label="Legenda da imagem">
+    <ol className="mt-2 grid gap-1 text-[15px]" aria-label={t("Legenda da imagem")}>
       {[...markers]
         .sort((a, b) => a.n - b.n)
         .map((m) => (

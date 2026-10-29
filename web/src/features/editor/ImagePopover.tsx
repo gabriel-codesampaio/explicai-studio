@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { assetPathFromSrc } from "@/lib/annotations";
+import { t } from "@/lib/i18n";
 import { AnchoredPopover } from "./AnchoredPopover";
 
 /** Imagem selecionada (clique nela): posição no documento e descrição atual. */
@@ -30,17 +31,22 @@ export function ImagePopover({ editor, onAnnotate }: { editor: Editor; onAnnotat
   };
 
   return (
-    <AnchoredPopover open={open} onClose={() => setDismissedAt(image?.pos ?? null)} getRect={rect} label="Descrição da imagem">
+    <AnchoredPopover
+      open={open}
+      onClose={() => setDismissedAt(image?.pos ?? null)}
+      getRect={rect}
+      label={t("Descrição da imagem")}
+    >
       {image && (
         <div className="grid gap-2">
           <label htmlFor="image-alt" className="text-sm font-bold">
-            Descrição da imagem
+            {t("Descrição da imagem")}
           </label>
           <Input
             id="image-alt"
             defaultValue={image.alt}
             key={image.pos}
-            placeholder="Ex.: Tela de clientes com o botão Novo cliente"
+            placeholder={t("Ex.: Tela de clientes com o botão Novo cliente")}
             onChange={(e) => editor.chain().updateAttributes("image", { alt: e.target.value }).setNodeSelection(image.pos).run()}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -51,7 +57,7 @@ export function ImagePopover({ editor, onAnnotate }: { editor: Editor; onAnnotat
             }}
           />
           <p className="text-xs text-muted-foreground">
-            Quem usa leitor de tela e a IA que lê o manual entendem a imagem por aqui.
+            {t("Quem usa leitor de tela e a IA que lê o manual entendem a imagem por aqui.")}
           </p>
           {assetPathFromSrc(image.src) && (
             <Button
@@ -63,7 +69,7 @@ export function ImagePopover({ editor, onAnnotate }: { editor: Editor; onAnnotat
                 onAnnotate(image.src, image.alt);
               }}
             >
-              <PenLine /> Marcar imagem
+              <PenLine /> {t("Marcar imagem")}
             </Button>
           )}
         </div>

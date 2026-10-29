@@ -196,3 +196,22 @@ test("marcação: arrasta o destaque com Selecionar e Desfazer volta ao lugar", 
   await dialog.getByRole("button", { name: "Desfazer" }).click();
   expect(Number.parseFloat(await leftOf())).toBeLessThan(15);
 });
+
+test.describe("interface em inglês", () => {
+  test.use({ locale: "en-US" });
+
+  test("navegador em inglês abre o Studio em inglês, e o manual novo nasce em inglês", async ({ page, request }) => {
+    const { slug } = await setup(request, "Manual English", ["Start"]);
+    await page.goto(`/#/${slug}`);
+    await expect(page.getByRole("button", { name: "New page" })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Page content" })).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("lang", "en-US");
+
+    await page.getByRole("button", { name: "Manual English" }).click();
+    await page.getByRole("menuitem", { name: "New manual" }).click();
+    await page.getByLabel("Manual name").fill("Billing");
+    await page.getByRole("button", { name: "Create manual" }).click();
+    const created = (await (await request.get("/api/manuals")).json()).find((m: { title: string }) => m.title === "Billing");
+    expect(created.language).toBe("en-US");
+  });
+});

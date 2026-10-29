@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
 import { type Annotations, type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
 import { errorMessage, type TreeItem } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { AnnotationCanvas } from "./AnnotationCanvas";
@@ -20,11 +21,16 @@ interface Props {
 }
 
 const TOOLS: { tool: Tool; label: string; hint: string; Icon: LucideIcon }[] = [
-  { tool: "select", label: "Selecionar", hint: "Clique numa marcação para selecionar; Delete exclui", Icon: MousePointer2 },
-  { tool: "marker", label: "Marcador", hint: "Clique onde o número deve ficar", Icon: Hash },
-  { tool: "highlight", label: "Destaque", hint: "Arraste sobre o que merece atenção", Icon: Highlighter },
-  { tool: "arrow", label: "Seta", hint: "Arraste do início até a ponta da seta", Icon: ArrowUpRight },
-  { tool: "hotspot", label: "Área clicável", hint: "Arraste sobre a área que leva a outra página", Icon: Link2 },
+  {
+    tool: "select",
+    label: t("Selecionar"),
+    hint: t("Clique numa marcação para selecionar e arraste para mover; Delete exclui"),
+    Icon: MousePointer2,
+  },
+  { tool: "marker", label: t("Marcador"), hint: t("Clique onde o número deve ficar"), Icon: Hash },
+  { tool: "highlight", label: t("Destaque"), hint: t("Arraste sobre o que merece atenção"), Icon: Highlighter },
+  { tool: "arrow", label: t("Seta"), hint: t("Arraste do início até a ponta da seta"), Icon: ArrowUpRight },
+  { tool: "hotspot", label: t("Área clicável"), hint: t("Arraste sobre a área que leva a outra página"), Icon: Link2 },
 ];
 
 /** Janela de marcação de uma imagem. Trabalha num rascunho e só grava ao clicar em "Salvar marcações". */
@@ -63,7 +69,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
       await saveAnnotations(slug, asset, draft);
       onClose();
     } catch (err) {
-      setError(errorMessage(err, "Não foi possível salvar as marcações."));
+      setError(errorMessage(err, t("Não foi possível salvar as marcações.")));
     } finally {
       setSaving(false);
     }
@@ -92,20 +98,20 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
         }}
       >
         <DialogHeader>
-          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">Marcar imagem</DialogTitle>
+          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Marcar imagem")}</DialogTitle>
           <DialogDescription>{current?.hint}</DialogDescription>
         </DialogHeader>
 
-        <div role="toolbar" aria-label="Ferramentas de marcação" className="flex flex-wrap gap-1">
-          {TOOLS.map(({ tool: t, label, Icon }) => (
+        <div role="toolbar" aria-label={t("Ferramentas de marcação")} className="flex flex-wrap gap-1">
+          {TOOLS.map(({ tool: id, label, Icon }) => (
             <button
-              key={t}
+              key={id}
               type="button"
-              aria-pressed={tool === t}
-              onClick={() => setTool(t)}
+              aria-pressed={tool === id}
+              onClick={() => setTool(id)}
               className={cn(
                 "flex h-9 items-center gap-2 rounded-md border px-3 text-sm",
-                tool === t ? "border-primary bg-accent font-bold text-primary" : "border-border hover:bg-muted",
+                tool === id ? "border-primary bg-accent font-bold text-primary" : "border-border hover:bg-muted",
               )}
             >
               <Icon className="size-4" aria-hidden /> {label}
@@ -139,12 +145,12 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
             />
           </div>
         ) : (
-          <p className="text-muted-foreground">Carregando as marcações…</p>
+          <p className="text-muted-foreground">{t("Carregando as marcações…")}</p>
         )}
 
         <DialogFooter className="items-center gap-3">
           <Button variant="ghost" onClick={undo} disabled={past.length === 0} className="sm:mr-auto" title="Ctrl+Z">
-            <Undo2 aria-hidden /> Desfazer
+            <Undo2 aria-hidden /> {t("Desfazer")}
           </Button>
           {error && (
             <p role="alert" className="text-sm text-destructive">
@@ -152,10 +158,10 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
             </p>
           )}
           <Button variant="ghost" onClick={onClose}>
-            Cancelar
+            {t("Cancelar")}
           </Button>
           <Button onClick={() => void save()} disabled={!draft || saving}>
-            {saving ? "Salvando…" : "Salvar marcações"}
+            {saving ? t("Salvando…") : t("Salvar marcações")}
           </Button>
         </DialogFooter>
       </DialogContent>

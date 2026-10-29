@@ -8,6 +8,7 @@ import { StudioProvider, useStudioContext } from "@/hooks/StudioContext";
 import { useSidebar } from "@/hooks/useSidebar";
 import { MobileBar, Navigation } from "@/layout/Navigation";
 import { PageView } from "@/layout/PageView";
+import { t } from "@/lib/i18n";
 import { useResolvedTheme } from "@/lib/theme";
 
 export function App() {
@@ -42,9 +43,9 @@ function Shell() {
           ) : !manual ? null : !page ? (
             <EmptyState
               title={manual.title}
-              action={{ label: "Criar a primeira página", onClick: () => void studio.addPage(null) }}
+              action={{ label: t("Criar a primeira página"), onClick: () => void studio.addPage(null) }}
             >
-              Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.
+              {t("Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.")}
             </EmptyState>
           ) : (
             // key: cada página (e cada versão restaurada) tem o próprio editor, criado com o conteúdo dela.

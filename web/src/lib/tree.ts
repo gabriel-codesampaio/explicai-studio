@@ -1,4 +1,5 @@
 import type { TreeItem } from "./api";
+import { t } from "./i18n";
 import { fold } from "./text";
 
 export interface Location {
@@ -114,7 +115,7 @@ export function searchPages(items: TreeItem[], query: string): PageMatch[] {
   const walk = (nodes: TreeItem[], path: string[]) => {
     for (const item of nodes) {
       all.push({ item, path });
-      walk(item.children, [...path, item.title || "Sem título"]);
+      walk(item.children, [...path, item.title || t("Sem título")]);
     }
   };
   walk(items, []);

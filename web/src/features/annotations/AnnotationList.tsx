@@ -2,6 +2,7 @@ import { ArrowUpRight, Highlighter, Link2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { type Annotations, type HotspotTarget, removeAnnotation, updateHotspot, updateMarker } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 
@@ -40,8 +41,9 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
   if (empty) {
     return (
       <p className="text-sm text-muted-foreground">
-        Escolha uma ferramenta e clique ou arraste sobre a imagem. Cada marcador numerado ganha uma linha aqui para você escrever
-        o que ele mostra.
+        {t(
+          "Escolha uma ferramenta e clique ou arraste sobre a imagem. Cada marcador numerado ganha uma linha aqui para você escrever o que ele mostra.",
+        )}
       </p>
     );
   }
@@ -50,7 +52,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
     <div className="grid content-start gap-4">
       {annotations.markers.length > 0 && (
         <section className="grid gap-1.5">
-          <h3 className="text-sm font-bold">Legenda</h3>
+          <h3 className="text-sm font-bold">{t("Legenda")}</h3>
           {[...annotations.markers]
             .sort((a, b) => a.n - b.n)
             .map((m) => (
@@ -59,14 +61,14 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
                   {m.n}
                 </span>
                 <Input
-                  aria-label={`O que o marcador ${m.n} mostra`}
+                  aria-label={t("O que o marcador {n} mostra", { n: m.n })}
                   value={m.label ?? ""}
-                  placeholder="O que este marcador mostra?"
+                  placeholder={t("O que este marcador mostra?")}
                   onFocus={() => onSelect(m.id)}
                   onChange={(e) => onChange(updateMarker(annotations, m.id, e.target.value))}
                   className="h-8"
                 />
-                <RemoveButton label={`Excluir marcador ${m.n}`} onClick={() => remove(m.id)} />
+                <RemoveButton label={t("Excluir marcador {n}", { n: m.n })} onClick={() => remove(m.id)} />
               </div>
             ))}
         </section>
@@ -74,12 +76,12 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
 
       {annotations.hotspots.length > 0 && (
         <section className="grid gap-1.5">
-          <h3 className="text-sm font-bold">Áreas clicáveis</h3>
+          <h3 className="text-sm font-bold">{t("Áreas clicáveis")}</h3>
           {annotations.hotspots.map((h, i) => (
             <div key={h.id} className={cn(row(h.id === selectedId), "flex-wrap")} onPointerDown={() => onSelect(h.id)}>
               <Link2 className="size-4 shrink-0 text-primary" aria-hidden />
               <select
-                aria-label={`Destino da área ${i + 1}`}
+                aria-label={t("Destino da área {n}", { n: i + 1 })}
                 value={h.target.type === "page" ? h.target.pageId : "__url"}
                 onFocus={() => onSelect(h.id)}
                 onChange={(e) =>
@@ -92,15 +94,15 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
               >
                 {allPages.map((p) => (
                   <option key={p.id} value={p.id}>
-                    Página: {p.title || "Sem título"}
+                    {t("Página: {titulo}", { titulo: p.title || t("Sem título") })}
                   </option>
                 ))}
-                <option value="__url">Endereço na web…</option>
+                <option value="__url">{t("Endereço na web…")}</option>
               </select>
-              <RemoveButton label={`Excluir área ${i + 1}`} onClick={() => remove(h.id)} />
+              <RemoveButton label={t("Excluir área {n}", { n: i + 1 })} onClick={() => remove(h.id)} />
               {h.target.type === "url" && (
                 <Input
-                  aria-label={`Endereço da área ${i + 1}`}
+                  aria-label={t("Endereço da área {n}", { n: i + 1 })}
                   value={h.target.href}
                   onChange={(e) => setTarget(h.id, { type: "url", href: e.target.value })}
                   className="h-8 basis-full"
@@ -113,16 +115,16 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
 
       {annotations.highlights.length + annotations.arrows.length > 0 && (
         <section className="grid gap-1.5">
-          <h3 className="text-sm font-bold">Destaques e setas</h3>
+          <h3 className="text-sm font-bold">{t("Destaques e setas")}</h3>
           {[
-            ...annotations.highlights.map((h, i) => ({ id: h.id, label: `Destaque ${i + 1}`, Icon: Highlighter })),
-            ...annotations.arrows.map((a, i) => ({ id: a.id, label: `Seta ${i + 1}`, Icon: ArrowUpRight })),
+            ...annotations.highlights.map((h, i) => ({ id: h.id, label: t("Destaque {n}", { n: i + 1 }), Icon: Highlighter })),
+            ...annotations.arrows.map((a, i) => ({ id: a.id, label: t("Seta {n}", { n: i + 1 }), Icon: ArrowUpRight })),
           ].map(({ id, label, Icon }) => (
             <div key={id} className={row(id === selectedId)}>
               <button type="button" onClick={() => onSelect(id)} className="flex flex-1 items-center gap-2 text-left text-sm">
                 <Icon className="size-4 text-primary" aria-hidden /> {label}
               </button>
-              <RemoveButton label={`Excluir ${label.toLowerCase()}`} onClick={() => remove(id)} />
+              <RemoveButton label={t("Excluir {nome}", { nome: label.toLowerCase() })} onClick={() => remove(id)} />
             </div>
           ))}
         </section>

@@ -1,4 +1,5 @@
 import type { Editor } from "@tiptap/react";
+import { t } from "@/lib/i18n";
 import { api, errorMessage } from "../../lib/api";
 import { assetUrl } from "../../lib/imagePaths";
 
@@ -22,7 +23,7 @@ export async function insertImages(
         .insertContentAt(pos, { type: "image", attrs: { src: assetUrl(slug, path), alt } })
         .run();
     } catch (err) {
-      onError(errorMessage(err, "Não foi possível enviar a imagem."));
+      onError(errorMessage(err, t("Não foi possível enviar a imagem.")));
     }
   }
 }

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { TreeItem } from "@/lib/api";
+import { t, tn } from "@/lib/i18n";
 import { flattenItems, type Shift, shiftTarget } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 
@@ -30,10 +31,10 @@ interface Props {
 
 /** As mesmas teclas valem na árvore (ver PageTree), por isso aparecem no menu. */
 const SHIFTS: { shift: Shift; label: string; keys: string; Icon: typeof ArrowUp }[] = [
-  { shift: "up", label: "Para cima", keys: "Alt+Shift+↑", Icon: ArrowUp },
-  { shift: "down", label: "Para baixo", keys: "Alt+Shift+↓", Icon: ArrowDown },
-  { shift: "indent", label: "Para dentro da anterior", keys: "Alt+Shift+→", Icon: IndentIncrease },
-  { shift: "outdent", label: "Para fora", keys: "Alt+Shift+←", Icon: IndentDecrease },
+  { shift: "up", label: t("Para cima"), keys: "Alt+Shift+↑", Icon: ArrowUp },
+  { shift: "down", label: t("Para baixo"), keys: "Alt+Shift+↓", Icon: ArrowDown },
+  { shift: "indent", label: t("Para dentro da anterior"), keys: "Alt+Shift+→", Icon: IndentIncrease },
+  { shift: "outdent", label: t("Para fora"), keys: "Alt+Shift+←", Icon: IndentDecrease },
 ];
 
 const iconButton =
@@ -45,7 +46,7 @@ const iconButton =
  * onde não existe "passar o mouse", ficam sempre à vista.
  */
 export function PageActions({ item, pages, selected, menuOpen, onMenuOpenChange, onAction }: Props) {
-  const name = item.title || "Sem título";
+  const name = item.title || t("Sem título");
   const sub = flattenItems(item.children).length;
 
   return (
@@ -61,28 +62,28 @@ export function PageActions({ item, pages, selected, menuOpen, onMenuOpenChange,
             type="button"
             tabIndex={-1}
             className={iconButton}
-            aria-label={`Nova subpágina em ${name}`}
+            aria-label={t("Nova subpágina em {nome}", { nome: name })}
             onClick={() => onAction({ kind: "addChild" })}
           >
             <Plus className="size-4" />
           </button>
         </TooltipTrigger>
-        <TooltipContent>Nova subpágina</TooltipContent>
+        <TooltipContent>{t("Nova subpágina")}</TooltipContent>
       </Tooltip>
 
       <DropdownMenu open={menuOpen} onOpenChange={onMenuOpenChange}>
         <DropdownMenuTrigger asChild>
-          <button type="button" tabIndex={-1} className={iconButton} aria-label={`Mais ações para ${name}`}>
+          <button type="button" tabIndex={-1} className={iconButton} aria-label={t("Mais ações para {nome}", { nome: name })}>
             <MoreHorizontal className="size-4" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64">
           <DropdownMenuItem onSelect={() => onAction({ kind: "addChild" })}>
-            <Plus /> Nova subpágina
+            <Plus /> {t("Nova subpágina")}
           </DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Move className="size-4 text-muted-foreground" /> Mover
+              <Move className="size-4 text-muted-foreground" /> {t("Mover")}
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="w-64">
               {SHIFTS.map(({ shift, label, keys, Icon }) => (
@@ -99,7 +100,7 @@ export function PageActions({ item, pages, selected, menuOpen, onMenuOpenChange,
           </DropdownMenuSub>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onSelect={() => onAction({ kind: "remove" })}>
-            <Trash2 /> {sub ? `Excluir página e ${sub} ${sub === 1 ? "subpágina" : "subpáginas"}` : "Excluir página"}
+            <Trash2 /> {sub ? tn(sub, "Excluir página e {n} subpágina", "Excluir página e {n} subpáginas") : t("Excluir página")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

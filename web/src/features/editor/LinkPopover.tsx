@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { TreeItem } from "@/lib/api";
+import { t } from "@/lib/i18n";
 import { checkHref, pageHref } from "@/lib/links";
 import { fold } from "@/lib/text";
 import { flattenItems } from "@/lib/tree";
@@ -63,7 +64,7 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
   };
 
   return (
-    <AnchoredPopover open={open} onClose={close} getRect={() => selectionRect(editor)} label="Editar link">
+    <AnchoredPopover open={open} onClose={close} getRect={() => selectionRect(editor)} label={t("Editar link")}>
       <form
         className="grid gap-2"
         onSubmit={(e) => {
@@ -74,7 +75,7 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
         }}
       >
         <label htmlFor="link-href" className="text-sm font-bold">
-          Link para uma página ou endereço
+          {t("Link para uma página ou endereço")}
         </label>
         <Input
           id="link-href"
@@ -85,7 +86,7 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
             setText(e.target.value);
             setError(null);
           }}
-          placeholder="Nome da página ou https://…"
+          placeholder={t("Nome da página ou https://…")}
         />
         {error && (
           <p id="link-error" role="alert" className="text-xs text-destructive">
@@ -93,7 +94,7 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
           </p>
         )}
         {suggestions.length > 0 && (
-          <ul aria-label="Páginas do manual" className="grid gap-0.5">
+          <ul aria-label={t("Páginas do manual")} className="grid gap-0.5">
             {suggestions.map((p) => (
               <li key={p.id}>
                 <button
@@ -102,7 +103,7 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
                   className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent"
                 >
                   <FileText className="size-4 shrink-0 text-primary" aria-hidden />
-                  <span className="truncate">{p.title || "Sem título"}</span>
+                  <span className="truncate">{p.title || t("Sem título")}</span>
                 </button>
               </li>
             ))}
@@ -111,13 +112,13 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
         <div className="flex justify-between gap-2 pt-1">
           {current ? (
             <Button type="button" variant="ghost" size="sm" className="text-destructive" onClick={() => setLink("")}>
-              Remover link
+              {t("Remover link")}
             </Button>
           ) : (
             <span />
           )}
           <Button type="submit" size="sm">
-            Aplicar
+            {t("Aplicar")}
           </Button>
         </div>
       </form>

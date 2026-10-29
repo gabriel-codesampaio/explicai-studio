@@ -1,6 +1,7 @@
 /** Cliente da API do Studio. Único ponto do editor que conhece URLs do servidor. */
 
 import type { Annotations } from "./annotations";
+import { t } from "./i18n";
 
 export interface ManualSummary {
   slug: string;
@@ -79,7 +80,7 @@ export interface PagePatch {
 async function call<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
   const data: unknown = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error((data as { error?: string }).error ?? `Erro ${res.status}`);
+  if (!res.ok) throw new Error((data as { error?: string }).error ?? t("Erro {status}", { status: res.status }));
   return data as T;
 }
 
@@ -142,6 +143,6 @@ export const api = {
     }),
 };
 
-export function errorMessage(err: unknown, fallback = "Algo deu errado."): string {
+export function errorMessage(err: unknown, fallback = t("Algo deu errado.")): string {
   return err instanceof Error ? err.message : fallback;
 }

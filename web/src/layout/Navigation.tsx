@@ -1,6 +1,7 @@
 import { PanelLeftOpen } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import type { SidebarState } from "@/hooks/useSidebar";
+import { t } from "@/lib/i18n";
 import { Sidebar } from "./Sidebar";
 
 interface Props {
@@ -24,8 +25,8 @@ export function Navigation({ sidebar, onSearch }: Props) {
             <button
               type="button"
               onClick={sidebar.expand}
-              aria-label={`Mostrar as páginas (${SHORTCUT})`}
-              title={`Mostrar as páginas (${SHORTCUT})`}
+              aria-label={t("Mostrar as páginas ({atalho})", { atalho: SHORTCUT })}
+              title={t("Mostrar as páginas ({atalho})", { atalho: SHORTCUT })}
               className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <PanelLeftOpen className="size-4" aria-hidden />
@@ -44,7 +45,7 @@ export function Navigation({ sidebar, onSearch }: Props) {
           aria-describedby={undefined}
           className="top-0 left-0 h-full w-[min(17.5rem,85vw)] max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 p-0 sm:max-w-none lg:hidden data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
         >
-          <DialogTitle className="sr-only">Páginas do manual</DialogTitle>
+          <DialogTitle className="sr-only">{t("Páginas do manual")}</DialogTitle>
           <Sidebar
             onCollapse={() => sidebar.setDrawerOpen(false)}
             onNavigate={() => sidebar.setDrawerOpen(false)}
@@ -66,10 +67,10 @@ export function MobileBar({ title, onOpen }: { title: string; onOpen: () => void
       <button
         type="button"
         onClick={onOpen}
-        aria-label={`Mostrar as páginas (${SHORTCUT})`}
+        aria-label={t("Mostrar as páginas ({atalho})", { atalho: SHORTCUT })}
         className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-bold hover:bg-muted"
       >
-        <PanelLeftOpen className="size-4" aria-hidden /> Páginas
+        <PanelLeftOpen className="size-4" aria-hidden /> {t("Páginas")}
       </button>
       <span className="truncate text-sm text-muted-foreground">{title}</span>
     </div>

@@ -2,6 +2,7 @@ import { ChevronRight, Search } from "lucide-react";
 import { type KeyboardEvent, useEffect, useEffectEvent, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useStudioContext } from "@/hooks/StudioContext";
+import { t } from "@/lib/i18n";
 import { searchPages } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { StatusDot } from "./StatusMenu";
@@ -57,7 +58,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
         aria-describedby={undefined}
         className="top-[12vh] translate-y-0 gap-0 overflow-hidden p-0 sm:max-w-lg"
       >
-        <DialogTitle className="sr-only">Buscar página</DialogTitle>
+        <DialogTitle className="sr-only">{t("Buscar página")}</DialogTitle>
         <div className="flex items-center gap-2 border-b border-border px-3">
           <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
           <input
@@ -67,8 +68,8 @@ export function PageSearch({ open, onOpenChange }: Props) {
             aria-expanded="true"
             aria-controls="busca-resultados"
             aria-activedescendant={matches[index] ? `busca-${matches[index].item.id}` : undefined}
-            aria-label="Buscar página pelo título"
-            placeholder="Buscar página pelo título…"
+            aria-label={t("Buscar página pelo título")}
+            placeholder={t("Buscar página pelo título…")}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -78,9 +79,14 @@ export function PageSearch({ open, onOpenChange }: Props) {
             className="h-12 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
           />
         </div>
-        <div id="busca-resultados" role="listbox" aria-label="Páginas encontradas" className="max-h-[50vh] overflow-y-auto p-1">
+        <div
+          id="busca-resultados"
+          role="listbox"
+          aria-label={t("Páginas encontradas")}
+          className="max-h-[50vh] overflow-y-auto p-1"
+        >
           {matches.length === 0 && (
-            <p className="px-3 py-6 text-center text-sm text-muted-foreground">Nenhuma página com esse título.</p>
+            <p className="px-3 py-6 text-center text-sm text-muted-foreground">{t("Nenhuma página com esse título.")}</p>
           )}
           {matches.map((m, i) => (
             <div
@@ -95,7 +101,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
               className={cn("flex cursor-pointer items-center gap-2 rounded-md px-3 py-2", i === index && "bg-accent")}
             >
               <span className="grid min-w-0 flex-1 leading-tight">
-                <span className="truncate text-sm font-bold">{m.item.title || "Sem título"}</span>
+                <span className="truncate text-sm font-bold">{m.item.title || t("Sem título")}</span>
                 {m.path.length > 0 && (
                   <span className="flex min-w-0 items-center gap-1 truncate text-xs text-muted-foreground">
                     {m.path.map((p, j) => (
@@ -108,7 +114,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
                 )}
               </span>
               {m.item.status !== "rascunho" && <StatusDot status={m.item.status} />}
-              {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">aberta</span>}
+              {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
             </div>
           ))}
         </div>

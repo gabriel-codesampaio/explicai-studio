@@ -2,6 +2,7 @@ import type { Editor } from "@tiptap/react";
 import { ListTree } from "lucide-react";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { t } from "@/lib/i18n";
 import type { Heading } from "./headings";
 
 interface Props {
@@ -24,8 +25,8 @@ export function PageOutline({ editor, headings, onNavigate }: Props) {
   };
 
   return (
-    <nav aria-label="Nesta página" className="text-[13px]">
-      <p className="mb-2 font-bold text-muted-foreground">Nesta página</p>
+    <nav aria-label={t("Nesta página")} className="text-[13px]">
+      <p className="mb-2 font-bold text-muted-foreground">{t("Nesta página")}</p>
       <ul className="grid gap-0.5 border-l border-border">
         {headings.map((h) => (
           <li key={h.pos}>
@@ -35,7 +36,7 @@ export function PageOutline({ editor, headings, onNavigate }: Props) {
               className="-ml-px block w-full truncate border-l-2 border-transparent py-1 pr-2 text-left text-muted-foreground hover:border-primary hover:text-foreground"
               style={{ paddingLeft: `${0.75 * h.level}rem` }}
             >
-              {h.text || "Título vazio"}
+              {h.text || t("Título vazio")}
             </button>
           </li>
         ))}
@@ -54,7 +55,7 @@ export function PageOutlineButton(props: Omit<Props, "onNavigate">) {
           type="button"
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted xl:hidden"
         >
-          <ListTree className="size-3.5" aria-hidden /> Nesta página
+          <ListTree className="size-3.5" aria-hidden /> {t("Nesta página")}
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" className="max-h-[60vh] w-72 overflow-y-auto p-3">
