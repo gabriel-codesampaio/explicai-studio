@@ -1,4 +1,4 @@
-import { PanelLeftClose, Plus } from "lucide-react";
+import { PanelLeftClose, Plus, Search } from "lucide-react";
 import { Brand } from "@/components/Brand";
 import { ExportDialog } from "@/features/export/ExportDialog";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
@@ -16,9 +16,10 @@ interface Props {
   onCollapse: () => void;
   /** Chamado ao abrir uma página: na gaveta, ela fecha para mostrar a página. */
   onNavigate?: () => void;
+  onSearch: () => void;
 }
 
-export function Sidebar({ onCollapse, onNavigate }: Props) {
+export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   const studio = useStudioContext();
   const { manuals, manual, page } = studio;
   const current = manuals?.find((m) => m.slug === manual?.slug) ?? null;
@@ -60,6 +61,14 @@ export function Sidebar({ onCollapse, onNavigate }: Props) {
 
       {manual && (
         <nav aria-label="Páginas do manual" className="grid gap-1">
+          <button
+            type="button"
+            onClick={onSearch}
+            className="mb-1 flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <Search className="size-3.5" aria-hidden /> Buscar página
+            <kbd className="ml-auto rounded border border-border px-1 font-mono text-[11px]">Ctrl+P</kbd>
+          </button>
           <div className="flex items-center justify-between px-2 text-[13px] text-muted-foreground">
             <span>Páginas</span>
             <button

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { TreeItem } from "@/lib/api";
 import { checkHref, pageHref } from "@/lib/links";
+import { fold } from "@/lib/text";
 import { flattenItems } from "@/lib/tree";
 import { AnchoredPopover } from "./AnchoredPopover";
 
@@ -22,8 +23,6 @@ function selectionRect(editor: Editor): DOMRect {
   const end = editor.view.coordsAtPos(to);
   return new DOMRect(start.left, start.top, Math.max(end.right - start.left, 1), end.bottom - start.top);
 }
-
-const fold = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
 export function LinkPopover({ editor, open, onClose, pages }: Props) {
   const current = (editor.getAttributes("link").href as string | undefined) ?? "";

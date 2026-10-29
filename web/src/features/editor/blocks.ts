@@ -13,6 +13,7 @@ import {
   Quote,
   Table,
 } from "lucide-react";
+import { fold } from "../../lib/text";
 
 export interface BlockContext {
   editor: Editor;
@@ -158,11 +159,7 @@ export const BLOCKS: Block[] = [
 
 /** Busca sem acento e sem maiúsculas: "titulo" acha "Título". */
 export function searchBlocks(query: string): Block[] {
-  const q = normalize(query);
+  const q = fold(query);
   if (!q) return BLOCKS;
-  return BLOCKS.filter((b) => [b.label, b.hint, ...b.keywords].some((t) => normalize(t).includes(q)));
-}
-
-function normalize(s: string): string {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+  return BLOCKS.filter((b) => [b.label, b.hint, ...b.keywords].some((t) => fold(t).includes(q)));
 }

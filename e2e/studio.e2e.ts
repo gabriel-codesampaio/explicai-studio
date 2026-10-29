@@ -149,3 +149,15 @@ test("versões: guarda, edita, restaura e o texto anterior vira versão", async 
   await page.getByRole("button", { name: /^Versões/ }).click();
   await expect(dialog.getByText("Antes de restaurar")).toBeVisible();
 });
+
+test("Ctrl+P busca a página pelo título, sem acento, e abre com Enter", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Busca", ["Início", "Relatórios de vendas"]);
+  await page.goto(`/#/${slug}`);
+  await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Início");
+
+  await page.keyboard.press("Control+p");
+  await page.getByRole("combobox", { name: "Buscar página pelo título" }).fill("relatorio");
+  await expect(page.getByRole("option")).toHaveCount(1);
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Relatórios de vendas");
+});

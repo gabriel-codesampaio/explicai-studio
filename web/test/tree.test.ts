@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TreeItem } from "../src/lib/api";
-import { dropTarget, renameItem, shiftTarget } from "../src/lib/tree";
+import { dropTarget, renameItem, searchPages, shiftTarget } from "../src/lib/tree";
 
 const item = (id: string, children: TreeItem[] = []): TreeItem => ({
   id,
@@ -58,5 +58,26 @@ describe("mover pelo menu (alternativa ao arrastar)", () => {
     expect(shiftTarget(pages, "a", "indent")).toBeNull();
     expect(shiftTarget(pages, "a1", "outdent")).toEqual({ parentId: null, index: 1 });
     expect(shiftTarget(pages, "b", "outdent")).toBeNull();
+  });
+});
+
+describe("busca de páginas (Ctrl+P)", () => {
+  const tree = [
+    { ...item("clientes"), title: "Clientes", children: [{ ...item("editar"), title: "Editar cadastro" }] },
+    { ...item("relatorios"), title: "Relatórios de cadastro" },
+    { ...item("cad"), title: "Cadastro rápido" },
+  ];
+
+  it("ignora acento e maiúscula, põe quem começa com o texto primeiro e mostra o caminho", () => {
+    expect(searchPages(tree, "CADASTRO").map((m) => [m.item.title, m.path])).toEqual([
+      ["Cadastro rápido", []],
+      ["Editar cadastro", ["Clientes"]],
+      ["Relatórios de cadastro", []],
+    ]);
+    expect(searchPages(tree, "relatorio").map((m) => m.item.title)).toEqual(["Relatórios de cadastro"]);
+  });
+
+  it("sem texto, lista todas na ordem da árvore", () => {
+    expect(searchPages(tree, " ").map((m) => m.item.id)).toEqual(["clientes", "editar", "relatorios", "cad"]);
   });
 });

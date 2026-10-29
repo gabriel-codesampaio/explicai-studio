@@ -1,4 +1,5 @@
 import type { TreeItem } from "./api";
+import { fold } from "./text";
 
 export interface Location {
   parentId: string | null;
@@ -95,4 +96,29 @@ export function ancestorsOf(items: TreeItem[], id: string): TreeItem[] {
 /** Todas as páginas em ordem de leitura, para listas de busca (ex.: link para outra página). */
 export function flattenItems(items: TreeItem[]): TreeItem[] {
   return items.flatMap((i) => [i, ...flattenItems(i.children)]);
+}
+
+export interface PageMatch {
+  item: TreeItem;
+  /** Títulos das páginas acima, para diferenciar "Editar" de Clientes de "Editar" de Fornecedores. */
+  path: string[];
+}
+
+/**
+ * Páginas cujo título tem o texto buscado, sem ligar para acento e maiúscula. Quem começa com o
+ * texto vem antes; depois, a ordem da árvore. Sem texto, devolve todas.
+ */
+export function searchPages(items: TreeItem[], query: string): PageMatch[] {
+  const q = fold(query);
+  const all: PageMatch[] = [];
+  const walk = (nodes: TreeItem[], path: string[]) => {
+    for (const item of nodes) {
+      all.push({ item, path });
+      walk(item.children, [...path, item.title || "Sem título"]);
+    }
+  };
+  walk(items, []);
+  if (!q) return all;
+  const hits = all.filter((m) => fold(m.item.title).includes(q));
+  return [...hits.filter((m) => fold(m.item.title).startsWith(q)), ...hits.filter((m) => !fold(m.item.title).startsWith(q))];
 }

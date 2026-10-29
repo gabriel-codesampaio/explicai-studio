@@ -5,6 +5,8 @@ import { Sidebar } from "./Sidebar";
 
 interface Props {
   sidebar: SidebarState;
+  /** Abre a busca de páginas (Ctrl+P). */
+  onSearch: () => void;
 }
 
 const SHORTCUT = "Ctrl+\\";
@@ -13,7 +15,7 @@ const SHORTCUT = "Ctrl+\\";
  * Onde a barra lateral aparece: coluna fixa (ou recolhida num trilho) em tela larga,
  * gaveta por cima do editor em tela estreita, como a do sistema dividida ao lado ou o celular.
  */
-export function Navigation({ sidebar }: Props) {
+export function Navigation({ sidebar, onSearch }: Props) {
   return (
     <>
       <div className="hidden h-full shrink-0 lg:block">
@@ -31,7 +33,7 @@ export function Navigation({ sidebar }: Props) {
           </div>
         ) : (
           <div className="h-full w-[17.5rem]">
-            <Sidebar onCollapse={sidebar.collapse} />
+            <Sidebar onCollapse={sidebar.collapse} onSearch={onSearch} />
           </div>
         )}
       </div>
@@ -43,7 +45,14 @@ export function Navigation({ sidebar }: Props) {
           className="top-0 left-0 h-full w-[min(17.5rem,85vw)] max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 p-0 sm:max-w-none lg:hidden data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
         >
           <DialogTitle className="sr-only">Páginas do manual</DialogTitle>
-          <Sidebar onCollapse={() => sidebar.setDrawerOpen(false)} onNavigate={() => sidebar.setDrawerOpen(false)} />
+          <Sidebar
+            onCollapse={() => sidebar.setDrawerOpen(false)}
+            onNavigate={() => sidebar.setDrawerOpen(false)}
+            onSearch={() => {
+              sidebar.setDrawerOpen(false);
+              onSearch();
+            }}
+          />
         </DialogContent>
       </Dialog>
     </>
