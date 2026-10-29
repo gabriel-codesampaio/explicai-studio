@@ -1,5 +1,6 @@
 import { slugify } from "../text.js";
 import type { Collected, ExportPage } from "./collect.js";
+import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, type ImageInfo } from "./refs.js";
 
 const IMAGE_LINE = /!\[([^\]]*)\]\(([^)\s]+)\)/g;
@@ -12,6 +13,7 @@ const PAGE_LINK = /\]\((?:\.\/)?([^/)#\s]+\.md)(#[^)\s]*)?\)/g;
  */
 export function renderMarkdown(collected: Collected, images: Map<string, ImageInfo>): string {
   const { meta, pages } = collected;
+  const L = labelsFor(meta.language);
   const anchor = (p: ExportPage) => slugify(`${p.number} ${p.title}`);
   const toc = pages.map((p) => `${"  ".repeat(p.depth)}- [${p.number} ${p.title}](#${anchor(p)})`).join("\n");
 
@@ -31,31 +33,31 @@ export function renderMarkdown(collected: Collected, images: Map<string, ImageIn
           const asset = assetFromSrc(src);
           const info = asset ? images.get(asset) : undefined;
           if (!info) return all;
-          notes.push(...imageNotes(info, pages));
+          notes.push(...imageNotes(info, pages, L));
           return `![${alt}](${info.asset})`;
         });
         if (!notes.length) return out;
-        return `${out}\n\n${indent}> Legenda da imagem:\n${notes.map((n) => `${indent}> ${n}`).join("\n")}`;
+        return `${out}\n\n${indent}> ${L.legend}:\n${notes.map((n) => `${indent}> ${n}`).join("\n")}`;
       })
       .join("\n");
     return `${"#".repeat(level)} ${page.number} ${page.title}\n\n${body.trim()}`;
   });
 
-  return `# ${meta.title}\n\n## Sumário\n\n${toc}\n\n${sections.join("\n\n")}\n`;
+  return `# ${meta.title}\n\n## ${L.toc}\n\n${toc}\n\n${sections.join("\n\n")}\n`;
 }
 
 /** Legenda e áreas clicáveis do print, em texto, uma por linha. */
-function imageNotes(info: ImageInfo, pages: ExportPage[]): string[] {
+function imageNotes(info: ImageInfo, pages: ExportPage[], L: Labels): string[] {
   const { markers, hotspots } = info.annotations;
   const lines = [...markers]
     .sort((a, b) => a.n - b.n)
-    .map((m) => `${m.n}. ${m.label ?? "(sem descrição)"}`)
+    .map((m) => `${m.n}. ${m.label ?? L.noDescription}`)
     .concat(
       hotspots.map((h) => {
-        if (h.target.type === "url") return `Área clicável: leva a ${h.target.href}`;
+        if (h.target.type === "url") return L.hotspotUrl(h.target.href);
         const id = h.target.pageId;
         const page = pages.find((p) => p.id === id);
-        return `Área clicável: leva à página "${page?.title ?? "removida"}"`;
+        return L.hotspotPage(page?.title ?? L.removedPage);
       }),
     );
   return lines;

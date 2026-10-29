@@ -2,6 +2,7 @@ import { readManual } from "../manuals.js";
 import { readPage } from "../pages.js";
 import type { ManualMeta, PageNode, PageStatus } from "../types.js";
 import { readVersion } from "../versions.js";
+import { labelsFor } from "./labels.js";
 
 export interface ExportPage {
   id: string;
@@ -51,7 +52,7 @@ export async function collectPages(dir: string, opts: CollectOptions = {}): Prom
           number = prefix ? `${prefix}.${count.n}` : String(count.n);
           pages.push({
             id: node.id,
-            title: source.title || "Sem título",
+            title: source.title || labelsFor(meta.language).untitled,
             number,
             depth,
             fileName: node.file.split("/").pop() ?? node.file,

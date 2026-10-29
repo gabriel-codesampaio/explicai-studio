@@ -151,3 +151,23 @@ describe("exportação", () => {
     120_000,
   );
 });
+
+it("manual em inglês sai com os textos da exportação em inglês", async () => {
+  const en = await createManual(workspace, { title: "Billing", language: "en-US" });
+  const asset = await saveAsset(en.dir, "screen.png", png(400, 300));
+  await writeAnnotations(en.dir, asset, {
+    version: 1,
+    markers: [{ id: "m1", n: 1, x: 0.5, y: 0.5 }],
+    highlights: [],
+    arrows: [],
+    hotspots: [],
+  });
+  await addPage(en.dir, { title: "", body: `![Screen](../${asset})` });
+  const md = await readFile(path.join(en.dir, (await exportManual(en.dir, "markdown")).file), "utf8");
+  expect(md).toContain("## Contents");
+  expect(md).toContain("## 1 Untitled");
+  expect(md).toContain("> Image legend:\n> 1. (no description)");
+  const html = await readFile(path.join(en.dir, (await exportManual(en.dir, "html")).file), "utf8");
+  expect(html).toContain('<nav class="toc" aria-label="Contents">');
+  expect(html).toContain("Manual made with Explicaí Studio.");
+});

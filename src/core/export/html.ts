@@ -1,6 +1,7 @@
 import { Marked, type Tokens } from "marked";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
 import type { Collected, ExportPage } from "./collect.js";
+import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
 
 /** Cor da marca, quando o manual não escolheu outra. */
@@ -12,6 +13,7 @@ const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
 /** Um arquivo HTML com o manual inteiro: sumário ao lado, uma seção por página, marcações sobre os prints. */
 export function renderHtml(collected: Collected, images: Map<string, ImageInfo>): string {
   const { meta, pages } = collected;
+  const L = labelsFor(meta.language);
   const accent = meta.theme?.accent ?? DEFAULT_ACCENT;
   const toc = pages
     .map(
@@ -19,7 +21,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>)
         `<li style="--d:${p.depth}"><a href="#${pageAnchor(p.id)}"><span class="num">${p.number}</span> ${esc(p.title)}</a></li>`,
     )
     .join("\n");
-  const sections = pages.map((p) => renderPage(p, pages, images)).join("\n");
+  const sections = pages.map((p) => renderPage(p, pages, images, L)).join("\n");
 
   return `<!doctype html>
 <html lang="${esc(meta.language)}">
@@ -32,7 +34,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>)
 </head>
 <body>
 <div class="layout">
-<nav class="toc" aria-label="Sumário">
+<nav class="toc" aria-label="${L.toc}">
 <p class="toc-title">${esc(meta.title)}</p>
 <ol>
 ${toc}
@@ -41,10 +43,10 @@ ${toc}
 <main>
 <header class="cover">
 <h1>${esc(meta.title)}</h1>
-<p>${pages.length} ${pages.length === 1 ? "página" : "páginas"}</p>
+<p>${L.pages(pages.length)}</p>
 </header>
 ${sections}
-<footer class="colophon">Manual feito com o Explicaí Studio.</footer>
+<footer class="colophon">${L.colophon}</footer>
 </main>
 </div>
 </body>
@@ -52,7 +54,7 @@ ${sections}
 `;
 }
 
-function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, ImageInfo>): string {
+function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, ImageInfo>, L: Labels): string {
   const marked = new Marked({
     gfm: true,
     renderer: {
@@ -71,8 +73,8 @@ function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, I
       image({ href, text }: Tokens.Image) {
         const asset = assetFromSrc(href);
         const info = asset ? images.get(asset) : undefined;
-        if (!info) return `<span class="missing">[imagem não encontrada: ${esc(text || href)}]</span>`;
-        return renderShot(info, text, pages);
+        if (!info) return `<span class="missing">[${L.missingImage}: ${esc(text || href)}]</span>`;
+        return renderShot(info, text, pages, L);
       },
       // HTML colado no texto sai como texto: o manual exportado não roda código de ninguém.
       html({ text }: Tokens.HTML | Tokens.Tag) {
@@ -100,7 +102,7 @@ function hotspotHref(target: HotspotTarget, pages: ExportPage[]): { href: string
 }
 
 /** O print com as marcações por cima (posições em %, acompanham o tamanho) e a legenda embaixo. */
-function renderShot(info: ImageInfo, alt: string, pages: ExportPage[]): string {
+function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels): string {
   const a: Annotations = info.annotations;
   const w = info.size?.w ?? 1000;
   const h = info.size?.h ?? 1000;
@@ -112,7 +114,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[]): string {
     .map((r) => {
       const link = hotspotHref(r.target, pages);
       return link
-        ? `<a class="hot" href="${esc(link.href)}" style="${box(r)}"><span class="sr">Ir para ${esc(link.label)}</span></a>`
+        ? `<a class="hot" href="${esc(link.href)}" style="${box(r)}"><span class="sr">${L.goTo} ${esc(link.label)}</span></a>`
         : "";
     })
     .join("");
@@ -140,7 +142,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[]): string {
     .join("");
 
   return `<span class="shot"><span class="frame" style="aspect-ratio:${w} / ${h}"><img src="${esc(info.asset)}" alt="${esc(alt)}" loading="lazy">${highlights}${arrows}${hotspots}${markers}</span>${
-    legend ? `<span class="legend" role="list" aria-label="Legenda da imagem">${legend}</span>` : ""
+    legend ? `<span class="legend" role="list" aria-label="${L.legend}">${legend}</span>` : ""
   }</span>`;
 }
 
