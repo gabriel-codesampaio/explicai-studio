@@ -13,7 +13,7 @@ Prioridade: **P0** atinge quem lê o resultado final; **P1** é o pedido princip
 | [T-006](T-006-exportar-no-topo.md) | Levar "Exportar manual" para o topo da página como botão principal | P1 | aberto | frontend |
 | [T-007](T-007-icones-decorativos.md) | Tirar os ícones que só decoram e usar a extensão do arquivo na exportação | P1 | aberto | design |
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
-| [T-009](T-009-raio-de-papel.md) | Raio de 3 px na interface de trabalho | P1 | aberto | design |
+| [T-009](T-009-raio-de-papel.md) | Raio de 3 px na interface de trabalho | P1 | feito | design |
 | [T-010](T-010-barra-colar-print.md) | "Colar print" com Ctrl+V na barra de ferramentas | P1 | aberto | frontend |
 | [T-019](T-019-cores-so-no-manual.md) | Tirar as cores extras do Studio e manter só no manual exportado | P1 | feito | frontend |
 | [T-022](T-022-enter-depois-de-imagem.md) | Corrigir o Enter que não cria parágrafo em página com imagem vinda do Markdown | P1 | aberto | frontend |
