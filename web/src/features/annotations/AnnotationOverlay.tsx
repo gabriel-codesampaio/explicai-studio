@@ -97,13 +97,13 @@ export function AnnotationOverlay({ annotations, selectedId, onSelect }: Props) 
           key={m.id}
           onPointerDown={pick(m.id)}
           className={cn(
-            "absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-anotacao font-mono text-[13px] font-semibold text-white shadow-[0_0_0_2px_#fff,0_2px_6px_rgb(21_26_51/0.35)]",
+            "absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-anotacao font-mono text-[13px] font-semibold text-white before:content-[attr(data-n)] shadow-[0_0_0_2px_#fff,0_2px_6px_rgb(21_26_51/0.35)]",
             ring(m.id),
           )}
           style={{ left: `${m.x * 100}%`, top: `${m.y * 100}%` }}
-        >
-          {m.n}
-        </span>
+          // O número vem do CSS: dentro do editor, um texto aqui entraria no conteúdo lido pelo leitor de tela.
+          data-n={m.n}
+        />
       ))}
     </span>
   );
