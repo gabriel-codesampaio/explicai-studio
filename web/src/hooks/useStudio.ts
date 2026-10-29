@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { api, errorMessage, type ManualDetail, type ManualSummary, type Page, type PagePatch, type TreeItem } from "../lib/api";
 import { readLocation, writeLocation } from "../lib/hashRoute";
-import { findItem, renameItem } from "../lib/tree";
+import { findItem, flattenItems, renameItem } from "../lib/tree";
 import { useAutosave } from "./useAutosave";
 
 /** Estado do Studio (manuais, manual aberto, página aberta) e as ações sobre ele. */
@@ -83,6 +83,14 @@ export function useStudio() {
       writeLocation({ slug: manual.slug, pageId: created.id });
     });
 
+  /** Devolve uma exclusão da lixeira e abre a página restaurada. */
+  const restorePage = (slug: string, trashId: string, pageId: string) =>
+    run(async () => {
+      await api.restorePage(slug, trashId);
+      await refreshManual(slug);
+      await showPage(slug, pageId);
+    });
+
   /** Exclui na hora e oferece "Desfazer": a página fica na lixeira do manual. */
   const removePage = (item: TreeItem) =>
     run(async () => {
@@ -93,17 +101,11 @@ export function useStudio() {
       const detail = await refreshManual(slug);
       if (page && !findItem(detail.pages, page.id)) await showPage(slug, detail.pages[0]?.id ?? null);
 
-      toast(`"${item.title || "Sem título"}" foi para a lixeira.`, {
+      const sub = flattenItems(item.children).length;
+      const what = `"${item.title || "Sem título"}"${sub ? ` e ${sub} ${sub === 1 ? "subpágina" : "subpáginas"}` : ""}`;
+      toast(`${what} ${sub ? "foram" : "foi"} para a lixeira.`, {
         duration: 10_000,
-        action: {
-          label: "Desfazer",
-          onClick: () =>
-            void run(async () => {
-              await api.restorePage(slug, trashId);
-              await refreshManual(slug);
-              await showPage(slug, item.id);
-            }),
-        },
+        action: { label: "Desfazer", onClick: () => void restorePage(slug, trashId, item.id) },
       });
     });
 
@@ -143,6 +145,7 @@ export function useStudio() {
     selectPage,
     addPage,
     removePage,
+    restorePage,
     movePage,
     createManual,
     editPage,

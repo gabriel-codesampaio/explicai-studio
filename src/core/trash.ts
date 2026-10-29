@@ -19,6 +19,8 @@ interface TrashEntry {
 
 export interface TrashItem {
   trashId: string;
+  /** Id da página principal, para abrir de novo depois de restaurar. */
+  pageId: string;
   title: string;
   /** Quantas páginas voltam ao restaurar (a página mais as subpáginas). */
   pages: number;
@@ -37,7 +39,7 @@ export async function listTrash(dir: string): Promise<TrashItem[]> {
     const pageFile = path.join(root, trashId, entry.node.file);
     const data: Record<string, unknown> = (await exists(pageFile)) ? splitFrontmatter(await readFile(pageFile, "utf8")).data : {};
     const title = typeof data.title === "string" ? data.title : "";
-    items.push({ trashId, title, pages: flatten([entry.node]).length, deletedAt: entry.deletedAt });
+    items.push({ trashId, pageId: entry.node.id, title, pages: flatten([entry.node]).length, deletedAt: entry.deletedAt });
   }
   return items.sort((a, b) => b.deletedAt.localeCompare(a.deletedAt));
 }

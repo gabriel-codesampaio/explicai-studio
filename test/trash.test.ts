@@ -71,7 +71,9 @@ describe("lixeira", () => {
     await addPage(dir, { title: "Cadastro", parentId: pai.id });
     const { trashId } = await removePage(dir, pai.id);
 
-    expect(await listTrash(dir)).toEqual([{ trashId, title: "Clientes", pages: 2, deletedAt: expect.any(String) }]);
+    expect(await listTrash(dir)).toEqual([
+      { trashId, pageId: pai.id, title: "Clientes", pages: 2, deletedAt: expect.any(String) },
+    ]);
     await restorePage(dir, trashId);
     expect(await listTrash(dir)).toEqual([]);
   });

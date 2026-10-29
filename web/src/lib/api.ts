@@ -24,6 +24,14 @@ export interface Page {
   file: string;
 }
 
+export interface TrashItem {
+  trashId: string;
+  pageId: string;
+  title: string;
+  pages: number;
+  deletedAt: string;
+}
+
 export interface PagePatch {
   title?: string;
   body?: string;
@@ -56,6 +64,7 @@ export const api = {
   updatePage: (slug: string, id: string, patch: PagePatch) => call<Page>(pageUrl(slug, id), send("PUT", patch)),
   /** Move para a lixeira. O trashId desfaz a exclusão com `restorePage`. */
   removePage: (slug: string, id: string) => call<{ trashId: string }>(pageUrl(slug, id), { method: "DELETE" }),
+  listTrash: (slug: string) => call<TrashItem[]>(`${manualUrl(slug)}/trash`),
   restorePage: (slug: string, trashId: string) =>
     call<{ ok: true }>(`${manualUrl(slug)}/trash/${encodeURIComponent(trashId)}/restore`, { method: "POST" }),
   movePage: (slug: string, id: string, parentId: string | null, index: number) =>

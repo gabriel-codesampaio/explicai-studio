@@ -3,6 +3,7 @@ import { Brand } from "@/components/Brand";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
+import { TrashPanel } from "@/features/pages/TrashPanel";
 import type { Studio } from "@/hooks/useStudio";
 import type { TreeItem } from "@/lib/api";
 import { shiftTarget } from "@/lib/tree";
@@ -55,6 +56,12 @@ export function Sidebar({ studio }: { studio: Studio }) {
             />
           )}
         </nav>
+      )}
+
+      {manual && (
+        <div className="mt-auto border-t border-border pt-3">
+          <TrashPanel slug={manual.slug} onRestore={(trashId, pageId) => studio.restorePage(manual.slug, trashId, pageId)} />
+        </div>
       )}
     </aside>
   );

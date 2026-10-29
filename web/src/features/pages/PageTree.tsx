@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { TreeItem } from "@/lib/api";
-import { type DropZone, dropTarget } from "@/lib/tree";
+import { type DropZone, dropTarget, findItem } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { type PageAction, PageActions } from "./PageActions";
+import { useTreeKeyboard } from "./useTreeKeyboard";
 
 const DRAG_TYPE = "text/x-explicai-page";
 
@@ -24,6 +25,12 @@ function zoneAt(e: React.DragEvent<HTMLElement>): DropZone {
 
 export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Props) {
   const [hover, setHover] = useState<{ id: string; zone: DropZone } | null>(null);
+  const onKeyDown = useTreeKeyboard(pages, (id, shift) => {
+    const item = findItem(pages, id);
+    if (item) onAction(item, { kind: "shift", shift });
+  });
+  // Uma parada só do Tab: a página aberta (ou a primeira) recebe o foco ao entrar na árvore.
+  const tabStop = selectedId && findItem(pages, selectedId) ? selectedId : pages[0]?.id;
 
   const drop = (targetId: string, zone: DropZone, draggedId: string) => {
     setHover(null);
@@ -32,7 +39,8 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
   };
 
   const renderLevel = (items: TreeItem[], depth: number) => (
-    <ul className={cn(depth > 0 && "ml-3 border-l border-border pl-1")}>
+    // O teclado chega dos botões das páginas e sobe até a lista (ver useTreeKeyboard).
+    <ul className={cn(depth > 0 && "ml-3 border-l border-border pl-1")} onKeyDown={depth === 0 ? onKeyDown : undefined}>
       {items.map((item) => {
         const zone = hover?.id === item.id ? hover.zone : null;
         const selected = item.id === selectedId;
@@ -40,6 +48,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
           <li key={item.id}>
             {/* biome-ignore lint/a11y/noStaticElementInteractions: arrastar é atalho de mouse; pelo teclado, o menu "⋯" move a página */}
             <div
+              data-row
               className={cn(
                 "group relative flex items-center rounded-md pr-1 transition-colors hover:bg-muted",
                 zone === "inside" && "outline-2 -outline-offset-2 outline-dashed outline-primary",
@@ -65,6 +74,8 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
             >
               <button
                 type="button"
+                data-page-id={item.id}
+                tabIndex={item.id === tabStop ? 0 : -1}
                 aria-current={selected ? "page" : undefined}
                 onClick={() => onSelect(item.id)}
                 className="min-w-0 flex-1 truncate py-1.5 pl-2 text-left text-[14.5px]"

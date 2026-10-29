@@ -36,7 +36,8 @@ export function App() {
           )}
         </main>
       </div>
-      <Toaster position="bottom-right" />
+      {/* Acima da linha de status, para o aviso não cobrir o "Salvo às…". */}
+      <Toaster position="bottom-right" offset={{ bottom: 56, right: 24 }} />
     </TooltipProvider>
   );
 }
