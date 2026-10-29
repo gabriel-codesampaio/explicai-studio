@@ -30,6 +30,22 @@ describe("Markdown do editor", () => {
     expect(out).toContain("Pronto.");
   });
 
+  it("passo com print e resultado esperado continua inteiro, como lista numerada comum", () => {
+    const md = [
+      "1. Clique em **Novo cliente**.",
+      "",
+      "   ![Tela](../assets/tela.png)",
+      "",
+      "   > **Resultado:** o formulário abre.",
+      "",
+      "2. Preencha o nome.",
+    ].join("\n");
+    const out = expectStable(md);
+    expect(out).toContain("![Tela](../assets/tela.png)");
+    expect(out).toMatch(/^\s+> \*\*Resultado:\*\* o formulário abre\.$/m);
+    expect(out).toContain("2. Preencha o nome.");
+  });
+
   it("mantém títulos, negrito, links, código e tabela", () => {
     const md = [
       "# Clientes",
