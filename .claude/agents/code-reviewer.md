@@ -14,4 +14,4 @@ Procure, em ordem de gravidade:
 4. Licença: dependência nova com licença GPL ou AGPL.
 5. Texto de interface fora da voz da marca (ver CLAUDE.md).
 
-Rode `npm test` e `npm run typecheck`. Responda com uma lista curta: arquivo:linha, o problema e a correção sugerida. Se não achar nada, diga isso em uma linha.
+Rode `npm run check` (lint do Biome, tipos e testes). Responda com uma lista curta: arquivo:linha, o problema e a correção sugerida. Se não achar nada, diga isso em uma linha.
