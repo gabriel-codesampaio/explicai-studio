@@ -196,3 +196,30 @@ describe("API de versões", () => {
     expect(restored.body).toBe("um");
   });
 });
+
+describe("API de exportação", () => {
+  it("exporta em HTML e Markdown, recusa formato desconhecido e grava a cor do manual", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
+    await fetch(`${base}/api/manuals/m/pages`, json("POST", { title: "P", body: "Texto." }));
+
+    const html = await (await fetch(`${base}/api/manuals/m/export`, json("POST", { format: "html" }))).json();
+    expect(html).toMatchObject({
+      format: "html",
+      file: "exportacao/html/index.html",
+      url: "/files/m/exportacao/html/index.html",
+    });
+    const page = await fetch(`${base}${html.url}`);
+    expect(page.headers.get("content-type")).toContain("text/html");
+    expect(await page.text()).toContain("Texto.");
+
+    const md = await (await fetch(`${base}/api/manuals/m/export`, json("POST", { format: "markdown" }))).json();
+    expect(md.file).toBe("exportacao/markdown/manual.md");
+    expect((await fetch(`${base}/api/manuals/m/export`, json("POST", { format: "docx" }))).status).toBe(400);
+
+    expect((await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: "#7a3fc4" }))).status).toBe(200);
+    expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({ accent: "#7a3fc4" });
+    expect((await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: "roxo" }))).status).toBe(400);
+    await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: null }));
+    expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({});
+  });
+});

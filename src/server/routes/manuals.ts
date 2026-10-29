@@ -34,6 +34,7 @@ export const manualRoutes: Route[] = [
         slug: ctx.params.slug,
         title: meta.title,
         language: meta.language,
+        theme: meta.theme ?? {},
         pages: await readPageTree(dir),
       });
     },
