@@ -12,6 +12,8 @@ export interface TreeItem {
   id: string;
   title: string;
   file: string;
+  /** O arquivo da página sumiu ou está com erro (mexido fora do Studio). */
+  problem?: string;
   children: TreeItem[];
 }
 

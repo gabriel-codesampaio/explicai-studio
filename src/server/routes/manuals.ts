@@ -1,30 +1,10 @@
 import path from "node:path";
-import { createManual, listManuals, type Manual, type PageNode, readManual, readPage } from "../../core/index.js";
+import { createManual, listManuals, type Manual, readManual, readPageTree } from "../../core/index.js";
 import { json, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir, optionalString } from "../workspace.js";
 
-interface PageTreeItem {
-  id: string;
-  title: string;
-  /** Caminho do Markdown, usado para links entre páginas (./arquivo.md). */
-  file: string;
-  children: PageTreeItem[];
-}
-
 const summary = (m: Manual) => ({ slug: path.basename(m.dir), title: m.meta.title, language: m.meta.language });
-
-/** A árvore do manual.json com o título de cada página, que fica no frontmatter. */
-async function withTitles(dir: string, nodes: PageNode[]): Promise<PageTreeItem[]> {
-  return Promise.all(
-    nodes.map(async (n) => ({
-      id: n.id,
-      title: (await readPage(dir, n.id)).title,
-      file: n.file,
-      children: await withTitles(dir, n.children),
-    })),
-  );
-}
 
 export const manualRoutes: Route[] = [
   {
@@ -54,7 +34,7 @@ export const manualRoutes: Route[] = [
         slug: ctx.params.slug,
         title: meta.title,
         language: meta.language,
-        pages: await withTitles(dir, meta.pages),
+        pages: await readPageTree(dir),
       });
     },
   },

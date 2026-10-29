@@ -1,3 +1,4 @@
+import { TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import type { TreeItem } from "@/lib/api";
 import { type DropZone, dropTarget, findItem } from "@/lib/tree";
@@ -89,8 +90,14 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                     !item.title && "italic text-muted-foreground",
                   )}
                 >
-                  {item.title || "Sem título"}
+                  {item.title || (item.problem ? item.file.split("/").pop() : "Sem título")}
                 </span>
+                {item.problem && (
+                  <span title={item.problem} className="ml-1.5 inline-flex align-[-2px] text-destructive">
+                    <TriangleAlert className="size-3.5" aria-hidden />
+                    <span className="sr-only">{item.problem}</span>
+                  </span>
+                )}
               </button>
               <PageActions item={item} pages={pages} onAction={(action) => onAction(item, action)} />
             </div>

@@ -6,7 +6,7 @@ import { atomicWrite, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { PAGES_DIR, readManual, updateManual } from "./manuals.js";
 import { slugify } from "./text.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
-import type { Page } from "./types.js";
+import type { Page, PageNode } from "./types.js";
 
 /** Página pode ficar sem título enquanto é escrita: a árvore mostra "Sem título" e o arquivo vira sem-titulo.md. */
 export async function addPage(
@@ -26,8 +26,55 @@ export async function addPage(
 
 export async function readPage(dir: string, id: string): Promise<Page> {
   const { node } = findNode((await readManual(dir)).pages, id);
-  const { data, body } = splitFrontmatter(await readFile(resolveInside(dir, node.file), "utf8"));
-  return { id, title: typeof data.title === "string" ? data.title : "", body, file: node.file };
+  return { id, ...(await readPageFile(dir, node.file)), file: node.file };
+}
+
+export interface PageTreeNode {
+  id: string;
+  title: string;
+  file: string;
+  /** Preenchido quando o arquivo da página sumiu ou está com erro: a página aparece, com o aviso. */
+  problem?: string;
+  children: PageTreeNode[];
+}
+
+/**
+ * Árvore do manual com o título de cada página (que fica no frontmatter). Lê o manual.json uma vez.
+ * Uma página com problema não derruba a árvore: ela vem com `problem` e o resto continua.
+ */
+export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
+  const walk = (nodes: PageNode[]): Promise<PageTreeNode[]> =>
+    Promise.all(
+      nodes.map(async (n) => {
+        const base = { id: n.id, file: n.file, children: await walk(n.children) };
+        try {
+          return { ...base, title: (await readPageFile(dir, n.file)).title };
+        } catch (err) {
+          return { ...base, title: "", problem: err instanceof Error ? err.message : String(err) };
+        }
+      }),
+    );
+  return walk((await readManual(dir)).pages);
+}
+
+/** Lê título e corpo de um arquivo de página, com mensagem clara quando ele foi apagado ou estragado. */
+async function readPageFile(dir: string, file: string): Promise<{ title: string; body: string }> {
+  let text: string;
+  try {
+    text = await readFile(resolveInside(dir, file), "utf8");
+  } catch (err) {
+    if ((err as { code?: string }).code === "ENOENT") {
+      throw new Error(`O arquivo ${file} não foi encontrado. Ele foi apagado ou renomeado fora do Studio.`);
+    }
+    throw err;
+  }
+  try {
+    const { data, body } = splitFrontmatter(text);
+    return { title: typeof data.title === "string" ? data.title : "", body };
+  } catch (err) {
+    const detail = err instanceof Error ? err.message.split("\n")[0] : String(err);
+    throw new Error(`O cabeçalho (frontmatter) de ${file} tem um erro: ${detail}`);
+  }
 }
 
 /**
@@ -68,6 +115,7 @@ async function relink(dir: string, files: string[], from: string, to: string): P
   const name = (f: string) => path.posix.basename(f);
   const escaped = name(from).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   // ](arquivo.md  ou  ](./arquivo.md  seguido de ) ou de #âncora
+  // Precisa ser new RegExp: o nome do arquivo entra no padrão (teste: "atualiza os links das outras páginas")
   const pattern = new RegExp(`(\\]\\()(?:\\./)?${escaped}(?=[)#])`, "g");
   for (const file of files) {
     const abs = resolveInside(dir, file);

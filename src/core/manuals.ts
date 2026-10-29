@@ -18,20 +18,36 @@ export async function createManual(workspace: string, opts: { title: string; lan
   return { dir, meta };
 }
 
-/** Manuais são as subpastas diretas do workspace que têm manual.json. */
+/**
+ * Manuais são as subpastas diretas do workspace que têm manual.json.
+ * Manual com manual.json ilegível fica de fora da lista, para um manual estragado não impedir
+ * de abrir os outros. Abrir ele pelo endereço mostra o erro de readManual.
+ */
 export async function listManuals(workspace: string): Promise<Manual[]> {
   const entries = await readdir(workspace, { withFileTypes: true });
   const manuals: Manual[] = [];
   for (const e of entries) {
     if (!e.isDirectory()) continue;
     const dir = path.join(workspace, e.name);
-    if (await exists(path.join(dir, META_FILE))) manuals.push({ dir, meta: await readManual(dir) });
+    if (!(await exists(path.join(dir, META_FILE)))) continue;
+    try {
+      manuals.push({ dir, meta: await readManual(dir) });
+    } catch {
+      // manual.json corrompido: os outros manuais continuam abrindo.
+    }
   }
   return manuals.sort((a, b) => a.meta.title.localeCompare(b.meta.title));
 }
 
 export async function readManual(dir: string): Promise<ManualMeta> {
-  const meta = JSON.parse(await readFile(path.join(dir, META_FILE), "utf8")) as Partial<ManualMeta> | null;
+  let meta: Partial<ManualMeta> | null;
+  try {
+    meta = JSON.parse(await readFile(path.join(dir, META_FILE), "utf8")) as Partial<ManualMeta> | null;
+  } catch (err) {
+    if (err instanceof SyntaxError)
+      throw new Error(`O ${META_FILE} do manual "${path.basename(dir)}" não é um JSON válido: ${err.message}`);
+    throw err;
+  }
   if (meta?.version !== FORMAT_VERSION) {
     throw new Error(`${META_FILE}: versão de formato não suportada (${String(meta?.version)})`);
   }

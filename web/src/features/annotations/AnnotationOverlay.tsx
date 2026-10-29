@@ -54,7 +54,7 @@ export function AnnotationOverlay({ annotations, selectedId, onSelect }: Props) 
         <span
           key={h.id}
           onPointerDown={pick(h.id)}
-          className={cn("absolute block rounded-[3px] border-2 border-marca bg-marca/25 mix-blend-multiply", ring(h.id))}
+          className={cn("absolute block rounded-[3px] border-2 border-marca bg-marca/25 mix-blend-multiply dark:bg-marca/30 dark:mix-blend-normal", ring(h.id))}
           style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%` }}
         />
       ))}
