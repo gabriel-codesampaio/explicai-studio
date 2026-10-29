@@ -1,6 +1,6 @@
 {
   "name": "explicai",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Construtor de manuais open source e gratuito. Do print ao manual pronto em PDF, HTML e Markdown.",
   "license": "MIT",
   "author": "Gabriel Sampaio",
@@ -11,7 +11,7 @@
   },
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=20.12"
   },
   "exports": {
     "./core": {
@@ -23,7 +23,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && vite build --config web/vite.config.ts",
+    "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json && vite build --config web/vite.config.ts",
     "start": "node dist/cli.js",
     "dev:server": "tsx watch src/cli.ts exemplos --no-open",
     "dev:web": "vite --config web/vite.config.ts",
@@ -33,7 +33,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "check": "npm run lint && npm run typecheck && npm test",
-    "test:e2e": "npm run build && playwright test"
+    "test:e2e": "npm run build && playwright test",
+    "prepublishOnly": "npm run check && npm run build"
   },
   "dependencies": {
     "marked": "^17.0.6",
@@ -78,5 +79,14 @@
   },
   "bin": {
     "explicai": "dist/cli.js"
-  }
+  },
+  "keywords": [
+    "manual",
+    "documentation",
+    "markdown",
+    "editor",
+    "screenshots",
+    "pdf",
+    "explicai"
+  ]
 }
