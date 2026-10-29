@@ -7,6 +7,7 @@ import { AnnotatedImage } from "@/features/annotations/annotatedImage";
 import { assetPathFromSrc } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";
+import { syncSelectionFromDom } from "./domSelection";
 import { contentExtensions } from "./extensions";
 import { ImagePopover } from "./ImagePopover";
 import { IMAGE_TYPES, insertImages } from "./imageUpload";
@@ -44,7 +45,8 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
       Extension.create({
         name: "linkShortcut",
         addKeyboardShortcuts: () => ({
-          "Mod-k": () => {
+          "Mod-k": ({ editor: ed }) => {
+            syncSelectionFromDom(ed);
             setLinkOpen(true);
             return true;
           },
