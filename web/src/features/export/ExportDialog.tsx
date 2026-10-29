@@ -13,7 +13,6 @@ import {
 import { useStudioContext } from "@/hooks/StudioContext";
 import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
-import { ACCENTS } from "@/lib/theme";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +21,14 @@ const FORMATS: { id: ExportFormat; label: string; hint: string; Icon: LucideIcon
   { id: "pdf", label: "PDF", hint: t("Para imprimir ou mandar por e-mail."), Icon: FileText },
   { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), Icon: Bot },
 ];
+
+/** Cores do manual exportado (o Studio fica sempre no cobalto). A primeira é a da marca. */
+const ACCENTS = [
+  { id: "cobalto", label: t("Cobalto"), swatch: "#2b4fe0" },
+  { id: "esmeralda", label: t("Esmeralda"), swatch: "#0f7a55" },
+  { id: "ameixa", label: t("Ameixa"), swatch: "#7a3fc4" },
+  { id: "grafite", label: t("Grafite"), swatch: "#3d4459" },
+] as const;
 
 /** Botão "Exportar manual" da barra lateral: escolhe o formato e a cor, exporta e mostra onde ficou. */
 export function ExportDialog() {

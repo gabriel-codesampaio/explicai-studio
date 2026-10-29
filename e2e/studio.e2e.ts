@@ -215,3 +215,34 @@ test.describe("interface em inglês", () => {
     expect(created.language).toBe("en-US");
   });
 });
+
+test("Aparência mostra só Tema e Idioma, e o Studio fica no cobalto mesmo com cor antiga gravada", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Aparência", ["Início"]);
+  const errors: string[] = [];
+  page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
+  page.on("pageerror", (e) => errors.push(e.message));
+  await page.addInitScript(() => {
+    if (!sessionStorage.getItem("semeado")) {
+      localStorage.setItem("explicai:aparencia", '{"mode":"dark","accent":"ameixa"}');
+      sessionStorage.setItem("semeado", "1");
+    }
+  });
+  await page.goto(`/#/${slug}`);
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  await expect(page.locator("html")).not.toHaveAttribute("data-accent", /.*/);
+
+  await page.getByRole("button", { name: "Aparência", exact: true }).click();
+  await expect(page.getByRole("group", { name: "Tema" })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Idioma da interface" })).toBeVisible();
+  await expect(page.getByText("Cor de destaque")).toHaveCount(0);
+  await expect(page.getByRole("dialog").getByRole("button")).toHaveCount(5); // 3 temas + 2 idiomas
+
+  // Cobalto nos dois temas: --primary pinta botões, foco e marcadores.
+  const primary = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--primary").trim());
+  expect(await primary()).toBe("#8098ff");
+  await page.getByRole("button", { name: "Claro" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  expect(await primary()).toBe("#2b4fe0");
+  expect(await page.evaluate(() => localStorage.getItem("explicai:aparencia"))).toBe('{"mode":"light"}');
+  expect(errors).toEqual([]);
+});

@@ -66,29 +66,6 @@
   color-scheme: dark;
 }
 
-/*
- * Cores de destaque escolhidas em "Aparência". Elas trocam o cobalto, e o resto (botões, foco,
- * marcadores) acompanha. Cada uma tem contraste AA com o texto sobre ela nos dois temas.
- */
-:root[data-accent="esmeralda"] {
-  --cobalto: #0f7a55;
-}
-:root[data-accent="ameixa"] {
-  --cobalto: #7a3fc4;
-}
-:root[data-accent="grafite"] {
-  --cobalto: #3d4459;
-}
-:root[data-theme="dark"][data-accent="esmeralda"] {
-  --cobalto: #4cc79a;
-}
-:root[data-theme="dark"][data-accent="ameixa"] {
-  --cobalto: #b58cff;
-}
-:root[data-theme="dark"][data-accent="grafite"] {
-  --cobalto: #b4bbd3;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

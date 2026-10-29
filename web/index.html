@@ -12,7 +12,6 @@
         try { a = JSON.parse(localStorage.getItem("explicai:aparencia") || "{}"); } catch {}
         var dark = a.mode === "dark" || (a.mode !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
         document.documentElement.dataset.theme = dark ? "dark" : "light";
-        document.documentElement.dataset.accent = a.accent || "cobalto";
       })();
     </script>
   </head>

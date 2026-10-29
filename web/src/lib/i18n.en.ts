@@ -63,7 +63,6 @@ export const EN: Record<string, string> = {
   "Comandos e trechos de código": "Commands and code snippets",
   "Conferida, pode ir para o manual": "Checked, can go into the manual",
   "Conteúdo da página": "Page content",
-  "Cor de destaque": "Accent color",
   "Cor do manual": "Manual color",
   "Criar a primeira página": "Create the first page",
   "Criar manual": "Create manual",
@@ -144,8 +143,8 @@ export const EN: Record<string, string> = {
   Mover: "Move",
   "Mover a página para cima ou para baixo": "Move the page up or down",
   "Mover para a lixeira": "Move to trash",
-  "Muda só o Studio, neste navegador. O manual não é alterado.":
-    "Only changes the Studio, in this browser. The manual is not changed.",
+  "Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.":
+    "Only changes the Studio, in this browser. The manual color is in Export manual.",
   "Não foi possível abrir o Studio.": "Could not open the Studio.",
   "Não foi possível enviar a imagem.": "Could not upload the image.",
   "Não foi possível exportar o manual.": "Could not export the manual.",

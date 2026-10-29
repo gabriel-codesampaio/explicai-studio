@@ -2,7 +2,7 @@ import { Monitor, Moon, Palette, Sun } from "lucide-react";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { type Lang, lang, setLang, t } from "@/lib/i18n";
-import { ACCENTS, type Appearance, type Mode, readAppearance, saveAppearance } from "@/lib/theme";
+import { type Appearance, type Mode, readAppearance, saveAppearance } from "@/lib/theme";
 
 const MODES: { id: Mode; label: string; Icon: typeof Sun }[] = [
   { id: "light", label: t("Claro"), Icon: Sun },
@@ -16,7 +16,7 @@ const LANGS: { id: Lang; label: string }[] = [
   { id: "en", label: "English" },
 ];
 
-/** Botão "Aparência" da barra lateral: tema claro/escuro e cor de destaque do Studio. */
+/** Botão "Aparência" da barra lateral: tema claro/escuro e idioma do Studio. */
 export function AppearancePanel() {
   const [look, setLook] = useState(readAppearance);
   const change = (patch: Partial<Appearance>) => {
@@ -54,23 +54,6 @@ export function AppearancePanel() {
           </div>
         </fieldset>
         <fieldset>
-          <legend className="mb-2 text-sm font-bold">{t("Cor de destaque")}</legend>
-          <div className="flex gap-2.5">
-            {ACCENTS.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                aria-pressed={look.accent === a.id}
-                aria-label={a.label}
-                title={a.label}
-                onClick={() => change({ accent: a.id })}
-                className="size-7 rounded-full ring-foreground ring-offset-2 ring-offset-popover aria-pressed:ring-2"
-                style={{ background: a.swatch }}
-              />
-            ))}
-          </div>
-        </fieldset>
-        <fieldset>
           <legend className="mb-2 text-sm font-bold">{t("Idioma da interface")}</legend>
           <div className="grid grid-cols-2 gap-1 rounded-md bg-muted p-1">
             {LANGS.map(({ id, label }) => (
@@ -87,7 +70,9 @@ export function AppearancePanel() {
             ))}
           </div>
         </fieldset>
-        <p className="text-xs text-muted-foreground">{t("Muda só o Studio, neste navegador. O manual não é alterado.")}</p>
+        <p className="text-xs text-muted-foreground">
+          {t("Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.")}
+        </p>
       </PopoverContent>
     </Popover>
   );
