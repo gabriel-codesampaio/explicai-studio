@@ -52,3 +52,5 @@ Explicaí is a free, open source manual builder. Run `npx explicai manuals` (Nod
 ## Licença
 
 MIT. Um projeto [codesampa.io](https://codesampa.io).
+
+As fontes em `fonts/` (Archivo, Atkinson Hyperlegible Next e JetBrains Mono) seguem a SIL Open Font License 1.1, com a licença de cada uma ao lado. Elas vão junto com o manual exportado em HTML.

@@ -101,7 +101,12 @@ describe("exportação", () => {
     const urls = [...html.matchAll(/@font-face\{font-family:"([^"]+)";src:url\((fonts\/[^)]+\.woff2)\)/g)];
     expect(new Set(urls.map((m) => m[1]))).toEqual(new Set(["Archivo", "Atkinson Hyperlegible Next", "JetBrains Mono"]));
     for (const m of urls) expect((await readFile(path.join(dir, "exportacao/html", m[2] ?? ""))).length).toBeGreaterThan(1000);
-    expect(await readFile(path.join(dir, "exportacao/html/fonts/OFL-archivo.txt"), "utf8")).toContain("Open Font License");
+    for (const f of ["archivo", "atkinson-hyperlegible-next", "jetbrains-mono"]) {
+      expect(await readFile(path.join(dir, `exportacao/html/fonts/OFL-${f}.txt`), "utf8")).toContain("Open Font License");
+    }
+    // npx explicai só leva o que está em "files": sem `fonts` ali, o export publicado sai sem fontes.
+    const pkg = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+    expect(pkg.files).toContain("fonts");
   });
 
   it("Markdown: um arquivo para IA, com a legenda do print em texto e dentro do passo", async () => {
