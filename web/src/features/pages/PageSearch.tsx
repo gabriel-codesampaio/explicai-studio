@@ -62,7 +62,6 @@ export function PageSearch({ open, onOpenChange }: Props) {
         <div className="flex items-center gap-2 border-b border-border px-3">
           <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
           <input
-            // biome-ignore lint/a11y/noAutofocus: a busca abre para digitar; é o único campo do diálogo
             autoFocus
             role="combobox"
             aria-expanded="true"
