@@ -1,11 +1,9 @@
 import { PanelLeftOpen } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import type { SidebarState } from "@/hooks/useSidebar";
-import type { Studio } from "@/hooks/useStudio";
 import { Sidebar } from "./Sidebar";
 
 interface Props {
-  studio: Studio;
   sidebar: SidebarState;
 }
 
@@ -15,7 +13,7 @@ const SHORTCUT = "Ctrl+\\";
  * Onde a barra lateral aparece: coluna fixa (ou recolhida num trilho) em tela larga,
  * gaveta por cima do editor em tela estreita, como a do sistema dividida ao lado ou o celular.
  */
-export function Navigation({ studio, sidebar }: Props) {
+export function Navigation({ sidebar }: Props) {
   return (
     <>
       <div className="hidden h-full shrink-0 lg:block">
@@ -33,7 +31,7 @@ export function Navigation({ studio, sidebar }: Props) {
           </div>
         ) : (
           <div className="h-full w-[17.5rem]">
-            <Sidebar studio={studio} onCollapse={sidebar.collapse} />
+            <Sidebar onCollapse={sidebar.collapse} />
           </div>
         )}
       </div>
@@ -45,11 +43,7 @@ export function Navigation({ studio, sidebar }: Props) {
           className="top-0 left-0 h-full w-[min(17.5rem,85vw)] max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 p-0 sm:max-w-none lg:hidden data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
         >
           <DialogTitle className="sr-only">Páginas do manual</DialogTitle>
-          <Sidebar
-            studio={studio}
-            onCollapse={() => sidebar.setDrawerOpen(false)}
-            onNavigate={() => sidebar.setDrawerOpen(false)}
-          />
+          <Sidebar onCollapse={() => sidebar.setDrawerOpen(false)} onNavigate={() => sidebar.setDrawerOpen(false)} />
         </DialogContent>
       </Dialog>
     </>

@@ -6,19 +6,19 @@ import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
 import { TrashPanel } from "@/features/pages/TrashPanel";
 import { AppearancePanel } from "@/features/settings/AppearancePanel";
-import type { Studio } from "@/hooks/useStudio";
+import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { shiftTarget } from "@/lib/tree";
 
 interface Props {
-  studio: Studio;
   /** Recolhe a coluna (tela larga) ou fecha a gaveta (tela estreita). */
   onCollapse: () => void;
   /** Chamado ao abrir uma página: na gaveta, ela fecha para mostrar a página. */
   onNavigate?: () => void;
 }
 
-export function Sidebar({ studio, onCollapse, onNavigate }: Props) {
+export function Sidebar({ onCollapse, onNavigate }: Props) {
+  const studio = useStudioContext();
   const { manuals, manual, page } = studio;
   const current = manuals?.find((m) => m.slug === manual?.slug) ?? null;
 

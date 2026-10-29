@@ -6,14 +6,13 @@ import { useHeadings } from "@/features/editor/headings";
 import { PageOutline, PageOutlineButton } from "@/features/editor/PageOutline";
 import { PinnedNotice } from "@/features/versions/PinnedNotice";
 import { VersionsPanel } from "@/features/versions/VersionsPanel";
-import type { Studio } from "@/hooks/useStudio";
+import { useStudioContext } from "@/hooks/StudioContext";
 import type { ManualDetail, Page } from "@/lib/api";
 import { ancestorsOf, findItem } from "@/lib/tree";
 import { PageTitle } from "./PageTitle";
 import { StatusBar } from "./StatusBar";
 
 interface Props {
-  studio: Studio;
   manual: ManualDetail;
   page: Page;
 }
@@ -26,7 +25,8 @@ interface Props {
 const GRID =
   "grid flex-1 [--medida:52rem] 2xl:[--medida:60rem] min-[1920px]:[--medida:68rem] xl:grid-cols-[minmax(0,1fr)_minmax(0,var(--medida))_minmax(14rem,1fr)]";
 
-export function PageView({ studio, manual, page }: Props) {
+export function PageView({ manual, page }: Props) {
+  const studio = useStudioContext();
   const [editor, setEditor] = useState<TiptapEditor | null>(null);
   const [title, setTitle] = useState(page.title);
   const headings = useHeadings(editor);

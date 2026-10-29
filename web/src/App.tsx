@@ -2,14 +2,22 @@ import { EmptyState } from "@/components/EmptyState";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CreateManual } from "@/features/manuals/CreateManual";
+import { StudioProvider, useStudioContext } from "@/hooks/StudioContext";
 import { useSidebar } from "@/hooks/useSidebar";
-import { useStudio } from "@/hooks/useStudio";
 import { MobileBar, Navigation } from "@/layout/Navigation";
 import { PageView } from "@/layout/PageView";
 import { useResolvedTheme } from "@/lib/theme";
 
 export function App() {
-  const studio = useStudio();
+  return (
+    <StudioProvider>
+      <Shell />
+    </StudioProvider>
+  );
+}
+
+function Shell() {
+  const studio = useStudioContext();
   const theme = useResolvedTheme();
   const sidebar = useSidebar();
   const { manuals, manual, page, bootError } = studio;
@@ -23,7 +31,7 @@ export function App() {
   return (
     <TooltipProvider delayDuration={400}>
       <div className="flex h-full">
-        {!firstRun && <Navigation studio={studio} sidebar={sidebar} />}
+        {!firstRun && <Navigation sidebar={sidebar} />}
         <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
           {!firstRun && <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} />}
           {firstRun || studio.creatingManual ? (
@@ -37,7 +45,7 @@ export function App() {
             </EmptyState>
           ) : (
             // key: cada página (e cada versão restaurada) tem o próprio editor, criado com o conteúdo dela.
-            <PageView key={`${page.id}:${studio.revision}`} studio={studio} manual={manual} page={page} />
+            <PageView key={`${page.id}:${studio.revision}`} manual={manual} page={page} />
           )}
         </main>
       </div>
