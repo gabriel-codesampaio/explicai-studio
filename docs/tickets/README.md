@@ -15,7 +15,7 @@ Prioridade: **P0** atinge quem lê o resultado final; **P1** é o pedido princip
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
 | [T-009](T-009-raio-de-papel.md) | Raio de 3 px na interface de trabalho | P1 | aberto | design |
 | [T-010](T-010-barra-colar-print.md) | "Colar print" com Ctrl+V na barra de ferramentas | P1 | aberto | frontend |
-| [T-019](T-019-cores-so-no-manual.md) | Tirar as cores extras do Studio e manter só no manual exportado | P1 | aberto | frontend |
+| [T-019](T-019-cores-so-no-manual.md) | Tirar as cores extras do Studio e manter só no manual exportado | P1 | feito | frontend |
 | [T-022](T-022-enter-depois-de-imagem.md) | Corrigir o Enter que não cria parágrafo em página com imagem vinda do Markdown | P1 | aberto | frontend |
 | [T-002](T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | aberto | core |
 | [T-011](T-011-amarelo-com-um-sentido.md) | Dar ao amarelo um sentido só (conteúdo e página ativa) | P2 | aberto | design |
