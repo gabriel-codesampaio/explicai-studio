@@ -60,6 +60,11 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
         className="grid max-h-[94vh] w-[min(96vw,80rem)] max-w-none grid-rows-[auto_auto_minmax(0,1fr)_auto] gap-4 sm:max-w-none"
+        onOpenAutoFocus={(e) => {
+          // O foco abre na ferramenta ativa, para não haver dois botões destacados ao mesmo tempo.
+          e.preventDefault();
+          (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[aria-pressed="true"]')?.focus();
+        }}
         onKeyDown={(e) => {
           const target = e.target as HTMLElement;
           if ((e.key === "Delete" || e.key === "Backspace") && selectedId && draft && !target.closest("input, select")) {
@@ -92,8 +97,8 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
         </div>
 
         {draft ? (
-          <div className="grid min-h-0 gap-5 overflow-auto md:grid-cols-[minmax(0,1fr)_20rem]">
-            <div className="min-w-0">
+          <div className="grid min-h-0 items-start gap-5 overflow-auto md:grid-cols-[minmax(0,1fr)_20rem]">
+            <div className="grid min-w-0 justify-items-center">
               <AnnotationCanvas
                 src={src}
                 alt={alt}

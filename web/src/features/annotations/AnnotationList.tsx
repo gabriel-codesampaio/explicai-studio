@@ -47,7 +47,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid content-start gap-4">
       {annotations.markers.length > 0 && (
         <section className="grid gap-1.5">
           <h3 className="text-sm font-bold">Legenda</h3>
@@ -55,7 +55,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
             .sort((a, b) => a.n - b.n)
             .map((m) => (
               <div key={m.id} className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary font-mono text-xs font-semibold text-primary-foreground">
+                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-anotacao font-mono text-xs font-semibold text-white">
                   {m.n}
                 </span>
                 <Input

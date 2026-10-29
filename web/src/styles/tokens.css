@@ -15,6 +15,8 @@
   --marca-faixa: rgba(255, 212, 59, 0.55);
   --coral: #c8411f;
   --acento: var(--cobalto);
+  /* Marcações sobre o print são conteúdo do manual: mesma cor em qualquer tema ou destaque do Studio. */
+  --anotacao: #2b4fe0;
 
   /* nomes do shadcn */
   --background: var(--papel);
@@ -107,6 +109,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-marca: var(--marca);
+  --color-anotacao: var(--anotacao);
   --color-marca-faixa: var(--marca-faixa);
   --color-superficie: var(--superficie);
 

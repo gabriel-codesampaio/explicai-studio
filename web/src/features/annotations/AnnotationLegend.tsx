@@ -9,7 +9,7 @@ export function AnnotationLegend({ markers }: { markers: Marker[] }) {
         .sort((a, b) => a.n - b.n)
         .map((m) => (
           <li key={m.id} className="flex items-start gap-2">
-            <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary font-mono text-[11px] font-semibold text-primary-foreground">
+            <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-anotacao font-mono text-[11px] font-semibold text-white">
               {m.n}
             </span>
             <span className={m.label ? "" : "text-muted-foreground italic"}>{m.label || "Sem descrição"}</span>

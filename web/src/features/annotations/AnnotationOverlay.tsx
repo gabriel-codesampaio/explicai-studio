@@ -54,10 +54,7 @@ export function AnnotationOverlay({ annotations, selectedId, onSelect }: Props) 
         <span
           key={h.id}
           onPointerDown={pick(h.id)}
-          className={cn(
-            "absolute block rounded-[3px] border-2 border-marca bg-marca/25 mix-blend-multiply dark:bg-marca/30 dark:mix-blend-normal",
-            ring(h.id),
-          )}
+          className={cn("absolute block rounded-[3px] border-2 border-marca bg-marca/30", ring(h.id))}
           style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%` }}
         />
       ))}
@@ -65,10 +62,10 @@ export function AnnotationOverlay({ annotations, selectedId, onSelect }: Props) 
         <span
           key={h.id}
           onPointerDown={pick(h.id)}
-          className={cn("absolute block rounded-[3px] border-2 border-dashed border-primary bg-primary/8", ring(h.id))}
+          className={cn("absolute block rounded-[3px] border-2 border-dashed border-anotacao bg-anotacao/8", ring(h.id))}
           style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%` }}
         >
-          <Link2 className="absolute -top-2.5 -right-2.5 size-5 rounded-full bg-primary p-0.5 text-primary-foreground" />
+          <Link2 className="absolute -top-2.5 -right-2.5 size-5 rounded-full bg-anotacao p-0.5 text-white" />
         </span>
       ))}
       {size.w > 0 && annotations.arrows.length > 0 && (
@@ -85,11 +82,11 @@ export function AnnotationOverlay({ annotations, selectedId, onSelect }: Props) 
                   y1={from.y}
                   x2={to.x}
                   y2={to.y}
-                  stroke="var(--cobalto)"
+                  stroke="var(--anotacao)"
                   strokeWidth={a.id === selectedId ? 5 : 3.5}
                   strokeLinecap="round"
                 />
-                <polygon points={arrowHead(from, to)} fill="var(--cobalto)" />
+                <polygon points={arrowHead(from, to)} fill="var(--anotacao)" />
               </g>
             );
           })}
@@ -100,7 +97,7 @@ export function AnnotationOverlay({ annotations, selectedId, onSelect }: Props) 
           key={m.id}
           onPointerDown={pick(m.id)}
           className={cn(
-            "absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-primary font-mono text-[13px] font-semibold text-primary-foreground shadow-[0_0_0_2px_var(--superficie),0_2px_6px_rgb(21_26_51/0.35)]",
+            "absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-anotacao font-mono text-[13px] font-semibold text-white shadow-[0_0_0_2px_#fff,0_2px_6px_rgb(21_26_51/0.35)]",
             ring(m.id),
           )}
           style={{ left: `${m.x * 100}%`, top: `${m.y * 100}%` }}
