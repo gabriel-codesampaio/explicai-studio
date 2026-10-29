@@ -8,6 +8,7 @@ import {
   type ManualSummary,
   type Page,
   type PagePatch,
+  type PageStatus,
   type TreeItem,
 } from "../lib/api";
 import { readLocation, writeLocation } from "../lib/hashRoute";
@@ -149,11 +150,21 @@ export function useStudio() {
     });
 
   /** Grava o que ainda está na fila e exporta. O diálogo mostra o resultado ou o erro. */
-  const exportManual = async (format: ExportFormat) => {
+  const exportManual = async (format: ExportFormat, onlyApproved: boolean) => {
     if (!manual) throw new Error("Abra um manual para exportar.");
     await flush();
-    return api.exportManual(manual.slug, format);
+    return api.exportManual(manual.slug, format, onlyApproved);
   };
+
+  /** Etapa da página aberta no fluxo de aprovação. Grava na hora e atualiza a etiqueta na árvore. */
+  const setPageStatus = (status: PageStatus) =>
+    run(async () => {
+      if (!manual || !page) return;
+      await flush();
+      const saved = await api.updatePage(manual.slug, page.id, { status });
+      setPage((p) => (p && p.id === saved.id ? { ...p, status: saved.status } : p));
+      await refreshManual(manual.slug);
+    });
 
   /** Cor do manual exportado (`null` = a da marca). */
   const setManualAccent = (accent: string | null) =>
@@ -207,6 +218,7 @@ export function useStudio() {
     publishVersion,
     exportManual,
     setManualAccent,
+    setPageStatus,
     createManual,
     editPage,
     reportError: (message: string) => toast.error(message),

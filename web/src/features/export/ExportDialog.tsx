@@ -13,6 +13,7 @@ import {
 import { useStudioContext } from "@/hooks/StudioContext";
 import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
 import { ACCENTS } from "@/lib/theme";
+import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 
 const FORMATS: { id: ExportFormat; label: string; hint: string; Icon: LucideIcon }[] = [
@@ -25,6 +26,8 @@ const FORMATS: { id: ExportFormat; label: string; hint: string; Icon: LucideIcon
 export function ExportDialog() {
   const studio = useStudioContext();
   const [format, setFormat] = useState<ExportFormat>("html");
+  const [onlyApproved, setOnlyApproved] = useState(false);
+  const approved = flattenItems(studio.manual?.pages ?? []).filter((p) => ["aprovado", "publicado"].includes(p.status)).length;
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ExportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +38,7 @@ export function ExportDialog() {
     setError(null);
     setResult(null);
     try {
-      setResult(await studio.exportManual(format));
+      setResult(await studio.exportManual(format, onlyApproved));
     } catch (err) {
       setError(errorMessage(err, "Não foi possível exportar o manual."));
     } finally {
@@ -90,6 +93,22 @@ export function ExportDialog() {
             </label>
           ))}
         </fieldset>
+
+        <label className="flex items-start gap-2.5 text-sm">
+          <input
+            type="checkbox"
+            checked={onlyApproved}
+            onChange={(e) => setOnlyApproved(e.target.checked)}
+            className="mt-0.5 size-4 accent-[var(--primary)]"
+          />
+          <span className="grid leading-tight">
+            <span className="font-bold">Só páginas aprovadas</span>
+            <span className="text-xs text-muted-foreground">
+              {approved} {approved === 1 ? "página aprovada ou publicada" : "páginas aprovadas ou publicadas"} neste manual. As
+              outras ficam de fora.
+            </span>
+          </span>
+        </label>
 
         <fieldset>
           <legend className="mb-2 text-sm font-bold">Cor do manual</legend>

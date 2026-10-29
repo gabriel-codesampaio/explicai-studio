@@ -8,9 +8,12 @@ export interface ManualSummary {
   language: string;
 }
 
+export type PageStatus = "rascunho" | "revisao" | "aprovado" | "publicado";
+
 export interface TreeItem {
   id: string;
   title: string;
+  status: PageStatus;
   file: string;
   /** O arquivo da página sumiu ou está com erro (mexido fora do Studio). */
   problem?: string;
@@ -40,6 +43,7 @@ export interface ExportResult {
 export interface Page {
   id: string;
   title: string;
+  status: PageStatus;
   body: string;
   file: string;
 }
@@ -69,6 +73,7 @@ export interface Version extends VersionInfo {
 export interface PagePatch {
   title?: string;
   body?: string;
+  status?: PageStatus;
 }
 
 async function call<T>(url: string, init?: RequestInit): Promise<T> {
@@ -116,7 +121,8 @@ export const api = {
   publishVersion: (slug: string, id: string, versionId: string | null) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/published`, send("PUT", { versionId })),
 
-  exportManual: (slug: string, format: ExportFormat) => call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format })),
+  exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean) =>
+    call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved })),
   /** `null` volta à cor da marca. */
   setTheme: (slug: string, accent: string | null) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", { accent })),
 

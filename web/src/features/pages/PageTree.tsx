@@ -1,9 +1,11 @@
 import { TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import type { TreeItem } from "@/lib/api";
+import { statusOf } from "@/lib/status";
 import { type DropZone, dropTarget, findItem } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { type PageAction, PageActions } from "./PageActions";
+import { StatusDot } from "./StatusMenu";
 import { useTreeKeyboard } from "./useTreeKeyboard";
 
 const DRAG_TYPE = "text/x-explicai-page";
@@ -101,6 +103,12 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                 >
                   {item.title || (item.problem ? item.file.split("/").pop() : "Sem título")}
                 </span>
+                {item.status !== "rascunho" && (
+                  <span title={statusOf(item.status).label} className="ml-1.5 inline-flex align-[1px]">
+                    <StatusDot status={item.status} />
+                    <span className="sr-only">({statusOf(item.status).label})</span>
+                  </span>
+                )}
                 {item.problem && (
                   <span title={item.problem} className="ml-1.5 inline-flex align-[-2px] text-destructive">
                     <TriangleAlert className="size-3.5" aria-hidden />
