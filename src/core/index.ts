@@ -1,5 +1,5 @@
 export { emptyAnnotations, parseAnnotations } from "./annotations.js";
-export { readAnnotations, saveAsset, writeAnnotations } from "./assets.js";
+export { cleanUnusedAssets, findUnusedAssets, readAnnotations, saveAsset, writeAnnotations } from "./assets.js";
 export {
   EXPORT_DIR,
   EXPORT_FORMATS,

@@ -1,5 +1,6 @@
-import { RotateCcw, Trash2 } from "lucide-react";
+import { ImageOff, RotateCcw, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { api, errorMessage, type TrashItem } from "@/lib/api";
 import { ago } from "@/lib/time";
@@ -13,12 +14,26 @@ interface Props {
 export function TrashPanel({ slug, onRestore }: Props) {
   const [items, setItems] = useState<TrashItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  /** Imagens e marcações que nenhuma página, versão ou item da lixeira usa. */
+  const [unused, setUnused] = useState(0);
 
   const load = () => {
     setItems(null);
     setError(null);
     api.listTrash(slug).then(setItems, (err: unknown) => setError(errorMessage(err)));
+    api.unusedAssets(slug).then(
+      ({ count }) => setUnused(count),
+      () => setUnused(0),
+    );
   };
+  const clean = () =>
+    api.cleanUnusedAssets(slug).then(
+      ({ moved, folder }) => {
+        setUnused(0);
+        toast(`${moved} ${moved === 1 ? "arquivo foi" : "arquivos foram"} para ${folder}.`);
+      },
+      (err: unknown) => setError(errorMessage(err)),
+    );
 
   return (
     <Popover onOpenChange={(open) => open && load()}>
@@ -56,6 +71,21 @@ export function TrashPanel({ slug, onRestore }: Props) {
               </li>
             ))}
           </ul>
+        )}
+        {unused > 0 && (
+          <div className="mx-2 mt-2 grid gap-1 rounded-md border border-border p-2 text-sm">
+            <p>
+              {unused} {unused === 1 ? "arquivo de imagem que nenhuma página usa" : "arquivos de imagem que nenhuma página usa"},
+              contando versões e lixeira.
+            </p>
+            <button
+              type="button"
+              onClick={() => void clean()}
+              className="flex w-fit items-center gap-1 rounded-md px-2 py-1 font-bold text-primary hover:bg-accent"
+            >
+              <ImageOff className="size-3.5" aria-hidden /> Mover para a lixeira
+            </button>
+          </div>
         )}
         <p className="px-2 pt-2 text-xs text-muted-foreground">
           As páginas ficam na pasta <code className="font-mono">.lixeira</code> do manual até você restaurar ou apagar.

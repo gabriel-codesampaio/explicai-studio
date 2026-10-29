@@ -1,4 +1,11 @@
-import { readAnnotations, resolveInside, saveAsset, writeAnnotations } from "../../core/index.js";
+import {
+  cleanUnusedAssets,
+  findUnusedAssets,
+  readAnnotations,
+  resolveInside,
+  saveAsset,
+  writeAnnotations,
+} from "../../core/index.js";
 import { file, json, readBody, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir } from "../workspace.js";
@@ -25,6 +32,18 @@ export const assetRoutes: Route[] = [
     path: "/api/manuals/:slug/annotations",
     handle: async (ctx) =>
       json(await writeAnnotations(manualDir(ctx), ctx.url.searchParams.get("asset") ?? "", await readJson(ctx.req))),
+  },
+  {
+    // Imagens e marcações que nenhuma página, versão ou item da lixeira usa.
+    method: "GET",
+    path: "/api/manuals/:slug/assets/unused",
+    handle: async (ctx) => json({ count: (await findUnusedAssets(manualDir(ctx))).length }),
+  },
+  {
+    // Move as sem uso para .lixeira/imagens-<data>/. Nada é apagado.
+    method: "POST",
+    path: "/api/manuals/:slug/assets/clean",
+    handle: async (ctx) => json(await cleanUnusedAssets(manualDir(ctx))),
   },
   {
     // Imagens do manual, usadas pelo editor: /files/<manual>/assets/<arquivo>

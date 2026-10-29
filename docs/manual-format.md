@@ -73,7 +73,7 @@ Destinos de área clicável: `page` (outra página), `anchor` (seção de uma p�
 
 ## Lixeira
 
-Excluir uma página move o arquivo dela (e o das subpáginas) para `.lixeira/<id>/pages/`, junto com um `entry.json` que guarda a posição na árvore. Restaurar devolve tudo ao mesmo lugar. Se o pai também foi excluído, a página volta para a raiz. Se o nome do arquivo foi ocupado nesse meio tempo, ela ganha um nome novo. A lixeira não é esvaziada sozinha: dá para apagar a pasta `.lixeira/` à mão ou colocá-la no `.gitignore`.
+Excluir uma página move o arquivo dela (e o das subpáginas) para `.lixeira/<id>/pages/`, junto com um `entry.json` que guarda a posição na árvore. Restaurar devolve tudo ao mesmo lugar. Se o pai também foi excluído, a página volta para a raiz. Se o nome do arquivo foi ocupado nesse meio tempo, ela ganha um nome novo. "Imagens sem uso" move para `.lixeira/imagens-<data>/` as imagens que nenhuma página, versão ou item da lixeira cita, junto com as marcações delas, e as marcações cuja imagem não existe mais. A lixeira não é esvaziada sozinha: dá para apagar a pasta `.lixeira/` à mão ou colocá-la no `.gitignore`.
 
 Uma página pode ficar sem título enquanto é escrita. O arquivo vira `sem-titulo.md` e é renomeado quando o título aparece.
 

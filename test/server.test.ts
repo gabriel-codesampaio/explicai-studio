@@ -234,3 +234,15 @@ describe("API do fluxo de aprovação", () => {
     expect((await fetch(url, json("PUT", { status: "pronto" }))).status).toBe(400);
   });
 });
+
+describe("API de imagens sem uso", () => {
+  it("conta e move para a lixeira as imagens que nenhuma página usa", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
+    const png = new Uint8Array([137, 80, 78, 71]);
+    await fetch(`${base}/api/manuals/m/assets?name=sobra.png`, { method: "POST", body: png });
+    expect(await (await fetch(`${base}/api/manuals/m/assets/unused`)).json()).toEqual({ count: 1 });
+    const cleaned = await (await fetch(`${base}/api/manuals/m/assets/clean`, json("POST"))).json();
+    expect(cleaned.moved).toBe(1);
+    expect(await (await fetch(`${base}/api/manuals/m/assets/unused`)).json()).toEqual({ count: 0 });
+  });
+});

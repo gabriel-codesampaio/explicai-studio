@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
 import { atomicWrite, exists, relativePosix, resolveInside, uniquePath } from "./fs.js";
@@ -37,4 +37,45 @@ function annotationsFile(dir: string, assetPath: string): string {
     throw new Error("Anotações só existem para imagens em assets/.");
   }
   return `${abs}.json`;
+}
+
+/** Pastas cujos Markdown podem citar imagens: páginas, versões guardadas e lixeira. */
+const MENTION_DIRS = ["pages", ".versoes", ".lixeira"];
+const MENTION = /assets\/([^)\s"'#?]+)/g;
+
+/**
+ * Arquivos de assets/ que ninguém usa: imagens que nenhuma página, versão ou item da lixeira cita,
+ * e marcações (.json) cuja imagem não existe mais. Devolve caminhos como `assets/tela.png`.
+ */
+export async function findUnusedAssets(dir: string): Promise<string[]> {
+  const assetsDir = path.join(dir, ASSETS_DIR);
+  if (!(await exists(assetsDir))) return [];
+  const used = new Set<string>();
+  for (const sub of MENTION_DIRS) {
+    const root = path.join(dir, sub);
+    if (!(await exists(root))) continue;
+    for (const file of await readdir(root, { recursive: true })) {
+      if (!file.endsWith(".md")) continue;
+      for (const [, name] of (await readFile(path.join(root, file), "utf8")).matchAll(MENTION)) {
+        if (name) used.add(decodeURI(name));
+      }
+    }
+  }
+  const files = await readdir(assetsDir);
+  const names = new Set(files);
+  return files
+    .filter((f) => (f.endsWith(".json") ? !names.has(f.slice(0, -".json".length)) : !used.has(f)))
+    .flatMap((f) => (!f.endsWith(".json") && names.has(`${f}.json`) ? [f, `${f}.json`] : [f]))
+    .filter((f, i, all) => all.indexOf(f) === i)
+    .map((f) => `${ASSETS_DIR}/${f}`);
+}
+
+/** Move o que `findUnusedAssets` achou para `.lixeira/imagens-<data>/`. Nada é apagado. */
+export async function cleanUnusedAssets(dir: string): Promise<{ moved: number; folder: string | null }> {
+  const unused = await findUnusedAssets(dir);
+  if (unused.length === 0) return { moved: 0, folder: null };
+  const folder = path.join(".lixeira", `imagens-${new Date().toISOString().replace(/[:.]/g, "-")}`);
+  await mkdir(path.join(dir, folder, ASSETS_DIR), { recursive: true });
+  for (const asset of unused) await rename(resolveInside(dir, asset), path.join(dir, folder, asset));
+  return { moved: unused.length, folder: folder.split(path.sep).join("/") };
 }
