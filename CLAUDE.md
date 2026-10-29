@@ -18,6 +18,7 @@ Especificação da v1: `docs/spec-v1.md`. Formato em disco: `docs/manual-format.
 npm run check       # lint (Biome) + tipos + testes: rode antes de dizer que terminou
 npm run lint:fix    # formata e corrige o que o Biome souber corrigir
 npm test            # testes
+npm run test:e2e    # build + Playwright no Chrome instalado (e2e/*.e2e.ts)
 npm run typecheck   # checagem de tipos (núcleo, servidor e editor)
 npm run build       # compila para dist/ (CLI, servidor, núcleo e dist/web)
 npm start -- <pasta>  # abre o Studio já compilado

@@ -32,7 +32,8 @@
     "test:watch": "vitest",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "check": "npm run lint && npm run typecheck && npm test"
+    "check": "npm run lint && npm run typecheck && npm test",
+    "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
     "cn": "^0.5.0",
@@ -44,6 +45,7 @@
     "@fontsource-variable/archivo": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.3",
     "@tiptap/extension-file-handler": "^3.32.0",
     "@tiptap/extension-image": "^3.32.0",

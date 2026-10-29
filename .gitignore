@@ -9,3 +9,5 @@ CLAUDE.local.md
 .claude/settings.local.json
 exemplos/
 .impeccable/hook.cache.json
+test-results/
+playwright-report/
