@@ -16,7 +16,11 @@ export async function insertImages(
     try {
       const { path } = await api.uploadAsset(slug, file);
       const alt = file.name.replace(/\.[^.]+$/, "");
-      editor.chain().focus().insertContentAt(pos, { type: "image", attrs: { src: assetUrl(slug, path), alt } }).run();
+      editor
+        .chain()
+        .focus()
+        .insertContentAt(pos, { type: "image", attrs: { src: assetUrl(slug, path), alt } })
+        .run();
     } catch (err) {
       onError(errorMessage(err, "Não foi possível enviar a imagem."));
     }

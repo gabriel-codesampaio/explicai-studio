@@ -25,7 +25,7 @@ export async function removePage(dir: string, id: string): Promise<{ trashId: st
     const { node, siblings } = findNode(meta.pages, id);
     const index = siblings.indexOf(node);
     siblings.splice(index, 1);
-    return { node, parentId: parentOf(meta.pages, id, siblings), index, deletedAt: new Date().toISOString() };
+    return { node, parentId: parentOf(meta.pages, siblings), index, deletedAt: new Date().toISOString() };
   });
 
   const trashId = randomUUID();
@@ -65,7 +65,7 @@ export async function restorePage(dir: string, trashId: string): Promise<void> {
   await rm(trash, { recursive: true, force: true });
 }
 
-function parentOf(nodes: PageNode[], id: string, siblings: PageNode[]): string | null {
+function parentOf(nodes: PageNode[], siblings: PageNode[]): string | null {
   if (siblings === nodes) return null;
   return flatten(nodes).find((n) => n.children === siblings)?.id ?? null;
 }

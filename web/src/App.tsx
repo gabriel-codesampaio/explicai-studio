@@ -1,6 +1,6 @@
+import { EmptyState } from "@/components/EmptyState";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { EmptyState } from "@/components/EmptyState";
 import { CreateManual } from "@/features/manuals/CreateManual";
 import { useStudio } from "@/hooks/useStudio";
 import { PageView } from "@/layout/PageView";
@@ -24,7 +24,10 @@ export function App() {
           {firstRun || studio.creatingManual ? (
             <CreateManual firstRun={firstRun} onCreate={studio.createManual} onCancel={() => studio.setCreatingManual(false)} />
           ) : !manual ? null : !page ? (
-            <EmptyState title={manual.title} action={{ label: "Criar a primeira página", onClick: () => void studio.addPage(null) }}>
+            <EmptyState
+              title={manual.title}
+              action={{ label: "Criar a primeira página", onClick: () => void studio.addPage(null) }}
+            >
               Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.
             </EmptyState>
           ) : (

@@ -1,6 +1,6 @@
 import { Extension } from "@tiptap/core";
 import FileHandler from "@tiptap/extension-file-handler";
-import { EditorContent, useEditor, type Editor as TiptapEditor } from "@tiptap/react";
+import { EditorContent, type Editor as TiptapEditor, useEditor } from "@tiptap/react";
 import { useEffect, useRef, useState } from "react";
 import type { TreeItem } from "@/lib/api";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";

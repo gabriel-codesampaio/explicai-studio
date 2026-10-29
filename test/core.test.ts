@@ -146,11 +146,15 @@ describe("imagens e anotações", () => {
     const withTarget = (href: string) => ({ ...valid, hotspots: [{ ...valid.hotspots[0], target: { type: "url", href } }] });
 
     await expect(writeAnnotations(dir, asset, withTarget("javascript:alert(1)"))).rejects.toThrow(/http/);
-    await expect(writeAnnotations(dir, asset, { ...valid, markers: [{ ...valid.markers[0], x: 1.5 }] })).rejects.toThrow(/entre 0 e 1/);
+    await expect(writeAnnotations(dir, asset, { ...valid, markers: [{ ...valid.markers[0], x: 1.5 }] })).rejects.toThrow(
+      /entre 0 e 1/,
+    );
     await expect(
       writeAnnotations(dir, asset, { ...valid, highlights: [{ id: "m1", x: 0, y: 0, w: 0.1, h: 0.1 }] }),
     ).rejects.toThrow(/repetido/);
-    await expect(writeAnnotations(dir, asset, { ...valid, hotspots: [{ ...valid.hotspots[0], x: 0.9 }] })).rejects.toThrow(/borda/);
+    await expect(writeAnnotations(dir, asset, { ...valid, hotspots: [{ ...valid.hotspots[0], x: 0.9 }] })).rejects.toThrow(
+      /borda/,
+    );
   });
 
   it("recusa formato de imagem desconhecido", async () => {

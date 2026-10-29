@@ -1,4 +1,4 @@
-import { FORMAT_VERSION, type Annotations, type HotspotTarget, type Point, type Rect } from "./types.js";
+import { type Annotations, FORMAT_VERSION, type HotspotTarget, type Point, type Rect } from "./types.js";
 
 export function emptyAnnotations(): Annotations {
   return { version: FORMAT_VERSION, markers: [], highlights: [], arrows: [], hotspots: [] };

@@ -7,10 +7,10 @@ import {
   ImageIcon,
   List,
   ListOrdered,
+  type LucideIcon,
   Pilcrow,
   Quote,
   Table,
-  type LucideIcon,
 } from "lucide-react";
 
 export interface BlockContext {

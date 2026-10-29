@@ -54,7 +54,12 @@ export async function updatePage(dir: string, id: string, patch: { title?: strin
     return flatten(meta.pages).filter((n) => n.id !== id);
   });
   await rm(resolveInside(dir, page.file), { force: true });
-  await relink(dir, others.map((n) => n.file), page.file, next.file);
+  await relink(
+    dir,
+    others.map((n) => n.file),
+    page.file,
+    next.file,
+  );
   return next;
 }
 

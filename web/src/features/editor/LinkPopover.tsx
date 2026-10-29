@@ -40,7 +40,12 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
   }
 
   const query = fold(text.trim());
-  const suggestions = query && !/[/:.#]/.test(query) ? flattenItems(pages).filter((p) => fold(p.title).includes(query)).slice(0, 5) : [];
+  const suggestions =
+    query && !/[/:.#]/.test(query)
+      ? flattenItems(pages)
+          .filter((p) => fold(p.title).includes(query))
+          .slice(0, 5)
+      : [];
 
   const setLink = (href: string) => {
     const chain = editor.chain().focus().extendMarkRange("link");
@@ -106,13 +111,7 @@ export function LinkPopover({ editor, open, onClose, pages }: Props) {
         )}
         <div className="flex justify-between gap-2 pt-1">
           {current ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="text-destructive"
-              onClick={() => setLink("")}
-            >
+            <Button type="button" variant="ghost" size="sm" className="text-destructive" onClick={() => setLink("")}>
               Remover link
             </Button>
           ) : (

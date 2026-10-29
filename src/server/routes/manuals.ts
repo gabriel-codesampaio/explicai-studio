@@ -1,5 +1,5 @@
 import path from "node:path";
-import { createManual, listManuals, readManual, readPage, type Manual, type PageNode } from "../../core/index.js";
+import { createManual, listManuals, type Manual, type PageNode, readManual, readPage } from "../../core/index.js";
 import { json, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir, optionalString } from "../workspace.js";
@@ -50,7 +50,12 @@ export const manualRoutes: Route[] = [
     handle: async (ctx) => {
       const dir = manualDir(ctx);
       const meta = await readManual(dir);
-      return json({ slug: ctx.params.slug, title: meta.title, language: meta.language, pages: await withTitles(dir, meta.pages) });
+      return json({
+        slug: ctx.params.slug,
+        title: meta.title,
+        language: meta.language,
+        pages: await withTitles(dir, meta.pages),
+      });
     },
   },
 ];

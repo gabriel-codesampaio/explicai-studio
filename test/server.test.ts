@@ -39,7 +39,9 @@ describe("API do Studio", () => {
     const tree = await (await fetch(`${base}/api/manuals/financeiro`)).json();
     expect(tree.pages).toMatchObject([{ title: "Clientes", children: [{ title: "Cadastrar", children: [] }] }]);
 
-    const saved = await (await fetch(`${base}/api/manuals/financeiro/pages/${pai.id}`, json("PUT", { body: "Texto **novo**" }))).json();
+    const saved = await (
+      await fetch(`${base}/api/manuals/financeiro/pages/${pai.id}`, json("PUT", { body: "Texto **novo**" }))
+    ).json();
     expect(saved.body).toBe("Texto **novo**");
   });
 

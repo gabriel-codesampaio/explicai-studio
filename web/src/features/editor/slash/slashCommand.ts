@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/core";
 import { ReactRenderer } from "@tiptap/react";
 import Suggestion from "@tiptap/suggestion";
-import { searchBlocks, type Block } from "../blocks";
+import { type Block, searchBlocks } from "../blocks";
 import { SlashMenu, type SlashMenuHandle } from "./SlashMenu";
 
 export interface SlashOptions {

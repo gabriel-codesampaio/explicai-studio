@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, IndentIncrease, IndentDecrease, MoreHorizontal, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, IndentDecrease, IndentIncrease, MoreHorizontal, Plus, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { TreeItem } from "@/lib/api";
-import { shiftTarget, type Shift } from "@/lib/tree";
+import { type Shift, shiftTarget } from "@/lib/tree";
 
 export type PageAction = { kind: "addChild" } | { kind: "remove" } | { kind: "shift"; shift: Shift };
 
@@ -35,7 +35,12 @@ export function PageActions({ item, pages, onAction }: Props) {
     <span className="flex opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 has-[[data-state=open]]:opacity-100">
       <Tooltip>
         <TooltipTrigger asChild>
-          <button type="button" className={iconButton} aria-label={`Nova subpágina em ${name}`} onClick={() => onAction({ kind: "addChild" })}>
+          <button
+            type="button"
+            className={iconButton}
+            aria-label={`Nova subpágina em ${name}`}
+            onClick={() => onAction({ kind: "addChild" })}
+          >
             <Plus className="size-4" />
           </button>
         </TooltipTrigger>
@@ -54,7 +59,11 @@ export function PageActions({ item, pages, onAction }: Props) {
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {SHIFTS.map(({ shift, label, Icon }) => (
-            <DropdownMenuItem key={shift} disabled={!shiftTarget(pages, item.id, shift)} onSelect={() => onAction({ kind: "shift", shift })}>
+            <DropdownMenuItem
+              key={shift}
+              disabled={!shiftTarget(pages, item.id, shift)}
+              onSelect={() => onAction({ kind: "shift", shift })}
+            >
               <Icon /> {label}
             </DropdownMenuItem>
           ))}

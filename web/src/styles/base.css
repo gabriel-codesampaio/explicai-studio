@@ -52,7 +52,10 @@
     letter-spacing: -0.035em;
     line-height: 1;
   }
-  .wordmark .i { position: relative; display: inline-block; }
+  .wordmark .i {
+    position: relative;
+    display: inline-block;
+  }
   .wordmark .i::after {
     content: "";
     position: absolute;

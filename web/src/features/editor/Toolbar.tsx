@@ -1,4 +1,4 @@
-import { useEditorState, type Editor } from "@tiptap/react";
+import { type Editor, useEditorState } from "@tiptap/react";
 import { Bold, Code, ImageIcon, Italic, Link2, Table, TableColumnsSplit, TableRowsSplit, Trash2 } from "lucide-react";
 import { useRovingFocus } from "@/hooks/useRovingFocus";
 import { BlockTypeMenu } from "./BlockTypeMenu";

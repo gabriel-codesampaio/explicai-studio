@@ -26,7 +26,8 @@ export function CreateManual({ firstRun, onCreate, onCancel }: Props) {
           {firstRun ? "Qual sistema você vai explicar?" : "Novo manual"}
         </h1>
         <p className="text-muted-foreground">
-          Cada manual vira uma pasta com uma página em Markdown para cada tela ou tarefa. Dá para versionar no git junto com o código.
+          Cada manual vira uma pasta com uma página em Markdown para cada tela ou tarefa. Dá para versionar no git junto com o
+          código.
         </p>
       </div>
       <div className="grid gap-2">

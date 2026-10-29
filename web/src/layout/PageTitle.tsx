@@ -14,14 +14,14 @@ interface Props {
 export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
-  const fit = () => {
+  const resize = () => {
     const el = ref.current;
     if (!el) return;
     el.style.height = "auto";
     // scrollHeight não conta a borda de baixo (o traço de foco); com border-box ela precisa entrar na altura.
     el.style.height = `${el.scrollHeight + el.offsetHeight - el.clientHeight}px`;
   };
-  useLayoutEffect(fit, []);
+  useLayoutEffect(resize, []);
 
   return (
     <textarea
@@ -30,12 +30,13 @@ export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
       aria-label="Título da página"
       defaultValue={initialTitle}
       placeholder="Sem título"
+      // biome-ignore lint/a11y/noAutofocus: página recém-criada abre com o cursor no título, que é o próximo passo de quem criou
       autoFocus={initialTitle === ""}
       onChange={(e) => {
         // Colar um título com quebras de linha vira uma linha só.
         const title = e.target.value.replace(/\s*\n\s*/g, " ");
         if (title !== e.target.value) e.target.value = title;
-        fit();
+        resize();
         onChange(title);
       }}
       onKeyDown={(e) => {

@@ -1,5 +1,5 @@
 import { NodeSelection } from "@tiptap/pm/state";
-import { useEditorState, type Editor } from "@tiptap/react";
+import { type Editor, useEditorState } from "@tiptap/react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { AnchoredPopover } from "./AnchoredPopover";
@@ -47,7 +47,9 @@ export function ImagePopover({ editor }: { editor: Editor }) {
               }
             }}
           />
-          <p className="text-xs text-muted-foreground">Quem usa leitor de tela e a IA que lê o manual entendem a imagem por aqui.</p>
+          <p className="text-xs text-muted-foreground">
+            Quem usa leitor de tela e a IA que lê o manual entendem a imagem por aqui.
+          </p>
         </div>
       )}
     </AnchoredPopover>

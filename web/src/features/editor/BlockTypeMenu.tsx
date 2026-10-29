@@ -1,4 +1,4 @@
-import { useEditorState, type Editor } from "@tiptap/react";
+import { type Editor, useEditorState } from "@tiptap/react";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { BLOCKS } from "./blocks";

@@ -46,6 +46,12 @@ server.listen(port, "127.0.0.1", () => {
 
 function openBrowser(url: string): void {
   const [cmd, args] =
-    process.platform === "win32" ? ["cmd", ["/c", "start", "", url]] : process.platform === "darwin" ? ["open", [url]] : ["xdg-open", [url]];
-  spawn(cmd, args, { stdio: "ignore", detached: true }).on("error", () => {}).unref();
+    process.platform === "win32"
+      ? ["cmd", ["/c", "start", "", url]]
+      : process.platform === "darwin"
+        ? ["open", [url]]
+        : ["xdg-open", [url]];
+  spawn(cmd, args, { stdio: "ignore", detached: true })
+    .on("error", () => {})
+    .unref();
 }

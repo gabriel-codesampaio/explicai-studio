@@ -1,4 +1,4 @@
-import { useCallback, type KeyboardEvent } from "react";
+import { type KeyboardEvent, useCallback } from "react";
 
 /**
  * Padrão de barra de ferramentas da WAI-ARIA: o Tab entra e sai da barra numa parada só,
@@ -13,7 +13,11 @@ export function useRovingFocus() {
     if (current === -1) return;
     e.preventDefault();
     const next =
-      e.key === "Home" ? 0 : e.key === "End" ? items.length - 1 : (current + (e.key === "ArrowRight" ? 1 : -1) + items.length) % items.length;
+      e.key === "Home"
+        ? 0
+        : e.key === "End"
+          ? items.length - 1
+          : (current + (e.key === "ArrowRight" ? 1 : -1) + items.length) % items.length;
     for (const [i, el] of items.entries()) el.tabIndex = i === next ? 0 : -1;
     items[next]?.focus();
   }, []);

@@ -20,14 +20,17 @@ export function PageView({ studio, manual, page }: Props) {
     editorRef.current = ed;
   }, []);
   const [title, setTitle] = useState(page.title);
-  const trail = [manual.title, ...ancestorsOf(manual.pages, page.id).map((p) => p.title || "Sem título")];
+  const trail = [
+    { key: manual.slug, name: manual.title },
+    ...ancestorsOf(manual.pages, page.id).map((p) => ({ key: p.id, name: p.title || "Sem título" })),
+  ];
 
   return (
     <div className="flex min-h-full flex-col">
       <article className="mx-auto w-full max-w-[52rem] flex-1 px-8 pt-6 pb-24">
         <nav aria-label="Caminho da página" className="flex flex-wrap items-center gap-1 text-[13px] text-muted-foreground">
-          {trail.map((name, i) => (
-            <Fragment key={i}>
+          {trail.map(({ key, name }, i) => (
+            <Fragment key={key}>
               {i > 0 && <ChevronRight className="size-3.5" aria-hidden />}
               <span className="max-w-60 truncate">{name}</span>
             </Fragment>

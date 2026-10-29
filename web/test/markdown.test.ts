@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { Editor } from "@tiptap/core";
 import { describe, expect, it } from "vitest";
-import { toDiskMarkdown, toEditorMarkdown } from "../src/lib/imagePaths";
 import { contentExtensions } from "../src/features/editor/extensions";
+import { toDiskMarkdown, toEditorMarkdown } from "../src/lib/imagePaths";
 
 /** Abre o Markdown no editor e devolve o que ele gravaria, como acontece ao reabrir uma página. */
 function roundTrip(md: string): string {

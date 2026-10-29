@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { TreeItem } from "@/lib/api";
-import { dropTarget, type DropZone } from "@/lib/tree";
+import { type DropZone, dropTarget } from "@/lib/tree";
 import { cn } from "@/lib/utils";
-import { PageActions, type PageAction } from "./PageActions";
+import { type PageAction, PageActions } from "./PageActions";
 
 const DRAG_TYPE = "text/x-explicai-page";
 
@@ -38,6 +38,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
         const selected = item.id === selectedId;
         return (
           <li key={item.id}>
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: arrastar é atalho de mouse; pelo teclado, o menu "⋯" move a página */}
             <div
               className={cn(
                 "group relative flex items-center rounded-md pr-1 transition-colors hover:bg-muted",

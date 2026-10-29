@@ -12,7 +12,10 @@ export const webRoutes: Route[] = [
     handle: async ({ opts, rest }) => {
       if (!opts.webDir) throw new HttpError(404, "Não encontrado.");
       const target = resolveInside(opts.webDir, rest || "index.html");
-      const isFile = await stat(target).then((s) => s.isFile(), () => false);
+      const isFile = await stat(target).then(
+        (s) => s.isFile(),
+        () => false,
+      );
       // Só os arquivos com hash no nome (assets/) podem ficar em cache; o index.html muda a cada build.
       if (isFile && rest.startsWith("assets/")) return file(target, "max-age=31536000, immutable");
       return file(isFile ? target : path.join(opts.webDir, "index.html"));

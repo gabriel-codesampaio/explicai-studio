@@ -15,6 +15,8 @@ Especificação da v1: `docs/spec-v1.md`. Formato em disco: `docs/manual-format.
 ## Comandos
 
 ```bash
+npm run check       # lint (Biome) + tipos + testes: rode antes de dizer que terminou
+npm run lint:fix    # formata e corrige o que o Biome souber corrigir
 npm test            # testes
 npm run typecheck   # checagem de tipos (núcleo, servidor e editor)
 npm run build       # compila para dist/ (CLI, servidor, núcleo e dist/web)
@@ -25,7 +27,7 @@ npm run dev:server  # servidor na porta 4321, manuais em ./exemplos
 npm run dev:web     # editor em http://localhost:5173
 ```
 
-Rode `npm test` e `npm run typecheck` antes de dizer que uma tarefa está pronta.
+Rode `npm run check` antes de dizer que uma tarefa está pronta. Exceção a uma regra do Biome só com `biome-ignore` e o motivo escrito.
 
 ## Estrutura
 
