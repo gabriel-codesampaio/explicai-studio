@@ -6,7 +6,7 @@ Prioridade: **P0** atinge quem lê o resultado final; **P1** é o pedido princip
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-001](T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | em andamento | core |
+| [T-001](T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | core |
 | [T-003](T-003-rotulos-mono.md) | Usar rótulos de seção em mono maiúsculo, como no brand book | P1 | aberto | design |
 | [T-004](T-004-numeracao-na-arvore.md) | Mostrar a numeração 2.1 na árvore de páginas e na busca | P1 | aberto | frontend |
 | [T-005](T-005-manual-como-cabecalho.md) | Mostrar o nome do manual como cabeçalho, sem caixa | P1 | aberto | design |
