@@ -1,4 +1,4 @@
-import { copyFile, mkdir, rm } from "node:fs/promises";
+import { copyFile, mkdir, readdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { atomicWrite, relativePosix, resolveInside } from "../fs.js";
 import { updateManual } from "../manuals.js";
@@ -14,6 +14,9 @@ export { findBrowser } from "./pdf.js";
 
 /** Pasta da exportação, dentro do manual. Cada exportação substitui a anterior do mesmo formato. */
 export const EXPORT_DIR = "exportacao";
+
+/** Fontes da marca (OFL), na raiz do pacote: o mesmo caminho vale de `src/` e de `dist/`. */
+const FONTS_DIR = new URL("../../../fonts/", import.meta.url);
 
 export type ExportFormat = "html" | "pdf" | "markdown";
 export const EXPORT_FORMATS: ExportFormat[] = ["html", "pdf", "markdown"];
@@ -53,6 +56,7 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
 
   const out = await freshDir(path.join(root, "html"));
   await copyImages(dir, images, out);
+  await copyFonts(out);
   const html = path.join(out, "index.html");
   await atomicWrite(html, renderHtml(collected, images));
   if (format === "html") return result(html);
@@ -84,4 +88,10 @@ async function freshDir(dir: string): Promise<string> {
 async function copyImages(dir: string, images: Map<string, ImageInfo>, out: string): Promise<void> {
   await mkdir(path.join(out, "assets"), { recursive: true });
   for (const asset of images.keys()) await copyFile(resolveInside(dir, asset), path.join(out, asset));
+}
+
+/** As fontes vão com o HTML (e a licença OFL junto), para o manual abrir igual sem internet. */
+async function copyFonts(out: string): Promise<void> {
+  await mkdir(path.join(out, "fonts"), { recursive: true });
+  for (const name of await readdir(FONTS_DIR)) await copyFile(new URL(name, FONTS_DIR), path.join(out, "fonts", name));
 }

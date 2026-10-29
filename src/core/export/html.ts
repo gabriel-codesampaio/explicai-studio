@@ -147,6 +147,11 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
 }
 
 const CSS = `
+@font-face{font-family:"Archivo";src:url(fonts/archivo-latin-wght-normal.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:block}
+@font-face{font-family:"JetBrains Mono";src:url(fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:block}
+@font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal;font-display:block}
+@font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:block}
+@font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block}
 :root{--accent:__ACCENT__;--anotacao:#2b4fe0;--marca:#ffd43b;--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
 --texto:"Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif;--display:"Archivo","Arial Narrow",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
 *{box-sizing:border-box}
