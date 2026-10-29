@@ -5,6 +5,7 @@ import { Editor } from "@/features/editor/Editor";
 import type { Studio } from "@/hooks/useStudio";
 import type { ManualDetail, Page } from "@/lib/api";
 import { ancestorsOf } from "@/lib/tree";
+import { PageTitle } from "./PageTitle";
 import { StatusBar } from "./StatusBar";
 
 interface Props {
@@ -36,22 +37,13 @@ export function PageView({ studio, manual, page }: Props) {
         {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
         <h1 className="sr-only">{title || "Sem título"}</h1>
         <div className="mt-3 mb-3">
-          <input
-            aria-label="Título da página"
-            defaultValue={page.title}
-            placeholder="Sem título"
-            autoFocus={page.title === ""}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              studio.editPage({ title: e.target.value });
+          <PageTitle
+            initialTitle={page.title}
+            onChange={(next) => {
+              setTitle(next);
+              studio.editPage({ title: next });
             }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                editorRef.current?.commands.focus("start");
-              }
-            }}
-            className="w-full bg-transparent font-display text-[2.125rem] leading-tight font-extrabold tracking-tight [font-stretch:105%] outline-none placeholder:text-muted-foreground"
+            onEnter={() => editorRef.current?.commands.focus("start")}
           />
         </div>
 
