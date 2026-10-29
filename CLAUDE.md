@@ -50,6 +50,8 @@ Mudou `web/src/features/editor/extensions.ts`? Rode `web/test/markdown.test.ts`:
 
 O projeto usa o plugin [explicai-workflow](https://github.com/gabriel-codesampaio/explicai-workflow) (ativado em `.claude/settings.json`): agentes `supervisor`, `frontend`, `design`, `qa` e `code-reviewer`, e uma skill por fase (especificar, planejar, tdd, verificar, revisar, entregar). Recurso novo ou mudança com mais de uma fatia: `@supervisor`. Ajuste pequeno: direto, pelo caminho rápido. O que a revisão olha primeiro neste projeto está em `.claude/rules/revisao.md`.
 
+Commits seguem o Conventional Commits (`feat(export): ...`, tipo em inglês e descrição em português): `.claude/rules/commits.md`.
+
 ## Decisões que não mudam sem conversar
 
 - O formato salvo é Markdown. HTML e PDF existem só na exportação.
