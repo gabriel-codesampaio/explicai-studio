@@ -5,9 +5,11 @@ import { CreateManual } from "@/features/manuals/CreateManual";
 import { useStudio } from "@/hooks/useStudio";
 import { PageView } from "@/layout/PageView";
 import { Sidebar } from "@/layout/Sidebar";
+import { useResolvedTheme } from "@/lib/theme";
 
 export function App() {
   const studio = useStudio();
+  const theme = useResolvedTheme();
   const { manuals, manual, page, bootError } = studio;
 
   if (manuals === null) {
@@ -37,7 +39,7 @@ export function App() {
         </main>
       </div>
       {/* Acima da linha de status, para o aviso não cobrir o "Salvo às…". */}
-      <Toaster position="bottom-right" offset={{ bottom: 56, right: 24 }} />
+      <Toaster theme={theme} position="bottom-right" offset={{ bottom: 56, right: 24 }} />
     </TooltipProvider>
   );
 }

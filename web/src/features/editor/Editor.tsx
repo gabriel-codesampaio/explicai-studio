@@ -77,6 +77,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
       <input
         ref={fileInput}
         type="file"
+        name="imagem"
         accept={IMAGE_TYPES.join(",")}
         multiple
         hidden

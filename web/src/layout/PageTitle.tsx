@@ -25,6 +25,7 @@ export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
 
   return (
     <textarea
+      name="title"
       ref={ref}
       rows={1}
       aria-label="Título da página"

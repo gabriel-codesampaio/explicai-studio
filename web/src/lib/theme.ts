@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from "react";
+
 /**
  * Aparência do Studio (claro/escuro e cor de destaque), guardada no navegador de quem usa.
  * O index.html aplica a mesma leitura antes da primeira pintura; mudou a chave ou o formato, mude lá também.
@@ -54,4 +56,16 @@ export function saveAppearance(next: Appearance): void {
 /** No modo "do sistema", acompanha quando o sistema troca de claro para escuro. */
 export function followSystemTheme(): void {
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => applyAppearance(readAppearance()));
+}
+
+/** Tema em uso agora ("light" ou "dark"), para componentes que não leem os tokens do CSS. */
+export function useResolvedTheme(): "light" | "dark" {
+  return useSyncExternalStore(
+    (onChange) => {
+      const observer = new MutationObserver(onChange);
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+      return () => observer.disconnect();
+    },
+    () => (document.documentElement.dataset.theme === "dark" ? "dark" : "light"),
+  );
 }

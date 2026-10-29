@@ -1,5 +1,5 @@
 import { ArrowUpRight, Hash, Highlighter, Link2, type LucideIcon, MousePointer2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
@@ -30,15 +30,13 @@ const TOOLS: { tool: Tool; label: string; hint: string; Icon: LucideIcon }[] = [
 /** Janela de marcação de uma imagem. Trabalha num rascunho e só grava ao clicar em "Salvar marcações". */
 export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Props) {
   const saved = useAnnotations(slug, asset);
-  const [draft, setDraft] = useState<Annotations | null>(null);
+  // Enquanto nada foi mexido, o rascunho é o que está gravado.
+  const [edited, setDraft] = useState<Annotations | null>(null);
+  const draft = edited ?? saved;
   const [tool, setTool] = useState<Tool>("marker");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (saved && !draft) setDraft(saved);
-  }, [saved, draft]);
 
   const firstPage = flattenItems(pages)[0];
   const defaultTarget: HotspotTarget = firstPage ? { type: "page", pageId: firstPage.id } : { type: "url", href: "https://" };

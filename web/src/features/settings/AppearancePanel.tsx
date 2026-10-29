@@ -1,5 +1,5 @@
 import { Monitor, Moon, Palette, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ACCENTS, type Appearance, type Mode, readAppearance, saveAppearance } from "@/lib/theme";
 
@@ -12,8 +12,12 @@ const MODES: { id: Mode; label: string; Icon: typeof Sun }[] = [
 /** Botão "Aparência" da barra lateral: tema claro/escuro e cor de destaque do Studio. */
 export function AppearancePanel() {
   const [look, setLook] = useState(readAppearance);
-  useEffect(() => saveAppearance(look), [look]);
-  const change = (patch: Partial<Appearance>) => setLook((prev) => ({ ...prev, ...patch }));
+  const change = (patch: Partial<Appearance>) => {
+    // Lê o que está gravado, e não o estado deste render: dois cliques seguidos não se atropelam.
+    const next = { ...readAppearance(), ...patch };
+    saveAppearance(next);
+    setLook(next);
+  };
 
   return (
     <Popover>

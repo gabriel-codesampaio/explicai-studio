@@ -1,10 +1,11 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { type Ref, useImperativeHandle, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { Block } from "../blocks";
 
 interface Props {
   items: Block[];
   command: (block: Block) => void;
+  ref?: Ref<SlashMenuHandle>;
 }
 
 export interface SlashMenuHandle {
@@ -12,10 +13,14 @@ export interface SlashMenuHandle {
 }
 
 /** Lista do menu "/". O teclado (setas e Enter) chega pelo `onKeyDown` exposto ao plugin de sugestão. */
-export const SlashMenu = forwardRef<SlashMenuHandle, Props>(function SlashMenu({ items, command }, ref) {
+export function SlashMenu({ items, command, ref }: Props) {
   const [index, setIndex] = useState(0);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: a lista nova (outra busca) volta a seleção para o primeiro item
-  useEffect(() => setIndex(0), [items]);
+  // Lista nova (outra busca) volta a seleção para o primeiro item, já nesta renderização.
+  const [shown, setShown] = useState(items);
+  if (items !== shown) {
+    setShown(items);
+    setIndex(0);
+  }
 
   useImperativeHandle(ref, () => ({
     onKeyDown: (event) => {
@@ -67,4 +72,4 @@ export const SlashMenu = forwardRef<SlashMenuHandle, Props>(function SlashMenu({
       )}
     </div>
   );
-});
+}
