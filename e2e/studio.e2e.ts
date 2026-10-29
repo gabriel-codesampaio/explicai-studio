@@ -124,22 +124,23 @@ test("versões: guarda, edita, restaura e o texto anterior vira versão", async 
   await page.keyboard.type("Texto aprovado.");
   await expect(page.getByRole("status")).toContainText("Salvo às");
 
-  await page.getByRole("button", { name: "Versões", exact: true }).click();
+  await page.getByRole("button", { name: /^Versões/ }).click();
   const dialog = page.getByRole("dialog", { name: "Versões desta página" });
   await dialog.getByLabel("Nome da versão (opcional)").fill("Aprovada");
   await dialog.getByRole("button", { name: "Guardar versão" }).click();
   await dialog.getByRole("button", { name: "Usar no manual" }).click();
   await expect(dialog.getByText("No manual", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
+  await expect(page.getByText("O manual final usa uma versão guardada desta página.", { exact: false })).toBeVisible();
 
   await editor(page).click();
   await page.keyboard.press("Control+a");
   await page.keyboard.type("Rascunho novo.");
-  await page.getByRole("button", { name: "Versões", exact: true }).click();
+  await page.getByRole("button", { name: /^Versões/ }).click();
   await dialog.getByRole("button", { name: "Restaurar" }).click();
 
   await expect(dialog).toBeHidden();
   await expect(editor(page)).toHaveText("Texto aprovado.");
-  await page.getByRole("button", { name: "Versões", exact: true }).click();
+  await page.getByRole("button", { name: /^Versões/ }).click();
   await expect(dialog.getByText("Antes de restaurar")).toBeVisible();
 });

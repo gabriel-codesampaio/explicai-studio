@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { PanelLeftClose, Plus } from "lucide-react";
 import { Brand } from "@/components/Brand";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import type { PageAction } from "@/features/pages/PageActions";
@@ -9,20 +9,42 @@ import type { Studio } from "@/hooks/useStudio";
 import type { TreeItem } from "@/lib/api";
 import { shiftTarget } from "@/lib/tree";
 
-export function Sidebar({ studio }: { studio: Studio }) {
+interface Props {
+  studio: Studio;
+  /** Recolhe a coluna (tela larga) ou fecha a gaveta (tela estreita). */
+  onCollapse: () => void;
+  /** Chamado ao abrir uma página: na gaveta, ela fecha para mostrar a página. */
+  onNavigate?: () => void;
+}
+
+export function Sidebar({ studio, onCollapse, onNavigate }: Props) {
   const { manuals, manual, page } = studio;
   const current = manuals?.find((m) => m.slug === manual?.slug) ?? null;
 
   const act = (item: TreeItem, action: PageAction) => {
-    if (action.kind === "addChild") return void studio.addPage(item.id);
+    if (action.kind === "addChild") {
+      onNavigate?.();
+      return void studio.addPage(item.id);
+    }
     if (action.kind === "remove") return void studio.removePage(item);
     const to = manual && shiftTarget(manual.pages, item.id, action.shift);
     if (to) void studio.movePage(item.id, to.parentId, to.index);
   };
 
   return (
-    <aside className="flex flex-col gap-5 border-r border-border bg-card px-3 py-4 md:h-full md:overflow-y-auto">
-      <Brand />
+    <aside className="flex h-full flex-col gap-5 overflow-y-auto border-r border-border bg-card px-3 py-4">
+      <div className="flex items-center justify-between gap-2">
+        <Brand />
+        <button
+          type="button"
+          onClick={onCollapse}
+          aria-label="Esconder as páginas (Ctrl+\)"
+          title="Esconder as páginas (Ctrl+\)"
+          className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+        >
+          <PanelLeftClose className="size-4" aria-hidden />
+        </button>
+      </div>
 
       {manuals && manuals.length > 0 && (
         <ManualSwitcher
@@ -39,7 +61,10 @@ export function Sidebar({ studio }: { studio: Studio }) {
             <span>Páginas</span>
             <button
               type="button"
-              onClick={() => void studio.addPage(null)}
+              onClick={() => {
+                onNavigate?.();
+                void studio.addPage(null);
+              }}
               className="flex items-center gap-1 rounded-md px-1.5 py-1 font-bold text-primary hover:bg-accent"
             >
               <Plus className="size-3.5" aria-hidden /> Nova página
@@ -51,7 +76,10 @@ export function Sidebar({ studio }: { studio: Studio }) {
             <PageTree
               pages={manual.pages}
               selectedId={page?.id ?? null}
-              onSelect={(id) => void studio.selectPage(id)}
+              onSelect={(id) => {
+                onNavigate?.();
+                void studio.selectPage(id);
+              }}
               onAction={act}
               onMove={(id, parentId, index) => void studio.movePage(id, parentId, index)}
             />

@@ -2,14 +2,16 @@ import { EmptyState } from "@/components/EmptyState";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CreateManual } from "@/features/manuals/CreateManual";
+import { useSidebar } from "@/hooks/useSidebar";
 import { useStudio } from "@/hooks/useStudio";
+import { MobileBar, Navigation } from "@/layout/Navigation";
 import { PageView } from "@/layout/PageView";
-import { Sidebar } from "@/layout/Sidebar";
 import { useResolvedTheme } from "@/lib/theme";
 
 export function App() {
   const studio = useStudio();
   const theme = useResolvedTheme();
+  const sidebar = useSidebar();
   const { manuals, manual, page, bootError } = studio;
 
   if (manuals === null) {
@@ -20,9 +22,10 @@ export function App() {
 
   return (
     <TooltipProvider delayDuration={400}>
-      <div className="md:grid md:h-full md:grid-cols-[17.5rem_minmax(0,1fr)]">
-        {!firstRun && <Sidebar studio={studio} />}
-        <main className={firstRun ? "md:col-span-2" : "md:overflow-y-auto"}>
+      <div className="flex h-full">
+        {!firstRun && <Navigation studio={studio} sidebar={sidebar} />}
+        <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
+          {!firstRun && <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} />}
           {firstRun || studio.creatingManual ? (
             <CreateManual firstRun={firstRun} onCreate={studio.createManual} onCancel={() => studio.setCreatingManual(false)} />
           ) : !manual ? null : !page ? (

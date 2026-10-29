@@ -12,6 +12,9 @@ interface Props {
   pageId: string;
   onSave: (note: string) => Promise<void>;
   onRestore: (versionId: string) => Promise<void>;
+  onPublish: (versionId: string | null) => Promise<void>;
+  /** Página fixada numa versão: o botão avisa. */
+  pinned: boolean;
 }
 
 const when = (iso: string) => new Date(iso).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
@@ -20,7 +23,7 @@ const when = (iso: string) => new Date(iso).toLocaleString("pt-BR", { dateStyle:
  * Botão "Versões" da página: guarda o texto como está, mostra as versões antigas, restaura uma
  * e escolhe qual vai para o manual final.
  */
-export function VersionsPanel({ slug, pageId, onSave, onRestore }: Props) {
+export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinned }: Props) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<VersionInfo[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +46,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore }: Props) {
     await onRestore(id);
     setOpen(false);
   };
-  const publish = (id: string | null) => api.publishVersion(slug, pageId, id).then(load, fail);
+  const publish = (id: string | null) => onPublish(id).then(load);
   const view = (id: string) => api.getVersion(slug, pageId, id).then(setPreview, fail);
 
   return (
@@ -61,6 +64,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore }: Props) {
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           <History className="size-3.5" aria-hidden /> Versões
+          {pinned && <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">versão fixada</span>}
         </button>
       </DialogTrigger>
       <DialogContent className="grid max-h-[90vh] w-[min(96vw,46rem)] max-w-none grid-rows-[auto_auto_minmax(0,1fr)] gap-4 sm:max-w-none">

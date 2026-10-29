@@ -131,6 +131,14 @@ export function useStudio() {
       toast('Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".');
     });
 
+  /** Escolhe a versão do manual final (`null` volta ao texto atual) e atualiza a árvore, que mostra a escolha. */
+  const publishVersion = (versionId: string | null) =>
+    run(async () => {
+      if (!manual || !page) return;
+      await api.publishVersion(manual.slug, page.id, versionId);
+      await refreshManual(manual.slug);
+    });
+
   const movePage = (id: string, parentId: string | null, index: number) =>
     run(async () => {
       if (!manual) return;
@@ -172,6 +180,7 @@ export function useStudio() {
     movePage,
     saveVersion,
     restoreVersion,
+    publishVersion,
     createManual,
     editPage,
     reportError: (message: string) => toast.error(message),

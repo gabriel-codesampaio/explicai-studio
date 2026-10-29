@@ -1,26 +1,18 @@
-import { type Editor, useEditorState } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
+import { ListTree } from "lucide-react";
+import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import type { Heading } from "./headings";
 
-interface Heading {
-  pos: number;
-  level: number;
-  text: string;
+interface Props {
+  editor: Editor;
+  headings: Heading[];
+  /** Depois de ir até um título (ex.: fechar o popover). */
+  onNavigate?: () => void;
 }
 
-/** Títulos do primeiro nível do documento (#, ##, ###), na ordem em que aparecem. */
-export function headingsOf(editor: Editor): Heading[] {
-  const list: Heading[] = [];
-  editor.state.doc.forEach((node, pos) => {
-    if (node.type.name === "heading") list.push({ pos, level: node.attrs.level as number, text: node.textContent });
-  });
-  return list;
-}
-
-/** Índice "Nesta página": acompanha os títulos enquanto a pessoa escreve e leva até eles no clique. */
-export function PageOutline({ editor }: { editor: Editor }) {
-  // A comparação padrão é profunda: o índice só redesenha quando os títulos mudam, não a cada tecla.
-  const headings = useEditorState({ editor, selector: ({ editor: ed }) => headingsOf(ed) });
-  if (headings.length === 0) return null;
-
+/** Índice "Nesta página": leva até o título no clique. */
+export function PageOutline({ editor, headings, onNavigate }: Props) {
   const go = (h: Heading) => {
     editor
       .chain()
@@ -28,6 +20,7 @@ export function PageOutline({ editor }: { editor: Editor }) {
       .setTextSelection(h.pos + 1)
       .run();
     (editor.view.nodeDOM(h.pos) as HTMLElement | null)?.scrollIntoView({ block: "start" });
+    onNavigate?.();
   };
 
   return (
@@ -48,5 +41,25 @@ export function PageOutline({ editor }: { editor: Editor }) {
         ))}
       </ul>
     </nav>
+  );
+}
+
+/** O mesmo índice em telas sem espaço para a coluna da direita: um botão que abre a lista. */
+export function PageOutlineButton(props: Omit<Props, "onNavigate">) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted xl:hidden"
+        >
+          <ListTree className="size-3.5" aria-hidden /> Nesta página
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="max-h-[60vh] w-72 overflow-y-auto p-3">
+        <PageOutline {...props} onNavigate={() => setOpen(false)} />
+      </PopoverContent>
+    </Popover>
   );
 }

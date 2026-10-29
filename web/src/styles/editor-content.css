@@ -4,6 +4,13 @@
   padding: 18px 0 40px;
   min-height: 50vh;
 }
+/*
+ * Em tela larga a coluna cresce para os prints e as tabelas, mas o texto corrido fica numa
+ * largura boa de ler. Parágrafo com imagem (a imagem é inline) pode ocupar a coluna toda.
+ */
+.tiptap > :is(p:not(:has(img)), h1, h2, h3, ul, ol, blockquote) {
+  max-width: 46rem;
+}
 .tiptap > * + * {
   margin-top: 0.75em;
 }

@@ -31,7 +31,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
       role="toolbar"
       aria-label="Formatação"
       onKeyDown={onKeyDown}
-      className="sticky top-0 z-10 -mx-2 flex flex-wrap items-center gap-0.5 border-b border-border bg-background/95 px-2 py-2 backdrop-blur-sm"
+      className="sticky top-0 z-10 -mx-2 flex items-center gap-0.5 overflow-x-auto border-b border-border bg-background/95 px-2 py-2 backdrop-blur-sm [scrollbar-width:none]"
     >
       <BlockTypeMenu editor={editor} pickImage={onPickImage} />
       <Divider />
@@ -50,7 +50,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
       ) : (
         <Btn icon={Table} label="Tabela" onClick={() => chain().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()} />
       )}
-      <span className="ml-auto hidden text-xs text-muted-foreground lg:block">
+      <span className="ml-auto hidden shrink-0 pl-3 text-xs whitespace-nowrap text-muted-foreground lg:block">
         Digite <kbd className="rounded border border-border bg-card px-1 font-mono">/</kbd> para inserir blocos
       </span>
     </div>

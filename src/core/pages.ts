@@ -35,6 +35,8 @@ export interface PageTreeNode {
   file: string;
   /** Preenchido quando o arquivo da página sumiu ou está com erro: a página aparece, com o aviso. */
   problem?: string;
+  /** Versão escolhida para o manual final, quando há uma (ver versions.ts). */
+  published?: string;
   children: PageTreeNode[];
 }
 
@@ -46,7 +48,12 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
   const walk = (nodes: PageNode[]): Promise<PageTreeNode[]> =>
     Promise.all(
       nodes.map(async (n) => {
-        const base = { id: n.id, file: n.file, children: await walk(n.children) };
+        const base = {
+          id: n.id,
+          file: n.file,
+          ...(n.published ? { published: n.published } : {}),
+          children: await walk(n.children),
+        };
         try {
           return { ...base, title: (await readPageFile(dir, n.file)).title };
         } catch (err) {

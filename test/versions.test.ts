@@ -9,6 +9,7 @@ import {
   publishVersion,
   readManual,
   readPage,
+  readPageTree,
   readVersion,
   removePage,
   restorePage,
@@ -64,6 +65,7 @@ describe("versões da página", () => {
     await publishVersion(dir, page.id, v1.id);
     expect((await readManual(dir)).pages[0]?.published).toBe(v1.id);
     expect((await listVersions(dir, page.id))[0]?.published).toBe(true);
+    expect((await readPageTree(dir))[0]?.published).toBe(v1.id);
 
     await publishVersion(dir, page.id, null);
     expect((await readManual(dir)).pages[0]).not.toHaveProperty("published");

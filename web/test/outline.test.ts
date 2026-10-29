@@ -2,7 +2,7 @@
 import { Editor } from "@tiptap/core";
 import { expect, it } from "vitest";
 import { contentExtensions } from "../src/features/editor/extensions";
-import { headingsOf } from "../src/features/editor/PageOutline";
+import { headingsOf } from "../src/features/editor/headings";
 
 it("índice da página lista os títulos com o nível, na ordem do texto", () => {
   const editor = new Editor({
