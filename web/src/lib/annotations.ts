@@ -119,3 +119,45 @@ export function updateMarker(ann: Annotations, id: string, label: string): Annot
 export function updateHotspot(ann: Annotations, id: string, target: HotspotTarget): Annotations {
   return { ...ann, hotspots: ann.hotspots.map((h) => (h.id === id ? { ...h, target } : h)) };
 }
+
+/** Parte da marcação que está sendo arrastada: ela inteira, um canto do retângulo ou uma ponta da seta. */
+export type Handle = "move" | "nw" | "ne" | "sw" | "se" | "from" | "to";
+
+const shift = (p: Point, dx: number, dy: number): Point => clampPoint({ x: p.x + dx, y: p.y + dy });
+
+/** Retângulo deslocado sem sair da imagem (encosta na borda em vez de encolher). */
+function moveRect<T extends Rect>(r: T, dx: number, dy: number): T {
+  return { ...r, x: Math.min(1 - r.w, Math.max(0, r.x + dx)), y: Math.min(1 - r.h, Math.max(0, r.y + dy)) };
+}
+
+/** Canto arrastado de um retângulo; o canto oposto fica parado. */
+function resizeRect<T extends Rect>(r: T, handle: Handle, dx: number, dy: number): T {
+  const left = handle === "nw" || handle === "sw";
+  const top = handle === "nw" || handle === "ne";
+  const moving = { x: (left ? r.x : r.x + r.w) + dx, y: (top ? r.y : r.y + r.h) + dy };
+  const fixed = { x: left ? r.x + r.w : r.x, y: top ? r.y + r.h : r.y };
+  return { ...r, ...rectFrom(moving, fixed) };
+}
+
+/**
+ * Marcação `id` arrastada por (dx, dy), em frações da imagem. "move" desloca tudo; os cantos
+ * redimensionam destaques e áreas clicáveis; "from" e "to" movem uma ponta da seta.
+ */
+export function moveAnnotation(ann: Annotations, id: string, handle: Handle, dx: number, dy: number): Annotations {
+  const rect = <T extends Rect>(r: T) => (handle === "move" ? moveRect(r, dx, dy) : resizeRect(r, handle, dx, dy));
+  return {
+    ...ann,
+    markers: ann.markers.map((m) => (m.id === id ? { ...m, ...shift(m, dx, dy) } : m)),
+    highlights: ann.highlights.map((h) => (h.id === id ? rect(h) : h)),
+    hotspots: ann.hotspots.map((h) => (h.id === id ? rect(h) : h)),
+    arrows: ann.arrows.map((a) =>
+      a.id !== id
+        ? a
+        : {
+            ...a,
+            from: handle === "to" ? a.from : shift(a.from, dx, dy),
+            to: handle === "from" ? a.to : shift(a.to, dx, dy),
+          },
+    ),
+  };
+}

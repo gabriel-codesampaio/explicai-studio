@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  type Annotations,
   addMarker,
   addShape,
   assetPathFromSrc,
   emptyAnnotations,
   isTooSmall,
+  moveAnnotation,
   rectFrom,
   removeAnnotation,
 } from "../src/lib/annotations";
@@ -53,5 +55,42 @@ describe("marcações de imagem", () => {
     expect(addShape(ann, "hotspot", a, b, target)?.hotspots[0]).toMatchObject({ target });
     expect(addShape(ann, "highlight", a, { x: 0.101, y: 0.1 }, target)).toBeNull();
     expect(addShape(ann, "marker", a, a, target)?.markers[0]).toMatchObject({ n: 1, x: 0.1, y: 0.1 });
+  });
+});
+
+describe("mover e redimensionar marcações", () => {
+  const base: Annotations = {
+    version: 1,
+    markers: [{ id: "m", n: 1, x: 0.5, y: 0.5 }],
+    highlights: [{ id: "h", x: 0.2, y: 0.2, w: 0.2, h: 0.1 }],
+    arrows: [{ id: "a", from: { x: 0.1, y: 0.1 }, to: { x: 0.3, y: 0.3 } }],
+    hotspots: [],
+  };
+  const near = (v: number) => expect.closeTo(v, 6);
+
+  it("move o marcador e não deixa sair da imagem", () => {
+    expect(moveAnnotation(base, "m", "move", 0.1, 0.9).markers[0]).toMatchObject({ x: near(0.6), y: 1 });
+  });
+
+  it("move o destaque inteiro encostando na borda, sem encolher", () => {
+    expect(moveAnnotation(base, "h", "move", 0.9, 0).highlights[0]).toMatchObject({ x: near(0.8), y: 0.2, w: 0.2 });
+  });
+
+  it("redimensiona pelo canto; o canto oposto fica parado, mesmo passando para o outro lado", () => {
+    expect(moveAnnotation(base, "h", "se", 0.1, 0.1).highlights[0]).toMatchObject({
+      x: 0.2,
+      y: 0.2,
+      w: near(0.3),
+      h: near(0.2),
+    });
+    expect(moveAnnotation(base, "h", "nw", 0.3, 0).highlights[0]).toMatchObject({ x: near(0.4), w: near(0.1) });
+  });
+
+  it("move uma ponta da seta ou a seta inteira", () => {
+    expect(moveAnnotation(base, "a", "to", 0.2, 0).arrows[0]).toMatchObject({
+      from: { x: 0.1, y: 0.1 },
+      to: { x: near(0.5), y: 0.3 },
+    });
+    expect(moveAnnotation(base, "a", "move", 0.1, 0.1).arrows[0]?.from).toMatchObject({ x: near(0.2), y: near(0.2) });
   });
 });

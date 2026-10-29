@@ -1,4 +1,4 @@
-import { ArrowUpRight, Hash, Highlighter, Link2, type LucideIcon, MousePointer2 } from "lucide-react";
+import { ArrowUpRight, Hash, Highlighter, Link2, type LucideIcon, MousePointer2, Undo2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -31,8 +31,21 @@ const TOOLS: { tool: Tool; label: string; hint: string; Icon: LucideIcon }[] = [
 export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Props) {
   const saved = useAnnotations(slug, asset);
   // Enquanto nada foi mexido, o rascunho é o que está gravado.
-  const [edited, setDraft] = useState<Annotations | null>(null);
+  const [edited, setEdited] = useState<Annotations | null>(null);
   const draft = edited ?? saved;
+  // Rascunhos anteriores, para o "Desfazer" (Ctrl+Z). Guarda os 50 últimos passos.
+  const [past, setPast] = useState<Annotations[]>([]);
+  const change = (next: Annotations) => {
+    if (draft) setPast([...past.slice(-49), draft]);
+    setEdited(next);
+  };
+  const undo = () => {
+    const previous = past.at(-1);
+    if (!previous) return;
+    setPast(past.slice(0, -1));
+    setEdited(previous);
+    setSelectedId(null);
+  };
   const [tool, setTool] = useState<Tool>("marker");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -69,8 +82,12 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           const target = e.target as HTMLElement;
           if ((e.key === "Delete" || e.key === "Backspace") && selectedId && draft && !target.closest("input, select")) {
             e.preventDefault();
-            setDraft(removeAnnotation(draft, selectedId));
+            change(removeAnnotation(draft, selectedId));
             setSelectedId(null);
+          }
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !target.closest("input, select, textarea")) {
+            e.preventDefault();
+            undo();
           }
         }}
       >
@@ -108,7 +125,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 defaultTarget={defaultTarget}
                 onSelect={setSelectedId}
                 onChange={(next, created) => {
-                  setDraft(next);
+                  change(next);
                   setSelectedId(created);
                 }}
               />
@@ -118,7 +135,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               pages={pages}
               selectedId={selectedId}
               onSelect={setSelectedId}
-              onChange={setDraft}
+              onChange={change}
             />
           </div>
         ) : (
@@ -126,8 +143,11 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
         )}
 
         <DialogFooter className="items-center gap-3">
+          <Button variant="ghost" onClick={undo} disabled={past.length === 0} className="sm:mr-auto" title="Ctrl+Z">
+            <Undo2 aria-hidden /> Desfazer
+          </Button>
           {error && (
-            <p role="alert" className="mr-auto text-sm text-destructive">
+            <p role="alert" className="text-sm text-destructive">
               {error}
             </p>
           )}

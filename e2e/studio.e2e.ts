@@ -161,3 +161,34 @@ test("Ctrl+P busca a página pelo título, sem acento, e abre com Enter", async 
   await page.keyboard.press("Enter");
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Relatórios de vendas");
 });
+
+test("marcação: arrasta o destaque com Selecionar e Desfazer volta ao lugar", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Mover", ["Tela"]);
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.locator('input[type="file"]').setInputFiles(IMAGE);
+  const img = editor(page).getByRole("img", { name: "tela" });
+  await img.click();
+  await page.getByRole("button", { name: "Marcar imagem" }).click();
+
+  const dialog = page.getByRole("dialog", { name: "Marcar imagem" });
+  const box = await dialog.getByRole("img").boundingBox();
+  if (!box) throw new Error("imagem sem tamanho");
+  const at = (fx: number, fy: number) => [box.x + box.width * fx, box.y + box.height * fy] as const;
+  const dragFrom = async (a: readonly [number, number], b: readonly [number, number]) => {
+    await page.mouse.move(...a);
+    await page.mouse.down();
+    await page.mouse.move(...b, { steps: 5 });
+    await page.mouse.up();
+  };
+
+  await dialog.getByRole("button", { name: "Destaque" }).click();
+  await dragFrom(at(0.1, 0.1), at(0.3, 0.3));
+  await dialog.getByRole("button", { name: "Selecionar" }).click();
+  await dragFrom(at(0.2, 0.2), at(0.6, 0.2));
+
+  const leftOf = () => dialog.locator(".border-marca").first().evaluate((el) => (el as HTMLElement).style.left);
+  expect(Number.parseFloat(await leftOf())).toBeGreaterThan(40);
+  await dialog.getByRole("button", { name: "Desfazer" }).click();
+  expect(Number.parseFloat(await leftOf())).toBeLessThan(15);
+});
