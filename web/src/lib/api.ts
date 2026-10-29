@@ -1,5 +1,7 @@
 /** Cliente da API do Studio. Único ponto do editor que conhece URLs do servidor. */
 
+import type { Annotations } from "./annotations";
+
 export interface ManualSummary {
   slug: string;
   title: string;
@@ -69,6 +71,11 @@ export const api = {
     call<{ ok: true }>(`${manualUrl(slug)}/trash/${encodeURIComponent(trashId)}/restore`, { method: "POST" }),
   movePage: (slug: string, id: string, parentId: string | null, index: number) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/move`, send("POST", { parentId, index })),
+
+  getAnnotations: (slug: string, asset: string) =>
+    call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`),
+  saveAnnotations: (slug: string, asset: string, annotations: Annotations) =>
+    call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`, send("PUT", annotations)),
 
   uploadAsset: (slug: string, file: File) =>
     call<{ path: string }>(`${manualUrl(slug)}/assets?name=${encodeURIComponent(file.name || "imagem.png")}`, {
