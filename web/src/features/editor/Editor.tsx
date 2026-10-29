@@ -2,6 +2,7 @@ import { Extension } from "@tiptap/core";
 import FileHandler from "@tiptap/extension-file-handler";
 import { EditorContent, type Editor as TiptapEditor, useEditor } from "@tiptap/react";
 import { useEffect, useRef, useState } from "react";
+import { AnnotatedImage } from "@/features/annotations/annotatedImage";
 import type { TreeItem } from "@/lib/api";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";
 import { contentExtensions } from "./extensions";
@@ -35,7 +36,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
 
   const editor = useEditor({
     extensions: [
-      ...contentExtensions(),
+      ...contentExtensions(AnnotatedImage.configure({ slug })),
       SlashCommand.configure({ pickImage }),
       Extension.create({
         name: "linkShortcut",
