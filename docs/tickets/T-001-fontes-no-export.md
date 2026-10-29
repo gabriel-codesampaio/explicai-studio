@@ -1,7 +1,7 @@
 # T-001: Embutir as fontes da marca no manual exportado
 
 - Prioridade: P0
-- Status: aberto
+- Status: em andamento
 - Agente: core
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)
 
