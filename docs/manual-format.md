@@ -98,7 +98,7 @@ O id da versão é o nome do arquivo sem `.md`. Quando `published` está no nó 
 
 A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do mesmo formato:
 
-- `exportacao/html/index.html`: o manual num arquivo só, com sumário, uma seção por página e as marcações desenhadas sobre os prints. As imagens usadas vão para `exportacao/html/assets/`.
+- `exportacao/html/index.html`: o manual num arquivo só, com sumário, uma seção por página e as marcações desenhadas sobre os prints. As imagens usadas vão para `exportacao/html/assets/` e as fontes da marca (com a licença OFL), para `exportacao/html/fonts/`.
 - `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
 - `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
 
