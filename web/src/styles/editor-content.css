@@ -96,6 +96,7 @@
   font-size: 0.88em;
   background: var(--superficie);
   border: 1px solid var(--linha);
+  /* Raios do conteúdo (código, citação do passo, print) espelham o manual exportado, não o --radius do Studio. */
   border-radius: 4px;
   padding: 0.05em 0.35em;
 }

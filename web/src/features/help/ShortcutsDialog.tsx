@@ -57,7 +57,7 @@ export function ShortcutsDialog() {
               {group.keys.map(([key, what]) => (
                 <div key={key} className="contents">
                   <dt>
-                    <kbd className="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-xs whitespace-nowrap">
+                    <kbd className="rounded-sm border border-border bg-card px-1.5 py-0.5 font-mono text-xs whitespace-nowrap">
                       {t(key)}
                     </kbd>
                   </dt>

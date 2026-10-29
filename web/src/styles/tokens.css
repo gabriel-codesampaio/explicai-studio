@@ -37,7 +37,8 @@
   --border: var(--linha);
   --input: var(--linha);
   --ring: var(--cobalto);
-  --radius: 6px;
+  /* Canto quase reto (decisão do T-009): o arredondado fica com o símbolo e os marcadores. */
+  --radius: 3px;
 
   /* fontes da marca (o @theme abaixo expõe como font-sans, font-display e font-mono) */
   --fonte-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;
@@ -94,8 +95,10 @@
   --font-display: var(--fonte-display);
   --font-mono: var(--fonte-mono);
 
-  --radius-sm: calc(var(--radius) - 2px);
+  /* Um raio só: os nomes do shadcn (rounded-xs a rounded-xl) apontam todos para --radius. */
+  --radius-xs: var(--radius);
+  --radius-sm: var(--radius);
   --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 2px);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
 }

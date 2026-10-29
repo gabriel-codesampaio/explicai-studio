@@ -60,10 +60,11 @@ export function AnnotationOverlay({ annotations, selectedId, onGrab }: Props) {
     <span
       key={key}
       onPointerDown={selectedId ? pick(selectedId, key) : undefined}
-      className="absolute z-10 size-3 -translate-x-1/2 -translate-y-1/2 rounded-[2px] border-2 border-primary bg-white"
+      className="absolute z-10 size-3 -translate-x-1/2 -translate-y-1/2 rounded-sm border-2 border-primary bg-white"
       style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%`, cursor }}
     />
   );
+  // Destaque e área clicável são conteúdo do manual: rounded-[3px] fixo, igual ao .hl/.hot do export (src/core/export/html.ts).
   const ring = (id: string) => (id === selectedId ? "outline-2 outline-offset-2 outline-primary" : "");
 
   return (
