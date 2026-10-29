@@ -1,5 +1,6 @@
 import { PanelLeftClose, Plus } from "lucide-react";
 import { Brand } from "@/components/Brand";
+import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
@@ -92,6 +93,7 @@ export function Sidebar({ studio, onCollapse, onNavigate }: Props) {
           <TrashPanel slug={manual.slug} onRestore={(trashId, pageId) => studio.restorePage(manual.slug, trashId, pageId)} />
         )}
         <AppearancePanel />
+        <ShortcutsDialog />
       </div>
     </aside>
   );
