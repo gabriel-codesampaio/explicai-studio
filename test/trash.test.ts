@@ -2,7 +2,17 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { addPage, createManual, flatten, readManual, readPage, removePage, restorePage, updatePage } from "../src/core/index.js";
+import {
+  addPage,
+  createManual,
+  flatten,
+  listTrash,
+  readManual,
+  readPage,
+  removePage,
+  restorePage,
+  updatePage,
+} from "../src/core/index.js";
 
 let workspace: string;
 let dir: string;
@@ -53,6 +63,17 @@ describe("lixeira", () => {
     await restorePage(dir, trashId);
     expect((await readPage(dir, velha.id)).file).toBe("pages/clientes-2.md");
     expect((await readPage(dir, nova.id)).file).toBe("pages/clientes.md");
+  });
+
+  it("lista o que está na lixeira com título e número de páginas", async () => {
+    expect(await listTrash(dir)).toEqual([]);
+    const pai = await addPage(dir, { title: "Clientes" });
+    await addPage(dir, { title: "Cadastro", parentId: pai.id });
+    const { trashId } = await removePage(dir, pai.id);
+
+    expect(await listTrash(dir)).toEqual([{ trashId, title: "Clientes", pages: 2, deletedAt: expect.any(String) }]);
+    await restorePage(dir, trashId);
+    expect(await listTrash(dir)).toEqual([]);
   });
 
   it("recusa id de lixeira que tenta sair da pasta", async () => {

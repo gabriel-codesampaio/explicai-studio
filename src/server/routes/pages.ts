@@ -1,4 +1,4 @@
-import { addPage, movePage, readPage, removePage, restorePage, updatePage } from "../../core/index.js";
+import { addPage, listTrash, movePage, readPage, removePage, restorePage, updatePage } from "../../core/index.js";
 import { json, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir, optionalNumber, optionalString } from "../workspace.js";
@@ -57,6 +57,11 @@ export const pageRoutes: Route[] = [
       });
       return json({ ok: true });
     },
+  },
+  {
+    method: "GET",
+    path: "/api/manuals/:slug/trash",
+    handle: async (ctx) => json(await listTrash(manualDir(ctx))),
   },
   {
     method: "POST",

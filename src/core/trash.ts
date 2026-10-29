@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, rm } from "node:fs/promises";
+import { mkdir, readdir, readFile, rename, rm } from "node:fs/promises";
 import path from "node:path";
+import { splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, exists, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { PAGES_DIR, updateManual } from "./manuals.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
@@ -14,6 +15,31 @@ interface TrashEntry {
   parentId: string | null;
   index: number;
   deletedAt: string;
+}
+
+export interface TrashItem {
+  trashId: string;
+  title: string;
+  /** Quantas páginas voltam ao restaurar (a página mais as subpáginas). */
+  pages: number;
+  deletedAt: string;
+}
+
+/** O que está na lixeira, da exclusão mais recente para a mais antiga. */
+export async function listTrash(dir: string): Promise<TrashItem[]> {
+  const root = path.join(dir, TRASH_DIR);
+  if (!(await exists(root))) return [];
+  const items: TrashItem[] = [];
+  for (const trashId of await readdir(root)) {
+    const entryFile = path.join(root, trashId, "entry.json");
+    if (!(await exists(entryFile))) continue;
+    const entry = JSON.parse(await readFile(entryFile, "utf8")) as TrashEntry;
+    const pageFile = path.join(root, trashId, entry.node.file);
+    const data: Record<string, unknown> = (await exists(pageFile)) ? splitFrontmatter(await readFile(pageFile, "utf8")).data : {};
+    const title = typeof data.title === "string" ? data.title : "";
+    items.push({ trashId, title, pages: flatten([entry.node]).length, deletedAt: entry.deletedAt });
+  }
+  return items.sort((a, b) => b.deletedAt.localeCompare(a.deletedAt));
 }
 
 /**
