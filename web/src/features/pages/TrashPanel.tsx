@@ -2,21 +2,11 @@ import { RotateCcw, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { api, errorMessage, type TrashItem } from "@/lib/api";
+import { ago } from "@/lib/time";
 
 interface Props {
   slug: string;
   onRestore: (trashId: string, pageId: string) => Promise<void>;
-}
-
-const relative = new Intl.RelativeTimeFormat("pt-BR", { numeric: "auto" });
-
-/** "há 5 minutos", "ontem"… a partir da data da exclusão. */
-function ago(iso: string): string {
-  const minutes = Math.round((Date.parse(iso) - Date.now()) / 60_000);
-  if (Math.abs(minutes) < 60) return relative.format(minutes, "minute");
-  const hours = Math.round(minutes / 60);
-  if (Math.abs(hours) < 24) return relative.format(hours, "hour");
-  return relative.format(Math.round(hours / 24), "day");
 }
 
 /** Botão "Lixeira" da barra lateral: lista o que foi excluído neste manual e restaura. */

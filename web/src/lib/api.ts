@@ -36,6 +36,20 @@ export interface TrashItem {
   deletedAt: string;
 }
 
+export interface VersionInfo {
+  id: string;
+  title: string;
+  /** Nome dado ao guardar. Pode ser vazio. */
+  note: string;
+  savedAt: string;
+  /** É a versão escolhida para o manual final. */
+  published: boolean;
+}
+
+export interface Version extends VersionInfo {
+  body: string;
+}
+
 export interface PagePatch {
   title?: string;
   body?: string;
@@ -73,6 +87,18 @@ export const api = {
     call<{ ok: true }>(`${manualUrl(slug)}/trash/${encodeURIComponent(trashId)}/restore`, { method: "POST" }),
   movePage: (slug: string, id: string, parentId: string | null, index: number) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/move`, send("POST", { parentId, index })),
+
+  listVersions: (slug: string, id: string) => call<VersionInfo[]>(`${pageUrl(slug, id)}/versions`),
+  getVersion: (slug: string, id: string, versionId: string) =>
+    call<Version>(`${pageUrl(slug, id)}/versions/${encodeURIComponent(versionId)}`),
+  saveVersion: (slug: string, id: string, note: string) =>
+    call<VersionInfo>(`${pageUrl(slug, id)}/versions`, send("POST", { note })),
+  /** Troca o texto da página pelo da versão; o texto anterior vira a versão "Antes de restaurar". */
+  restoreVersion: (slug: string, id: string, versionId: string) =>
+    call<Page>(`${pageUrl(slug, id)}/versions/${encodeURIComponent(versionId)}/restore`, { method: "POST" }),
+  /** `null` volta a usar o texto atual no manual final. */
+  publishVersion: (slug: string, id: string, versionId: string | null) =>
+    call<{ ok: true }>(`${pageUrl(slug, id)}/published`, send("PUT", { versionId })),
 
   getAnnotations: (slug: string, asset: string) =>
     call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`),

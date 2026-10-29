@@ -13,6 +13,8 @@ export function useStudio() {
   const [bootError, setBootError] = useState<string | null>(null);
   /** true enquanto o formulário de novo manual está aberto na área principal. */
   const [creatingManual, setCreatingManual] = useState(false);
+  /** Muda quando o texto da página aberta é trocado por fora do editor (restaurar versão), para recriar o editor. */
+  const [revision, setRevision] = useState(0);
 
   const autosave = useAutosave(async (job) => {
     const saved = await api.updatePage(job.slug, job.id, job.patch);
@@ -109,6 +111,26 @@ export function useStudio() {
       });
     });
 
+  /** Guarda o texto atual como versão. Antes, grava o que ainda está na fila do salvamento automático. */
+  const saveVersion = (note: string) =>
+    run(async () => {
+      if (!manual || !page) return;
+      await flush();
+      await api.saveVersion(manual.slug, page.id, note);
+      toast.success("Versão guardada.");
+    });
+
+  const restoreVersion = (versionId: string) =>
+    run(async () => {
+      if (!manual || !page) return;
+      await flush();
+      const restored = await api.restoreVersion(manual.slug, page.id, versionId);
+      await refreshManual(manual.slug);
+      setPage(restored);
+      setRevision((r) => r + 1);
+      toast('Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".');
+    });
+
   const movePage = (id: string, parentId: string | null, index: number) =>
     run(async () => {
       if (!manual) return;
@@ -140,6 +162,7 @@ export function useStudio() {
     bootError,
     creatingManual,
     setCreatingManual,
+    revision,
     save: { state: autosave.state, savedAt: autosave.savedAt, retry: autosave.retry },
     openManual,
     selectPage,
@@ -147,6 +170,8 @@ export function useStudio() {
     removePage,
     restorePage,
     movePage,
+    saveVersion,
+    restoreVersion,
     createManual,
     editPage,
     reportError: (message: string) => toast.error(message),

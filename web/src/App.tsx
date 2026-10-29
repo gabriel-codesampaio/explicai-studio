@@ -31,8 +31,8 @@ export function App() {
               Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.
             </EmptyState>
           ) : (
-            // key: cada página tem o próprio editor, criado com o conteúdo dela.
-            <PageView key={page.id} studio={studio} manual={manual} page={page} />
+            // key: cada página (e cada versão restaurada) tem o próprio editor, criado com o conteúdo dela.
+            <PageView key={`${page.id}:${studio.revision}`} studio={studio} manual={manual} page={page} />
           )}
         </main>
       </div>
