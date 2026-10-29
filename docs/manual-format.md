@@ -13,6 +13,7 @@ meu-workspace/
       tela-clientes.png.json   marcadores, destaques, setas e áreas clicáveis
     .lixeira/                  páginas excluídas, até serem restauradas
     .versoes/                  versões guardadas de cada página
+    exportacao/                HTML, PDF e Markdown gerados (pode ir para o .gitignore)
 ```
 
 ## manual.json
@@ -30,7 +31,7 @@ meu-workspace/
 }
 ```
 
-A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões).
+A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado: `{ "accent": "#2b4fe0" }` é a cor de títulos, links e números dos passos no HTML e no PDF. O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões).
 
 ## Página
 
@@ -90,6 +91,16 @@ Texto da página naquele momento.
 ```
 
 O id da versão é o nome do arquivo sem `.md`. Quando `published` está no nó da página em `manual.json`, a exportação usa aquela versão. Sem ele, usa o texto atual. Restaurar uma versão troca o texto atual por ela e antes guarda o texto que estava lá como uma versão "Antes de restaurar". As versões acompanham a página na lixeira, porque ficam pelo id.
+
+## Exportação
+
+A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do mesmo formato:
+
+- `exportacao/html/index.html`: o manual num arquivo só, com sumário, uma seção por página e as marcações desenhadas sobre os prints. As imagens usadas vão para `exportacao/html/assets/`.
+- `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
+- `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
+
+Cada página entra com a versão marcada em `published` ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto, e links só passam se forem `http`, `https`, `mailto` ou âncora.
 
 ## Regras
 

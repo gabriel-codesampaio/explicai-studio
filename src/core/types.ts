@@ -17,7 +17,14 @@ export interface ManualMeta {
   title: string;
   /** Tag BCP 47, como `pt-BR` ou `en-US`. */
   language: string;
+  /** Aparência do manual exportado. Sem ela, vale a cor da marca. */
+  theme?: ManualTheme;
   pages: PageNode[];
+}
+
+export interface ManualTheme {
+  /** Cor de destaque em hexadecimal (#2b4fe0): títulos, links e números dos passos no HTML e no PDF. */
+  accent?: string;
 }
 
 export interface Manual {

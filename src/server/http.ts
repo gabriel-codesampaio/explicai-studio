@@ -29,6 +29,8 @@ const MIME: Record<string, string> = {
   ".gif": "image/gif",
   ".webp": "image/webp",
   ".woff2": "font/woff2",
+  ".pdf": "application/pdf",
+  ".md": "text/markdown; charset=utf-8",
 };
 
 export async function send(res: ServerResponse, reply: Reply): Promise<void> {

@@ -87,15 +87,6 @@
 .tiptap li > :is(img, p > img, span > img, .react-renderer) {
   margin-top: 0.5em;
 }
-.tiptap li > blockquote {
-  margin-top: 0.5em;
-  padding: 6px 12px;
-  border-left: 3px solid var(--marca);
-  border-radius: 0 6px 6px 0;
-  background: var(--marca-faixa);
-  color: var(--tinta);
-  font-style: normal;
-}
 .tiptap a {
   color: var(--cobalto);
   text-underline-offset: 0.2em;
@@ -128,6 +119,16 @@
   border-left: 2px solid var(--linha);
   color: var(--grafite);
   font-style: italic;
+}
+/* Citação dentro do passo é o "Resultado:": marca-texto em vez de cinza. */
+.tiptap li > blockquote {
+  margin-top: 0.5em;
+  padding: 6px 12px;
+  border-left: 3px solid var(--marca);
+  border-radius: 0 6px 6px 0;
+  background: var(--marca-faixa);
+  color: var(--tinta);
+  font-style: normal;
 }
 .tiptap img {
   max-width: 100%;
