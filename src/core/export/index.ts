@@ -4,7 +4,7 @@ import { atomicWrite, relativePosix, resolveInside } from "../fs.js";
 import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
 import type { ManualTheme } from "../types.js";
-import { collectPages } from "./collect.js";
+import { type CollectOptions, collectPages } from "./collect.js";
 import { renderHtml } from "./html.js";
 import { renderMarkdown } from "./markdown.js";
 import { printPdf } from "./pdf.js";
@@ -32,8 +32,8 @@ export interface ExportResult {
  * a partir desse HTML) ou Markdown (um arquivo só, para quem lê com IA). Usa a versão marcada
  * "No manual" de cada página.
  */
-export async function exportManual(dir: string, format: ExportFormat): Promise<ExportResult> {
-  const collected = await collectPages(dir);
+export async function exportManual(dir: string, format: ExportFormat, opts: CollectOptions = {}): Promise<ExportResult> {
+  const collected = await collectPages(dir, opts);
   const images = await loadImages(dir, collected.pages);
   const root = resolveInside(dir, EXPORT_DIR);
   const result = (file: string): ExportResult => ({

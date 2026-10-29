@@ -33,9 +33,14 @@ export interface Manual {
   meta: ManualMeta;
 }
 
+/** Etapa da página no fluxo de aprovação. Sem status no arquivo, a página é rascunho. */
+export const PAGE_STATUSES = ["rascunho", "revisao", "aprovado", "publicado"] as const;
+export type PageStatus = (typeof PAGE_STATUSES)[number];
+
 export interface Page {
   id: string;
   title: string;
+  status: PageStatus;
   /** Conteúdo em Markdown, sem o frontmatter. */
   body: string;
   file: string;

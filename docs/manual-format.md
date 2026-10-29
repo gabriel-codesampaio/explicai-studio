@@ -48,6 +48,8 @@ title: Cadastrar cliente
 
 O nome do arquivo acompanha o título: quando o título muda, o arquivo é renomeado e o `manual.json` é atualizado. O `id` do frontmatter nunca muda, e é ele que as áreas clicáveis usam como destino.
 
+O frontmatter pode ter `status`, a etapa da página no fluxo de aprovação: `revisao`, `aprovado` ou `publicado`. Sem ele, a página é rascunho, e por isso página escrita à mão continua válida. A exportação pode levar só as páginas aprovadas ou publicadas.
+
 ## Links entre páginas
 
 Um link para outra página do manual é um link Markdown relativo ao arquivo: `[Cadastro](./cadastrar-cliente.md)`, ou `./cadastrar-cliente.md#campos` para uma seção. Todas as páginas ficam em `pages/`, então o caminho é sempre `./nome.md`. Quando uma página é renomeada, os links das outras páginas são atualizados.

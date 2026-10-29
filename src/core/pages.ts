@@ -6,7 +6,7 @@ import { atomicWrite, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { PAGES_DIR, readManual, updateManual } from "./manuals.js";
 import { slugify } from "./text.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
-import type { Page, PageNode } from "./types.js";
+import { PAGE_STATUSES, type Page, type PageNode, type PageStatus } from "./types.js";
 
 /** Página pode ficar sem título enquanto é escrita: a árvore mostra "Sem título" e o arquivo vira sem-titulo.md. */
 export async function addPage(
@@ -14,7 +14,13 @@ export async function addPage(
   opts: { title: string; body?: string; parentId?: string | null; index?: number },
 ): Promise<Page> {
   const title = opts.title.trim();
-  const page: Page = { id: randomUUID(), title, body: opts.body ?? "", file: await newPageFile(dir, title) };
+  const page: Page = {
+    id: randomUUID(),
+    title,
+    status: "rascunho",
+    body: opts.body ?? "",
+    file: await newPageFile(dir, title),
+  };
 
   await updateManual(dir, (meta) => {
     const siblings = childrenOf(meta.pages, opts.parentId);
@@ -32,6 +38,7 @@ export async function readPage(dir: string, id: string): Promise<Page> {
 export interface PageTreeNode {
   id: string;
   title: string;
+  status: PageStatus;
   file: string;
   /** Preenchido quando o arquivo da página sumiu ou está com erro: a página aparece, com o aviso. */
   problem?: string;
@@ -55,9 +62,10 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
           children: await walk(n.children),
         };
         try {
-          return { ...base, title: (await readPageFile(dir, n.file)).title };
+          const { title, status } = await readPageFile(dir, n.file);
+          return { ...base, title, status };
         } catch (err) {
-          return { ...base, title: "", problem: err instanceof Error ? err.message : String(err) };
+          return { ...base, title: "", status: "rascunho" as const, problem: err instanceof Error ? err.message : String(err) };
         }
       }),
     );
@@ -65,7 +73,7 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
 }
 
 /** Lê título e corpo de um arquivo de página, com mensagem clara quando ele foi apagado ou estragado. */
-async function readPageFile(dir: string, file: string): Promise<{ title: string; body: string }> {
+async function readPageFile(dir: string, file: string): Promise<{ title: string; status: PageStatus; body: string }> {
   let text: string;
   try {
     text = await readFile(resolveInside(dir, file), "utf8");
@@ -77,7 +85,8 @@ async function readPageFile(dir: string, file: string): Promise<{ title: string;
   }
   try {
     const { data, body } = splitFrontmatter(text);
-    return { title: typeof data.title === "string" ? data.title : "", body };
+    const status = PAGE_STATUSES.includes(data.status as PageStatus) ? (data.status as PageStatus) : "rascunho";
+    return { title: typeof data.title === "string" ? data.title : "", status, body };
   } catch (err) {
     const detail = err instanceof Error ? err.message.split("\n")[0] : String(err);
     throw new Error(`O cabeçalho (frontmatter) de ${file} tem um erro: ${detail}`);
@@ -88,10 +97,18 @@ async function readPageFile(dir: string, file: string): Promise<{ title: string;
  * Quando o título muda, o arquivo é renomeado para acompanhar, para a pasta continuar legível
  * para pessoas e IAs. O id no frontmatter não muda, e é ele que as áreas clicáveis usam.
  */
-export async function updatePage(dir: string, id: string, patch: { title?: string; body?: string }): Promise<Page> {
+export async function updatePage(
+  dir: string,
+  id: string,
+  patch: { title?: string; body?: string; status?: PageStatus },
+): Promise<Page> {
   const page = await readPage(dir, id);
+  if (patch.status !== undefined && !PAGE_STATUSES.includes(patch.status)) {
+    throw new Error(`Status inválido: ${patch.status}. Use ${PAGE_STATUSES.join(", ")}.`);
+  }
   const next: Page = {
     ...page,
+    ...(patch.status === undefined ? {} : { status: patch.status }),
     ...(patch.title === undefined ? {} : { title: patch.title.trim() }),
     ...(patch.body === undefined ? {} : { body: patch.body }),
   };
@@ -149,5 +166,7 @@ async function newPageFile(dir: string, title: string): Promise<string> {
 }
 
 async function writePageFile(dir: string, page: Page): Promise<void> {
-  await atomicWrite(resolveInside(dir, page.file), joinFrontmatter({ id: page.id, title: page.title }, page.body));
+  // Rascunho é o padrão e não vai para o arquivo: página escrita à mão continua igual.
+  const status = page.status === "rascunho" ? {} : { status: page.status };
+  await atomicWrite(resolveInside(dir, page.file), joinFrontmatter({ id: page.id, title: page.title, ...status }, page.body));
 }

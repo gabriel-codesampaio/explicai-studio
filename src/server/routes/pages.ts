@@ -1,4 +1,13 @@
-import { addPage, listTrash, movePage, readPage, removePage, restorePage, updatePage } from "../../core/index.js";
+import {
+  addPage,
+  listTrash,
+  movePage,
+  type PageStatus,
+  readPage,
+  removePage,
+  restorePage,
+  updatePage,
+} from "../../core/index.js";
 import { json, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir, optionalNumber, optionalString } from "../workspace.js";
@@ -34,7 +43,12 @@ export const pageRoutes: Route[] = [
       const body = await readJson(ctx.req);
       const title = optionalString(body.title);
       const text = optionalString(body.body);
-      const patch = { ...(title === undefined ? {} : { title }), ...(text === undefined ? {} : { body: text }) };
+      const status = optionalString(body.status) as PageStatus | undefined;
+      const patch = {
+        ...(title === undefined ? {} : { title }),
+        ...(text === undefined ? {} : { body: text }),
+        ...(status === undefined ? {} : { status }),
+      };
       return json(await updatePage(manualDir(ctx), ctx.params.id ?? "", patch));
     },
   },

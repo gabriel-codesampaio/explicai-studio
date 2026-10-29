@@ -5,15 +5,16 @@ import { manualDir, optionalString } from "../workspace.js";
 
 export const exportRoutes: Route[] = [
   {
-    // { format: "html" | "pdf" | "markdown" }. Devolve o arquivo gerado e o endereço para abrir no navegador.
+    // { format: "html" | "pdf" | "markdown", onlyApproved?: true }. Devolve o arquivo gerado e o endereço para abrir no navegador.
     method: "POST",
     path: "/api/manuals/:slug/export",
     handle: async (ctx) => {
-      const format = optionalString((await readJson(ctx.req)).format) as ExportFormat | undefined;
+      const body = await readJson(ctx.req);
+      const format = optionalString(body.format) as ExportFormat | undefined;
       if (!format || !EXPORT_FORMATS.includes(format)) {
         throw new HttpError(400, `Formato de exportação inválido. Use ${EXPORT_FORMATS.join(", ")}.`);
       }
-      const result = await exportManual(manualDir(ctx), format);
+      const result = await exportManual(manualDir(ctx), format, { onlyApproved: body.onlyApproved === true });
       return json({ ...result, url: `/files/${encodeURIComponent(ctx.params.slug ?? "")}/${result.file}` });
     },
   },

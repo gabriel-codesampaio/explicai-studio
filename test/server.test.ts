@@ -223,3 +223,14 @@ describe("API de exportação", () => {
     expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({});
   });
 });
+
+describe("API do fluxo de aprovação", () => {
+  it("muda o status pela página e recusa status desconhecido", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
+    const page = await (await fetch(`${base}/api/manuals/m/pages`, json("POST", { title: "P" }))).json();
+    const url = `${base}/api/manuals/m/pages/${page.id}`;
+    expect((await (await fetch(url, json("PUT", { status: "aprovado" }))).json()).status).toBe("aprovado");
+    expect((await (await fetch(`${base}/api/manuals/m`)).json()).pages[0].status).toBe("aprovado");
+    expect((await fetch(url, json("PUT", { status: "pronto" }))).status).toBe(400);
+  });
+});
