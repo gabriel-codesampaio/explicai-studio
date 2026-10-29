@@ -14,7 +14,7 @@
   --marca: #ffd43b;
   --marca-faixa: rgba(255, 212, 59, 0.55);
   --coral: #c8411f;
-  --acento: #2b4fe0;
+  --acento: var(--cobalto);
 
   /* nomes do shadcn */
   --background: var(--papel);
@@ -29,7 +29,7 @@
   --secondary-foreground: var(--tinta);
   --muted: #eceef5;
   --muted-foreground: var(--grafite);
-  --accent: rgba(43, 79, 224, 0.08);
+  --accent: color-mix(in srgb, var(--cobalto) 8%, transparent);
   --accent-foreground: var(--tinta);
   --destructive: var(--coral);
   --border: var(--linha);
@@ -45,24 +45,46 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --papel: #0e1120;
-    --superficie: #161a2e;
-    --tinta: #eceef7;
-    --grafite: #a3aac4;
-    --linha: #2a3050;
-    --cobalto: #8098ff;
-    --sobre-cobalto: #0e1120;
-    --marca-faixa: rgba(255, 212, 59, 0.3);
-    --coral: #ff8a70;
-    --acento: #ffd43b;
+/* O tema vem de data-theme, que o index.html põe antes da primeira pintura (ver lib/theme.ts). */
+:root[data-theme="dark"] {
+  --papel: #0e1120;
+  --superficie: #161a2e;
+  --tinta: #eceef7;
+  --grafite: #a3aac4;
+  --linha: #2a3050;
+  --cobalto: #8098ff;
+  --sobre-cobalto: #0e1120;
+  --marca-faixa: rgba(255, 212, 59, 0.3);
+  --coral: #ff8a70;
+  --acento: #ffd43b;
 
-    --secondary: #1d2238;
-    --muted: #1b2034;
-    --accent: rgba(128, 152, 255, 0.12);
-    color-scheme: dark;
-  }
+  --secondary: #1d2238;
+  --muted: #1b2034;
+  --accent: color-mix(in srgb, var(--cobalto) 12%, transparent);
+  color-scheme: dark;
+}
+
+/*
+ * Cores de destaque escolhidas em "Aparência". Elas trocam o cobalto, e o resto (botões, foco,
+ * marcadores) acompanha. Cada uma tem contraste AA com o texto sobre ela nos dois temas.
+ */
+:root[data-accent="esmeralda"] {
+  --cobalto: #0f7a55;
+}
+:root[data-accent="ameixa"] {
+  --cobalto: #7a3fc4;
+}
+:root[data-accent="grafite"] {
+  --cobalto: #3d4459;
+}
+:root[data-theme="dark"][data-accent="esmeralda"] {
+  --cobalto: #4cc79a;
+}
+:root[data-theme="dark"][data-accent="ameixa"] {
+  --cobalto: #b58cff;
+}
+:root[data-theme="dark"][data-accent="grafite"] {
+  --cobalto: #b4bbd3;
 }
 
 @theme inline {

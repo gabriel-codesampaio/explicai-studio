@@ -3,3 +3,6 @@
 @import "./tokens.css";
 @import "./base.css";
 @import "./editor-content.css";
+
+/* dark: segue o tema escolhido no Studio (data-theme), não só o do sistema. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));

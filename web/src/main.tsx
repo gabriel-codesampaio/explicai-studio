@@ -5,11 +5,13 @@ import "@fontsource-variable/jetbrains-mono";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
+import { followSystemTheme } from "./lib/theme";
 import "./styles/index.css";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("index.html sem o elemento #root.");
 
+followSystemTheme();
 createRoot(root).render(
   <StrictMode>
     <App />
