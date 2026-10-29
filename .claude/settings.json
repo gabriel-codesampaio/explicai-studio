@@ -12,5 +12,13 @@
       "Bash(git diff:*)",
       "Bash(git log:*)"
     ]
+  },
+  "extraKnownMarketplaces": {
+    "explicai-workflow": {
+      "source": { "source": "github", "repo": "gabriel-codesampaio/explicai-workflow" }
+    }
+  },
+  "enabledPlugins": {
+    "explicai-workflow@explicai-workflow": true
   }
 }
