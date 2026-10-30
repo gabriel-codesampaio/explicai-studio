@@ -58,17 +58,20 @@ export function PageView({ manual, page }: Props) {
                 </Fragment>
               ))}
             </nav>
-            {manual.pages.length > 0 && <ExportDialog />}
-            <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
-            {editor && headings.length > 0 && <PageOutlineButton editor={editor} headings={headings} />}
-            <VersionsPanel
-              slug={manual.slug}
-              pageId={page.id}
-              pinned={pinned}
-              onSave={studio.saveVersion}
-              onRestore={studio.restoreVersion}
-              onPublish={studio.publishVersion}
-            />
+            {/* ml-auto: o grupo fica à direita também abaixo de sm, quando o caminho ocupa a linha inteira. */}
+            <div className="ml-auto flex flex-wrap items-center justify-end gap-1">
+              <VersionsPanel
+                slug={manual.slug}
+                pageId={page.id}
+                pinned={pinned}
+                onSave={studio.saveVersion}
+                onRestore={studio.restoreVersion}
+                onPublish={studio.publishVersion}
+              />
+              <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
+              {editor && headings.length > 0 && <PageOutlineButton editor={editor} headings={headings} />}
+              {manual.pages.length > 0 && <ExportDialog />}
+            </div>
           </div>
 
           {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}

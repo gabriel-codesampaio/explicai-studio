@@ -440,3 +440,84 @@ test("lixeira: restaurar fecha o painel e mostra a página restaurada", async ({
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(treePage(page, "Sai")).toBeVisible();
 });
+
+/** Os botões do topo da página, com posição e nome, na ordem em que aparecem na tela. */
+async function topButtons(page: Page) {
+  return page.evaluate(() => {
+    const row = document.querySelector("article nav[aria-label]")?.parentElement as HTMLElement;
+    const buttons = [...row.querySelectorAll("button")].map((b) => {
+      const r = b.getBoundingClientRect();
+      return {
+        name: b.getAttribute("aria-label") ?? b.textContent?.trim() ?? "",
+        left: r.left,
+        top: r.top,
+        right: r.right,
+        height: r.height,
+      };
+    });
+    return {
+      buttons,
+      rowRight: row.getBoundingClientRect().right,
+      scrollW: document.documentElement.scrollWidth,
+      innerW: innerWidth,
+    };
+  });
+}
+
+async function pageWithHeadings(request: APIRequestContext, title: string) {
+  const { slug, pages } = await setup(request, title, ["Início"]);
+  await request.put(`/api/manuals/${slug}/pages/${pages[0]?.id}`, {
+    data: { body: "## Primeiro\n\nTexto.\n\n## Segundo\n\nTexto." },
+  });
+  return slug;
+}
+
+test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
+  test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
+
+  test("é o último item, encosta na direita, tem 44 px e segue Versões, Status, Índice no Tab", async ({ page, request }) => {
+    const slug = await pageWithHeadings(request, "Manual Exportar Celular");
+    await page.goto(`/#/${slug}`);
+    await expect(page.getByRole("button", { name: "Exportar manual" })).toBeVisible();
+    const { buttons, rowRight, scrollW, innerW } = await topButtons(page);
+    expect(buttons.map((b) => b.name.replace(/:.*/, "").replace(/\s+/g, " "))).toEqual([
+      "Versões",
+      "Status da página",
+      "Nesta página",
+      "Exportar manual",
+    ]);
+    const exportBtn = buttons[3];
+    // Sem espaço na linha, o Exportar desce para uma linha própria, ainda à direita; nunca fica no meio.
+    const others = buttons.slice(0, 3);
+    expect(exportBtn?.top ?? 0).toBeGreaterThanOrEqual(Math.max(...others.map((b) => b.top)) - 1);
+    if (exportBtn && Math.abs(exportBtn.top - (others[2]?.top ?? 0)) < 1)
+      expect(exportBtn.left).toBeGreaterThan(others[2]?.left ?? 0);
+    expect(Math.abs((exportBtn?.right ?? 0) - rowRight)).toBeLessThan(1);
+    expect(exportBtn?.height).toBeGreaterThanOrEqual(44);
+    expect(scrollW).toBeLessThanOrEqual(innerW);
+
+    await page.getByRole("button", { name: "Versões" }).focus();
+    for (const name of [/Status da página/, /Nesta página/, /Exportar manual/]) {
+      await page.keyboard.press("Tab");
+      await expect(page.getByRole("button", { name })).toBeFocused();
+    }
+  });
+});
+
+test("botão Exportar manual em 1280 px: último à direita, altura de botão primário e único sólido", async ({ page, request }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  const slug = await pageWithHeadings(request, "Manual Exportar Desktop");
+  await page.goto(`/#/${slug}`);
+  await expect(page.getByRole("button", { name: "Exportar manual" })).toBeVisible();
+  const { buttons, rowRight } = await topButtons(page);
+  expect(buttons.at(-1)?.name).toBe("Exportar manual");
+  expect(Math.abs((buttons.at(-1)?.right ?? 0) - rowRight)).toBeLessThan(1);
+  expect(buttons.at(-1)?.height).toBe(36);
+  // Só ele tem fundo sólido: os vizinhos são texto.
+  const bg = await page.evaluate(() =>
+    [...(document.querySelector("article nav[aria-label]")?.parentElement?.querySelectorAll("button") ?? [])].map(
+      (b) => getComputedStyle(b).backgroundColor,
+    ),
+  );
+  expect(bg.filter((c) => c !== "rgba(0, 0, 0, 0)")).toHaveLength(1);
+});
