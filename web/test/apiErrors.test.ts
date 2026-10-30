@@ -54,6 +54,7 @@ describe("erros de conexão e de acesso", () => {
     ["forbidden-host", /só aceita pedidos deste computador/],
     ["forbidden-origin", /só aceita pedidos deste computador/],
     ["invalid-utf8", /UTF-8/],
+    ["malformed-url", /endereço/],
     ["no-browser", /Chrome, o Edge ou o Chromium/],
   ])("código %s tem texto da interface", (code, text) => {
     expect(errorMessage(new ApiError("do servidor", code))).toMatch(text);
