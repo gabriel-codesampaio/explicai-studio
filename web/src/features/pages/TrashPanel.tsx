@@ -63,7 +63,7 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore }: Props) {
                 </span>
                 <button
                   type="button"
-                  onClick={() => void onRestore(item.trashId, item.pageId).then(load)}
+                  onClick={() => void onRestore(item.trashId, item.pageId).then(() => onOpenChange(false))}
                   className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-sm font-bold text-primary hover:bg-accent"
                 >
                   <RotateCcw className="size-3.5" aria-hidden /> {t("Restaurar")}

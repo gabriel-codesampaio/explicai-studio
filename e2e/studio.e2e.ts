@@ -359,3 +359,16 @@ test("tela estreita: painéis do ⋯ abrem sobre a gaveta, Esc fecha só o paine
     await expect(more).toBeFocused();
   }
 });
+
+test("lixeira: restaurar fecha o painel e mostra a página restaurada", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Restaura", ["Fica", "Sai"]);
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Mais ações para Sai" }).click();
+  await page.getByRole("menuitem", { name: "Excluir página" }).click();
+  await expect(treePage(page, "Sai")).toHaveCount(0);
+  await page.getByRole("button", { name: "Mais opções" }).click();
+  await page.getByRole("menuitem", { name: "Lixeira" }).click();
+  await page.getByRole("dialog", { name: "Lixeira deste manual" }).getByRole("button", { name: "Restaurar" }).click();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(treePage(page, "Sai")).toBeVisible();
+});
