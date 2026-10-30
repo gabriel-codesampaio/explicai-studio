@@ -20,5 +20,6 @@ export function useRovingFocus() {
           : (current + (e.key === "ArrowRight" ? 1 : -1) + items.length) % items.length;
     for (const [i, el] of items.entries()) el.tabIndex = i === next ? 0 : -1;
     items[next]?.focus();
+    items[next]?.scrollIntoView({ inline: "nearest", block: "nearest" }); // barra rolável: traz o botão para a vista
   }, []);
 }
