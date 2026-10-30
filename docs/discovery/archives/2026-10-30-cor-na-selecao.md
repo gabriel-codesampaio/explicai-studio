@@ -62,5 +62,5 @@ Cor livre por trecho não garante 4,5:1 nos dois temas nem na impressão, e cor 
 Não verificado: código do `explicai-mcp`, suporte nativo do marked 17 a alertas, telas no navegador.
 
 ## Decisões tomadas (2026-10-30)
-- Bloco de aviso com Dica, Atenção, Erro e Nota, também dentro do passo, cor fixa por tipo e Nota na cor de destaque: sim. → [T-034](../tickets/T-034-bloco-de-aviso.md)
+- Bloco de aviso com Dica, Atenção, Erro e Nota, também dentro do passo, cor fixa por tipo e Nota na cor de destaque: sim. → [T-034](../../tickets/T-034-bloco-de-aviso.md)
 - Seleção em cobalto: feita no T-011.

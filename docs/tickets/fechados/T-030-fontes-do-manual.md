@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: [Discovery de customização](../discovery/2026-10-30-customizacao-marca.md) (2026-10-30)
+- Origem: [Discovery de customização](../../discovery/archives/2026-10-30-customizacao-marca.md) (2026-10-30)
 
 ## Problema
 O manual exportado sempre usa Atkinson Hyperlegible Next no texto e Archivo nos títulos. Quem entrega o manual a um cliente quer a tipografia do cliente.

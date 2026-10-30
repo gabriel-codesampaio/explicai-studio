@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: aberto
 - Agente: frontend
-- Origem: [Discovery de customização](../discovery/2026-10-30-customizacao-marca.md) (2026-10-30)
+- Origem: [Discovery de customização](../discovery/archives/2026-10-30-customizacao-marca.md) (2026-10-30)
 
 ## Problema
 O rodapé do Explicaí continua por padrão, mas quem entrega o manual ao cliente precisa poder tirá-lo.

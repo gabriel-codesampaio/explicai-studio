@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: aberto
 - Agente: frontend
-- Origem: [Discovery de cor na seleção](../discovery/2026-10-30-cor-na-selecao.md) (2026-10-30)
+- Origem: [Discovery de cor na seleção](../discovery/archives/2026-10-30-cor-na-selecao.md) (2026-10-30)
 
 ## Problema
 A spec v1 promete o bloco de aviso e ele não existe. Quem escreve não tem como chamar a atenção do leitor para uma dica ou um risco.

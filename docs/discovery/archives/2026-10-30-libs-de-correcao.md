@@ -1,6 +1,6 @@
 # Discovery: bibliotecas para correção futura (2026-10-30)
 
-Complementa [verificação ortográfica](2026-10-30-ortografia.md). Não repete o que está lá (nspell, dictionary-pt, opções A a D).
+Complementa [verificação ortográfica](../2026-10-30-ortografia.md). Não repete o que está lá (nspell, dictionary-pt, opções A a D).
 
 Decisão da pessoa: por enquanto fica o corretor do navegador, com explicação na ajuda. Este arquivo é um mapa para o dia em que isso não bastar. Ortografia, gramática e estilo (frase longa, voz passiva, termo do sistema escrito de jeitos diferentes).
 

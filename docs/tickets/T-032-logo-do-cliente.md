@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: aberto
 - Agente: frontend
-- Origem: [Discovery de customização](../discovery/2026-10-30-customizacao-marca.md) (2026-10-30)
+- Origem: [Discovery de customização](../discovery/archives/2026-10-30-customizacao-marca.md) (2026-10-30)
 
 ## Problema
 Quem entrega o manual a um cliente quer a marca dele na capa. Hoje a capa do HTML e do PDF só tem o título.

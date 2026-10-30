@@ -55,8 +55,8 @@ Padrão: logo + cor + tirar a marca da ferramenta é pago em todos. Fonte própr
 
 ## Decisões tomadas (2026-10-30)
 A pessoa esclareceu o pedido: o manual exportado não pode ficar preso às cores do Explicaí. Hoje só `--accent` muda; texto (`--tinta`), amarelo (`--marca`), anotações (`--anotacao`) e cinzas são fixos (`html.ts:155`).
-- **Cores do manual:** cor do texto, cor de cada nível de título (padrão preto, a pessoa escolhe), cor de realce no lugar do amarelo e cor de destaque livre. → [T-029](../tickets/T-029-cores-do-manual.md)
-- **Fontes:** entram agora, com um leque de fontes para escolher (texto e títulos separados). Muda a decisão 5. → [T-030](../tickets/T-030-fontes-do-manual.md)
+- **Cores do manual:** cor do texto, cor de cada nível de título (padrão preto, a pessoa escolhe), cor de realce no lugar do amarelo e cor de destaque livre. → [T-029](../../tickets/fechados/T-029-cores-do-manual.md)
+- **Fontes:** entram agora, com um leque de fontes para escolher (texto e títulos separados). Muda a decisão 5. → [T-030](../../tickets/fechados/T-030-fontes-do-manual.md)
 - Logo, contraste (decisão 2), atalhos (3) e rodapé (4): seguem as recomendações acima até a pessoa dizer o contrário; logo ainda sem ticket.
 
 ## Rascunho de spec (opção A)
@@ -73,5 +73,5 @@ A pessoa esclareceu o pedido: o manual exportado não pode ficar preso às cores
 Não verificado: preços atuais dos concorrentes (fontes divergem).
 
 ## Decisões tomadas (2026-10-30)
-- Logo do cliente: sim. → [T-032](../tickets/T-032-logo-do-cliente.md)
-- Rodapé do Explicaí: fica por padrão, com opção de exportar sem ele. → [T-033](../tickets/T-033-exportar-sem-rodape.md)
+- Logo do cliente: sim. → [T-032](../../tickets/T-032-logo-do-cliente.md)
+- Rodapé do Explicaí: fica por padrão, com opção de exportar sem ele. → [T-033](../../tickets/T-033-exportar-sem-rodape.md)

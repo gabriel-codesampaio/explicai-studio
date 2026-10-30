@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: pedido direto (2026-10-30), "igual ao Confluence". Revê a recusa da opção 3 da [discovery de cor na seleção](../discovery/2026-10-30-cor-na-selecao.md): a cor vem de uma paleta fixa, não de hex livre.
+- Origem: pedido direto (2026-10-30), "igual ao Confluence". Revê a recusa da opção 3 da [discovery de cor na seleção](../../discovery/archives/2026-10-30-cor-na-selecao.md): a cor vem de uma paleta fixa, não de hex livre.
 
 ## Problema
 Para formatar um trecho, a pessoa precisa subir até a barra fixa. E não há como pintar uma palavra para chamar a atenção do leitor.

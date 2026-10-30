@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: [Discovery de customização](../discovery/2026-10-30-customizacao-marca.md) (2026-10-30)
+- Origem: [Discovery de customização](../../discovery/archives/2026-10-30-customizacao-marca.md) (2026-10-30)
 
 ## Problema
 O manual exportado sai com as cores do Explicaí: texto azul-marinho (`--tinta`), amarelo na capa, no "Resultado:" e nos destaques (`--marca`), cobalto nas anotações (`--anotacao`). Só a cor de destaque muda, e só entre 4 opções. Quem entrega o manual a um cliente quer as cores do cliente.
