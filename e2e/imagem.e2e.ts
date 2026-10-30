@@ -163,3 +163,188 @@ test.describe("entrada", () => {
     await expect(images(page)).toHaveCount(1);
   });
 });
+
+/** Manual com uma página que já traz a imagem `tela.png` (enviada pela API), para os testes que não são de entrada. */
+async function withImage(request: APIRequestContext, title: string, body = "Antes.\n\n![Tela](../assets/tela.png)\n\nDepois.") {
+  const { slug, pages } = await setup(request, title, [{ title: "Tela de clientes", body }]);
+  const up = await request.post(`/api/manuals/${slug}/assets?name=tela.png`, { data: PNG });
+  expect((await up.json()).path).toBe("assets/tela.png");
+  return { slug, id: pages[0]?.id as string };
+}
+const pageBody = async (request: APIRequestContext, slug: string, id: string) =>
+  (await (await request.get(`/api/manuals/${slug}/pages/${id}`)).json()).body as string;
+const openImage = async (page: Page) => {
+  await images(page).first().click();
+  return page.getByRole("textbox", { name: "Descrição da imagem" });
+};
+/** Seleciona a imagem pelo teclado (Shift+seta sobre ela), sem abrir o balão da descrição. */
+const selectImageByKeyboard = async (page: Page) => {
+  await editor(page).getByText("Antes.").click();
+  await page.keyboard.press("End");
+  await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Shift+ArrowRight");
+};
+const markDialog = (page: Page) => page.getByRole("dialog", { name: "Marcar imagem" });
+const annotations = (request: APIRequestContext, slug: string) =>
+  request.get(`/api/manuals/${slug}/annotations?asset=assets/tela.png`).then((r) => r.json());
+
+test.describe("edição", () => {
+  test("descrição (alt) vai para o Markdown e continua depois de recarregar", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Alt");
+    await page.goto(`/#/${slug}/${id}`);
+    await (await openImage(page)).fill("Tela de clientes com o botão Novo");
+    await saved(page);
+    expect(await pageBody(request, slug, id)).toContain("![Tela de clientes com o botão Novo](../assets/tela.png)");
+    await page.reload();
+    await expect(editor(page).getByRole("img", { name: "Tela de clientes com o botão Novo" })).toBeVisible();
+  });
+
+  test("Enter no fim da página com a imagem por último cria parágrafo e dá para continuar escrevendo", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Enter", "![Tela](../assets/tela.png)");
+    await page.goto(`/#/${slug}/${id}`);
+    await expect(images(page)).toHaveCount(1);
+    await editor(page).focus();
+    await page.keyboard.press("Control+End");
+    await page.keyboard.press("Enter");
+    await page.keyboard.type("Depois da imagem.");
+    await expect(editor(page).locator("p").last()).toHaveText("Depois da imagem.");
+    await saved(page);
+    expect(await pageBody(request, slug, id)).toMatch(/!\[Tela\]\(\.\.\/assets\/tela\.png\)\s+Depois da imagem\./);
+  });
+
+  test("imagem dentro de um passo continua dentro do passo ao salvar e recarregar", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Passo", "1. Abra a tela.\n\n   ![Tela](../assets/tela.png)\n\n2. Clique em Novo.");
+    await page.goto(`/#/${slug}/${id}`);
+    await expect(editor(page).locator("ol li .node-image img")).toHaveCount(1);
+    await editor(page).getByText("Clique em Novo.").click();
+    await page.keyboard.press("End");
+    await page.keyboard.type(" Pronto.");
+    await saved(page);
+    expect(await pageBody(request, slug, id)).toMatch(/1\. Abra a tela\.\n\n\s{3}!\[Tela\]\(\.\.\/assets\/tela\.png\)/);
+    await page.reload();
+    await expect(editor(page).locator("ol li .node-image img")).toHaveCount(1);
+    await expect(editor(page).locator("ol li")).toHaveCount(2);
+  });
+
+  test("apagar a imagem com Backspace, desfazer e refazer", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Apagar");
+    await page.goto(`/#/${slug}/${id}`);
+    await selectImageByKeyboard(page);
+    await page.keyboard.press("Backspace");
+    await expect(images(page)).toHaveCount(0);
+    await page.keyboard.press("Control+z");
+    await expect(images(page)).toHaveCount(1);
+    await page.keyboard.press("Control+Shift+z");
+    await expect(images(page)).toHaveCount(0);
+    await saved(page);
+    expect(await pageBody(request, slug, id)).not.toContain("tela.png");
+  });
+
+  test("mover a imagem arrastando para depois do último parágrafo", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Mover");
+    await page.goto(`/#/${slug}/${id}`);
+    const img = await images(page).first().boundingBox();
+    const last = await editor(page).getByText("Depois.").boundingBox();
+    if (!img || !last) throw new Error("sem caixa");
+    await page.mouse.move(img.x + img.width / 2, img.y + img.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(last.x + 20, last.y + last.height + 4, { steps: 12 });
+    await page.mouse.up();
+    await saved(page);
+    expect(await pageBody(request, slug, id)).toMatch(/Depois\.[\s\S]*!\[Tela\]\(\.\.\/assets\/tela\.png\)/);
+    await expect(images(page)).toHaveCount(1);
+  });
+
+  test("copiar a imagem e colar em outra página usa o mesmo arquivo", async ({ page, request, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    const { slug, id } = await withImage(request, "Imagem Copiar");
+    const outra = await (await request.post(`/api/manuals/${slug}/pages`, { data: { title: "Outra" } })).json();
+    await page.goto(`/#/${slug}/${id}`);
+    await selectImageByKeyboard(page);
+    await page.keyboard.press("Control+c");
+    await page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: "Outra", exact: true }).click();
+    await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Outra");
+    await editor(page).click();
+    await page.keyboard.press("Control+v");
+    await expect(images(page)).toHaveCount(1);
+    await saved(page);
+    expect(await pageBody(request, slug, outra.id)).toContain("../assets/tela.png");
+  });
+});
+
+test.describe("marcações", () => {
+  test("cria marcador, destaque, seta e área clicável, apaga e desfaz; só o Salvar grava", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Marcas");
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Marcar imagem" }).click();
+    const dialog = markDialog(page);
+    const box = await dialog.getByRole("img").boundingBox();
+    if (!box) throw new Error("sem caixa");
+    const at = (fx: number, fy: number) => [box.x + box.width * fx, box.y + box.height * fy] as const;
+    const drag = async (a: readonly [number, number], b: readonly [number, number]) => {
+      await page.mouse.move(...a);
+      await page.mouse.down();
+      await page.mouse.move(...b, { steps: 5 });
+      await page.mouse.up();
+    };
+
+    await dialog.getByRole("button", { name: "Marcador" }).click();
+    await page.mouse.click(...at(0.15, 0.15));
+    await dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" }).fill("Botão Novo");
+    await dialog.getByRole("button", { name: "Destaque" }).click();
+    await drag(at(0.3, 0.3), at(0.5, 0.45));
+    await dialog.getByRole("button", { name: "Seta" }).click();
+    await drag(at(0.6, 0.6), at(0.8, 0.8));
+    await dialog.getByRole("button", { name: "Área clicável" }).click();
+    await drag(at(0.1, 0.6), at(0.3, 0.8));
+    await expect(dialog.getByRole("button", { name: "Excluir destaque 1" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Excluir seta 1" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Excluir área 1" })).toBeVisible();
+
+    // Excluir o destaque pela lista e trazer de volta com Desfazer.
+    await dialog.getByRole("button", { name: "Excluir destaque 1" }).click();
+    await expect(dialog.getByRole("button", { name: "Excluir destaque 1" })).toHaveCount(0);
+    await dialog.getByRole("button", { name: "Desfazer" }).click();
+    await expect(dialog.getByRole("button", { name: "Excluir destaque 1" })).toBeVisible();
+
+    // Selecionar o marcador e apagar com Delete.
+    await dialog.getByRole("button", { name: "Selecionar" }).click();
+    await page.mouse.click(...at(0.15, 0.15));
+    await page.keyboard.press("Delete");
+    await expect(dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" })).toHaveCount(0);
+    await dialog.getByRole("button", { name: "Desfazer" }).click();
+    await expect(dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" })).toHaveValue("Botão Novo");
+
+    // Nada foi gravado ainda.
+    expect((await annotations(request, slug)).markers).toEqual([]);
+    await dialog.getByRole("button", { name: "Salvar marcações" }).click();
+    await expect(dialog).toBeHidden();
+    const a = await annotations(request, slug);
+    expect([a.markers.length, a.highlights.length, a.arrows.length, a.hotspots.length]).toEqual([1, 1, 1, 1]);
+    expect(a.markers[0].label).toBe("Botão Novo");
+  });
+
+  test("Cancelar descarta o que foi marcado", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Cancelar");
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Marcar imagem" }).click();
+    await markDialog(page).getByRole("img").click({ position: { x: 40, y: 40 } });
+    await expect(markDialog(page).getByRole("textbox", { name: "O que o marcador 1 mostra" })).toBeVisible();
+    await markDialog(page).getByRole("button", { name: "Cancelar" }).click();
+    await expect(markDialog(page)).toBeHidden();
+    expect((await annotations(request, slug)).markers).toEqual([]);
+  });
+
+  test("a legenda aparece na página e continua depois de recarregar", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Legenda");
+    await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, {
+      data: { version: 1, markers: [{ id: "m1", n: 1, x: 0.3, y: 0.3, label: "Menu Clientes" }], highlights: [], arrows: [], hotspots: [] },
+    });
+    await page.goto(`/#/${slug}/${id}`);
+    await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
+    await page.reload();
+    await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
+  });
+});
