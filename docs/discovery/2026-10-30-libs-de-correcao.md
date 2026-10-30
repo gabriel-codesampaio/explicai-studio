@@ -128,3 +128,6 @@ Medir antes de subir: quantos termos o glossário tem em manuais reais; quantos 
 - Se o Harper já tem outro idioma além do inglês (README e busca dizem que não; sem conferir o changelog).
 - Última versão do Vale.
 - Como Scribe, Tango, GitBook, Confluence e Notion tratam consistência de termos.
+
+## Decisões tomadas (2026-10-30)
+- Arquivado. A pessoa decide depois; nenhum ticket aberto.
