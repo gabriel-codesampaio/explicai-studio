@@ -103,6 +103,26 @@ describe("useAutosave", () => {
     expect(save).toHaveBeenLastCalledWith({ slug: "m", id: "p1", patch: { title: "T", body: "novo" } });
   });
 
+  it("falha numa página não leva o texto de outra página junto", async () => {
+    let fail!: (e: Error) => void;
+    const save = vi
+      .fn<(job: Job) => Promise<void>>()
+      .mockImplementationOnce(() => new Promise<void>((_, reject) => (fail = reject)))
+      .mockResolvedValue();
+    const { result } = renderHook(() => useAutosave(save, 600));
+
+    act(() => result.current.queue("m", "p1", { body: "da um" }));
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    act(() => result.current.queue("m", "p2", { body: "da dois" }));
+    await act(async () => fail(new Error("fora")));
+    await act(() => result.current.flush());
+    await act(() => result.current.flush());
+
+    const saved = save.mock.calls.map(([job]) => job);
+    expect(saved).toContainEqual({ slug: "m", id: "p2", patch: { body: "da dois" } });
+    expect(saved).toContainEqual({ slug: "m", id: "p1", patch: { body: "da um" } });
+  });
+
   it("avisa ao fechar a aba com texto pendente e grava", async () => {
     const save = vi.fn<(job: Job) => Promise<void>>().mockResolvedValue();
     const { result } = renderHook(() => useAutosave(save, 600));

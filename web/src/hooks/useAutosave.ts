@@ -17,34 +17,36 @@ interface Job {
 export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
   const [state, setState] = useState<SaveState>("idle");
   const [savedAt, setSavedAt] = useState<Date | null>(null);
-  const pending = useRef<Job | null>(null);
+  // Uma mudança pendente por página: trocar de página com a gravação falhando não mistura nem perde texto.
+  const pending = useRef(new Map<string, Job>());
   const timer = useRef<number | undefined>(undefined);
   const saveRef = useRef(save);
   saveRef.current = save;
 
   const flush = useCallback(async () => {
     window.clearTimeout(timer.current);
-    const job = pending.current;
-    pending.current = null;
-    if (!job) return;
+    const jobs = [...pending.current.values()];
+    pending.current.clear();
+    if (jobs.length === 0) return;
     setState("saving");
-    try {
-      await saveRef.current(job);
-      setSavedAt(new Date());
-      setState(pending.current ? "saving" : "saved");
-    } catch {
-      // Devolve a mudança para a fila, sem perder o que foi digitado enquanto isso.
-      // O TypeScript estreita pending.current para null acima; durante o await ele pode ter mudado.
-      const newer = pending.current as Job | null;
-      pending.current = { ...job, patch: { ...job.patch, ...newer?.patch } };
-      setState("error");
+    let failed = false;
+    for (const job of jobs) {
+      try {
+        await saveRef.current(job);
+        setSavedAt(new Date());
+      } catch {
+        // Devolve a mudança para a fila, sem perder o que foi digitado enquanto isso.
+        const newer = pending.current.get(job.id);
+        pending.current.set(job.id, { ...job, patch: { ...job.patch, ...newer?.patch } });
+        failed = true;
+      }
     }
+    setState(failed ? "error" : pending.current.size > 0 ? "saving" : "saved");
   }, []);
 
   const queue = useCallback(
     (slug: string, id: string, patch: PagePatch) => {
-      const previous = pending.current?.id === id ? pending.current.patch : {};
-      pending.current = { slug, id, patch: { ...previous, ...patch } };
+      pending.current.set(id, { slug, id, patch: { ...pending.current.get(id)?.patch, ...patch } });
       setState("saving");
       window.clearTimeout(timer.current);
       timer.current = window.setTimeout(() => void flush(), delay);
@@ -54,12 +56,12 @@ export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
 
   /** Descarta o que estava para ser gravado nesta página (ex.: ela foi excluída). */
   const discard = useCallback((id: string) => {
-    if (pending.current?.id === id) pending.current = null;
+    pending.current.delete(id);
   }, []);
 
   useEffect(() => {
     const warn = (e: BeforeUnloadEvent) => {
-      if (!pending.current) return;
+      if (pending.current.size === 0) return;
       void flush();
       e.preventDefault();
     };
