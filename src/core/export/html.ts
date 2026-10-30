@@ -1,6 +1,7 @@
 import { Marked, type Tokens } from "marked";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
 import type { Collected, ExportPage } from "./collect.js";
+import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
 
@@ -55,12 +56,20 @@ ${sections}
 }
 
 function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, ImageInfo>, L: Labels): string {
+  const titleLevel = Math.min(page.depth + 2, 3);
+  const depths: number[] = [];
+  const lexer = new Marked({ gfm: true });
+  lexer.walkTokens(lexer.lexer(page.body), (t) => {
+    if (t.type === "heading") depths.push((t as Tokens.Heading).depth);
+  });
+  const levels = exportLevels(depths, titleLevel);
+  let next = 0;
   const marked = new Marked({
     gfm: true,
     renderer: {
-      // Os títulos da página descem um nível: o título da página é o h2 da seção.
-      heading({ tokens, depth, text }: Tokens.Heading) {
-        const level = Math.min(depth + 2, 6);
+      // Os títulos ficam abaixo do título da página, sem pular nível (ver exportLevels).
+      heading({ tokens, text }: Tokens.Heading) {
+        const level = levels[next++] ?? 6;
         return `<h${level} id="${headingAnchor(page.id, text)}">${this.parser.parseInline(tokens)}</h${level}>\n`;
       },
       link({ href, tokens }: Tokens.Link) {
@@ -83,9 +92,8 @@ function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, I
     },
   });
   const body = marked.parse(page.body, { async: false });
-  const level = Math.min(page.depth + 2, 3);
   return `<section class="page" id="${pageAnchor(page.id)}">
-<h${level} class="page-title"><span class="num">${page.number}</span> ${esc(page.title)}</h${level}>
+<h${titleLevel} class="page-title"><span class="num">${page.number}</span> ${esc(page.title)}</h${titleLevel}>
 <div class="page-body">${body}</div>
 </section>`;
 }

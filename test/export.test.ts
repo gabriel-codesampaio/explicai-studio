@@ -109,6 +109,18 @@ describe("exportação", () => {
     expect(pkg.files).toContain("fonts");
   });
 
+  it("títulos: nenhum salto de nível no HTML nem no Markdown", async () => {
+    await addPage(dir, { title: "A", body: "## Um\n\n#### Fundo\n\n## Dois" });
+    await addPage(dir, { title: "B", body: "# Um\n\n## Dois\n\n```\n# nao é título\n```" });
+    const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
+    const jumps = (levels: number[]) => levels.some((n, i) => n > (levels[i - 1] ?? 0) + 1);
+    expect(jumps([...html.matchAll(/<h([1-6])[ >]/g)].map((m) => Number(m[1])))).toBe(false);
+    // O sumário (## Sumário) vem antes das seções, então o salto conta a partir do h1 do manual.
+    expect(jumps([...md.matchAll(/^(#{1,6}) /gm)].map((m) => m[1]?.length ?? 0))).toBe(false);
+    expect(md).not.toContain("# nao é título\n\n```");
+  });
+
   it("Markdown: um arquivo para IA, com a legenda do print em texto e dentro do passo", async () => {
     await seed();
     const result = await exportManual(dir, "markdown");
@@ -116,7 +128,7 @@ describe("exportação", () => {
 
     expect(md).toMatch(/^# Financeiro Pro\n\n## Sumário\n\n- \[1 Visão geral\]\(#1-visao-geral\)/);
     expect(md).toContain("  - [2.1 Editar](#2-1-editar)");
-    expect(md).toContain("## 2 Clientes\n\n#### Cadastrar");
+    expect(md).toContain("## 2 Clientes\n\n### Cadastrar");
     expect(md).toContain(
       "   ![Tela de clientes](assets/tela.png)\n\n   > Legenda da imagem:\n   > 1. Botão Novo cliente\n" +
         '   > Área clicável: leva à página "Visão geral"',

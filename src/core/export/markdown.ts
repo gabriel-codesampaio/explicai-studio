@@ -1,5 +1,6 @@
 import { slugify } from "../text.js";
 import type { Collected, ExportPage } from "./collect.js";
+import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, type ImageInfo } from "./refs.js";
 
@@ -63,15 +64,22 @@ function imageNotes(info: ImageInfo, pages: ExportPage[], L: Labels): string[] {
   return lines;
 }
 
-/** Desce os títulos da página para ficarem abaixo do título dela (`level`). Ignora blocos de código. */
+/** Põe os títulos da página abaixo do título dela (`level`), sem pular nível. Ignora blocos de código. */
 function shiftHeadings(body: string, level: number): string {
+  const lines = body.split("\n");
+  const found: { at: number; hashes: number }[] = [];
   let fence = false;
-  return body
-    .split("\n")
-    .map((line) => {
-      if (/^\s*(```|~~~)/.test(line)) fence = !fence;
-      if (fence) return line;
-      return line.replace(/^(#{1,6}) /, (_, hashes: string) => `${"#".repeat(Math.min(hashes.length + level, 6))} `);
-    })
-    .join("\n");
+  lines.forEach((line, at) => {
+    if (/^\s*(```|~~~)/.test(line)) fence = !fence;
+    const m = fence ? null : /^(#{1,6}) /.exec(line);
+    if (m?.[1]) found.push({ at, hashes: m[1].length });
+  });
+  const levels = exportLevels(
+    found.map((f) => f.hashes),
+    level,
+  );
+  found.forEach((f, i) => {
+    lines[f.at] = `${"#".repeat(levels[i] ?? 6)} ${(lines[f.at] ?? "").slice(f.hashes + 1)}`;
+  });
+  return lines.join("\n");
 }
