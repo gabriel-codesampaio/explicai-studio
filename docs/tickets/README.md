@@ -20,7 +20,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-012](T-012-marcacoes-do-brand-book.md) | Marcações como no brand book | P2 | aberto | frontend |
 | [T-013](T-013-tela-dividida.md) | Manter a árvore visível em tela dividida (~960 px) | P2 | aberto | frontend |
 | [T-014](T-014-atalhos-de-marcacao.md) | Atalhos de letra nas ferramentas de marcação | P2 | aberto | frontend |
-| [T-015](T-015-so-aprovadas-sem-aprovadas.md) | "Só páginas aprovadas" desabilitado quando não há nenhuma | P2 | aberto | frontend |
 | [T-016](T-016-um-nome-para-versao.md) | Um nome só para a versão do manual final | P2 | aberto | frontend |
 | [T-017](T-017-status-legivel.md) | Status da página mais legível | P2 | aberto | design |
 | [T-023](T-023-marcacao-no-celular.md) | Deixar a legenda editável no diálogo de marcação em 375 px | P2 | aberto | frontend |
@@ -45,6 +44,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-015](fechados/T-015-so-aprovadas-sem-aprovadas.md) | "Só páginas aprovadas" desabilitado quando não há nenhuma | P2 | feito | bf91cab |
 | [T-006](fechados/T-006-exportar-no-topo.md) | Levar "Exportar manual" para o topo da página como botão principal | P1 | feito | 060a936 |
 | [T-005](fechados/T-005-manual-como-cabecalho.md) | Mostrar o nome do manual como cabeçalho, sem caixa | P1 | feito | d5f92a0 |
 | [T-004](fechados/T-004-numeracao-na-arvore.md) | Mostrar a numeração 2.1 na árvore de páginas e na busca | P1 | feito | c558b39 |
