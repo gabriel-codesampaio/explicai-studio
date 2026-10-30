@@ -12,10 +12,17 @@ const IMAGE_EXT = /^\.(png|jpe?g|gif|webp|svg)$/;
 export async function saveAsset(dir: string, fileName: string, data: Uint8Array): Promise<string> {
   const ext = path.extname(fileName).toLowerCase();
   if (!IMAGE_EXT.test(ext)) throw new Error(`Formato de imagem não suportado: ${ext || "sem extensão"}`);
-  const name = path.basename(fileName);
-  const abs = await uniquePath(path.join(dir, ASSETS_DIR), slugify(name.slice(0, name.length - ext.length)), ext);
-  await writeFile(abs, data, { flag: "wx" });
-  return relativePosix(dir, abs);
+  const base = slugify(path.basename(fileName).slice(0, -ext.length));
+  // Dois envios do mesmo nome ao mesmo tempo (duas abas) escolhem o mesmo caminho livre; quem perde tenta o próximo.
+  for (;;) {
+    const abs = await uniquePath(path.join(dir, ASSETS_DIR), base, ext);
+    try {
+      await writeFile(abs, data, { flag: "wx" });
+      return relativePosix(dir, abs);
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== "EEXIST") throw err;
+    }
+  }
 }
 
 export async function readAnnotations(dir: string, assetPath: string): Promise<Annotations> {

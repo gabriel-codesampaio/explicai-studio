@@ -22,15 +22,18 @@ export function assetFromSrc(src: string): string | null {
   return p.startsWith("assets/") ? p : null;
 }
 
-/** Marcações e tamanho de cada imagem do manual usada nas páginas. Imagem apagada fica de fora. */
-export async function loadImages(dir: string, pages: ExportPage[]): Promise<Map<string, ImageInfo>> {
+/** Marcações e tamanho de cada imagem do manual usada nas páginas. Imagem apagada fica de fora e vai para `missing`. */
+export async function loadImages(dir: string, pages: ExportPage[], missing: string[] = []): Promise<Map<string, ImageInfo>> {
   const images = new Map<string, ImageInfo>();
   for (const page of pages) {
     for (const [, src] of page.body.matchAll(IMAGE)) {
       const asset = src && assetFromSrc(src);
-      if (!asset || images.has(asset)) continue;
+      if (!asset || images.has(asset) || missing.includes(asset)) continue;
       const abs = resolveInside(dir, asset);
-      if (!(await exists(abs))) continue;
+      if (!(await exists(abs))) {
+        missing.push(asset);
+        continue;
+      }
       images.set(asset, { asset, size: await imageSize(abs), annotations: await readAnnotations(dir, asset) });
     }
   }
