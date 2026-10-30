@@ -23,8 +23,19 @@ export interface BlockContext {
   pickImage: () => void;
 }
 
+/** Grupos do menu "/", na ordem em que aparecem. Dentro do grupo, vale a ordem de BLOCKS. */
+export const BLOCK_GROUPS = [
+  { id: "estrutura", label: t("Estrutura") },
+  { id: "passos", label: t("Passo a passo") },
+  { id: "alertas", label: t("Alertas") },
+  { id: "midia", label: t("Mídia") },
+] as const;
+
+export type BlockGroupId = (typeof BLOCK_GROUPS)[number]["id"];
+
 export interface Block {
   id: string;
+  group: BlockGroupId;
   label: string;
   /** Explica o bloco no menu "/" e entra na busca. */
   hint: string;
@@ -98,10 +109,11 @@ const CALLOUT_KEYWORDS: Record<CalloutType, string[]> = {
 export const BLOCKS: Block[] = [
   {
     id: "paragraph",
+    group: "estrutura",
     label: t("Texto"),
     hint: t("Parágrafo comum"),
     icon: Pilcrow,
-    keywords: ["paragrafo", "texto", "paragraph", "text"],
+    keywords: ["paragrafo", "texto", "comum", "paragraph", "text", "plain"],
     isTextType: true,
     isActive: (e) => e.isActive("paragraph"),
     // Dentro de um alerta, "Texto" tira o bloco do alerta.
@@ -110,10 +122,11 @@ export const BLOCKS: Block[] = [
   ...([1, 2, 3] as const).map(
     (level): Block => ({
       id: `h${level}`,
+      group: "estrutura",
       label: t("Título {n}", { n: level }),
       hint: level === 1 ? t("Seção principal") : level === 2 ? t("Subseção") : t("Tópico dentro da subseção"),
       icon: [Heading1, Heading2, Heading3][level - 1] ?? Heading1,
-      keywords: ["titulo", "cabecalho", "heading", "title", `h${level}`],
+      keywords: ["titulo", "cabecalho", "secao", "subsecao", "topico", "heading", "section", "title", `h${level}`],
       isTextType: true,
       isActive: (e) => e.isActive("heading", { level }),
       run: ({ editor }) => chain(editor).setHeading({ level }).run(),
@@ -121,6 +134,7 @@ export const BLOCKS: Block[] = [
   ),
   {
     id: "steps",
+    group: "passos",
     label: t("Passos numerados"),
     hint: t("Um passo por linha, na ordem de uso"),
     icon: ListOrdered,
@@ -131,6 +145,7 @@ export const BLOCKS: Block[] = [
   },
   {
     id: "result",
+    group: "passos",
     label: t("Resultado esperado"),
     hint: t("O que a pessoa vê depois do passo"),
     icon: CircleCheck,
@@ -140,16 +155,18 @@ export const BLOCKS: Block[] = [
   },
   {
     id: "bullets",
+    group: "estrutura",
     label: t("Lista"),
     hint: t("Itens sem ordem"),
     icon: List,
-    keywords: ["lista", "marcadores", "itens", "bullet", "list"],
+    keywords: ["lista", "marcadores", "itens", "bullet", "list", "unordered"],
     isTextType: true,
     isActive: (e) => e.isActive("bulletList"),
     run: ({ editor }) => chain(editor).toggleBulletList().run(),
   },
   {
     id: "quote",
+    group: "estrutura",
     label: t("Citação"),
     hint: t("Trecho em destaque ou observação"),
     icon: Quote,
@@ -161,6 +178,7 @@ export const BLOCKS: Block[] = [
   ...CALLOUT_TYPES.map(
     (type): Block => ({
       id: `callout-${type}`,
+      group: "alertas",
       label: CALLOUT_BLOCK_LABELS[type](),
       hint: CALLOUT_HINTS[type](),
       icon: CALLOUT_ICONS[type],
@@ -172,16 +190,18 @@ export const BLOCKS: Block[] = [
   ),
   {
     id: "code",
+    group: "estrutura",
     label: t("Bloco de código"),
     hint: t("Comandos e trechos de código"),
     icon: Code2,
-    keywords: ["codigo", "comando", "terminal", "code"],
+    keywords: ["codigo", "comando", "terminal", "trecho", "code", "command", "snippet"],
     isTextType: true,
     isActive: (e) => e.isActive("codeBlock"),
     run: ({ editor }) => chain(editor).toggleCodeBlock().run(),
   },
   {
     id: "image",
+    group: "midia",
     label: t("Imagem"),
     hint: t("Print da tela do sistema"),
     icon: ImageIcon,
@@ -191,18 +211,26 @@ export const BLOCKS: Block[] = [
   },
   {
     id: "table",
+    group: "midia",
     label: t("Tabela"),
     hint: t("3 × 3 com cabeçalho"),
     icon: Table,
-    keywords: ["tabela", "colunas", "campos", "table", "columns"],
+    keywords: ["tabela", "colunas", "campos", "table", "columns", "grid"],
     isTextType: false,
     run: ({ editor }) => chain(editor).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
   },
 ];
 
-/** Busca sem acento e sem maiúsculas: "titulo" acha "Título". */
+const groupIndex = (b: Block) => BLOCK_GROUPS.findIndex((g) => g.id === b.group);
+
+/** Busca sem acento e sem maiúsculas ("titulo" acha "Título"), já na ordem dos grupos do menu. */
 export function searchBlocks(query: string): Block[] {
   const q = fold(query);
-  if (!q) return BLOCKS;
-  return BLOCKS.filter((b) => [b.label, b.hint, ...b.keywords].some((t) => fold(t).includes(q)));
+  const found = q ? BLOCKS.filter((b) => [b.label, b.hint, ...b.keywords].some((k) => fold(k).includes(q))) : BLOCKS;
+  return found.toSorted((a, b) => groupIndex(a) - groupIndex(b));
+}
+
+/** Separa a lista do menu por grupo; grupo sem bloco fica de fora. */
+export function groupBlocks(blocks: Block[]) {
+  return BLOCK_GROUPS.map((g) => ({ ...g, items: blocks.filter((b) => b.group === g.id) })).filter((g) => g.items.length > 0);
 }

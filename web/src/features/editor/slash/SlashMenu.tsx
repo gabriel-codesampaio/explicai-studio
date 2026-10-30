@@ -1,7 +1,8 @@
 import { type Ref, useImperativeHandle, useState } from "react";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import type { Block } from "../blocks";
+import { type Block, groupBlocks } from "../blocks";
+import { SlashPreview } from "./SlashPreview";
 
 interface Props {
   items: Block[];
@@ -46,29 +47,38 @@ export function SlashMenu({ items, command, ref }: Props) {
     <div
       role="listbox"
       aria-label={t("Inserir bloco")}
-      className="z-50 max-h-80 w-72 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
+      className="z-50 max-h-80 w-80 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
     >
       {items.length === 0 ? (
         <p className="px-3 py-2 text-sm text-muted-foreground">{t("Nenhum bloco com esse nome.")}</p>
       ) : (
-        items.map((item, i) => (
-          <button
-            key={item.id}
-            type="button"
-            role="option"
-            aria-selected={i === index}
-            onMouseEnter={() => setIndex(i)}
-            onClick={() => command(item)}
-            className={cn("flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left", i === index && "bg-accent")}
-          >
-            <span className="grid size-8 shrink-0 place-items-center rounded-md border border-border bg-background">
-              <item.icon className="size-4 text-primary" aria-hidden />
-            </span>
-            <span className="grid leading-tight">
-              <span className="text-sm font-bold">{item.label}</span>
-              <span className="text-xs text-muted-foreground">{item.hint}</span>
-            </span>
-          </button>
+        groupBlocks(items).map((group) => (
+          // biome-ignore lint/a11y/useSemanticElements: group dentro de listbox é o padrão ARIA; fieldset não cabe aí
+          <div key={group.id} role="group" aria-labelledby={`slash-${group.id}`}>
+            <p id={`slash-${group.id}`} className="rotulo px-2 pt-2 pb-1">
+              {group.label}
+            </p>
+            {group.items.map((item) => {
+              const i = items.indexOf(item);
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="option"
+                  aria-selected={i === index}
+                  onMouseEnter={() => setIndex(i)}
+                  onClick={() => command(item)}
+                  className={cn("flex w-full items-center gap-2 rounded-md px-2 py-1 text-left", i === index && "bg-accent")}
+                >
+                  <SlashPreview block={item} />
+                  <span className="grid leading-tight">
+                    <span className="text-sm font-bold">{item.label}</span>
+                    <span className="text-xs text-muted-foreground">{item.hint}</span>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         ))
       )}
     </div>
