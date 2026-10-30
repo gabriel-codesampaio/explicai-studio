@@ -636,3 +636,66 @@ test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3
   });
   expect(ratio).toBeGreaterThanOrEqual(3);
 });
+
+test.describe("rodapés alinhados", () => {
+  const tops = (page: Page) =>
+    page.evaluate(() => {
+      const box = (el: Element | null | undefined) => el?.getBoundingClientRect();
+      const side = [...document.querySelectorAll("button")].find((b) => b.textContent?.trim() === "Ajustes")?.parentElement;
+      const rail = document.querySelector("div.w-12 > div[aria-hidden]");
+      const foot = document.querySelector("footer");
+      return { side: box(side ?? rail), foot: box(foot) };
+    });
+  const aligned = async (page: Page) => {
+    const { side, foot } = await tops(page);
+    expect(side && foot).toBeTruthy();
+    expect(Math.abs((side?.top ?? 0) - (foot?.top ?? 99))).toBeLessThanOrEqual(1);
+    expect(Math.abs((side?.height ?? 0) - (foot?.height ?? 99))).toBeLessThanOrEqual(1);
+  };
+
+  for (const mode of ["light", "dark"]) {
+    test(`1280 px, barra aberta e recolhida, tema ${mode}: a borda de cima dos dois rodapés fica na mesma linha`, async ({
+      page,
+      request,
+    }) => {
+      await page.addInitScript((m) => localStorage.setItem("explicai:aparencia", JSON.stringify({ mode: m })), mode);
+      await page.setViewportSize({ width: 1280, height: 800 });
+      const { slug } = await setup(request, `Manual Rodape ${mode}`, ["Início"]);
+      await page.goto(`/#/${slug}`);
+      await expect(page.locator("footer")).toBeVisible();
+      await aligned(page);
+      await page.getByRole("button", { name: /Esconder as páginas/ }).click();
+      await expect(page.getByRole("button", { name: /Mostrar as páginas/ })).toBeVisible();
+      await aligned(page);
+    });
+  }
+
+  test.describe("toque", () => {
+    test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
+
+    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar de novo tem 44 px", async ({ page, request }) => {
+      const { slug } = await setup(request, "Manual Rodape Celular", ["Início"]);
+      await page.goto(`/#/${slug}`);
+      // offsetHeight ignora a escala da animação de abertura da gaveta.
+      const height = (loc: ReturnType<Page["locator"]>) => loc.evaluate((el) => (el as HTMLElement).offsetHeight);
+      const foot = await height(page.locator("footer"));
+      await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
+      const drawer = page.getByRole("dialog", { name: "Páginas do manual" });
+      const side = drawer.getByRole("button", { name: "Ajustes" }).locator("..");
+      expect(Math.abs((await height(side)) - foot)).toBeLessThanOrEqual(1);
+      await expect
+        .poll(async () => ((await side.boundingBox())?.y ?? 0) + (await height(side)))
+        .toBeGreaterThanOrEqual(799);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+      await page.keyboard.press("Escape");
+      // Servidor fora: o salvamento falha e a barra de status mostra o botão.
+      await page.route("**/api/manuals/*/pages/*", (r) => (r.request().method() === "PUT" ? r.abort() : r.continue()));
+      await editor(page).click();
+      await page.keyboard.type("x");
+      const retry = page.getByRole("button", { name: "Tentar de novo" }).first();
+      await expect(retry).toBeVisible({ timeout: 10_000 });
+      const b = await retry.boundingBox();
+      expect(b?.height ?? 0).toBeGreaterThanOrEqual(44);
+    });
+  });
+});

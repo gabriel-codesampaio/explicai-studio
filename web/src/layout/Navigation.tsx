@@ -21,7 +21,7 @@ export function Navigation({ sidebar, onSearch }: Props) {
     <>
       <div className="hidden h-full shrink-0 lg:block">
         {sidebar.collapsed ? (
-          <div className="flex h-full w-12 flex-col items-center border-r border-border bg-card py-4">
+          <div className="flex h-full w-12 flex-col items-center border-r border-border bg-card pt-4">
             <button
               type="button"
               onClick={sidebar.expand}
@@ -31,6 +31,8 @@ export function Navigation({ sidebar, onSearch }: Props) {
             >
               <PanelLeftOpen className="size-4" aria-hidden />
             </button>
+            {/* Mantém a linha do rodapé contínua, como na barra aberta. */}
+            <div aria-hidden className="mt-auto h-(--rodape-h) w-full shrink-0 border-t border-border" />
           </div>
         ) : (
           <div className="h-full w-[17.5rem]">
