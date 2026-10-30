@@ -35,6 +35,12 @@ export function PageSearch({ open, onOpenChange }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // O resultado ativo (pelas setas ou pelo mouse) fica à vista; o item já visível não rola.
+  const activeId = matches[index]?.item.id;
+  useEffect(() => {
+    if (activeId) document.getElementById(`busca-${activeId}`)?.scrollIntoView({ block: "nearest" });
+  }, [activeId]);
+
   const go = (id: string) => {
     onOpenChange(false);
     void studio.selectPage(id);
