@@ -39,7 +39,7 @@ export function StatusBar({ path, state, savedAt, onRetry }: Props) {
         {state === "error" && (
           <>
             <AlertCircle className="size-3.5 text-destructive" aria-hidden />
-            <span className="text-destructive">{t("Não foi possível salvar.")}</span>
+            <span className="text-destructive">{t("Não foi possível salvar. O texto continua na tela.")}</span>
             <button type="button" onClick={onRetry} className="font-bold text-primary underline-offset-2 hover:underline">
               {t("Tentar de novo")}
             </button>
