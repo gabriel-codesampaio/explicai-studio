@@ -57,7 +57,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
       )}
 
       {manual && (
-        <nav aria-label="Páginas do manual" className="grid gap-1">
+        <nav aria-label="Páginas do manual" className="grid grid-cols-1 gap-1">
           <button
             type="button"
             onClick={onSearch}
