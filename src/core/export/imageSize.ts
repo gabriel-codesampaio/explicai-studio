@@ -46,7 +46,7 @@ function jpeg(b: Buffer): Size | null {
 
 function svg(text: string): Size | null {
   const tag = /<svg[^>]*>/i.exec(text)?.[0] ?? "";
-  const num = (name: string) => Number.parseFloat(new RegExp(`s${name}="([d.]+)`, "i").exec(tag)?.[1] ?? "");
+  const num = (name: string) => Number.parseFloat(new RegExp(`\\s${name}="([\\d.]+)`, "i").exec(tag)?.[1] ?? "");
   const [w, h] = [num("width"), num("height")];
   if (w > 0 && h > 0) return { w, h };
   const box = /viewBox="[\d.\s-]*?([\d.]+)\s+([\d.]+)"/i.exec(tag);

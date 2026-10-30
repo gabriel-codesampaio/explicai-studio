@@ -1,4 +1,4 @@
-import { slugify } from "../text.js";
+import { decodeUri, slugify } from "../text.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
@@ -26,7 +26,7 @@ export function renderMarkdown(collected: Collected, images: Map<string, ImageIn
     const body = shiftHeadings(page.body, level)
       .replace(COLOR_SPAN, (all, name: string, text: string) => (Object.hasOwn(TEXT_COLORS, name) ? text : all))
       .replace(PAGE_LINK, (all, file: string, hash: string | undefined) => {
-        const target = pages.find((p) => p.fileName === decodeURI(file));
+        const target = pages.find((p) => p.fileName === decodeUri(file));
         return target ? `](#${hash ? hash.slice(1) : anchor(target)})` : all;
       })
       .split("\n")
