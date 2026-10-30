@@ -29,7 +29,7 @@ export function TextColorMenu({ editor, roving }: { editor: Editor; roving?: boo
               tabIndex={roving ? -1 : undefined}
               aria-label={t("Cor do texto")}
               onMouseDown={(e) => e.preventDefault()}
-              className="inline-flex h-8 flex-col items-center justify-center rounded-md px-2 font-display text-sm font-bold text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary"
+              className="inline-flex h-8 flex-col items-center justify-center rounded-md px-2 [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:min-w-11 font-display text-sm font-bold text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary"
             >
               <span aria-hidden>A</span>
               <span

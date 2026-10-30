@@ -15,6 +15,15 @@ interface Props {
 
 const MENU_KEY = "selectionMenu";
 
+/**
+ * Vira a barra para baixo da seleção quando, em cima, ela cobriria a barra fixa (e as dicas dos botões dela).
+ * Só o viewport conta como limite (boundary vazio); o topo útil começa onde a barra fixa termina.
+ */
+const FLIP_BELOW_TOOLBAR = () => ({
+  boundary: [],
+  padding: { top: document.querySelector("[data-editor-toolbar]")?.getBoundingClientRect().bottom ?? 0 },
+});
+
 const Divider = () => <span className="mx-1 h-5 w-px bg-border" aria-hidden />;
 
 /**
@@ -36,7 +45,7 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
     <BubbleMenu
       editor={editor}
       pluginKey={MENU_KEY}
-      options={{ placement: "top-start", offset: 8 }}
+      options={{ placement: "top-start", offset: 8, flip: FLIP_BELOW_TOOLBAR }}
       // Só em texto selecionado: o print selecionado tem o seu próprio menu (ImagePopover), e no bloco de código não há cor.
       shouldShow={({ view, state, from, to }) =>
         view.hasFocus() &&

@@ -609,6 +609,7 @@ test.describe("toque", () => {
     expect(await height(page.getByRole("button", { name: "Colar print" }))).toBeGreaterThanOrEqual(44);
     expect(await height(page.getByRole("button", { name: /Tipo de bloco/ }))).toBeGreaterThanOrEqual(44);
     expect(await height(page.getByRole("button", { name: "Negrito" }))).toBeGreaterThanOrEqual(44);
+    expect(await height(page.getByRole("button", { name: "Cor do texto" }))).toBeGreaterThanOrEqual(44);
     await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
     await page.getByRole("dialog", { name: "Páginas do manual" }).getByRole("button", { name: "Ajustes" }).click();
     for (const name of ["Lixeira", "Aparência", "Idioma", "Atalhos"])
@@ -635,4 +636,27 @@ test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3
     return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
   });
   expect(ratio).toBeGreaterThanOrEqual(3);
+});
+
+test("barra da seleção na primeira linha não cobre a barra fixa nem as dicas dela", async ({ page, request }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  const { slug } = await setup(request, "Manual Barra Cobre", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.keyboard.type("Clique em Excluir");
+  await page.keyboard.press("Shift+Home");
+  const menu = page.getByRole("toolbar", { name: "Formatar seleção" });
+  await expect(menu).toBeVisible();
+  const fixed = page.getByRole("toolbar", { name: "Formatação" });
+  await expect.poll(async () => {
+    const [m, f] = await Promise.all([menu.boundingBox(), fixed.boundingBox()]);
+    return (m?.y ?? 0) >= (f?.y ?? 0) + (f?.height ?? 0) - 1;
+  }).toBe(true);
+  // Cor do texto em toque tem 44 px (teste "alvos de toque"); aqui, a dica da barra fixa aparece e fica livre.
+  await fixed.getByRole("button", { name: "Negrito" }).hover();
+  const tip = page.getByRole("tooltip");
+  await expect(tip).toContainText("Negrito");
+  const [tb, mb] = await Promise.all([tip.boundingBox(), menu.boundingBox()]);
+  const overlap = (tb?.y ?? 0) < (mb?.y ?? 0) + (mb?.height ?? 0) && (tb?.y ?? 0) + (tb?.height ?? 0) > (mb?.y ?? 0);
+  expect(overlap).toBe(false);
 });
