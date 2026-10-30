@@ -38,6 +38,13 @@ describe("entrada de imagem: tipos e nomes", () => {
   });
 });
 
+describe("envio ao mesmo tempo (duas abas)", () => {
+  it("cinco envios simultâneos do mesmo nome geram cinco arquivos diferentes", async () => {
+    const paths = await Promise.all([1, 2, 3, 4, 5].map((n) => saveAsset(dir, "tela.png", new Uint8Array([n]))));
+    expect(new Set(paths).size).toBe(5);
+  });
+});
+
 describe("exportação com imagem", () => {
   const annotated = async () => {
     const asset = await saveAsset(dir, "tela.png", bytes);
