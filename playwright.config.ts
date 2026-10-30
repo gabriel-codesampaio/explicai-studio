@@ -12,8 +12,8 @@ export default defineConfig({
   reporter: [["list"]],
   use: {
     baseURL: `http://localhost:${port}`,
-    // Usa o Chrome instalado na máquina, sem baixar outro navegador.
-    channel: "chrome",
+    // Local: usa o Chrome instalado na máquina, sem baixar outro navegador. No CI: o Chromium do Playwright.
+    ...(process.env.CI ? {} : { channel: "chrome" as const }),
     locale: "pt-BR",
     trace: "retain-on-failure",
   },
