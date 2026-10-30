@@ -154,6 +154,9 @@ test("cor do texto pela barra fixa, só com o teclado, e a dica mostra o nome", 
   await trigger.hover();
   await expect(page.getByRole("tooltip")).toContainText("Cor do texto");
   await page.keyboard.press("Shift+Control+ArrowLeft");
+  // O editor só guarda a seleção depois do selectionchange; a barra da seleção aparece quando ele guardou.
+  // Sem esperar, Shift+Tab tira o foco antes e a cor cai num cursor sem seleção.
+  await expect(page.getByRole("toolbar", { name: "Formatar seleção" })).toBeVisible();
 
   // Sai do editor para a barra fixa e anda pelas setas até o botão de cor.
   await page.keyboard.press("Shift+Tab");
