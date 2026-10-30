@@ -60,9 +60,7 @@ export function ExportDialog() {
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
-          <DialogDescription>
-            {t('Cada página entra com a versão marcada "No manual" ou, sem ela, com o texto atual.')}
-          </DialogDescription>
+          <DialogDescription>{t('Cada página entra com a "Versão do manual" ou, sem ela, com o texto atual.')}</DialogDescription>
         </DialogHeader>
 
         <fieldset className="grid gap-2">

@@ -31,8 +31,8 @@ export interface ExportResult {
 
 /**
  * Exporta o manual: HTML (um arquivo com sumário, para publicar ou abrir no navegador), PDF (impresso
- * a partir desse HTML) ou Markdown (um arquivo só, para quem lê com IA). Usa a versão marcada
- * "No manual" de cada página.
+ * a partir desse HTML) ou Markdown (um arquivo só, para quem lê com IA). Usa a Versão do manual
+ * de cada página.
  */
 export async function exportManual(dir: string, format: ExportFormat, opts: CollectOptions = {}): Promise<ExportResult> {
   const collected = await collectPages(dir, opts);

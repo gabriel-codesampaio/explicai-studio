@@ -47,8 +47,8 @@ export const EN: Record<string, string> = {
   "Buscar página pelo título…": "Find page by title…",
   "Cada manual vira uma pasta com uma página em Markdown para cada tela ou tarefa. Dá para versionar no git junto com o código.":
     "Each manual becomes a folder with one Markdown page per screen or task. You can version it in git next to the code.",
-  'Cada página entra com a versão marcada "No manual" ou, sem ela, com o texto atual.':
-    'Each page goes in with the version marked "In manual" or, without one, with the current text.',
+  'Cada página entra com a "Versão do manual" ou, sem ela, com o texto atual.':
+    'Each page goes in with the "Manual version" or, without one, with the current text.',
   "Caminho da página": "Page path",
   Cancelar: "Cancel",
   "Carregando as marcações…": "Loading markups…",
@@ -113,8 +113,8 @@ export const EN: Record<string, string> = {
   Formato: "Format",
   Grafite: "Graphite",
   "Guardar versão": "Save version",
-  'Guarde o texto como está agora para voltar a ele depois. A versão marcada "No manual" é a que vai para o manual final. Sem marcação, vale o texto atual.':
-    'Save the text as it is now to come back to it later. The version marked "In manual" is the one that goes into the final manual. With none marked, the current text is used.',
+  'Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que vai para o manual final. Sem ela, vale o texto atual.':
+    'Save the text as it is now to come back to it later. The "Manual version" is the one that goes into the final manual. Without one, the current text is used.',
   "Idioma da interface": "Interface language",
   Imagem: "Image",
   "Inserir bloco": "Insert block",
@@ -159,7 +159,6 @@ export const EN: Record<string, string> = {
   "Nenhuma versão guardada ainda.": "No saved versions yet.",
   "Nesta página": "On this page",
   "No Mac, use Cmd no lugar de Ctrl.": "On a Mac, use Cmd instead of Ctrl.",
-  "No manual": "In manual",
   "Nome da página ou https://…": "Page name or https://…",
   "Nome da versão (opcional)": "Version name (optional)",
   "Nome da versão (opcional), ex.: Revisada pelo suporte": "Version name (optional), e.g.: Reviewed by support",
@@ -168,8 +167,8 @@ export const EN: Record<string, string> = {
   "Nova subpágina": "New subpage",
   "Nova subpágina em {nome}": "New subpage in {nome}",
   "Novo manual": "New manual",
-  "O manual final usa uma versão guardada desta página. O que você escrever aqui só entra no manual quando você voltar para o texto atual.":
-    "The final manual uses a saved version of this page. What you write here only goes into the manual when you switch back to the current text.",
+  "O manual final usa a Versão do manual desta página. O que você escrever aqui só entra nele quando você voltar para o texto atual.":
+    "The final manual uses this page's Manual version. What you write here only goes into it when you switch back to the current text.",
   "O que a pessoa vê depois do passo": "What the person sees after the step",
   "O que este marcador mostra?": "What does this marker show?",
   "O que o marcador {n} mostra": "What marker {n} shows",
@@ -235,7 +234,7 @@ export const EN: Record<string, string> = {
   "Usar o texto atual": "Use the current text",
   "Use um endereço http, https ou mailto.": "Use an http, https or mailto address.",
   Ver: "View",
-  "versão fixada": "pinned version",
+  "Versão do manual": "Manual version",
   "Versão guardada.": "Version saved.",
   'Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".':
     'Version restored. The previous text was saved as "Before restoring".',
