@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
+import { ExplicaiError } from "../errors.js";
 import { exists } from "../fs.js";
 
 const run = promisify(execFile);
@@ -46,7 +47,8 @@ export async function findBrowser(): Promise<string | null> {
 export async function printPdf(htmlFile: string, pdfFile: string): Promise<void> {
   const browser = await findBrowser();
   if (!browser) {
-    throw new Error(
+    throw new ExplicaiError(
+      "no-browser",
       "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. " +
         "Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.",
     );

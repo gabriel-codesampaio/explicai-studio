@@ -1,7 +1,7 @@
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { contrastWithWhite } from "../src/core/export/color.js";
 import { imageSize } from "../src/core/export/imageSize.js";
 import { TEXT_COLORS } from "../src/core/export/textColors.js";
@@ -171,6 +171,16 @@ describe("exportação", () => {
       { w: 320, h: 240 },
       { w: 800, h: 600 },
     ]);
+  });
+
+  it.skipIf(process.platform === "darwin")("PDF: sem navegador, o erro tem código para a interface traduzir", async () => {
+    for (const v of ["PROGRAMFILES", "PROGRAMFILES(X86)", "LOCALAPPDATA", "PATH", "EXPLICAI_BROWSER"]) vi.stubEnv(v, "");
+    try {
+      await seed();
+      await expect(exportManual(dir, "pdf")).rejects.toMatchObject({ code: "no-browser" });
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 
   it.skipIf(!process.env.CI_PDF && process.platform !== "win32")(

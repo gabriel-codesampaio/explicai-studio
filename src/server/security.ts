@@ -10,7 +10,7 @@ const LOCAL_ORIGIN = /^http:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/;
  */
 export function assertLocalRequest(req: IncomingMessage): void {
   const host = (req.headers.host ?? "").replace(/:\d+$/, "");
-  if (!LOCAL_HOSTS.includes(host)) throw new HttpError(403, "Acesso permitido só a partir deste computador.");
+  if (!LOCAL_HOSTS.includes(host)) throw new HttpError(403, "Acesso permitido só a partir deste computador.", "forbidden-host");
   const origin = req.headers.origin;
-  if (origin && !LOCAL_ORIGIN.test(origin)) throw new HttpError(403, "Origem não permitida.");
+  if (origin && !LOCAL_ORIGIN.test(origin)) throw new HttpError(403, "Origem não permitida.", "forbidden-origin");
 }

@@ -36,7 +36,8 @@ export function createStudioServer(opts: StudioOptions): Server {
       await send(res, await match.route.handle({ req, url, params: match.params, rest: match.rest, opts }));
     } catch (err) {
       const { code, params } = err instanceof ExplicaiError ? err : ({} as Partial<ExplicaiError>);
-      sendJson(res, statusOf(err), { error: err instanceof Error ? err.message : String(err), code, params });
+      const errorCode = code ?? (err instanceof HttpError ? err.code : undefined);
+      sendJson(res, statusOf(err), { error: err instanceof Error ? err.message : String(err), code: errorCode, params });
     }
   });
 }
