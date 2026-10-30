@@ -458,3 +458,24 @@ test.describe("toque", () => {
       expect(await height(page.getByRole("menuitem", { name }))).toBeGreaterThanOrEqual(44);
   });
 });
+
+test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3:1)", async ({ page, request }) => {
+  await page.addInitScript(() => localStorage.setItem("explicai:aparencia", JSON.stringify({ mode: "dark" })));
+  const { slug } = await setup(request, "Manual Escuro", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByText("Cores do manual").click();
+  const ratio = await dialog.getByLabel("Cor do texto", { exact: true }).evaluate((swatch) => {
+    const rgb = (el: Element, prop: "borderTopColor" | "backgroundColor") =>
+      (getComputedStyle(el)[prop].match(/\d+/g) ?? []).slice(0, 3).map(Number);
+    const l = (c: number[]) => {
+      const [r, g, b] = c.map((v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const a = l(rgb(swatch, "borderTopColor"));
+    const b = l(rgb(swatch.closest("[role=dialog]") as Element, "backgroundColor"));
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  });
+  expect(ratio).toBeGreaterThanOrEqual(3);
+});

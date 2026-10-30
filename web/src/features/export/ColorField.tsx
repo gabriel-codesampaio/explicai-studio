@@ -43,7 +43,7 @@ export function ColorField({ label, value, fallback, onCommit }: Props) {
           value={HEX.test(text) ? text.toLowerCase() : shown}
           onChange={(e) => setText(e.target.value)}
           onBlur={(e) => void commit(e.target.value)}
-          className="size-7 shrink-0 cursor-pointer rounded-sm border border-border bg-transparent p-0.5"
+          className="size-7 shrink-0 cursor-pointer rounded-sm border border-muted-foreground bg-transparent p-0.5"
         />
         <span className="min-w-0 flex-1">{label}</span>
         <input
