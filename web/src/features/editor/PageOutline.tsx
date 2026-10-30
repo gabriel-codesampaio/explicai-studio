@@ -53,7 +53,7 @@ export function PageOutlineButton(props: Omit<Props, "onNavigate">) {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted xl:hidden"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted xl:hidden [@media(pointer:coarse)]:min-h-11"
         >
           <ListTree className="size-3.5" aria-hidden /> {t("Nesta página")}
         </button>

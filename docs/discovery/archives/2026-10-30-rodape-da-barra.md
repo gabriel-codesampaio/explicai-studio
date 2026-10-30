@@ -2,7 +2,7 @@
 
 Ideia original no caderno (30/10/2026): `#app` - Menu inferior da esquerda não tá bacana, pensar num style bacana
 
-Relacionado: [botão Exportar](../2026-10-30-botao-exportar.md) (mesma sessão, outro canto da tela). Ideia do caderno (#app): "Menu inferior da esquerda não tá bacana, pensar num style bacana".
+Relacionado: [botão Exportar](./2026-10-30-botao-exportar.md) (mesma sessão, outro canto da tela). Ideia do caderno (#app): "Menu inferior da esquerda não tá bacana, pensar num style bacana".
 
 ## Problema
 Quem edita um manual precisa, de vez em quando, abrir a Lixeira, trocar tema/idioma ou ver os atalhos. Hoje o rodapé da barra é um "⋯" solto no canto, sem texto, que não diz o que guarda. Hipótese: ninguém reclamou além da própria pessoa (PRODUCT.md não traz usuário real); a queixa é de acabamento e de descoberta.

@@ -57,7 +57,8 @@ export function ExportDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button>{t("Exportar manual")}</Button>
+        {/* Primário do topo: mais peso que os vizinhos de texto e 44 px em tela de toque. */}
+        <Button className="font-semibold [@media(pointer:coarse)]:h-11">{t("Exportar manual")}</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
