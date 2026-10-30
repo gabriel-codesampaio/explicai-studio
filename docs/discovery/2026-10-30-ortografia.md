@@ -65,3 +65,7 @@ Se for C um dia, a ordem é: (1) `glossary` opcional no `manual.json` (campo pre
 - **Riscos:** o atributo `lang` do contêiner do Tiptap pode não chegar no `contenteditable` certo; testar em Chrome e Edge. Não resolve o ruído de termos do sistema (assumido).
 
 Não verificado: o que cada concorrente faz; que o navegador não aceita lista de palavras da página; tamanho real dos arquivos `.aff`/`.dic` empacotados; tempo de carga do nspell.
+
+## Decisões tomadas (2026-10-30)
+- Por enquanto, só o corretor do navegador e uma explicação na ajuda. → [T-036](../tickets/T-036-corretor-do-navegador.md)
+- Levantamento de bibliotecas de correção: [libs de correção](2026-10-30-libs-de-correcao.md).

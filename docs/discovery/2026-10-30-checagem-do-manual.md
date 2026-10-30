@@ -73,3 +73,6 @@ Perguntas que esse corte não responde (e ficam para depois): onde fica o login,
 - **Riscos:** falso alarme; ação destrutiva; credenciais; qualidade do modelo variando. Dependência do `explicai-mcp`, que ainda não tem código.
 
 Não verificado: flags atuais do Chrome DevTools MCP (conectar a navegador já aberto); recursos de Scribe e Tango.
+
+## Decisões tomadas (2026-10-30)
+- Fica para depois. Nenhuma decisão tomada.

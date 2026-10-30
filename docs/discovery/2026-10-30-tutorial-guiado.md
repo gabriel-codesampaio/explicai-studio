@@ -69,3 +69,7 @@ Se a opção B for aprovada, driver.js é a escolha: MIT, menor, sem dependênci
 - **Riscos:** texto longo demais para o estado vazio; competir com o T-006 pela atenção ao botão Exportar.
 
 Não verificado: peso real e acessibilidade dos popovers do Shepherd, Intro.js e Joyride; se o driver.js move o foco para o popover; se há usuário que trava hoje.
+
+## Decisões tomadas (2026-10-30)
+- Sem biblioteca: o T-018 foi ampliado para mostrar também onde exportar.
+- Público: quem monta o manual no Studio.

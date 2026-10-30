@@ -92,3 +92,7 @@ Por quê: o audit é barato, só relata, e cobre o que a crítica não mede. O `
 - **Riscos:** o `DESIGN.md` virar fonte concorrente do brand book; relatório longo gerar ticket a mais do que a fila aguenta; o detector reabrir `side-tab` já ignorado em `config.json`.
 
 Não verificado: o que cada comando acharia de fato (nenhum foi rodado, por regra desta tarefa); a lista de comandos vem da skill instalada, não da documentação online.
+
+## Decisões tomadas (2026-10-30)
+- `document` e `audit` agora. → [T-037](../tickets/T-037-design-md-e-audit.md)
+- `harden` antes da versão pública. → [T-038](../tickets/T-038-harden-antes-do-npm.md)

@@ -75,3 +75,7 @@ Sem `voice`, vale Profissional.
 - **Riscos:** nome do campo congelado antes do MCP; `custom` como instrução injetada; esquecer o `.claude/rules/manual-format.md`.
 
 Não verificado: se Scribe, Tango ou Guidde têm controle de tom (a busca não achou). O `explicai-mcp` está vazio, então o desenho de ferramentas e prompts ainda não foi decidido.
+
+## Decisões tomadas (2026-10-30)
+- A voz é só do MCP: nada no Studio. Ticket quando o `explicai-mcp` tiver código.
+- Pendente: onde o tom fica salvo e o exemplo do tom Tranquilo em inglês.

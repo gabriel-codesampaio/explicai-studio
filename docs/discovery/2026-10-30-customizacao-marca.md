@@ -65,3 +65,7 @@ Padrão: logo + cor + tirar a marca da ferramenta é pago em todos. Fonte própr
 - **Riscos:** SVG com script; logo grande quebrando a capa do PDF; MCP gravando cor sem validação.
 
 Não verificado: preços atuais dos concorrentes (fontes divergem).
+
+## Decisões tomadas (2026-10-30)
+- Logo do cliente: sim. → [T-032](../tickets/T-032-logo-do-cliente.md)
+- Rodapé do Explicaí: fica por padrão, com opção de exportar sem ele. → [T-033](../tickets/T-033-exportar-sem-rodape.md)

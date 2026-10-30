@@ -73,3 +73,7 @@ Link no Studio, quando entrar: dentro de um diálogo de ajuda que já existe (`S
 - **Riscos:** prometer prazo; contato pessoal exposto; guias duplicados nos dois repositórios.
 
 Não verificado: o que concorrentes e ferramentas parecidas fazem na interface para contribuição (não achei fonte); se existe repositório `.github` na conta.
+
+## Decisões tomadas (2026-10-30)
+- Guia de contribuição, Contributor Covenant e guia em pt com resumo em inglês: sim. → [T-035](../tickets/T-035-guia-de-contribuicao.md)
+- Pendente: e-mail para denúncias e segurança.
