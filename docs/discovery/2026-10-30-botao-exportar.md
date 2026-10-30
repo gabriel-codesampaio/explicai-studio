@@ -1,5 +1,7 @@
 # Discovery: botão Exportar sempre à direita, em destaque (2026-10-30)
 
+Ideia original no caderno (30/10/2026): `#app` - Inverter a ordem do botão de Exportar, colocar ele sempre a direita, com cores que chamem a atenção
+
 Complementa [T-006](../tickets/fechados/T-006-exportar-no-topo.md), que levou "Exportar manual" para o topo da página. Ideia do caderno (#app): "Inverter a ordem do botão de Exportar, colocar ele sempre a direita, com cores que chamem a atenção".
 
 ## Problema

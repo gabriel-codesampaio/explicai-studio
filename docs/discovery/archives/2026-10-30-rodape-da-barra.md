@@ -1,5 +1,7 @@
 # Discovery: rodapé da barra lateral (2026-10-30)
 
+Ideia original no caderno (30/10/2026): `#app` - Menu inferior da esquerda não tá bacana, pensar num style bacana
+
 Relacionado: [botão Exportar](2026-10-30-botao-exportar.md) (mesma sessão, outro canto da tela). Ideia do caderno (#app): "Menu inferior da esquerda não tá bacana, pensar num style bacana".
 
 ## Problema

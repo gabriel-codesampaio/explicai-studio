@@ -1,5 +1,7 @@
 # Discovery: landing page com demonstração e GitHub Pages (2026-10-30)
 
+Ideia original no caderno (30/10/2026): `#marca` - Criar uma Landing Page com uma demonstração do Explicai, adicionar o github pages
+
 Ideia do caderno (`#marca`, 30/10/2026): "Criar uma Landing Page com uma demonstração do Explicaí, adicionar o github pages".
 
 ## Problema
