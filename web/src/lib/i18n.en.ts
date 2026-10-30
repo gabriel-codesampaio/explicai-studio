@@ -243,6 +243,8 @@ export const EN: Record<string, string> = {
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",
   "Tipo de bloco: {tipo}": "Block type: {tipo}",
+  "Fonte do manual: {fonte}": "Manual font: {fonte}",
+  "Fonte do manual inteiro": "Font for the whole manual",
   "Tipo de alerta: {tipo}": "Alert type: {tipo}",
   "Alerta: Dica": "Alert: Tip",
   "Alerta: Atenção": "Alert: Warning",

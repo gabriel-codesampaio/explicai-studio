@@ -1,6 +1,6 @@
 import type { FontInfo } from "@/lib/api";
 import { t } from "@/lib/i18n";
-import { previewFamily } from "./useFontPreview";
+import { previewFamily } from "@/lib/manualFont";
 
 interface Props {
   label: string;
