@@ -1,4 +1,4 @@
-# T-018: Página vazia que ensina o primeiro passo com print
+# T-018: Página vazia que ensina o primeiro passo e onde exportar
 
 - Prioridade: P3
 - Tamanho: P
@@ -13,6 +13,9 @@ Os estados vazios são neutros ("Sem título", "Nenhuma página ainda"). Não h�
 - [ ] Página vazia sugere o caminho: colar um print (Ctrl+V) e numerar o que a pessoa precisa clicar.
 - [ ] Texto no tom da marca, sem humor, em pt-BR e en.
 - [ ] Desaparece assim que a página tem conteúdo.
+- [ ] Uma linha aponta onde exportar e leva ao botão (ampliado pelo [discovery de tutorial](../discovery/2026-10-30-tutorial-guiado.md), 2026-10-30).
+- [ ] O mesmo texto aparece na ajuda. Usável só com teclado; nenhuma dependência nova.
+- [ ] Público: quem monta o manual no Studio, não quem lê o manual exportado.
 
 ## Onde
 `features/editor/extensions.ts` (placeholder), `components/EmptyState.tsx`, `lib/i18n.en.ts`.
