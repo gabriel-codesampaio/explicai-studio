@@ -944,3 +944,36 @@ for (const mode of ["light", "dark"] as const) {
     expect(await borderContrast(exportDialog.getByLabel("Cor do texto: código da cor"))).toBeGreaterThanOrEqual(3);
   });
 }
+
+test("fonte do manual pela barra: editor, diálogo Exportar e recarga mostram a mesma fonte", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Fonte Barra", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  const toolbar = page.getByRole("toolbar", { name: "Formatação" });
+  const trigger = toolbar.getByRole("button", { name: /^Fonte do manual:/ });
+  await expect(trigger).toHaveAccessibleName("Fonte do manual: Atkinson Hyperlegible Next");
+  const family = () => editor(page).evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(await family()).toContain("Atkinson");
+
+  await trigger.focus();
+  await page.keyboard.press("Enter");
+  // Fonte sem itálico não serve para o texto: não aparece na lista.
+  await expect(page.getByRole("menuitem", { name: "Montserrat" })).toHaveCount(0);
+  await page.getByRole("menuitem", { name: "Lora" }).click();
+  await expect(trigger).toHaveAccessibleName("Fonte do manual: Lora");
+  await expect.poll(family).toContain("Lora");
+  // O resto do Studio fica na fonte da marca.
+  expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toContain("Atkinson");
+
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByText("Cores do manual").click();
+  await expect(dialog.getByRole("group", { name: "Fonte do texto" }).getByRole("button", { name: "Lora" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await page.keyboard.press("Escape");
+
+  await page.reload();
+  await expect(toolbar.getByRole("button", { name: "Fonte do manual: Lora" })).toBeVisible();
+  await expect.poll(family).toContain("Lora");
+});

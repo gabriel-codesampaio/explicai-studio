@@ -4,10 +4,13 @@ import { EditorContent, type Editor as TiptapEditor, useEditor } from "@tiptap/r
 import { useEffect, useRef, useState } from "react";
 import { AnnotationEditor } from "@/features/annotations/AnnotationEditor";
 import { AnnotatedImage } from "@/features/annotations/annotatedImage";
+import { useFontPreview } from "@/features/export/useFontPreview";
+import { useStudioContext } from "@/hooks/StudioContext";
 import { assetPathFromSrc } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";
+import { manualFontStyle } from "@/lib/manualFont";
 import { CalloutWithView } from "./calloutExtension";
 import { syncSelectionFromDom } from "./domSelection";
 import { contentExtensions } from "./extensions";
@@ -36,6 +39,8 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
   latest.current = { slug, onChange, onError };
   const fileInput = useRef<HTMLInputElement>(null);
   const pickImage = () => fileInput.current?.click();
+  const manualTheme = useStudioContext().manual?.theme;
+  const fonts = useFontPreview(true);
   const [linkOpen, setLinkOpen] = useState(false);
   const [annotating, setAnnotating] = useState<{ src: string; alt: string } | null>(null);
   const upload = (ed: TiptapEditor, files: File[], pos: number) =>
@@ -90,7 +95,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
           upload(editor, files, editor.state.selection.anchor);
         }}
       />
-      <EditorContent editor={editor} className="editor-content" />
+      <EditorContent editor={editor} className="editor-content" style={manualFontStyle(fonts, manualTheme)} />
       <SelectionMenu editor={editor} pickImage={pickImage} onEditLink={() => setLinkOpen(true)} />
       <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} pages={pages} />
       <ImagePopover editor={editor} onAnnotate={(src, alt) => setAnnotating({ src, alt })} />
