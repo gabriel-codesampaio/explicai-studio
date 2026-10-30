@@ -94,3 +94,7 @@ describe("mover e redimensionar marcações", () => {
     expect(moveAnnotation(base, "a", "move", 0.1, 0.1).arrows[0]?.from).toMatchObject({ x: near(0.2), y: near(0.2) });
   });
 });
+
+it("assetPathFromSrc não lança com % malformado", () => {
+  expect(assetPathFromSrc("/files/m/assets/100%.png")).toBe("assets/100%.png");
+});

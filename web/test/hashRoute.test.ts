@@ -21,6 +21,15 @@ describe("hashRoute", () => {
     expect(readLocation()).toEqual({ slug: "guia rápido", pageId: "página 1" });
   });
 
+  it("hash com % malformado não lança: vira o texto cru", () => {
+    for (const h of ["#/%", "#/%E0%A4%A/x", "#/m/%zz"]) {
+      window.location.hash = h;
+      expect(() => readLocation()).not.toThrow();
+    }
+    window.location.hash = "#/%/p";
+    expect(readLocation()).toEqual({ slug: "%", pageId: "p" });
+  });
+
   it("escreve o hash codificado e a ida e volta devolve o mesmo lugar", () => {
     const place = { slug: "guia rápido", pageId: "a/b" };
     writeLocation(place);

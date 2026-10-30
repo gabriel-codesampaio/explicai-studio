@@ -4,6 +4,8 @@
  * Coordenadas vão de 0 a 1, relativas à largura e à altura da imagem.
  */
 
+import { decodeComponent } from "./text";
+
 export interface Point {
   x: number;
   y: number;
@@ -45,7 +47,7 @@ export const emptyAnnotations = (): Annotations => ({ version: 1, markers: [], h
 /** `/files/<manual>/assets/tela.png` → `assets/tela.png`. Imagem de fora do manual não tem marcações. */
 export function assetPathFromSrc(src: string): string | null {
   const match = /^\/files\/[^/]+\/(assets\/[^?#]+)$/.exec(src);
-  return match?.[1] ? decodeURIComponent(match[1]) : null;
+  return match?.[1] ? decodeComponent(match[1]) : null;
 }
 
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
