@@ -7,7 +7,7 @@
 - Origem: Prints de referência do P1 (design, 2026-10-29)
 
 ## Problema
-Em 375 px o rodapé do diálogo "Marcar imagem" (Salvar, Cancelar, Desfazer, fundo opaco) cobre os campos da legenda. O diálogo mede 763 px de altura sem rolagem (`overflow: visible`). Print: `explicai-prints/p1/antes/marcacao-375-claro.png`.
+Em 375 px o rodapé do diálogo "Marcar imagem" (Salvar, Cancelar, Desfazer, fundo opaco) cobre os campos da legenda. O diálogo mede 763 px de altura sem rolagem (`overflow: visible`). Print: `C:/Users/PC/explicai-prints/p1/antes/marcacao-375-claro.png`.
 
 ## Critérios de aceite
 - [ ] Em 375 x 812 px todos os campos da legenda ficam alcançáveis por rolagem e não ficam embaixo do rodapé.

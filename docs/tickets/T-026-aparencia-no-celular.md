@@ -7,7 +7,7 @@
 - Origem: Revisão de design do T-019 (2026-10-29)
 
 ## Problema
-Em 375 px o painel Aparência abre para a direita (`side="right"`) e corta "Sistema" e "English" para fora da tela (print `explicai-prints/p1/T-019/aparencia-375-claro.png`). No tema escuro a opção marcada de Tema e Idioma tem fundo #161a2e sobre trilho #1b2034 (1,07:1); só o negrito diz qual está escolhida.
+Em 375 px o painel Aparência abre para a direita (`side="right"`) e corta "Sistema" e "English" para fora da tela (print `C:/Users/PC/explicai-prints/p1/T-019/aparencia-375-claro.png`). No tema escuro a opção marcada de Tema e Idioma tem fundo #161a2e sobre trilho #1b2034 (1,07:1); só o negrito diz qual está escolhida.
 
 ## Critérios de aceite
 - [ ] Em 375 px todas as opções do painel ficam visíveis e tocáveis.

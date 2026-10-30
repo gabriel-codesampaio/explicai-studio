@@ -7,7 +7,7 @@
 - Origem: Prints de referência do P1 (design, 2026-10-29)
 
 ## Problema
-Com um título longo ("Gerar o relatório de contas pag…") o índice "Nesta página" ganha barra de rolagem horizontal. Print: `explicai-prints/p1/antes/menu-barra-1440-claro.png`.
+Com um título longo ("Gerar o relatório de contas pag…") o índice "Nesta página" ganha barra de rolagem horizontal. Print: `C:/Users/PC/explicai-prints/p1/antes/menu-barra-1440-claro.png`.
 
 ## Critérios de aceite
 - [ ] Título longo no índice quebra linha ou corta com reticências, sem barra de rolagem horizontal.

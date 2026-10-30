@@ -26,6 +26,6 @@ O que foi feito: `Appearance` guarda só o tema; saíram `data-accent` do `theme
 
 Decisões tomadas sem a pessoa: lista de cores dentro do `ExportDialog.tsx` em vez de um módulo em `lib/` (um uso só); anel fino na bolinha, porque o grafite some no escuro (1,94:1); cópia invisível em negrito para os botões não andarem ao trocar a cor.
 
-Verificação: testes de unidade em `web/test/theme.test.ts` (cor antiga gravada, no `theme.ts` e no script do `index.html`); e2e "Aparência mostra só Tema e Idioma..." e "exportação mostra o nome de cada cor do manual" (o HTML baixado sai com `--accent:#7a3fc4`). `npm run check` (94 testes) e `npm run test:e2e` (12 testes) verdes. Prints antes em `explicai-prints/p1/antes/` e depois em `explicai-prints/p1/T-019/` (aparencia e exportar, 375/960/1440, claro e escuro).
+Verificação: testes de unidade em `web/test/theme.test.ts` (cor antiga gravada, no `theme.ts` e no script do `index.html`); e2e "Aparência mostra só Tema e Idioma..." e "exportação mostra o nome de cada cor do manual" (o HTML baixado sai com `--accent:#7a3fc4`). `npm run check` (94 testes) e `npm run test:e2e` (12 testes) verdes. Prints antes em `C:/Users/PC/explicai-prints/p1/antes/` e depois em `C:/Users/PC/explicai-prints/p1/T-019/` (aparencia e exportar, 375/960/1440, claro e escuro).
 
 Ficou de fora: esmeralda, ameixa e grafite continuam fora da paleta no manual exportado (decisão da pessoa). Painel Aparência cortado em 375 px e opção marcada pouco visível no escuro (T-026); tokens do tema escuro diferentes do brand book (T-027).

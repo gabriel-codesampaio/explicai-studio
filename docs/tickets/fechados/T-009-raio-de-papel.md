@@ -28,7 +28,7 @@ Exceções de propósito: círculos (`rounded-full`, `50%`); destaque e área cl
 
 Busca de raio solto: `grep -rnE "rounded-\[[^]]*\]|rounded(\s|\"|')|border-radius:\s*[^;]*[0-9]+(px|rem|em)" web/src --include=*.tsx --include=*.ts --include=*.css` traz só as exceções acima.
 
-Verificação: o qa mediu o raio calculado de todos os elementos visíveis em cinco telas (página, Exportar, menu "/", Ctrl+P, marcação): interface toda em 3 px, fora das exceções. `npm run check` (94 testes) e `npm run test:e2e` (12) verdes. Prints depois em `explicai-prints/p1/T-009/` (todas as telas, 375/960/1440, claro e escuro).
+Verificação: o qa mediu o raio calculado de todos os elementos visíveis em cinco telas (página, Exportar, menu "/", Ctrl+P, marcação): interface toda em 3 px, fora das exceções. `npm run check` (94 testes) e `npm run test:e2e` (12) verdes. Prints depois em `C:/Users/PC/explicai-prints/p1/T-009/` (todas as telas, 375/960/1440, claro e escuro).
 
 Decisão para a pessoa confirmar: o desenho do Studio dentro do brand book publicado usa 6 px (`.lateral div`, `.btn-fake`, `.busca`), e janelas e cartões usam 10 a 12 px; o 3 px veio da crítica de design. Mantive o 3 px do ticket. Se o brand book continuar com 6 px, basta voltar `--radius` (a unificação num raio só continua valendo). Atualizar o brand book fica com a pessoa.
 
