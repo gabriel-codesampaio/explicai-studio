@@ -3,7 +3,8 @@ import { type KeyboardEvent, useEffect, useEffectEvent, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { t } from "@/lib/i18n";
-import { searchPages } from "@/lib/tree";
+import { statusOf } from "@/lib/status";
+import { pageNumbers, searchPages } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { StatusDot } from "./StatusMenu";
 
@@ -20,7 +21,9 @@ export function PageSearch({ open, onOpenChange }: Props) {
   const studio = useStudioContext();
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);
-  const matches = searchPages(studio.manual?.pages ?? [], query).slice(0, 50);
+  const pages = studio.manual?.pages ?? [];
+  const matches = searchPages(pages, query).slice(0, 50);
+  const numbers = pageNumbers(pages);
 
   const onKey = useEffectEvent((e: globalThis.KeyboardEvent) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p" && studio.manual) {
@@ -99,6 +102,13 @@ export function PageSearch({ open, onOpenChange }: Props) {
               onKeyDown={() => {}}
               className={cn("flex cursor-pointer items-center gap-2 rounded-md px-3 py-2", i === index && "bg-accent")}
             >
+              {/* Fora do nome acessível, como na árvore: a opção começa pelo título. */}
+              <span
+                aria-hidden
+                className="min-w-10 shrink-0 self-start font-mono text-[12.5px] leading-5 tabular-nums text-primary"
+              >
+                {numbers.get(m.item.id)}
+              </span>
               <span className="grid min-w-0 flex-1 leading-tight">
                 <span className="truncate text-sm font-bold">{m.item.title || t("Sem título")}</span>
                 {m.path.length > 0 && (
@@ -112,7 +122,10 @@ export function PageSearch({ open, onOpenChange }: Props) {
                   </span>
                 )}
               </span>
-              {m.item.status !== "rascunho" && <StatusDot status={m.item.status} />}
+              <span className="flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
+                <StatusDot status={m.item.status} />
+                {statusOf(m.item.status).label}
+              </span>
               {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
             </div>
           ))}

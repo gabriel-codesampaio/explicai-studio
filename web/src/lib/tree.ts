@@ -99,6 +99,19 @@ export function flattenItems(items: TreeItem[]): TreeItem[] {
   return items.flatMap((i) => [i, ...flattenItems(i.children)]);
 }
 
+/**
+ * Número de cada página (1, 2, 2.1), na ordem da árvore. Conta todas as páginas: é a numeração do
+ * manual completo; o export pode pular as que ficam de fora.
+ */
+export function pageNumbers(items: TreeItem[], prefix = "", into = new Map<string, string>()): Map<string, string> {
+  items.forEach((item, i) => {
+    const number = prefix ? `${prefix}.${i + 1}` : String(i + 1);
+    into.set(item.id, number);
+    pageNumbers(item.children, number, into);
+  });
+  return into;
+}
+
 export interface PageMatch {
   item: TreeItem;
   /** Títulos das páginas acima, para diferenciar "Editar" de Clientes de "Editar" de Fornecedores. */

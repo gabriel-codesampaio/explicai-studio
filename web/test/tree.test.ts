@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TreeItem } from "../src/lib/api";
-import { dropTarget, renameItem, searchPages, shiftTarget } from "../src/lib/tree";
+import { dropTarget, pageNumbers, renameItem, searchPages, shiftTarget } from "../src/lib/tree";
 
 const item = (id: string, children: TreeItem[] = []): TreeItem => ({
   id,
@@ -79,5 +79,25 @@ describe("busca de páginas (Ctrl+P)", () => {
 
   it("sem texto, lista todas na ordem da árvore", () => {
     expect(searchPages(tree, " ").map((m) => m.item.id)).toEqual(["clientes", "editar", "relatorios", "cad"]);
+  });
+});
+
+describe("numeração das páginas (igual ao sumário exportado)", () => {
+  it("numera raiz, filhas e netas na ordem da árvore", () => {
+    // a (1) ├─ a1 (1.1) │  └─ a1x (1.1.1) ├─ a2 (1.2)  b (2)  c (3) └─ c1 (3.1)
+    const tree = [item("a", [item("a1", [item("a1x")]), item("a2")]), item("b"), item("c", [item("c1")])];
+    expect([...pageNumbers(tree)]).toEqual([
+      ["a", "1"],
+      ["a1", "1.1"],
+      ["a1x", "1.1.1"],
+      ["a2", "1.2"],
+      ["b", "2"],
+      ["c", "3"],
+      ["c1", "3.1"],
+    ]);
+  });
+
+  it("devolve um mapa vazio para árvore vazia", () => {
+    expect(pageNumbers([]).size).toBe(0);
   });
 });

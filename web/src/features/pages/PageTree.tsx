@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { statusOf } from "@/lib/status";
-import { type DropZone, dropTarget, findItem } from "@/lib/tree";
+import { type DropZone, dropTarget, findItem, pageNumbers } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { type PageAction, PageActions } from "./PageActions";
 import { StatusDot } from "./StatusMenu";
@@ -41,6 +41,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
   );
   // Uma parada só do Tab: a página aberta (ou a primeira) recebe o foco ao entrar na árvore.
   const tabStop = selectedId && findItem(pages, selectedId) ? selectedId : pages[0]?.id;
+  const numbers = pageNumbers(pages);
 
   const drop = (targetId: string, zone: DropZone, draggedId: string) => {
     setHover(null);
@@ -93,6 +94,10 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                 onClick={() => onSelect(item.id)}
                 className="min-w-0 flex-1 truncate py-1.5 pl-2 text-left text-[14.5px]"
               >
+                {/* Fora do nome acessível: o leitor de tela já ouve o nível pela lista aninhada. */}
+                <span aria-hidden className="mr-1.5 font-mono text-[12.5px] tabular-nums text-primary">
+                  {numbers.get(item.id)}
+                </span>
                 {/* A página aberta ganha a faixa de marca-texto, como numa revisão no papel. */}
                 <span
                   className={cn(
