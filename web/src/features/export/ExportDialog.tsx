@@ -29,6 +29,8 @@ export function ExportDialog() {
   const [format, setFormat] = useState<ExportFormat>("html");
   const [onlyApproved, setOnlyApproved] = useState(false);
   const approved = flattenItems(studio.manual?.pages ?? []).filter((p) => ["aprovado", "publicado"].includes(p.status)).length;
+  // Sem página aprovada a opção fica desligada, mesmo que tenha sido marcada antes.
+  const onlyApprovedOn = onlyApproved && approved > 0;
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ExportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +40,7 @@ export function ExportDialog() {
     setError(null);
     setResult(null);
     try {
-      setResult(await studio.exportManual(format, onlyApproved && approved > 0));
+      setResult(await studio.exportManual(format, onlyApprovedOn));
     } catch (err) {
       setError(errorMessage(err, t("Não foi possível exportar o manual.")));
     } finally {
@@ -95,7 +97,7 @@ export function ExportDialog() {
         <label className={cn("flex items-start gap-2.5 text-sm", approved === 0 && "opacity-60")}>
           <input
             type="checkbox"
-            checked={onlyApproved && approved > 0}
+            checked={onlyApprovedOn}
             disabled={approved === 0}
             onChange={(e) => setOnlyApproved(e.target.checked)}
             className="mt-0.5 size-4 accent-[var(--primary)]"

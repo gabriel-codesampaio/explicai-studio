@@ -12,6 +12,20 @@ export const EN: Record<string, string> = {
   "{n} arquivos de imagem que nenhuma página usa, contando versões e lixeira.":
     "{n} image files that no page uses, counting versions and trash.",
   "{n} arquivos foram para {pasta}.": "{n} files went to {pasta}.",
+  "Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.":
+    "No page is approved or published. Approve a page or export them all.",
+  "A cor de {label} tem contraste {ratio}:1 com o branco; o mínimo é {min}:1. Escolha uma cor mais escura.":
+    "The {label} color has a contrast of {ratio}:1 with white; the minimum is {min}:1. Choose a darker color.",
+  "O texto sobre o realce tem contraste {ratio}:1; o mínimo é {min}:1. Escolha um realce mais claro.":
+    "Text over the highlight has a contrast of {ratio}:1; the minimum is {min}:1. Choose a lighter highlight.",
+  // Nomes dos campos de cor, mandados pelo núcleo nos erros de contraste (t com texto dinâmico).
+  destaque: "accent",
+  texto: "text",
+  "título da capa": "cover title",
+  "título da página": "page title",
+  "título de nível 1": "level 1 heading",
+  "título de nível 2": "level 2 heading",
+  "título de nível 3": "level 3 heading",
   "Nenhuma página está aprovada ou publicada. Aprove uma página para usar esta opção.":
     "No page is approved or published. Approve a page to use this option.",
   "{n} página aprovada ou publicada neste manual. As outras ficam de fora.":

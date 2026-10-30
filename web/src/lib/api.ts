@@ -1,7 +1,7 @@
 /** Cliente da API do Studio. Único ponto do editor que conhece URLs do servidor. */
 
 import type { Annotations } from "./annotations";
-import { t } from "./i18n";
+import { locale, t } from "./i18n";
 
 export interface ManualSummary {
   slug: string;
@@ -103,10 +103,24 @@ export interface PagePatch {
   status?: PageStatus;
 }
 
+/** Erro da API. `code` e `params` (quando o núcleo manda) deixam a interface traduzir a mensagem. */
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    readonly code?: string,
+    readonly params: Record<string, string | number> = {},
+  ) {
+    super(message);
+  }
+}
+
 async function call<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, init);
   const data: unknown = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error((data as { error?: string }).error ?? t("Erro {status}", { status: res.status }));
+  if (!res.ok) {
+    const { error, code, params } = data as { error?: string; code?: string; params?: Record<string, string | number> };
+    throw new ApiError(error ?? t("Erro {status}", { status: res.status }), code, params);
+  }
   return data as T;
 }
 
@@ -169,6 +183,25 @@ export const api = {
     }),
 };
 
+const ratio = (n: unknown) => Number(n).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+/** Erros do núcleo com código: o texto vem do i18n, no idioma da interface. Sem código conhecido, vale a mensagem do servidor. */
+const CODED: Record<string, (p: Record<string, string | number>) => string> = {
+  "no-approved-pages": () => t("Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas."),
+  "low-contrast": (p) =>
+    t("A cor de {label} tem contraste {ratio}:1 com o branco; o mínimo é {min}:1. Escolha uma cor mais escura.", {
+      label: t(String(p.label)),
+      ratio: ratio(p.ratio),
+      min: ratio(p.min),
+    }),
+  "low-contrast-highlight": (p) =>
+    t("O texto sobre o realce tem contraste {ratio}:1; o mínimo é {min}:1. Escolha um realce mais claro.", {
+      ratio: ratio(p.ratio),
+      min: ratio(p.min),
+    }),
+};
+
 export function errorMessage(err: unknown, fallback = t("Algo deu errado.")): string {
+  if (err instanceof ApiError && err.code) return CODED[err.code]?.(err.params) ?? err.message;
   return err instanceof Error ? err.message : fallback;
 }
