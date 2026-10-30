@@ -260,3 +260,35 @@ describe("API de fontes", () => {
     expect((await fetch(`${base}/api/fonts/..%2Fpackage.json`)).status).toBe(404);
   });
 });
+
+describe("corpo da requisição em UTF-8", () => {
+  const post = (url: string, body: Uint8Array) =>
+    fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: body as BodyInit });
+
+  it("junta pedaços cortados no meio de um caractere multibyte", async () => {
+    const bytes = Buffer.from(JSON.stringify({ title: "Início" }), "utf8");
+    const corte = bytes.indexOf(0xc3) + 1; // entre os dois bytes do "í"
+    const stream = new ReadableStream({
+      async start(c) {
+        c.enqueue(bytes.subarray(0, corte));
+        await new Promise((r) => setTimeout(r, 20));
+        c.enqueue(bytes.subarray(corte));
+        c.close();
+      },
+    });
+    const res = await fetch(`${base}/api/manuals`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: stream,
+      duplex: "half",
+    } as RequestInit);
+    expect((await res.json()).title).toBe("Início");
+  });
+
+  it("recusa corpo em Latin-1 em vez de gravar U+FFFD", async () => {
+    const res = await post(`${base}/api/manuals`, Buffer.from('{"title":"In\xedcio"}', "latin1"));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/UTF-8/);
+    expect(await (await fetch(`${base}/api/manuals`)).json()).toEqual([]);
+  });
+});

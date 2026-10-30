@@ -63,7 +63,14 @@ export async function readBody(req: IncomingMessage, limit: number): Promise<Uin
 }
 
 export async function readJson(req: IncomingMessage): Promise<Record<string, unknown>> {
-  const text = Buffer.from(await readBody(req, 5 * 1024 * 1024)).toString("utf8");
+  const raw = await readBody(req, 5 * 1024 * 1024);
+  let text: string;
+  try {
+    // fatal: um cliente em Latin-1/cp1252 (curl no Windows) mandaria "í" como 0xED, e o decode comum o trocaria por U+FFFD gravado em disco.
+    text = new TextDecoder("utf-8", { fatal: true }).decode(raw);
+  } catch {
+    throw new HttpError(400, "O corpo da requisição não está em UTF-8 válido. Envie o JSON em UTF-8.");
+  }
   let data: unknown;
   try {
     data = text ? JSON.parse(text) : {};
