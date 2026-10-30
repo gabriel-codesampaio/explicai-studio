@@ -1,16 +1,13 @@
 import { PanelLeftClose, Plus, Search } from "lucide-react";
 import { Brand } from "@/components/Brand";
-import { ExportDialog } from "@/features/export/ExportDialog";
-import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
-import { TrashPanel } from "@/features/pages/TrashPanel";
-import { AppearancePanel } from "@/features/settings/AppearancePanel";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { shiftTarget } from "@/lib/tree";
+import { MoreMenu } from "./MoreMenu";
 
 interface Props {
   /** Recolhe a coluna (tela larga) ou fecha a gaveta (tela estreita). */
@@ -58,17 +55,16 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
           onCreate={() => studio.setCreatingManual(true)}
         />
       )}
-      {manual && manual.pages.length > 0 && <ExportDialog />}
 
       {manual && (
-        <nav aria-label="Páginas do manual" className="grid gap-1">
+        <nav aria-label="Páginas do manual" className="grid grid-cols-1 gap-1">
           <button
             type="button"
             onClick={onSearch}
-            className="mb-1 flex items-center gap-2 rounded-md border border-border bg-background px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground"
+            className="mb-1 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
-            <kbd className="ml-auto rounded-sm border border-border px-1 font-mono text-[11px]">Ctrl+P</kbd>
+            <kbd className="ml-auto font-mono text-[11px] text-muted-foreground">Ctrl+P</kbd>
           </button>
           <div className="flex items-center justify-between px-2 text-[13px] text-muted-foreground">
             <span className="rotulo">{t("Páginas")}</span>
@@ -100,13 +96,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
         </nav>
       )}
 
-      <div className="mt-auto flex flex-wrap gap-1 border-t border-border pt-3">
-        {manual && (
-          <TrashPanel slug={manual.slug} onRestore={(trashId, pageId) => studio.restorePage(manual.slug, trashId, pageId)} />
-        )}
-        <AppearancePanel />
-        <ShortcutsDialog />
-      </div>
+      <MoreMenu />
     </aside>
   );
 }

@@ -1,4 +1,4 @@
-import { ArrowLeft, BookCheck, Eye, History, RotateCcw } from "lucide-react";
+import { ArrowLeft, BookCheck, Eye, RotateCcw } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -67,7 +67,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           type="button"
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground"
         >
-          <History className="size-3.5" aria-hidden /> {t("Versões")}
+          {t("Versões")}
           {pinned && <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">{t("versão fixada")}</span>}
         </button>
       </DialogTrigger>

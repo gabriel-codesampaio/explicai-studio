@@ -1,4 +1,4 @@
-import { Download, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +23,7 @@ const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] 
   { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), ext: ".md" },
 ];
 
-/** Botão "Exportar manual" da barra lateral: escolhe o formato e a cor, exporta e mostra onde ficou. */
+/** Botão "Exportar manual" do topo da página: escolhe o formato e a cor, exporta e mostra onde ficou. */
 export function ExportDialog() {
   const studio = useStudioContext();
   const [format, setFormat] = useState<ExportFormat>("html");
@@ -55,9 +55,7 @@ export function ExportDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full justify-start">
-          <Download aria-hidden /> {t("Exportar manual")}
-        </Button>
+        <Button>{t("Exportar manual")}</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>

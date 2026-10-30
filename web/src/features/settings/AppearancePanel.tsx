@@ -1,6 +1,6 @@
-import { Monitor, Moon, Palette, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { type Lang, lang, setLang, t } from "@/lib/i18n";
 import { type Appearance, type Mode, readAppearance, saveAppearance } from "@/lib/theme";
 
@@ -16,8 +16,8 @@ const LANGS: { id: Lang; label: string }[] = [
   { id: "en", label: "English" },
 ];
 
-/** Botão "Aparência" da barra lateral: tema claro/escuro e idioma do Studio. */
-export function AppearancePanel() {
+/** Painel "Aparência" (aberto pelo menu "⋯" da barra lateral): tema claro/escuro e idioma do Studio. */
+export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [look, setLook] = useState(readAppearance);
   const change = (patch: Partial<Appearance>) => {
     // Lê o que está gravado, e não o estado deste render: dois cliques seguidos não se atropelam.
@@ -27,16 +27,9 @@ export function AppearancePanel() {
   };
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted"
-        >
-          <Palette className="size-4" aria-hidden /> {t("Aparência")}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent side="right" align="end" className="grid w-64 gap-4 p-3">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="gap-4 p-4 sm:max-w-xs" aria-describedby={undefined}>
+        <DialogTitle className="font-display text-lg font-extrabold tracking-tight">{t("Aparência")}</DialogTitle>
         <fieldset>
           <legend className="mb-2 rotulo">{t("Tema")}</legend>
           <div className="grid grid-cols-3 gap-1 rounded-md bg-muted p-1">
@@ -73,7 +66,7 @@ export function AppearancePanel() {
         <p className="text-xs text-muted-foreground">
           {t("Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.")}
         </p>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 }

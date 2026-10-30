@@ -1,18 +1,20 @@
-import { ImageOff, RotateCcw, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { ImageOff, RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { api, errorMessage, type TrashItem } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { ago } from "@/lib/time";
 
 interface Props {
   slug: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   onRestore: (trashId: string, pageId: string) => Promise<void>;
 }
 
-/** Botão "Lixeira" da barra lateral: lista o que foi excluído neste manual e restaura. */
-export function TrashPanel({ slug, onRestore }: Props) {
+/** Painel "Lixeira" (aberto pelo menu "⋯" da barra lateral): lista o que foi excluído neste manual e restaura. */
+export function TrashPanel({ slug, open, onOpenChange, onRestore }: Props) {
   const [items, setItems] = useState<TrashItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   /** Imagens e marcações que nenhuma página, versão ou item da lixeira usa. */
@@ -36,18 +38,15 @@ export function TrashPanel({ slug, onRestore }: Props) {
       (err: unknown) => setError(errorMessage(err)),
     );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: recarrega só ao abrir
+  useEffect(() => {
+    if (open) load();
+  }, [open]);
+
   return (
-    <Popover onOpenChange={(open) => open && load()}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted"
-        >
-          <Trash2 className="size-4" aria-hidden /> {t("Lixeira")}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent side="right" align="end" className="w-80 p-2">
-        <p className="px-2 pt-1 pb-2 text-sm font-bold">{t("Lixeira deste manual")}</p>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="gap-2 p-4 sm:max-w-sm" aria-describedby={undefined}>
+        <DialogTitle className="px-2 pt-1 pb-2 text-sm font-bold">{t("Lixeira deste manual")}</DialogTitle>
         {error && <p className="px-2 pb-2 text-sm text-destructive">{error}</p>}
         {!error && items === null && <p className="px-2 pb-2 text-sm text-muted-foreground">{t("Carregando…")}</p>}
         {items?.length === 0 && <p className="px-2 pb-2 text-sm text-muted-foreground">{t("Nenhuma página excluída.")}</p>}
@@ -64,7 +63,7 @@ export function TrashPanel({ slug, onRestore }: Props) {
                 </span>
                 <button
                   type="button"
-                  onClick={() => void onRestore(item.trashId, item.pageId).then(load)}
+                  onClick={() => void onRestore(item.trashId, item.pageId).then(() => onOpenChange(false))}
                   className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-sm font-bold text-primary hover:bg-accent"
                 >
                   <RotateCcw className="size-3.5" aria-hidden /> {t("Restaurar")}
@@ -94,7 +93,7 @@ export function TrashPanel({ slug, onRestore }: Props) {
         <p className="px-2 pt-2 text-xs text-muted-foreground">
           {t("As páginas excluídas ficam na pasta .lixeira do manual até você restaurar ou apagar.")}
         </p>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 }

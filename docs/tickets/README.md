@@ -14,10 +14,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-003](T-003-rotulos-mono.md) | Usar rótulos de seção em mono maiúsculo, como no brand book | P1 | em andamento | design |
-| [T-004](T-004-numeracao-na-arvore.md) | Mostrar a numeração 2.1 na árvore de páginas e na busca | P1 | aberto | frontend |
-| [T-005](T-005-manual-como-cabecalho.md) | Mostrar o nome do manual como cabeçalho, sem caixa | P1 | aberto | design |
-| [T-006](T-006-exportar-no-topo.md) | Levar "Exportar manual" para o topo da página como botão principal | P1 | aberto | frontend |
 | [T-007](T-007-icones-decorativos.md) | Tirar os ícones que só decoram e usar a extensão do arquivo na exportação | P1 | em andamento | design |
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
 | [T-010](T-010-barra-colar-print.md) | "Colar print" com Ctrl+V na barra de ferramentas | P1 | aberto | frontend |
@@ -41,6 +37,10 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-006](fechados/T-006-exportar-no-topo.md) | Levar "Exportar manual" para o topo da página como botão principal | P1 | feito | 060a936 |
+| [T-005](fechados/T-005-manual-como-cabecalho.md) | Mostrar o nome do manual como cabeçalho, sem caixa | P1 | feito | d5f92a0 |
+| [T-004](fechados/T-004-numeracao-na-arvore.md) | Mostrar a numeração 2.1 na árvore de páginas e na busca | P1 | feito | c558b39 |
+| [T-003](fechados/T-003-rotulos-mono.md) | Usar rótulos de seção em mono maiúsculo, como no brand book | P1 | feito | 77a41f9 |
 | [T-022](fechados/T-022-enter-depois-de-imagem.md) | Corrigir o Enter que não cria parágrafo em página com imagem vinda do Markdown | P1 | feito | 3c3d2b3 |
 | [T-019](fechados/T-019-cores-so-no-manual.md) | Tirar as cores extras do Studio e manter só no manual exportado | P1 | feito | 240c3fb |
 | [T-009](fechados/T-009-raio-de-papel.md) | Raio de 3 px na interface de trabalho | P1 | feito | 8a5867c |
