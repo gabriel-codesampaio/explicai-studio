@@ -4,6 +4,7 @@ import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
+import { colorSpanOpen, TEXT_COLORS } from "./textColors.js";
 import { fontFacesCss, themeCss } from "./theme.js";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -62,6 +63,7 @@ function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, I
   });
   const levels = exportLevels(depths, titleLevel);
   let next = 0;
+  let openSpans = 0;
   const marked = new Marked({
     gfm: true,
     renderer: {
@@ -84,7 +86,17 @@ function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, I
         return renderShot(info, text, pages, L);
       },
       // HTML colado no texto sai como texto: o manual exportado não roda código de ninguém.
+      // Só a cor do texto passa, e só com um nome da paleta (ver textColors.ts).
       html({ text }: Tokens.HTML | Tokens.Tag) {
+        const color = colorSpanOpen(text);
+        if (color) {
+          openSpans++;
+          return `<span data-color="${color}">`;
+        }
+        if (text === "</span>" && openSpans > 0) {
+          openSpans--;
+          return text;
+        }
         return esc(text);
       },
     },
@@ -203,6 +215,9 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .legend{display:grid;gap:4px;margin-top:8px;font-size:15px}
 .legend .n{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:6px;border-radius:50%;background:var(--anotacao);color:#fff;font:600 11px var(--mono);vertical-align:1px}
 .missing{color:#c8411f;font-style:italic}
+${Object.entries(TEXT_COLORS)
+  .map(([name, hex]) => `[data-color="${name}"]{color:${hex}}`)
+  .join("")}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .colophon{margin-top:64px;padding-top:16px;border-top:1px solid var(--linha);color:var(--grafite);font-size:13px}
 @media (max-width:800px){.layout{display:block}.toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--linha)}main{padding:24px 20px 64px}}

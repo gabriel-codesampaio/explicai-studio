@@ -2,7 +2,9 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { contrastWithWhite } from "../src/core/export/color.js";
 import { imageSize } from "../src/core/export/imageSize.js";
+import { TEXT_COLORS } from "../src/core/export/textColors.js";
 import {
   addPage,
   createManual,
@@ -201,4 +203,28 @@ it("manual em inglês sai com os textos da exportação em inglês", async () =>
   const html = await readFile(path.join(en.dir, (await exportManual(en.dir, "html")).file), "utf8");
   expect(html).toContain('<nav class="toc" aria-label="Contents">');
   expect(html).toContain("Manual made with Explicaí Studio.");
+});
+
+describe("exportação: cor do texto", () => {
+  const body =
+    'Clique em <span data-color="red">**Excluir**</span>, <span data-color="hotpink">rosa</span> e <span style="x">solto</span>.';
+
+  it("HTML: só o span com cor da paleta passa, com contraste AA no branco; o resto continua escapado", async () => {
+    await addPage(dir, { title: "Cores", body });
+    const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    expect(html).toContain('<span data-color="red"><strong>Excluir</strong></span>');
+    expect(html).toContain("&lt;span data-color=&quot;hotpink&quot;&gt;");
+    expect(html).toContain("&lt;span style=&quot;x&quot;&gt;");
+    for (const [name, hex] of Object.entries(TEXT_COLORS)) {
+      expect(html).toContain(`[data-color="${name}"]{color:${hex}}`);
+      expect(contrastWithWhite(hex)).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it("Markdown: sai só o texto, sem o span", async () => {
+    await addPage(dir, { title: "Cores", body });
+    const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
+    expect(md).toContain("Clique em **Excluir**,");
+    expect(md).not.toContain('data-color="red"');
+  });
 });

@@ -3,8 +3,11 @@ import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, type ImageInfo } from "./refs.js";
+import { TEXT_COLORS } from "./textColors.js";
 
 const IMAGE_LINE = /!\[([^\]]*)\]\(([^)\s]+)\)/g;
+/** Cor do texto: no Markdown para IA fica só o texto. */
+const COLOR_SPAN = /<span data-color="([a-z]+)">([\s\S]*?)<\/span>/g;
 const PAGE_LINK = /\]\((?:\.\/)?([^/)#\s]+\.md)(#[^)\s]*)?\)/g;
 
 /**
@@ -21,6 +24,7 @@ export function renderMarkdown(collected: Collected, images: Map<string, ImageIn
   const sections = pages.map((page) => {
     const level = Math.min(page.depth + 2, 6);
     const body = shiftHeadings(page.body, level)
+      .replace(COLOR_SPAN, (all, name: string, text: string) => (Object.hasOwn(TEXT_COLORS, name) ? text : all))
       .replace(PAGE_LINK, (all, file: string, hash: string | undefined) => {
         const target = pages.find((p) => p.fileName === decodeURI(file));
         return target ? `](#${hash ? hash.slice(1) : anchor(target)})` : all;
