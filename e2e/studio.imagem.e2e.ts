@@ -278,17 +278,25 @@ test.describe("edição", () => {
     await expect(images(page)).toHaveCount(1);
   });
 
-  test("copiar a imagem e colar em outra página usa o mesmo arquivo", async ({ page, request, context }) => {
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  test("copiar a imagem e colar em outra página usa o mesmo arquivo", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Copiar");
     const outra = await (await request.post(`/api/manuals/${slug}/pages`, { data: { title: "Outra" } })).json();
     await page.goto(`/#/${slug}/${id}`);
     await selectImageByKeyboard(page);
-    await page.keyboard.press("Control+c");
+    // Evento sintético com um DataTransfer da própria página: a área de transferência do sistema é de todos os processos e
+    // qualquer outra cópia entre o Ctrl+C e o Ctrl+V (outro Chrome, outra execução) trocava o conteúdo.
+    await editor(page).evaluate((el) => {
+      const dt = new DataTransfer();
+      (window as unknown as { __copiado: DataTransfer }).__copiado = dt;
+      el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
+    });
     await page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: "Outra", exact: true }).click();
     await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Outra");
     await editor(page).click();
-    await page.keyboard.press("Control+v");
+    await editor(page).evaluate((el) => {
+      const dt = (window as unknown as { __copiado: DataTransfer }).__copiado;
+      el.dispatchEvent(new ClipboardEvent("paste", { clipboardData: dt, bubbles: true, cancelable: true }));
+    });
     await expect(images(page)).toHaveCount(1);
     await saved(page);
     expect(await pageBody(request, slug, outra.id)).toContain("../assets/tela.png");
