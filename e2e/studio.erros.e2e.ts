@@ -1,3 +1,4 @@
+// Roda depois de studio.e2e.ts, cujo primeiro teste espera a pasta de manuais vazia.
 import { type APIRequestContext, expect, test } from "@playwright/test";
 
 async function setup(request: APIRequestContext, title: string, pages: string[] = []) {
