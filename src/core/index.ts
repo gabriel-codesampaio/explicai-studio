@@ -1,5 +1,6 @@
 export { emptyAnnotations, parseAnnotations } from "./annotations.js";
 export { cleanUnusedAssets, findUnusedAssets, readAnnotations, saveAsset, writeAnnotations } from "./assets.js";
+export { ExplicaiError } from "./errors.js";
 export { FONTS, FONTS_DIR, type FontSpec, fontFiles } from "./export/fonts.js";
 export {
   EXPORT_DIR,

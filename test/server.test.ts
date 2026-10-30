@@ -219,6 +219,8 @@ describe("API de exportação", () => {
     expect((await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: "#7a3fc4" }))).status).toBe(200);
     expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({ accent: "#7a3fc4" });
     expect((await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: "roxo" }))).status).toBe(400);
+    const low = await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: "#ffd43b" }));
+    expect(await low.json()).toMatchObject({ code: "low-contrast", params: { label: "destaque", min: 4.5 } });
     await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: null }));
     expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({});
   });
