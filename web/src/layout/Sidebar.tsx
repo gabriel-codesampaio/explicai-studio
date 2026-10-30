@@ -1,16 +1,13 @@
 import { PanelLeftClose, Plus, Search } from "lucide-react";
 import { Brand } from "@/components/Brand";
-import { ExportDialog } from "@/features/export/ExportDialog";
-import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
-import { TrashPanel } from "@/features/pages/TrashPanel";
-import { AppearancePanel } from "@/features/settings/AppearancePanel";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { shiftTarget } from "@/lib/tree";
+import { MoreMenu } from "./MoreMenu";
 
 interface Props {
   /** Recolhe a coluna (tela larga) ou fecha a gaveta (tela estreita). */
@@ -58,7 +55,6 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
           onCreate={() => studio.setCreatingManual(true)}
         />
       )}
-      {manual && manual.pages.length > 0 && <ExportDialog />}
 
       {manual && (
         <nav aria-label="Páginas do manual" className="grid gap-1">
@@ -100,13 +96,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
         </nav>
       )}
 
-      <div className="mt-auto flex flex-wrap gap-1 border-t border-border pt-3">
-        {manual && (
-          <TrashPanel slug={manual.slug} onRestore={(trashId, pageId) => studio.restorePage(manual.slug, trashId, pageId)} />
-        )}
-        <AppearancePanel />
-        <ShortcutsDialog />
-      </div>
+      <MoreMenu />
     </aside>
   );
 }

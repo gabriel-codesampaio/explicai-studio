@@ -1,5 +1,4 @@
-import { Keyboard } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { t } from "@/lib/i18n";
 
 /** Mude aqui quando um atalho novo entrar no Studio: esta lista é a única ajuda de teclado. */
@@ -33,18 +32,10 @@ const GROUPS: { title: string; keys: [string, string][] }[] = [
   },
 ];
 
-/** Botão "Atalhos" da barra lateral: lista as teclas do Studio, agrupadas pelo que a pessoa está fazendo. */
-export function ShortcutsDialog() {
+/** Painel "Atalhos" (aberto pelo menu "⋯" da barra lateral): lista as teclas do Studio, agrupadas pelo que a pessoa está fazendo. */
+export function ShortcutsDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-        >
-          <Keyboard className="size-4" aria-hidden /> {t("Atalhos")}
-        </button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Atalhos de teclado")}</DialogTitle>

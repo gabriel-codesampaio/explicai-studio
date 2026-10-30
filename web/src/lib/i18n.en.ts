@@ -131,6 +131,7 @@ export const EN: Record<string, string> = {
   "Link para uma página ou endereço": "Link to a page or address",
   Lista: "List",
   Lixeira: "Trash",
+  "Mais opções": "More options",
   "Lixeira deste manual": "Trash for this manual",
   "Mais ações para {nome}": "More actions for {nome}",
   Manual: "Manual",
