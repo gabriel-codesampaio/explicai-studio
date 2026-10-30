@@ -336,3 +336,26 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo me
     await expect(more).toBeFocused();
   }
 });
+
+test("tela estreita: painéis do ⋯ abrem sobre a gaveta, Esc fecha só o painel e o foco volta ao ⋯", async ({ page, request }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  const { slug } = await setup(request, "Manual Gaveta", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
+  const drawer = page.getByRole("dialog", { name: "Páginas do manual" });
+  await expect(drawer).toBeVisible();
+  const more = drawer.getByRole("button", { name: "Mais opções" });
+  for (const [item, title] of [
+    ["Lixeira", "Lixeira deste manual"],
+    ["Aparência", "Aparência"],
+    ["Atalhos", "Atalhos de teclado"],
+  ] as const) {
+    await more.click();
+    await page.getByRole("menuitem", { name: item }).click();
+    await expect(page.getByRole("dialog", { name: title })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: title })).toHaveCount(0);
+    await expect(drawer).toBeVisible();
+    await expect(more).toBeFocused();
+  }
+});
