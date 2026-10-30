@@ -41,6 +41,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-061](fechados/T-061-testes-da-web.md) | Testes unitários da web (autosave, rota, marcações, teclado) | P2 | feito | d03dde3 |
 | [T-059](fechados/T-059-deps-de-teste.md) | Dependências de teste (cobertura, Testing Library, axe) | P2 | feito | 40b3e87 |
 | [T-047](fechados/T-047-telas-de-erro.md) | Telas de erro: servidor fora, rota inexistente, erro inesperado | P1 | feito | 83dbbb0 |
 | [T-046](fechados/T-046-titulo-corrompido.md) | Recusar corpo não UTF-8 que gravava U+FFFD no título | P1 | feito | a29b735 |
