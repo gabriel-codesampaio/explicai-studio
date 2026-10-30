@@ -71,7 +71,11 @@ Observar: tempo entre o clique e o cursor pronto no editor, com e sem transiçã
 4. Aceitar que Firefox antigo e Safari antigo fiquem sem transição no Studio? → Sim, o fallback é a troca de hoje.
 5. Aceitar nenhuma dependência nova (sem Motion, sem react-transition-group)? → Sim.
 
-## Rascunho de spec (opção A)
+## Decisão tomada (2026-10-30)
+Animação só no Studio. O manual exportado fica sem rolagem suave (opção A descartada). Vale a opção B sem a parte do export, com o teste de tempo como portão. → [T-031](../tickets/T-031-transicao-no-studio.md)
+Decisões 2, 4 e 5 seguem a recomendação até a pessoa dizer o contrário.
+
+## Rascunho de spec (opção A, descartada)
 - **Escopo:** em `src/core/export/html.ts`, dentro do CSS embutido, `@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}`. Testar o HTML gerado. Registrar a regra de movimento em `docs/marca-resumo.md` (se aprovado).
 - **Critérios de aceite:**
   - O HTML exportado contém a regra só dentro de `no-preference`.
