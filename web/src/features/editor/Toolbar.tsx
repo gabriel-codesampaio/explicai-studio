@@ -56,7 +56,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
         className="flex items-center gap-0.5 overflow-x-auto px-2 py-2 [scrollbar-width:none]"
       >
         <BlockTypeMenu editor={editor} pickImage={onPickImage} />
-        <Btn icon={ImageIcon} label={t("Colar print")} shortcut="Ctrl+V" showLabel onClick={onPickImage} />
+        <Btn icon={ImageIcon} label={t("Imagem")} hint={t("Colar print")} shortcut="Ctrl+V" showLabel onClick={onPickImage} />
         <Divider />
         <Btn icon={Bold} label={t("Negrito")} shortcut="Ctrl+B" active={s.bold} onClick={() => chain().toggleBold().run()} />
         <Btn
