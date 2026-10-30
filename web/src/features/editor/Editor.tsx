@@ -19,6 +19,7 @@ import { IMAGE_TYPES, insertImages } from "./imageUpload";
 import { LinkPopover } from "./LinkPopover";
 import { SelectionMenu } from "./SelectionMenu";
 import { SlashCommand } from "./slash/slashCommand";
+import { TableControls } from "./TableControls";
 import { Toolbar } from "./Toolbar";
 
 interface Props {
@@ -38,6 +39,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
   const latest = useRef({ slug, onChange, onError });
   latest.current = { slug, onChange, onError };
   const fileInput = useRef<HTMLInputElement>(null);
+  const contentBox = useRef<HTMLDivElement>(null);
   const pickImage = () => fileInput.current?.click();
   const manualTheme = useStudioContext().manual?.theme;
   const fonts = useFontPreview(true);
@@ -101,7 +103,10 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
           upload(editor, files, editor.state.selection.anchor);
         }}
       />
-      <EditorContent editor={editor} className="editor-content" style={manualFontStyle(fonts, manualTheme)} />
+      <div ref={contentBox} className="relative">
+        <EditorContent editor={editor} className="editor-content" style={manualFontStyle(fonts, manualTheme)} />
+        <TableControls editor={editor} host={contentBox} />
+      </div>
       <SelectionMenu editor={editor} pickImage={pickImage} onEditLink={() => setLinkOpen(true)} />
       <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} pages={pages} />
       <ImagePopover editor={editor} onAnnotate={(src, alt) => setAnnotating({ src, alt })} />
