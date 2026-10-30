@@ -552,4 +552,41 @@ test("botão Exportar manual em 1280 px: último à direita, altura de botão pr
     ),
   );
   expect(bg.filter((c) => c !== "rgba(0, 0, 0, 0)")).toHaveLength(1);
+test.describe("toque", () => {
+  test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
+
+  test("alvos de toque: itens do menu Ajustes e botões da barra têm 44 px de altura", async ({ page, request }) => {
+    const { slug } = await setup(request, "Manual Toque", ["Início"]);
+    await page.goto(`/#/${slug}`);
+    // offsetHeight ignora a escala da animação de abertura do menu.
+    const height = (loc: ReturnType<Page["locator"]>) => loc.evaluate((el) => (el as HTMLElement).offsetHeight);
+    expect(await height(page.getByRole("button", { name: "Colar print" }))).toBeGreaterThanOrEqual(44);
+    expect(await height(page.getByRole("button", { name: /Tipo de bloco/ }))).toBeGreaterThanOrEqual(44);
+    expect(await height(page.getByRole("button", { name: "Negrito" }))).toBeGreaterThanOrEqual(44);
+    await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
+    await page.getByRole("dialog", { name: "Páginas do manual" }).getByRole("button", { name: "Ajustes" }).click();
+    for (const name of ["Lixeira", "Aparência", "Atalhos"])
+      expect(await height(page.getByRole("menuitem", { name }))).toBeGreaterThanOrEqual(44);
+  });
+});
+
+test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3:1)", async ({ page, request }) => {
+  await page.addInitScript(() => localStorage.setItem("explicai:aparencia", JSON.stringify({ mode: "dark" })));
+  const { slug } = await setup(request, "Manual Escuro", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByText("Cores do manual").click();
+  const ratio = await dialog.getByLabel("Cor do texto", { exact: true }).evaluate((swatch) => {
+    const rgb = (el: Element, prop: "borderTopColor" | "backgroundColor") =>
+      (getComputedStyle(el)[prop].match(/\d+/g) ?? []).slice(0, 3).map(Number);
+    const l = (c: number[]) => {
+      const [r = 0, g = 0, b = 0] = c.map((v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const a = l(rgb(swatch, "borderTopColor"));
+    const b = l(rgb(swatch.closest("[role=dialog]") as Element, "backgroundColor"));
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  });
+  expect(ratio).toBeGreaterThanOrEqual(3);
 });

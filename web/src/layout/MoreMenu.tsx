@@ -9,6 +9,8 @@ import { type Mode, readAppearance } from "@/lib/theme";
 
 type Panel = "trash" | "appearance" | "shortcuts";
 
+/** Alvo de toque de 44 px em tela de toque, como a linha "Ajustes". */
+const TOUCH = "[@media(pointer:coarse)]:min-h-11";
 const MODE_LABELS: Record<Mode, string> = { light: "Claro", dark: "Escuro", system: "Sistema" };
 
 /** Menu "Ajustes" do rodapé da barra lateral: Lixeira, Aparência e Atalhos, cada um abrindo seu painel. */
@@ -32,12 +34,18 @@ export function MoreMenu() {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="top" align="start" className="w-(--radix-dropdown-menu-trigger-width)">
-          {manual && <DropdownMenuItem onSelect={() => setPanel("trash")}>{t("Lixeira")}</DropdownMenuItem>}
-          <DropdownMenuItem onSelect={() => setPanel("appearance")}>
+          {manual && (
+            <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("trash")}>
+              {t("Lixeira")}
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("appearance")}>
             {t("Aparência")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{t(MODE_LABELS[mode])}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setPanel("shortcuts")}>{t("Atalhos")}</DropdownMenuItem>
+          <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("shortcuts")}>
+            {t("Atalhos")}
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {manual && (
