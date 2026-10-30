@@ -1,8 +1,9 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { contrastWithWhite } from "../src/core/export/color.js";
+import { FONTS, fontFiles, MONO } from "../src/core/export/fonts.js";
 import { themeCss } from "../src/core/export/theme.js";
 import { addPage, createManual, exportManual, readManual, setManualTheme } from "../src/core/index.js";
 
@@ -63,5 +64,46 @@ describe("tema do manual", () => {
     expect(html).toContain("--t-page:#000");
     expect(html).toContain("--tinta:#151a33");
     expect(html.split(":root{")).toHaveLength(2); // só o :root da marca, sem sobreposição do tema
+  });
+
+  it("fontes: a lista empacotada existe em fonts/ com a licença OFL", async () => {
+    const dirFonts = new URL("../fonts/", import.meta.url);
+    for (const f of [...FONTS, MONO]) {
+      for (const { file } of fontFiles(f)) expect((await readFile(new URL(file, dirFonts))).length).toBeGreaterThan(1000);
+      expect(await readFile(new URL(`OFL-${f.id}.txt`, dirFonts), "utf8")).toMatch(/Open Font License, Version 1.1/i);
+    }
+  });
+
+  it("fontes: recusa nome fora da lista e fonte sem itálico no texto; mantém as outras escolhas", async () => {
+    await expect(setManualTheme(dir, { fonts: { headings: "comic-sans" } })).rejects.toThrow(/Fonte fora da lista: comic-sans/);
+    await expect(setManualTheme(dir, { fonts: { text: "montserrat" } })).rejects.toThrow(/Fonte fora da lista/);
+    await setManualTheme(dir, { accent: "#0f7a55", fonts: { text: "lora" } });
+    await setManualTheme(dir, { fonts: { headings: "montserrat" } });
+    expect((await readManual(dir)).theme).toEqual({ accent: "#0f7a55", fonts: { text: "lora", headings: "montserrat" } });
+    await setManualTheme(dir, { fonts: { text: null, headings: null } });
+    expect((await readManual(dir)).theme).toEqual({ accent: "#0f7a55" });
+  });
+
+  it("fontes: o export copia só as escolhidas, mais a de código, e declara só elas", async () => {
+    await addPage(dir, { title: "A", body: "Texto" });
+    await setManualTheme(dir, { fonts: { text: "lora", headings: "playfair-display" } });
+    const result = await exportManual(dir, "html");
+    const html = await readFile(path.join(dir, result.file), "utf8");
+    expect(html).toContain('font-family:"Lora"');
+    expect(html).toContain('--texto:"Lora",Georgia');
+    expect(html).not.toContain("url(fonts/atkinson");
+    expect(html).not.toContain('font-family:"Archivo"');
+    const files = (await readdir(path.join(dir, "exportacao/html/fonts"))).sort();
+    expect(files).toEqual(
+      [
+        "OFL-jetbrains-mono.txt",
+        "OFL-lora.txt",
+        "OFL-playfair-display.txt",
+        "jetbrains-mono-latin-wght-normal.woff2",
+        "lora-latin-wght-italic.woff2",
+        "lora-latin-wght-normal.woff2",
+        "playfair-display-latin-wght-normal.woff2",
+      ].sort(),
+    );
   });
 });

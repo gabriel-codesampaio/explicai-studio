@@ -1,14 +1,16 @@
-import { copyFile, mkdir, readdir, rm } from "node:fs/promises";
+import { copyFile, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { atomicWrite, relativePosix, resolveInside } from "../fs.js";
 import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
+import type { ManualTheme } from "../types.js";
 import { type CollectOptions, collectPages } from "./collect.js";
+import { fontFiles } from "./fonts.js";
 import { renderHtml } from "./html.js";
 import { renderMarkdown } from "./markdown.js";
 import { printPdf } from "./pdf.js";
 import { type ImageInfo, loadImages } from "./refs.js";
-import { mergeTheme, type ThemePatch } from "./theme.js";
+import { mergeTheme, type ThemePatch, usedFonts } from "./theme.js";
 
 export { findBrowser } from "./pdf.js";
 
@@ -56,7 +58,7 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
 
   const out = await freshDir(path.join(root, "html"));
   await copyImages(dir, images, out);
-  await copyFonts(out);
+  await copyFonts(out, collected.meta.theme);
   const html = path.join(out, "index.html");
   await atomicWrite(html, renderHtml(collected, images));
   if (format === "html") return result(html);
@@ -91,8 +93,12 @@ async function copyImages(dir: string, images: Map<string, ImageInfo>, out: stri
   for (const asset of images.keys()) await copyFile(resolveInside(dir, asset), path.join(out, asset));
 }
 
-/** As fontes vão com o HTML (e a licença OFL junto), para o manual abrir igual sem internet. */
-async function copyFonts(out: string): Promise<void> {
+/** Só as fontes que o tema usa vão com o HTML (e a licença OFL de cada uma), para o manual abrir igual sem internet. */
+async function copyFonts(out: string, theme: ManualTheme | undefined): Promise<void> {
   await mkdir(path.join(out, "fonts"), { recursive: true });
-  for (const name of await readdir(FONTS_DIR)) await copyFile(new URL(name, FONTS_DIR), path.join(out, "fonts", name));
+  for (const font of usedFonts(theme)) {
+    for (const name of [...fontFiles(font).map((f) => f.file), `OFL-${font.id}.txt`]) {
+      await copyFile(new URL(name, FONTS_DIR), path.join(out, "fonts", name));
+    }
+  }
 }

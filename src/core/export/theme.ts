@@ -1,5 +1,15 @@
 import { HEADING_SLOTS, type HeadingSlot, type ManualTheme } from "../types.js";
 import { contrast, contrastWithWhite, HEX, muted, overWhite, withAlpha } from "./color.js";
+import {
+  DEFAULT_HEADINGS_FONT,
+  DEFAULT_TEXT_FONT,
+  FONTS,
+  type FontSpec,
+  fontById,
+  fontFaceCss,
+  fontStack,
+  MONO,
+} from "./fonts.js";
 
 /** Contraste mínimo do texto com o fundo (WCAG AA). */
 export const MIN_CONTRAST = 4.5;
@@ -22,6 +32,7 @@ const SLOT_NAMES: Record<HeadingSlot, string> = {
 /** Mudança no tema: campo ausente fica como está, `null` apaga o campo. */
 export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string | null>> & {
   headings?: Partial<Record<HeadingSlot, string | null>> | null;
+  fonts?: Partial<Record<"text" | "headings", string | null>> | null;
 };
 
 const num = (n: number) => n.toFixed(1).replace(".", ",");
@@ -42,9 +53,27 @@ function readable(hex: string, label: string): string {
   return hex;
 }
 
+/** A fonte da lista com esse nome. O texto precisa de uma com itálico empacotado. */
+function fontOf(id: unknown, role: "text" | "headings"): FontSpec {
+  const font = typeof id === "string" ? fontById(id) : undefined;
+  const valid = FONTS.filter((f) => role === "headings" || f.italic);
+  if (!font || !valid.includes(font)) {
+    throw new Error(`Fonte fora da lista: ${String(id)}. Use uma destas: ${valid.map((f) => f.id).join(", ")}.`);
+  }
+  return font;
+}
+
+/** As fontes que o tema usa (as da marca, onde não houve escolha). */
+export function themeFonts(theme: ManualTheme | undefined): { text: FontSpec; headings: FontSpec } {
+  return {
+    text: fontById(theme?.fonts?.text ?? DEFAULT_TEXT_FONT) as FontSpec,
+    headings: fontById(theme?.fonts?.headings ?? DEFAULT_HEADINGS_FONT) as FontSpec,
+  };
+}
+
 /** Aplica `patch` sobre o tema atual e confere tudo. Devolve o tema novo; o que não mudou continua igual. */
 export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch): ManualTheme {
-  const next: ManualTheme = { ...current, headings: { ...current?.headings } };
+  const next: ManualTheme = { ...current, headings: { ...current?.headings }, fonts: { ...current?.fonts } };
   const set = (key: "accent" | "text" | "highlight", label: string, check: boolean) => {
     if (patch[key] === undefined) return;
     const hex = hexOf(patch[key], label);
@@ -65,6 +94,15 @@ export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch):
       else if (next.headings) next.headings[slot] = readable(hex, SLOT_NAMES[slot]);
     }
   }
+  if (patch.fonts === null) next.fonts = {};
+  else if (patch.fonts) {
+    for (const role of ["text", "headings"] as const) {
+      const id = patch.fonts[role];
+      if (id === undefined) continue;
+      if (id === null) delete next.fonts?.[role];
+      else if (next.fonts) next.fonts[role] = fontOf(id, role).id;
+    }
+  }
   // O realce é fundo: o texto por cima precisa continuar legível.
   if (next.highlight) {
     const c = contrast(overWhite(next.highlight, HIGHLIGHT_ALPHA), next.text ?? DEFAULT_TEXT);
@@ -75,6 +113,7 @@ export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch):
     }
   }
   if (!Object.keys(next.headings ?? {}).length) delete next.headings;
+  if (!Object.keys(next.fonts ?? {}).length) delete next.fonts;
   return next;
 }
 
@@ -93,5 +132,17 @@ export function themeCss(theme: ManualTheme | undefined): string {
     );
   }
   for (const slot of HEADING_SLOTS) if (theme.headings?.[slot]) v.push(`--t-${slot}:${theme.headings[slot]}`);
+  const fonts = themeFonts(theme);
+  if (theme.fonts?.text) v.push(`--texto:${fontStack(fonts.text)}`);
+  if (theme.fonts?.headings) v.push(`--display:${fontStack(fonts.headings)}`);
   return v.length ? `:root{${v.join(";")}}` : "";
 }
+
+/** As fontes que vão no export: texto, títulos (sem repetir) e a de código. */
+export function usedFonts(theme: ManualTheme | undefined): FontSpec[] {
+  const { text, headings } = themeFonts(theme);
+  return [...new Set([text, headings, MONO])];
+}
+
+/** `@font-face` das fontes usadas, no mesmo formato do export. */
+export const fontFacesCss = (theme: ManualTheme | undefined): string => usedFonts(theme).map(fontFaceCss).join("\n");

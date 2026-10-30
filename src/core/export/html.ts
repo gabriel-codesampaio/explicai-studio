@@ -4,7 +4,7 @@ import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
-import { themeCss } from "./theme.js";
+import { fontFacesCss, themeCss } from "./theme.js";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
@@ -28,7 +28,8 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
-<style>${CSS}${themeCss(meta.theme)}</style>
+<style>${fontFacesCss(meta.theme)}
+${CSS}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
@@ -152,11 +153,6 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
 }
 
 const CSS = `
-@font-face{font-family:"Archivo";src:url(fonts/archivo-latin-wght-normal.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:block}
-@font-face{font-family:"JetBrains Mono";src:url(fonts/jetbrains-mono-latin-wght-normal.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:block}
-@font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal;font-display:block}
-@font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:block}
-@font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block}
 :root{--accent:#2b4fe0;--anotacao:#2b4fe0;--anotacao-fundo:rgba(43,79,224,.08);--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--marca-halo:rgba(255,212,59,.3);--t-cover:#000;--t-page:#000;--t-h1:#000;--t-h2:#000;--t-h3:#000;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
 --texto:"Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif;--display:"Archivo","Arial Narrow",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
 *{box-sizing:border-box}

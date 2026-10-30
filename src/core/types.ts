@@ -39,6 +39,8 @@ export interface ManualTheme {
   highlight?: string;
   /** Cor de cada tipo de título. Sem escolha, saem pretos. */
   headings?: Partial<Record<HeadingSlot, string>>;
+  /** Fontes do manual, pelo nome da lista de `export/fonts.ts` (`inter`, `lora`…). Sem escolha: Atkinson e Archivo. */
+  fonts?: { text?: string; headings?: string };
 }
 
 export interface Manual {
