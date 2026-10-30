@@ -76,7 +76,7 @@ export function ExportDialog() {
         </DialogHeader>
 
         <fieldset className="grid gap-2">
-          <legend className="mb-2 text-sm font-bold">{t("Formato")}</legend>
+          <legend className="mb-2 rotulo">{t("Formato")}</legend>
           {FORMATS.map(({ id, label, hint, Icon }) => (
             <label
               key={id}
@@ -122,7 +122,7 @@ export function ExportDialog() {
         </label>
 
         <fieldset>
-          <legend className="mb-2 text-sm font-bold">{t("Cor do manual")}</legend>
+          <legend className="mb-2 rotulo">{t("Cor do manual")}</legend>
           <div className="flex flex-wrap gap-1.5">
             {ACCENTS.map((a) => (
               <button

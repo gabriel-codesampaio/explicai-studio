@@ -52,7 +52,7 @@ export function ShortcutsDialog() {
         </DialogHeader>
         {GROUPS.map((group) => (
           <section key={group.title} className="grid gap-1.5">
-            <h3 className="text-sm font-bold">{t(group.title)}</h3>
+            <h3 className="rotulo">{t(group.title)}</h3>
             <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
               {group.keys.map(([key, what]) => (
                 <div key={key} className="contents">

@@ -52,7 +52,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
     <div className="grid content-start gap-4">
       {annotations.markers.length > 0 && (
         <section className="grid gap-1.5">
-          <h3 className="text-sm font-bold">{t("Legenda")}</h3>
+          <h3 className="rotulo">{t("Legenda")}</h3>
           {[...annotations.markers]
             .sort((a, b) => a.n - b.n)
             .map((m) => (
@@ -76,7 +76,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
 
       {annotations.hotspots.length > 0 && (
         <section className="grid gap-1.5">
-          <h3 className="text-sm font-bold">{t("Áreas clicáveis")}</h3>
+          <h3 className="rotulo">{t("Áreas clicáveis")}</h3>
           {annotations.hotspots.map((h, i) => (
             <div key={h.id} className={cn(row(h.id === selectedId), "flex-wrap")} onPointerDown={() => onSelect(h.id)}>
               <Link2 className="size-4 shrink-0 text-primary" aria-hidden />
@@ -115,7 +115,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
 
       {annotations.highlights.length + annotations.arrows.length > 0 && (
         <section className="grid gap-1.5">
-          <h3 className="text-sm font-bold">{t("Destaques e setas")}</h3>
+          <h3 className="rotulo">{t("Destaques e setas")}</h3>
           {[
             ...annotations.highlights.map((h, i) => ({ id: h.id, label: t("Destaque {n}", { n: i + 1 }), Icon: Highlighter })),
             ...annotations.arrows.map((a, i) => ({ id: a.id, label: t("Seta {n}", { n: i + 1 }), Icon: ArrowUpRight })),

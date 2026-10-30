@@ -38,7 +38,7 @@ export function AppearancePanel() {
       </PopoverTrigger>
       <PopoverContent side="right" align="end" className="grid w-64 gap-4 p-3">
         <fieldset>
-          <legend className="mb-2 text-sm font-bold">{t("Tema")}</legend>
+          <legend className="mb-2 rotulo">{t("Tema")}</legend>
           <div className="grid grid-cols-3 gap-1 rounded-md bg-muted p-1">
             {MODES.map(({ id, label, Icon }) => (
               <button
@@ -54,7 +54,7 @@ export function AppearancePanel() {
           </div>
         </fieldset>
         <fieldset>
-          <legend className="mb-2 text-sm font-bold">{t("Idioma da interface")}</legend>
+          <legend className="mb-2 rotulo">{t("Idioma da interface")}</legend>
           <div className="grid grid-cols-2 gap-1 rounded-md bg-muted p-1">
             {LANGS.map(({ id, label }) => (
               <button
