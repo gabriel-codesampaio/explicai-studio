@@ -55,8 +55,8 @@ function ExportDone({ result, formatLabel }: { result: ExportResult; formatLabel
         <code className="font-mono text-xs break-all">{result.file}</code>
       </p>
       {result.warnings.length > 0 && (
-        <div className="grid gap-1 border-l-2 border-destructive pl-3">
-          <p className="font-bold text-destructive">{tn(result.warnings.length, "Atenção: {n} aviso", "Atenção: {n} avisos")}</p>
+        <div className="grid gap-1 rounded-md border border-destructive/40 bg-destructive/10 p-2">
+          <p className="font-bold">{tn(result.warnings.length, "Atenção: {n} aviso", "Atenção: {n} avisos")}</p>
           <ul className="list-disc pl-5">
             {result.warnings.map((w) => (
               <li key={w}>{t("Ficou de fora: {motivo}", { motivo: w })}</li>
