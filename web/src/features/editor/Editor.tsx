@@ -13,6 +13,7 @@ import { contentExtensions } from "./extensions";
 import { ImagePopover } from "./ImagePopover";
 import { IMAGE_TYPES, insertImages } from "./imageUpload";
 import { LinkPopover } from "./LinkPopover";
+import { SelectionMenu } from "./SelectionMenu";
 import { SlashCommand } from "./slash/slashCommand";
 import { Toolbar } from "./Toolbar";
 
@@ -89,6 +90,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
         }}
       />
       <EditorContent editor={editor} className="editor-content" />
+      <SelectionMenu editor={editor} pickImage={pickImage} onEditLink={() => setLinkOpen(true)} />
       <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} pages={pages} />
       <ImagePopover editor={editor} onAnnotate={(src, alt) => setAnnotating({ src, alt })} />
       {annotating && assetPathFromSrc(annotating.src) && (

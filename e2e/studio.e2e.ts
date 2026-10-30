@@ -113,6 +113,33 @@ test('barra: "Colar print" mostra o Ctrl+V, abre o seletor de arquivo e a dica d
   await expect(editor(page).getByRole("img", { name: "tela" })).toBeVisible();
 });
 
+test("barra da seleção: selecionar texto abre a barra, pinta de vermelho, põe negrito e a cor fica depois de recarregar", async ({
+  page,
+  request,
+}) => {
+  const { slug } = await setup(request, "Manual Cor", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.keyboard.type("Clique em Excluir");
+  await page.keyboard.press("Shift+Control+ArrowLeft");
+
+  const menu = page.getByRole("toolbar", { name: "Formatar seleção" });
+  await expect(menu).toBeVisible();
+  await menu.getByRole("button", { name: "Cor do texto" }).click();
+  await page.getByRole("group", { name: "Cor do texto" }).getByRole("button", { name: "Vermelho" }).click();
+  await menu.getByRole("button", { name: "Negrito" }).click();
+
+  const red = editor(page).locator('[data-color="red"]');
+  await expect(red).toHaveText("Excluir");
+  await expect(editor(page).locator("strong")).toHaveText("Excluir");
+  await expect(page.getByRole("status")).toContainText("Salvo às");
+
+  await page.reload();
+  await expect(editor(page).locator('[data-color="red"]')).toHaveText("Excluir");
+  await editor(page).click();
+  await expect(page.getByRole("toolbar", { name: "Formatar seleção" })).toBeHidden();
+});
+
 test("excluir página vai para a lixeira e Desfazer traz de volta", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Lixeira", ["Fica", "Sai"]);
   await page.goto(`/#/${slug}`);
