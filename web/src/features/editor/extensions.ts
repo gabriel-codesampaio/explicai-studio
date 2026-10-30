@@ -1,6 +1,7 @@
 import type { AnyExtension, JSONContent, MarkdownRendererHelpers, RenderContext } from "@tiptap/core";
 import Image from "@tiptap/extension-image";
 import { ListItem } from "@tiptap/extension-list";
+import Paragraph from "@tiptap/extension-paragraph";
 import { TableKit } from "@tiptap/extension-table";
 import { Placeholder } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
@@ -31,12 +32,25 @@ const StepListItem = ListItem.extend({
 });
 
 /**
+ * O Paragraph do Tiptap tira do parágrafo a imagem que está sozinha nele, o que a deixava inline na raiz
+ * do documento: o ProseMirror não consegue dividir ali e o Enter não fazia nada. Mantém o parágrafo em volta.
+ */
+const ImageSafeParagraph = Paragraph.extend({
+  parseMarkdown(token, h) {
+    const parsed = this.parent?.(token, h);
+    const list = Array.isArray(parsed) ? parsed : parsed ? [parsed] : [];
+    return list.map((n) => ("type" in n && n.type === "image" ? { type: "paragraph", content: [n] } : n));
+  },
+});
+
+/**
  * Extensões que definem o que o editor aceita e como vira Markdown. Usadas pelo editor e pelos testes.
  * O editor troca a imagem pela versão com marcações (`image`); os testes usam a comum, sem React.
  */
 export function contentExtensions(image: AnyExtension = Image) {
   return [
-    StarterKit.configure({ link: { openOnClick: false, autolink: true }, listItem: false }),
+    StarterKit.configure({ link: { openOnClick: false, autolink: true }, listItem: false, paragraph: false }),
+    ImageSafeParagraph,
     StepListItem,
     // No Markdown a imagem é inline (`![alt](src)` dentro de um parágrafo). Como bloco, ela se perdia
     // ao reabrir uma página com imagem dentro de um item de lista.

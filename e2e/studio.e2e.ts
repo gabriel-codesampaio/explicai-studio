@@ -50,6 +50,29 @@ test("menu / insere passos numerados", async ({ page, request }) => {
   await expect(editor(page).locator("ol li")).toHaveText("Abra o menu Clientes.");
 });
 
+test("Enter no texto cria parágrafo em página com texto, imagem e texto vindos da API", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Enter", []);
+  await request.post(`/api/manuals/${slug}/pages`, {
+    data: {
+      title: "Com imagem",
+      body: `Antes da tela.
+
+![Tela](../assets/tela.png)
+
+Depois da tela.`,
+    },
+  });
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Com imagem", exact: true }).click();
+  const paragraphs = editor(page).locator("p");
+  await expect(paragraphs).toHaveCount(3);
+  await editor(page).getByText("Depois da tela.").click();
+  await page.keyboard.press("End");
+  await page.keyboard.press("Enter");
+  await expect(paragraphs).toHaveCount(4);
+  await expect(editor(page).locator(".node-image")).toHaveCount(1);
+});
+
 test("imagem: envia, descreve, marca e a legenda aparece na página", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Imagem", ["Tela de clientes"]);
   await page.goto(`/#/${slug}`);

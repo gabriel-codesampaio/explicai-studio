@@ -81,3 +81,13 @@ describe("caminhos de imagem", () => {
     expect(toDiskMarkdown(toEditorMarkdown("m", md))).toBe(md);
   });
 });
+
+describe("Markdown do editor: imagem solta entre textos", () => {
+  it("texto, imagem e texto voltam inteiros, com a legenda", () => {
+    const md = "Antes.\n\n![Tela](../assets/tela.png)\n\nDepois.";
+    const out = expectStable(md);
+    expect(out).toContain("Antes.");
+    expect(out).toContain("![Tela](../assets/tela.png)");
+    expect(out).toContain("Depois.");
+  });
+});
