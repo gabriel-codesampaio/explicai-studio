@@ -99,8 +99,32 @@ export function flattenItems(items: TreeItem[]): TreeItem[] {
   return items.flatMap((i) => [i, ...flattenItems(i.children)]);
 }
 
+/**
+ * Número de cada página (1, 2, 2.1), a mesma regra do sumário exportado (`collectPages`): ordem da
+ * árvore e um nível por profundidade. Página com problema não entra e os filhos sobem para o lugar dela.
+ */
+export function numberPages(items: TreeItem[]): Map<string, string> {
+  const numbers = new Map<string, string>();
+  const walk = (nodes: TreeItem[], prefix: string, count: { n: number }) => {
+    for (const node of nodes) {
+      if (node.problem) {
+        walk(node.children, prefix, count);
+        continue;
+      }
+      count.n += 1;
+      const number = prefix ? `${prefix}.${count.n}` : String(count.n);
+      numbers.set(node.id, number);
+      walk(node.children, number, { n: 0 });
+    }
+  };
+  walk(items, "", { n: 0 });
+  return numbers;
+}
+
 export interface PageMatch {
   item: TreeItem;
+  /** Número da página na árvore; vazio se ela não entra na numeração. */
+  number: string;
   /** Títulos das páginas acima, para diferenciar "Editar" de Clientes de "Editar" de Fornecedores. */
   path: string[];
 }
@@ -112,9 +136,10 @@ export interface PageMatch {
 export function searchPages(items: TreeItem[], query: string): PageMatch[] {
   const q = fold(query);
   const all: PageMatch[] = [];
+  const numbers = numberPages(items);
   const walk = (nodes: TreeItem[], path: string[]) => {
     for (const item of nodes) {
-      all.push({ item, path });
+      all.push({ item, number: numbers.get(item.id) ?? "", path });
       walk(item.children, [...path, item.title || t("Sem título")]);
     }
   };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TreeItem } from "../src/lib/api";
-import { dropTarget, renameItem, searchPages, shiftTarget } from "../src/lib/tree";
+import { dropTarget, numberPages, renameItem, searchPages, shiftTarget } from "../src/lib/tree";
 
 const item = (id: string, children: TreeItem[] = []): TreeItem => ({
   id,
@@ -79,5 +79,34 @@ describe("busca de páginas (Ctrl+P)", () => {
 
   it("sem texto, lista todas na ordem da árvore", () => {
     expect(searchPages(tree, " ").map((m) => m.item.id)).toEqual(["clientes", "editar", "relatorios", "cad"]);
+  });
+});
+
+describe("numeração das páginas", () => {
+  it("numera como o sumário exportado: 1, 2, 2.1", () => {
+    const n = numberPages([item("a"), item("b", [item("b1"), item("b2", [item("b21")])]), item("c")]);
+    expect([...n]).toEqual([
+      ["a", "1"],
+      ["b", "2"],
+      ["b1", "2.1"],
+      ["b2", "2.2"],
+      ["b21", "2.2.1"],
+      ["c", "3"],
+    ]);
+  });
+
+  it("página com problema não ganha número e os filhos sobem para o lugar dela", () => {
+    const broken = { ...item("x", [item("x1")]), problem: "ilegível" };
+    const n = numberPages([item("a"), broken, item("c")]);
+    expect([...n]).toEqual([
+      ["a", "1"],
+      ["x1", "2"],
+      ["c", "3"],
+    ]);
+  });
+
+  it("a busca traz o número da página", () => {
+    const tree = [item("a"), item("b", [item("b1")])];
+    expect(searchPages(tree, "b1")[0]?.number).toBe("2.1");
   });
 });
