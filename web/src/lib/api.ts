@@ -30,12 +30,24 @@ export interface ManualTheme {
   text?: string;
   highlight?: string;
   headings?: Partial<Record<HeadingSlot, string>>;
+  fonts?: { text?: string; headings?: string };
 }
 
 /** Só os campos enviados mudam; `null` volta o campo ao padrão. */
 export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string | null>> & {
   headings?: Partial<Record<HeadingSlot, string | null>>;
+  fonts?: Partial<Record<"text" | "headings", string | null>>;
 };
+
+/** Fonte empacotada para o manual exportado. */
+export interface FontInfo {
+  id: string;
+  family: string;
+  kind: "sans" | "serif";
+  /** Tem itálico: só essas servem para o texto. */
+  italic: boolean;
+  files: { file: string; weight: string; style: "normal" | "italic" }[];
+}
 
 export interface ManualDetail extends ManualSummary {
   /** Cores do manual exportado; campo ausente = a da marca. */
@@ -136,6 +148,7 @@ export const api = {
   publishVersion: (slug: string, id: string, versionId: string | null) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/published`, send("PUT", { versionId })),
 
+  listFonts: () => call<FontInfo[]>("/api/fonts"),
   exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean) =>
     call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved })),
   setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),

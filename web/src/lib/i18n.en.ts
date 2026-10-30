@@ -258,4 +258,7 @@ export const EN: Record<string, string> = {
   "Capa, “Resultado:” e destaques nas imagens.": "Cover, “Result:” and highlights on images.",
   "Texto, títulos e destaque precisam de contraste de 4,5:1 com o branco para a leitura ficar nítida.":
     "Text, headings and accent need a 4.5:1 contrast with white so reading stays clear.",
+  "Fonte do texto": "Text font",
+  "Fonte dos títulos": "Heading font",
+  padrão: "default",
 };
