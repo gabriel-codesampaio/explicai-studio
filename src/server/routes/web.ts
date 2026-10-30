@@ -19,7 +19,14 @@ export const webRoutes: Route[] = [
       );
       // Só os arquivos com hash no nome (assets/) podem ficar em cache; o index.html muda a cada build.
       if (isFile && rest.startsWith("assets/")) return file(target, "max-age=31536000, immutable");
-      return file(isFile ? target : path.join(opts.webDir, "index.html"));
+      if (isFile) return file(target);
+      const index = path.join(opts.webDir, "index.html");
+      const hasIndex = await stat(index).then(
+        (s) => s.isFile(),
+        () => false,
+      );
+      if (!hasIndex) throw new HttpError(500, "O editor não foi encontrado: rode npm run build.", "web-missing");
+      return file(index);
     },
   },
 ];
