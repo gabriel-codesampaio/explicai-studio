@@ -56,13 +56,8 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
     if (!(await exists(root))) continue;
     for (const file of await readdir(root, { recursive: true })) {
       if (!file.endsWith(".md")) continue;
-<<<<<<< HEAD
       for (const [, name] of (await readText(path.join(root, file))).matchAll(MENTION)) {
-        if (name) used.add(decodeURI(name));
-=======
-      for (const [, name] of (await readFile(path.join(root, file), "utf8")).matchAll(MENTION)) {
         if (name) used.add(decodeUri(name));
->>>>>>> origin/test/t-058-testes
       }
     }
   }
