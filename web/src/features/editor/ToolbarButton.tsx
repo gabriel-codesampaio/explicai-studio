@@ -18,28 +18,33 @@ interface Props {
  * quem recebe o Tab é o seletor de bloco, e as setas andam pelos botões (ver useRovingFocus).
  */
 export function ToolbarButton({ label, shortcut, icon: Icon, onClick, active, showLabel }: Props) {
+  const button = (
+    <button
+      type="button"
+      data-roving
+      tabIndex={-1}
+      aria-pressed={active}
+      aria-label={label}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+      className={cn(
+        "inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
+        active && "bg-accent text-primary",
+        showLabel && "shrink-0 border border-border px-2.5 text-sm font-bold whitespace-nowrap text-foreground",
+      )}
+    >
+      <Icon className="size-4 shrink-0" aria-hidden />
+      {showLabel && <span>{label}</span>}
+      {showLabel && shortcut && (
+        <kbd className="hidden font-mono text-[11px] font-normal text-muted-foreground sm:inline">{shortcut}</kbd>
+      )}
+    </button>
+  );
+  // Com rótulo à vista, a dica só repetiria o texto do botão.
+  if (showLabel) return button;
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          data-roving
-          tabIndex={-1}
-          aria-pressed={active}
-          aria-label={label}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={onClick}
-          className={cn(
-            "inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
-            active && "bg-accent text-primary",
-            showLabel && "border border-border px-2.5 text-sm font-bold text-foreground",
-          )}
-        >
-          <Icon className="size-4" aria-hidden />
-          {showLabel && <span>{label}</span>}
-          {showLabel && shortcut && <kbd className="font-mono text-[11px] font-normal text-muted-foreground">{shortcut}</kbd>}
-        </button>
-      </TooltipTrigger>
+      <TooltipTrigger asChild>{button}</TooltipTrigger>
       <TooltipContent>
         {label}
         {shortcut && <kbd className="ml-2 font-mono text-[11px] opacity-70">{shortcut}</kbd>}
