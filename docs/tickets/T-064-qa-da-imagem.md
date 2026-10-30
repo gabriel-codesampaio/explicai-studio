@@ -18,16 +18,16 @@ A feature de imagem tem muita superfície e testes espalhados. Falta um mapa do 
 - [ ] Exportação HTML, PDF e Markdown com imagem e marcações; imagem faltando gera aviso.
 - [ ] Tela: 375 e 1280 px, claro e escuro, teclado e leitor de tela.
 - [ ] Robustez: falha de rede no upload (route.abort), erro do servidor, upload lento, duas abas.
-- [ ] Testes em arquivo e2e próprio da área de imagem (e2e/imagem.e2e.ts); cada bug achado vira ticket separado.
+- [ ] Testes em arquivo e2e próprio da área de imagem (e2e/studio.imagem.e2e.ts); cada bug achado vira ticket separado.
 
 ## Onde
-`e2e/imagem.e2e.ts` (novo), `test/`, `web/test/`. O popover colado no rodapé é o T-063; a seta e a legenda são do T-012.
+`e2e/studio.imagem.e2e.ts` (novo), `test/`, `web/test/`. O popover colado no rodapé é o T-063; a seta e a legenda são do T-012.
 
 ## Como verificar
 Teste primeiro (unit ou e2e da área); medir no navegador, claro e escuro, 1280 e 375 px.
 
 ## Registro
-Testes: `e2e/imagem.e2e.ts` (34 passam, 2 em `test.fixme`) e `test/image-assets.test.ts`. Roda com `E2E_PORT=4493 npx playwright test e2e/imagem.e2e.ts`.
+Testes: `e2e/studio.imagem.e2e.ts` (34 passam, 2 em `test.fixme`) e `test/image-assets.test.ts`. Roda com `E2E_PORT=4493 npx playwright test e2e/studio.imagem.e2e.ts`.
 
 ### Mapa de casos
 | Critério | Caso | Teste |
