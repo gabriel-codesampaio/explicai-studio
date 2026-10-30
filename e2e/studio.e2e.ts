@@ -282,7 +282,7 @@ test("Aparência mostra só Tema e Idioma, e o Studio fica no cobalto mesmo com 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.locator("html")).not.toHaveAttribute("data-accent", /.*/);
 
-  await page.getByRole("button", { name: "Mais opções" }).click();
+  await page.getByRole("button", { name: "Ajustes" }).click();
   await page.getByRole("menuitem", { name: "Aparência" }).click();
   await expect(page.getByRole("group", { name: "Tema" })).toBeVisible();
   await expect(page.getByRole("group", { name: "Idioma da interface" })).toBeVisible();
@@ -351,7 +351,7 @@ test("barra: troca de manual pelo cabeçalho e abre a busca pela linha", async (
   await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeHidden();
 });
 
-test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo menu ⋯, com foco de volta", async ({
+test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo menu Ajustes, com foco de volta", async ({
   page,
   request,
 }) => {
@@ -360,7 +360,7 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo me
   const sidebar = page.locator("aside").first();
   await expect(sidebar.getByRole("button", { name: "Exportar manual" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Exportar manual" })).toHaveCount(1);
-  const more = page.getByRole("button", { name: "Mais opções" });
+  const more = page.getByRole("button", { name: "Ajustes" });
   for (const [item, title] of [
     ["Lixeira", "Lixeira deste manual"],
     ["Aparência", "Aparência"],
@@ -375,14 +375,17 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo me
   }
 });
 
-test("tela estreita: painéis do ⋯ abrem sobre a gaveta, Esc fecha só o painel e o foco volta ao ⋯", async ({ page, request }) => {
+test("tela estreita: painéis de Ajustes abrem sobre a gaveta, Esc fecha só o painel e o foco volta a Ajustes", async ({
+  page,
+  request,
+}) => {
   await page.setViewportSize({ width: 375, height: 800 });
   const { slug } = await setup(request, "Manual Gaveta", ["Início"]);
   await page.goto(`/#/${slug}`);
   await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
   const drawer = page.getByRole("dialog", { name: "Páginas do manual" });
   await expect(drawer).toBeVisible();
-  const more = drawer.getByRole("button", { name: "Mais opções" });
+  const more = drawer.getByRole("button", { name: "Ajustes" });
   for (const [item, title] of [
     ["Lixeira", "Lixeira deste manual"],
     ["Aparência", "Aparência"],
@@ -404,7 +407,7 @@ test("lixeira: restaurar fecha o painel e mostra a página restaurada", async ({
   await page.getByRole("button", { name: "Mais ações para Sai" }).click();
   await page.getByRole("menuitem", { name: "Excluir página" }).click();
   await expect(treePage(page, "Sai")).toHaveCount(0);
-  await page.getByRole("button", { name: "Mais opções" }).click();
+  await page.getByRole("button", { name: "Ajustes" }).click();
   await page.getByRole("menuitem", { name: "Lixeira" }).click();
   await page.getByRole("dialog", { name: "Lixeira deste manual" }).getByRole("button", { name: "Restaurar" }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
