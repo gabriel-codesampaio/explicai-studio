@@ -43,6 +43,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-057](fechados/T-057-utf8-e-formato-em-disco.md) | UTF-8 e formato em disco | P1 | feito | ac1ea97 |
 | [T-058](fechados/T-058-testes-da-exportacao.md) | Testes da exportação (refs, collect, labels, safeHref, XSS, PDF) | P1 | feito | f83e3ec, 5f32ddf |
 | [T-060](fechados/T-060-medir-cobertura.md) | Medir a cobertura de testes | P2 | feito | cfb82a0 |
+| [T-061](fechados/T-061-testes-da-web.md) | Testes unitários da web (autosave, rota, marcações, teclado) | P2 | feito | d03dde3 |
 | [T-059](fechados/T-059-deps-de-teste.md) | Dependências de teste (cobertura, Testing Library, axe) | P2 | feito | 40b3e87 |
 | [T-047](fechados/T-047-telas-de-erro.md) | Telas de erro: servidor fora, rota inexistente, erro inesperado | P1 | feito | 83dbbb0 |
 | [T-051](fechados/T-051-paginas-de-erro.md) | Páginas de erro em tela cheia | P1 | feito | f09a58e |
