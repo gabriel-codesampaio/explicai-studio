@@ -552,6 +552,8 @@ test("botão Exportar manual em 1280 px: último à direita, altura de botão pr
     ),
   );
   expect(bg.filter((c) => c !== "rgba(0, 0, 0, 0)")).toHaveLength(1);
+});
+
 test.describe("toque", () => {
   test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
