@@ -4,6 +4,8 @@
  * O trecho entre asteriscos no título leva o marca-texto.
  */
 
+import { FONTS, fontFaceCss } from "../core/export/fonts.js";
+
 type Lang = "pt" | "en";
 
 const TEXTS: Record<string, Record<Lang, [title: string, text: string]>> = {
@@ -62,8 +64,13 @@ const UI = {
   en: { home: "Go to the start", reload: "Reload", copy: "Copy code", copied: "Copied" },
 };
 
+// As fontes da marca vêm da rota /api/fonts do próprio servidor (sem CDN); se não carregarem, cai na do sistema.
+const FACES = FONTS.filter((f) => f.id === "atkinson-hyperlegible-next" || f.id === "archivo")
+  .map((f) => fontFaceCss(f).replaceAll("url(fonts/", "url(/api/fonts/"))
+  .join("");
+
 // Mesmos valores de web/src/styles/tokens.css e do wordmark de base.css.
-const CSS = `
+const CSS = `${FACES}
 :root{color-scheme:light dark;--p:#f5f6fa;--t:#151a33;--g:#575e78;--c:#2b4fe0;--s:#fff;--l:#dce0eb;--m:rgba(255,212,59,.55);--a:#2b4fe0}
 @media(prefers-color-scheme:dark){:root{--p:#0e1120;--t:#eceef7;--g:#a3aac4;--c:#8098ff;--s:#0e1120;--l:#2a3050;--m:rgba(255,212,59,.3);--a:#ffd43b}}
 *{box-sizing:border-box}
@@ -71,14 +78,14 @@ body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var
 header,main{width:100%;max-width:64rem;margin:0 auto}
 header{padding:1.25rem 1.25rem}
 .brand{display:inline-flex;align-items:center;gap:.5rem;color:var(--t);text-decoration:none;min-height:44px}
-.wordmark{font:800 21px/1 "Archivo Variable",Archivo,"Arial Narrow",system-ui,sans-serif;font-stretch:112%;letter-spacing:-.035em}
+.wordmark{font:800 21px/1 Archivo,"Arial Narrow",system-ui,sans-serif;font-stretch:112%;letter-spacing:-.035em}
 .wordmark i{position:relative;display:inline-block;font-style:normal}
 .wordmark i:after{content:"";position:absolute;left:.06em;bottom:.77em;width:.115em;height:.19em;background:var(--a);transform:skewX(-32deg);transform-origin:bottom left}
 .sub{font:12px ui-monospace,Consolas,monospace;color:var(--g)}
 main{margin:auto;padding:3rem 1.5rem;display:grid;justify-items:start;align-content:start;gap:1.25rem}
 main>*{max-width:min(42rem,100%)}
 @media(min-width:640px){header{padding-inline:2.25rem}main{padding-inline:2.5rem}}
-h1{margin:0;font:800 clamp(2.25rem,7vw,3rem)/1.08 "Archivo Variable",Archivo,"Arial Narrow",system-ui,sans-serif;font-stretch:108%;letter-spacing:-.025em;text-wrap:balance;outline:none}
+h1{margin:0;font:800 clamp(2.25rem,7vw,3rem)/1.08 Archivo,"Arial Narrow",system-ui,sans-serif;font-stretch:108%;letter-spacing:-.025em;text-wrap:balance;outline:none}
 mark{background:var(--m);color:inherit;padding:0 .25rem;margin:0 -.25rem;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 p.text{text-wrap:pretty;margin:0;max-width:65ch;font-size:1.125rem;color:var(--g)}
 .actions{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1.25rem;padding-top:.25rem}
