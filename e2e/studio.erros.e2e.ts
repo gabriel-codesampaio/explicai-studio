@@ -99,3 +99,43 @@ test("erro de renderização: tela de erro com recarregar e código copiável, s
   await page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: "Boa", exact: true }).click();
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Boa");
 });
+
+test("servidor recusa o acesso (403): página inteira com marca, texto e código", async ({ page }) => {
+  await page.route("**/api/manuals", (route) =>
+    route.fulfill({
+      status: 403,
+      json: { error: "Host não permitido.", code: "forbidden-host" },
+    }),
+  );
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "O Studio só abre neste computador" })).toBeFocused();
+  await expect(page.getByRole("img", { name: "Explicaí Studio" })).toBeVisible();
+  await expect(page.getByText("HTTP 403 forbidden-host")).toBeVisible();
+  await expect(page.locator("mark")).toHaveText("neste computador");
+});
+
+test("servidor responde 500: página inteira com tentar de novo, que abre o Studio quando o servidor volta", async ({
+  page,
+  request,
+}) => {
+  const { slug } = await setup(request, "Manual Quinhentos", ["Pagina"]);
+  let broken = true;
+  await page.route("**/api/manuals", (route) =>
+    broken ? route.fulfill({ status: 500, json: { error: "Falhou ao ler a pasta." } }) : route.continue(),
+  );
+  await page.goto(`/#/${slug}`);
+  await expect(page.getByRole("heading", { name: "O servidor não conseguiu responder" })).toBeFocused();
+  await expect(page.getByText("HTTP 500")).toBeVisible();
+  broken = false;
+  await page.getByRole("button", { name: "Tentar de novo" }).click();
+  await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Pagina");
+});
+
+test("404 abre em página inteira com a marca e cabe em 375 px sem rolagem lateral", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Celular", ["Primeira"]);
+  await page.setViewportSize({ width: 375, height: 700 });
+  await page.goto(`/#/${slug}/antiga`);
+  await expect(page.getByRole("heading", { name: "Não achamos esta página" })).toBeFocused();
+  await expect(page.getByRole("img", { name: "Explicaí Studio" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
