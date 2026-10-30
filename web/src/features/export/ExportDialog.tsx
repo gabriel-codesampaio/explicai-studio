@@ -38,7 +38,7 @@ export function ExportDialog() {
     setError(null);
     setResult(null);
     try {
-      setResult(await studio.exportManual(format, onlyApproved));
+      setResult(await studio.exportManual(format, onlyApproved && approved > 0));
     } catch (err) {
       setError(errorMessage(err, t("Não foi possível exportar o manual.")));
     } finally {
@@ -94,21 +94,24 @@ export function ExportDialog() {
           ))}
         </fieldset>
 
-        <label className="flex items-start gap-2.5 text-sm">
+        <label className={cn("flex items-start gap-2.5 text-sm", approved === 0 && "opacity-60")}>
           <input
             type="checkbox"
-            checked={onlyApproved}
+            checked={onlyApproved && approved > 0}
+            disabled={approved === 0}
             onChange={(e) => setOnlyApproved(e.target.checked)}
             className="mt-0.5 size-4 accent-[var(--primary)]"
           />
           <span className="grid leading-tight">
             <span className="font-bold">{t("Só páginas aprovadas")}</span>
             <span className="text-xs text-muted-foreground">
-              {tn(
-                approved,
-                "{n} página aprovada ou publicada neste manual. As outras ficam de fora.",
-                "{n} páginas aprovadas ou publicadas neste manual. As outras ficam de fora.",
-              )}
+              {approved === 0
+                ? t("Nenhuma página está aprovada ou publicada. Aprove uma página para usar esta opção.")
+                : tn(
+                    approved,
+                    "{n} página aprovada ou publicada neste manual. As outras ficam de fora.",
+                    "{n} páginas aprovadas ou publicadas neste manual. As outras ficam de fora.",
+                  )}
             </span>
           </span>
         </label>

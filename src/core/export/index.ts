@@ -36,6 +36,9 @@ export interface ExportResult {
  */
 export async function exportManual(dir: string, format: ExportFormat, opts: CollectOptions = {}): Promise<ExportResult> {
   const collected = await collectPages(dir, opts);
+  if (opts.onlyApproved && collected.pages.length === 0) {
+    throw new Error("Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.");
+  }
   const images = await loadImages(dir, collected.pages);
   const root = resolveInside(dir, EXPORT_DIR);
   const result = (file: string): ExportResult => ({
