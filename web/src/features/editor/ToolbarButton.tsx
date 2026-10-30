@@ -9,15 +9,17 @@ interface Props {
   icon: LucideIcon;
   onClick: () => void;
   active?: boolean;
-  /** Mostra o rótulo ao lado do ícone (ações principais, como "Colar print"; com atalho, ele aparece em mono ao lado). */
+  /** Mostra o rótulo ao lado do ícone (ações principais, como "Imagem"). O atalho fica só na dica. */
   showLabel?: boolean;
+  /** Texto da dica quando difere do rótulo (ex.: "Colar print"). Não repete o rótulo visível. */
+  hint?: string;
 }
 
 /**
  * Botão da barra de formatação. Não rouba o foco do editor ao ser clicado. Fica fora da ordem do Tab:
  * quem recebe o Tab é o seletor de bloco, e as setas andam pelos botões (ver useRovingFocus).
  */
-export function ToolbarButton({ label, shortcut, icon: Icon, onClick, active, showLabel }: Props) {
+export function ToolbarButton({ label, shortcut, icon: Icon, onClick, active, showLabel, hint }: Props) {
   const button = (
     <button
       type="button"
@@ -35,18 +37,13 @@ export function ToolbarButton({ label, shortcut, icon: Icon, onClick, active, sh
     >
       <Icon className="size-4 shrink-0" aria-hidden />
       {showLabel && <span>{label}</span>}
-      {showLabel && shortcut && (
-        <kbd className="hidden font-mono text-[11px] font-normal text-muted-foreground sm:inline">{shortcut}</kbd>
-      )}
     </button>
   );
-  // Com rótulo à vista, a dica só repetiria o texto do botão.
-  if (showLabel) return button;
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
       <TooltipContent>
-        {label}
+        {hint ?? label}
         {shortcut && <kbd className="ml-2 font-mono text-[11px] opacity-70">{shortcut}</kbd>}
       </TooltipContent>
     </Tooltip>

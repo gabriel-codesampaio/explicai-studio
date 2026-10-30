@@ -97,15 +97,19 @@ test("imagem: envia, descreve, marca e a legenda aparece na página", async ({ p
   expect(saved.markers).toMatchObject([{ n: 1, label: "Botão Novo cliente" }]);
 });
 
-test('barra: "Colar print" mostra o Ctrl+V, abre o seletor de arquivo e a dica do / fica só no placeholder', async ({
+test('barra: "Imagem" mostra só o texto, a dica traz o Ctrl+V, abre o seletor de arquivo e a dica do / fica só no placeholder', async ({
   page,
   request,
 }) => {
   const { slug } = await setup(request, "Manual Colar Print", ["Início"]);
   await page.goto(`/#/${slug}`);
   const toolbar = page.getByRole("toolbar", { name: "Formatação" });
-  const button = toolbar.getByRole("button", { name: "Colar print" });
-  await expect(button).toContainText("Ctrl+V");
+  const button = toolbar.getByRole("button", { name: "Imagem", exact: true });
+  await expect(button).toHaveText("Imagem");
+  await expect(button.locator("kbd")).toHaveCount(0);
+  await button.hover();
+  await expect(page.getByRole("tooltip")).toContainText("Colar print");
+  await expect(page.getByRole("tooltip")).toContainText("Ctrl+V");
   await expect(toolbar.getByText("para inserir blocos")).toHaveCount(0);
   const chooser = page.waitForEvent("filechooser");
   await button.click();
@@ -581,7 +585,7 @@ test("botão Exportar manual em 1280 px: último à direita, altura de botão pr
 test.describe("toque", () => {
   test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
-  test("barra rolável: Colar print aparece sem rolar, o degradê indica mais botões e as setas levam até a Tabela", async ({
+  test("barra rolável: Imagem aparece sem rolar, o degradê indica mais botões e as setas levam até a Tabela", async ({
     page,
     request,
   }) => {
@@ -590,7 +594,7 @@ test.describe("toque", () => {
     const bar = page.getByRole("toolbar", { name: "Formatação" });
     const fades = bar.locator("xpath=..").locator("span[aria-hidden].pointer-events-none");
     const opacity = (i: number) => fades.nth(i).evaluate((el) => getComputedStyle(el).opacity);
-    const colar = await page.getByRole("button", { name: "Colar print" }).boundingBox();
+    const colar = await page.getByRole("button", { name: "Imagem", exact: true }).boundingBox();
     expect((colar?.x ?? 0) + (colar?.width ?? 0)).toBeLessThanOrEqual(375);
     await expect.poll(() => opacity(1)).toBe("1");
     expect(await opacity(0)).toBe("0");
@@ -606,7 +610,7 @@ test.describe("toque", () => {
     await page.goto(`/#/${slug}`);
     // offsetHeight ignora a escala da animação de abertura do menu.
     const height = (loc: ReturnType<Page["locator"]>) => loc.evaluate((el) => (el as HTMLElement).offsetHeight);
-    expect(await height(page.getByRole("button", { name: "Colar print" }))).toBeGreaterThanOrEqual(44);
+    expect(await height(page.getByRole("button", { name: "Imagem", exact: true }))).toBeGreaterThanOrEqual(44);
     expect(await height(page.getByRole("button", { name: /Tipo de bloco/ }))).toBeGreaterThanOrEqual(44);
     expect(await height(page.getByRole("button", { name: "Negrito" }))).toBeGreaterThanOrEqual(44);
     await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
