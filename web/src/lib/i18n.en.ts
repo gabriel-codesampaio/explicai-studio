@@ -287,4 +287,12 @@ export const EN: Record<string, string> = {
   "Fonte do texto": "Text font",
   "Fonte dos títulos": "Heading font",
   padrão: "default",
+  "Não foi possível falar com o Studio. Ele pode ter sido fechado ou estar reiniciando.":
+    "Could not reach the Studio. It may have been closed or may be restarting.",
+  "O Studio só aceita pedidos deste computador. Abra-o por localhost ou 127.0.0.1.":
+    "The Studio only accepts requests from this computer. Open it through localhost or 127.0.0.1.",
+  "O Studio recebeu um texto que não está em UTF-8. Salve o conteúdo em UTF-8 e envie de novo.":
+    "The Studio received text that is not UTF-8. Save the content as UTF-8 and send it again.",
+  "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.":
+    "To make the PDF, Explicaí uses Chrome, Edge or Chromium on your computer, and none was found. Install one of them or set its path in the EXPLICAI_BROWSER variable.",
 };
