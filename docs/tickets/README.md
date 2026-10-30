@@ -38,6 +38,9 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-068](T-068-fonte-na-pagina-de-erro-do-servidor.md) | Página HTML de erro do servidor sem a fonte Archivo | P3 | aberto | frontend |
 | [T-070](T-070-ctrl-end-antes-da-imagem.md) | Ctrl+End nem sempre leva o cursor para depois da imagem | P3 | aberto | frontend |
 | [T-071](T-071-esc-no-balao-da-imagem-perde-o-foco.md) | Esc no balão da descrição da imagem joga o foco para o body | P2 | aberto | frontend |
+| [T-072](T-072-menu-barra-nao-rola-com-a-seta.md) | Menu "/": o item ativo some quando a seta desce | P1 | aberto | frontend |
+| [T-073](T-073-controles-na-tabela.md) | Controles de tabela direto na tabela | P2 | aberto | frontend |
+| [T-074](T-074-e2e-copiar-imagem-usa-a-area-de-transferencia.md) | e2e de copiar e colar a imagem falha às vezes na suíte completa | P3 | aberto | qa |
 
 ## Fechados
 
