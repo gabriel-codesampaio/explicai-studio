@@ -23,9 +23,23 @@ export interface TreeItem {
   children: TreeItem[];
 }
 
+export type HeadingSlot = "cover" | "page" | "h1" | "h2" | "h3";
+
+export interface ManualTheme {
+  accent?: string;
+  text?: string;
+  highlight?: string;
+  headings?: Partial<Record<HeadingSlot, string>>;
+}
+
+/** Só os campos enviados mudam; `null` volta o campo ao padrão. */
+export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string | null>> & {
+  headings?: Partial<Record<HeadingSlot, string | null>>;
+};
+
 export interface ManualDetail extends ManualSummary {
-  /** Cor do manual exportado; vazio = a da marca. */
-  theme: { accent?: string };
+  /** Cores do manual exportado; campo ausente = a da marca. */
+  theme: ManualTheme;
   pages: TreeItem[];
 }
 
@@ -124,8 +138,7 @@ export const api = {
 
   exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean) =>
     call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved })),
-  /** `null` volta à cor da marca. */
-  setTheme: (slug: string, accent: string | null) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", { accent })),
+  setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),
 
   getAnnotations: (slug: string, asset: string) =>
     call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`),

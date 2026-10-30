@@ -15,20 +15,13 @@ import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
+import { ThemeFields } from "./ThemeFields";
 
 const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] = [
   { id: "html", label: t("Site (HTML)"), hint: t("Um arquivo para publicar ou abrir no navegador."), ext: ".html" },
   { id: "pdf", label: "PDF", hint: t("Para imprimir ou mandar por e-mail."), ext: ".pdf" },
   { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), ext: ".md" },
 ];
-
-/** Cores do manual exportado (o Studio fica sempre no cobalto). A primeira é a da marca. */
-const ACCENTS = [
-  { id: "cobalto", label: t("Cobalto"), swatch: "#2b4fe0" },
-  { id: "esmeralda", label: t("Esmeralda"), swatch: "#0f7a55" },
-  { id: "ameixa", label: t("Ameixa"), swatch: "#7a3fc4" },
-  { id: "grafite", label: t("Grafite"), swatch: "#3d4459" },
-] as const;
 
 /** Botão "Exportar manual" da barra lateral: escolhe o formato e a cor, exporta e mostra onde ficou. */
 export function ExportDialog() {
@@ -39,7 +32,6 @@ export function ExportDialog() {
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ExportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const accent = studio.manual?.theme.accent ?? ACCENTS[0].swatch;
 
   const run = async () => {
     setBusy(true);
@@ -67,7 +59,7 @@ export function ExportDialog() {
           <Download aria-hidden /> {t("Exportar manual")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
           <DialogDescription>
@@ -123,30 +115,7 @@ export function ExportDialog() {
           </span>
         </label>
 
-        <fieldset>
-          <legend className="mb-2 rotulo">{t("Cor do manual")}</legend>
-          <div className="flex flex-wrap gap-1.5">
-            {ACCENTS.map((a) => (
-              <button
-                key={a.id}
-                type="button"
-                aria-pressed={accent === a.swatch}
-                onClick={() => void studio.setManualAccent(a.id === "cobalto" ? null : a.swatch)}
-                className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs hover:bg-muted aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-bold"
-              >
-                <span className="size-3.5 rounded-full ring-1 ring-foreground/20" style={{ background: a.swatch }} aria-hidden />
-                {/* A cópia invisível em negrito reserva a largura: escolher a cor não empurra as vizinhas. */}
-                <span className="grid">
-                  <span className="invisible col-start-1 row-start-1 font-bold" aria-hidden>
-                    {a.label}
-                  </span>
-                  <span className="col-start-1 row-start-1">{a.label}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-          <p className="mt-1.5 text-xs text-muted-foreground">{t("Títulos, links e números dos passos.")}</p>
-        </fieldset>
+        {format !== "markdown" && studio.manual && <ThemeFields theme={studio.manual.theme} />}
 
         {error && (
           <p role="alert" className="text-sm text-destructive">

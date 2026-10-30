@@ -9,6 +9,7 @@ import {
   type Page,
   type PagePatch,
   type PageStatus,
+  type ThemePatch,
   type TreeItem,
 } from "../lib/api";
 import { readLocation, writeLocation } from "../lib/hashRoute";
@@ -170,13 +171,12 @@ export function useStudio() {
       await refreshManual(manual.slug);
     });
 
-  /** Cor do manual exportado (`null` = a da marca). */
-  const setManualAccent = (accent: string | null) =>
-    run(async () => {
-      if (!manual) return;
-      await api.setTheme(manual.slug, accent);
-      await refreshManual(manual.slug);
-    });
+  /** Cores do manual exportado. Lança se o core recusar a cor: quem chama mostra o motivo no campo. */
+  const setManualTheme = async (patch: ThemePatch) => {
+    if (!manual) return;
+    await api.setTheme(manual.slug, patch);
+    await refreshManual(manual.slug);
+  };
 
   const movePage = (id: string, parentId: string | null, index: number) =>
     run(async () => {
@@ -221,7 +221,7 @@ export function useStudio() {
     restoreVersion,
     publishVersion,
     exportManual,
-    setManualAccent,
+    setManualTheme,
     setPageStatus,
     createManual,
     editPage,
