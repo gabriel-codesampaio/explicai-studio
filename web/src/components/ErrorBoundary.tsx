@@ -33,6 +33,12 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     const { error } = this.state;
     if (!error) return this.props.children;
-    return <CrashScreen error={error} onRetry={this.props.root ? undefined : () => this.setState({ error: null })} />;
+    return (
+      <CrashScreen
+        error={error}
+        standalone={this.props.root}
+        onRetry={this.props.root ? undefined : () => this.setState({ error: null })}
+      />
+    );
   }
 }

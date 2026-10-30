@@ -4,8 +4,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ConnectionBanner } from "@/features/errors/ConnectionBanner";
-import { CrashScreen } from "@/features/errors/CrashScreen";
 import { NotFoundScreen } from "@/features/errors/NotFoundScreen";
+import { RequestErrorScreen } from "@/features/errors/RequestErrorScreen";
 import { ServerDownScreen } from "@/features/errors/ServerDownScreen";
 import { CreateManual } from "@/features/manuals/CreateManual";
 import { PageSearch } from "@/features/pages/PageSearch";
@@ -13,7 +13,7 @@ import { StudioProvider, useStudioContext } from "@/hooks/StudioContext";
 import { useSidebar } from "@/hooks/useSidebar";
 import { MobileBar, Navigation } from "@/layout/Navigation";
 import { PageView } from "@/layout/PageView";
-import { ApiError, errorMessage, isOffline } from "@/lib/api";
+import { technicalCode } from "@/lib/errorPages";
 import { t } from "@/lib/i18n";
 import { useResolvedTheme } from "@/lib/theme";
 
@@ -43,20 +43,32 @@ function Shell() {
         />
       );
     }
-    if (bootError) {
-      return (
-        <CrashScreen
-          title={t("Não foi possível abrir o Studio")}
-          message={errorMessage(bootError, t("Não foi possível abrir o Studio."))}
-          error={asError(bootError)}
-          action={{ label: t("Tentar de novo"), onClick: () => void studio.reload() }}
-        />
-      );
-    }
+    if (bootError) return <RequestErrorScreen error={bootError} onRetry={() => void studio.reload()} />;
     return <div className="grid h-full place-items-center text-muted-foreground">{t("Abrindo o Studio…")}</div>;
   }
 
   const firstRun = manuals.length === 0;
+
+  if (notFound && !firstRun && !studio.creatingManual) {
+    return (
+      <NotFoundScreen
+        kind={notFound.kind}
+        address={notFound.address}
+        action={
+          notFound.kind === "page" && manual
+            ? { label: t("Abrir a primeira página"), onClick: () => void studio.openManual(manual.slug) }
+            : {
+                label: t("Abrir {nome}", { nome: manuals[0]?.title ?? "" }),
+                onClick: () => void studio.openManual(manuals[0]?.slug ?? ""),
+              }
+        }
+        secondary={{ label: t("Criar um manual novo"), onClick: () => studio.setCreatingManual(true) }}
+      />
+    );
+  }
+  if (openError && !studio.creatingManual) {
+    return <RequestErrorScreen error={openError.error} onRetry={() => void studio.openManual(openError.slug)} />;
+  }
 
   return (
     <TooltipProvider delayDuration={400}>
@@ -67,27 +79,6 @@ function Shell() {
           {studio.serverDown && <ConnectionBanner checking={studio.reconnect.checking} onRetry={studio.reconnect.retryNow} />}
           {firstRun || studio.creatingManual ? (
             <CreateManual firstRun={firstRun} onCreate={studio.createManual} onCancel={() => studio.setCreatingManual(false)} />
-          ) : notFound ? (
-            <NotFoundScreen
-              kind={notFound.kind}
-              address={notFound.address}
-              action={
-                notFound.kind === "page" && manual
-                  ? { label: t("Abrir a primeira página"), onClick: () => void studio.openManual(manual.slug) }
-                  : {
-                      label: t("Abrir {nome}", { nome: manuals[0]?.title ?? "" }),
-                      onClick: () => void studio.openManual(manuals[0]?.slug ?? ""),
-                    }
-              }
-              secondary={{ label: t("Criar um manual novo"), onClick: () => studio.setCreatingManual(true) }}
-            />
-          ) : openError ? (
-            <CrashScreen
-              title={t("Não foi possível abrir este manual")}
-              message={errorMessage(openError.error)}
-              error={asError(openError.error)}
-              action={{ label: t("Tentar de novo"), onClick: () => void studio.openManual(openError.slug) }}
-            />
           ) : !manual ? null : !page ? (
             <EmptyState
               title={manual.title}
@@ -108,12 +99,4 @@ function Shell() {
       <Toaster theme={theme} position="bottom-right" offset={{ bottom: 56, right: 24 }} />
     </TooltipProvider>
   );
-}
-
-const asError = (err: unknown): Error => (err instanceof Error ? err : new Error(String(err)));
-
-/** Código curto para copiar num relato: "HTTP 502" quando o proxy respondeu, "fetch falhou" quando nem chegou. */
-function technicalCode(err: unknown): string {
-  if (err instanceof ApiError && isOffline(err)) return err.status ? `HTTP ${err.status}` : "fetch failed";
-  return asError(err).message;
 }
