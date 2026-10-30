@@ -26,7 +26,7 @@ export interface ExportResult {
   /** Arquivo principal, relativo à pasta do manual (`exportacao/html/index.html`). */
   file: string;
   pages: number;
-  /** Páginas que ficaram de fora e por quê. */
+  /** Páginas que ficaram de fora e imagens que não existem, com o motivo. */
   warnings: string[];
 }
 
@@ -43,13 +43,15 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
       "Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.",
     );
   }
-  const images = await loadImages(dir, collected.pages);
+  const missing: string[] = [];
+  const images = await loadImages(dir, collected.pages, missing);
+  const warnings = [...collected.warnings, ...missing.map((asset) => `Imagem não encontrada: ${asset}`)];
   const root = resolveInside(dir, EXPORT_DIR);
   const result = (file: string): ExportResult => ({
     format,
     file: relativePosix(dir, file),
     pages: collected.pages.length,
-    warnings: collected.warnings,
+    warnings,
   });
 
   if (format === "markdown") {
