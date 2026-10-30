@@ -1,7 +1,3 @@
-| [T-030](fechados/T-030-fontes-do-manual.md) | Deixar a pessoa escolher as fontes do manual exportado | P2 | feito | 4d091d1 |
-| [T-029](fechados/T-029-cores-do-manual.md) | Deixar a pessoa escolher as cores do manual exportado | P2 | feito | 230d294 |
-| [T-011](fechados/T-011-amarelo-com-um-sentido.md) | Dar ao amarelo um sentido só (conteúdo e página ativa) | P2 | feito | dd8b1b9 |
-| [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
 # Tickets
 
 Fila de trabalho do Studio. Formato e ciclo de vida: skill `tickets` do plugin [explicai-workflow](https://github.com/gabriel-codesampaio/explicai-workflow).
@@ -14,7 +10,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-007](fechados/T-007-icones-decorativos.md) | Tirar os ícones que só decoram e usar a extensão do arquivo na exportação | P1 | feito | 205d9c4 |
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
 | [T-012](T-012-marcacoes-do-brand-book.md) | Marcações como no brand book | P2 | aberto | frontend |
 | [T-013](T-013-tela-dividida.md) | Manter a árvore visível em tela dividida (~960 px) | P2 | aberto | frontend |
@@ -43,13 +38,13 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 |----|--------|------------|--------|--------|
 | [T-047](fechados/T-047-telas-de-erro.md) | Telas de erro: servidor fora, rota inexistente, erro inesperado | P1 | feito | 83dbbb0 |
 | [T-046](fechados/T-046-titulo-corrompido.md) | Recusar corpo não UTF-8 que gravava U+FFFD no título | P1 | feito | a29b735 |
-| [T-044](fechados/T-044-colar-print-fora-da-tela-no-celular.md) | "Colar print" fica fora da tela em 375 px | P2 | feito | — |
-| [T-025](fechados/T-025-barra-no-celular.md) | Mostrar que a barra de ferramentas rola em 375 px | P2 | feito | — |
-| [T-041](fechados/T-041-cor-pelo-teclado.md) | Cor do texto com nome visível e pelo teclado | P1 | feito | — |
-| [T-042](fechados/T-042-erros-traduzidos.md) | Erros do núcleo traduzidos na interface em inglês | P3 | feito | — |
-| [T-043](fechados/T-043-botao-exportar.md) | Exportar manual como último item do topo, à direita | P2 | feito | — |
-| [T-045](fechados/T-045-menu-ajustes.md) | Menu Ajustes com Idioma próprio, ícones e cursor de mão | P2 | feito | — |
-| [T-040](fechados/T-040-rodape-ajustes.md) | Rodapé da barra lateral como a linha "Ajustes" | P2 | feito | — |
+| [T-044](fechados/T-044-colar-print-fora-da-tela-no-celular.md) | "Colar print" fica fora da tela em 375 px | P2 | feito | 4282764 |
+| [T-025](fechados/T-025-barra-no-celular.md) | Mostrar que a barra de ferramentas rola em 375 px | P2 | feito | 4282764 |
+| [T-041](fechados/T-041-cor-pelo-teclado.md) | Cor do texto com nome visível e pelo teclado | P1 | feito | 74cb1e9 |
+| [T-042](fechados/T-042-erros-traduzidos.md) | Erros do núcleo traduzidos na interface em inglês | P3 | feito | 8217af2 |
+| [T-043](fechados/T-043-botao-exportar.md) | Exportar manual como último item do topo, à direita | P2 | feito | 7dc2f62 |
+| [T-045](fechados/T-045-menu-ajustes.md) | Menu Ajustes com Idioma próprio, ícones e cursor de mão | P2 | feito | 5a05684 |
+| [T-040](fechados/T-040-rodape-ajustes.md) | Rodapé da barra lateral como a linha "Ajustes" | P2 | feito | a2a2021 |
 | [T-039](fechados/T-039-barra-na-selecao.md) | Barra flutuante na seleção, com cor do texto | P1 | feito | a39f7cf |
 | [T-010](fechados/T-010-barra-colar-print.md) | "Colar print" com Ctrl+V na barra de ferramentas | P1 | feito | 428cbc6 |
 | [T-016](fechados/T-016-um-nome-para-versao.md) | Um nome só para a versão do manual final | P2 | feito | 94ee9a3 |
@@ -62,3 +57,8 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-019](fechados/T-019-cores-so-no-manual.md) | Tirar as cores extras do Studio e manter só no manual exportado | P1 | feito | 240c3fb |
 | [T-009](fechados/T-009-raio-de-papel.md) | Raio de 3 px na interface de trabalho | P1 | feito | 8a5867c |
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
+| [T-030](fechados/T-030-fontes-do-manual.md) | Deixar a pessoa escolher as fontes do manual exportado | P2 | feito | 4d091d1 |
+| [T-029](fechados/T-029-cores-do-manual.md) | Deixar a pessoa escolher as cores do manual exportado | P2 | feito | 230d294 |
+| [T-011](fechados/T-011-amarelo-com-um-sentido.md) | Dar ao amarelo um sentido só (conteúdo e página ativa) | P2 | feito | dd8b1b9 |
+| [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
+| [T-007](fechados/T-007-icones-decorativos.md) | Tirar os ícones que só decoram e usar a extensão do arquivo na exportação | P1 | feito | 205d9c4 |
