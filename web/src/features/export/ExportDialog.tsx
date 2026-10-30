@@ -93,7 +93,7 @@ export function ExportDialog() {
                 onChange={() => setFormat(id)}
                 className="sr-only"
               />
-              <span className="w-12 shrink-0 font-mono text-lg leading-tight font-medium text-primary" aria-hidden>
+              <span className="w-14 shrink-0 font-mono text-lg leading-tight font-medium text-primary" aria-hidden>
                 {ext}
               </span>
               <span className="grid leading-tight">
