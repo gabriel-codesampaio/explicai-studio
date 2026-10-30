@@ -97,6 +97,22 @@ test("imagem: envia, descreve, marca e a legenda aparece na página", async ({ p
   expect(saved.markers).toMatchObject([{ n: 1, label: "Botão Novo cliente" }]);
 });
 
+test('barra: "Colar print" mostra o Ctrl+V, abre o seletor de arquivo e a dica do / fica só no placeholder', async ({
+  page,
+  request,
+}) => {
+  const { slug } = await setup(request, "Manual Colar Print", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  const toolbar = page.getByRole("toolbar", { name: "Formatação" });
+  const button = toolbar.getByRole("button", { name: "Colar print" });
+  await expect(button).toContainText("Ctrl+V");
+  await expect(toolbar.getByText("para inserir blocos")).toHaveCount(0);
+  const chooser = page.waitForEvent("filechooser");
+  await button.click();
+  await (await chooser).setFiles(IMAGE);
+  await expect(editor(page).getByRole("img", { name: "tela" })).toBeVisible();
+});
+
 test("excluir página vai para a lixeira e Desfazer traz de volta", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Lixeira", ["Fica", "Sai"]);
   await page.goto(`/#/${slug}`);

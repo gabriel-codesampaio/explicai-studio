@@ -47,7 +47,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
       />
       <Btn icon={Link2} label={t("Link")} shortcut="Ctrl+K" active={s.link} onClick={onEditLink} />
       <Divider />
-      <Btn icon={ImageIcon} label={t("Imagem")} showLabel onClick={onPickImage} />
+      <Btn icon={ImageIcon} label={t("Colar print")} shortcut="Ctrl+V" showLabel onClick={onPickImage} />
       {s.inTable ? (
         <>
           <Btn icon={TableRowsSplit} label={t("Adicionar linha")} onClick={() => chain().addRowAfter().run()} />
@@ -61,9 +61,6 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
           onClick={() => chain().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
         />
       )}
-      <span className="ml-auto hidden shrink-0 pl-3 text-xs whitespace-nowrap text-muted-foreground lg:block">
-        {t("Digite")} <kbd className="rounded-sm border border-border bg-card px-1 font-mono">/</kbd> {t("para inserir blocos")}
-      </span>
     </div>
   );
 }
