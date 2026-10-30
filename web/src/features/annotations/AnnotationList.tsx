@@ -57,7 +57,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
             .sort((a, b) => a.n - b.n)
             .map((m) => (
               <div key={m.id} className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-anotacao font-mono text-xs font-semibold text-white">
+                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-anotacao font-mono text-xs font-semibold text-sobre-anotacao">
                   {m.n}
                 </span>
                 <Input
