@@ -19,3 +19,19 @@ describe("busca do menu /", () => {
     expect(searchBlocks("xyz")).toEqual([]);
   });
 });
+
+describe("blocos de alerta", () => {
+  it("entram pelo menu / com o jeito que o usuário fala", () => {
+    expect(searchBlocks("dica").map((b) => b.id)).toContain("callout-tip");
+    expect(searchBlocks("alerta").map((b) => b.id)).toEqual([
+      "callout-tip",
+      "callout-warning",
+      "callout-caution",
+      "callout-note",
+    ]);
+  });
+
+  it("aparecem no seletor de tipo de bloco", () => {
+    expect(BLOCKS.filter((b) => b.id.startsWith("callout-") && b.isTextType)).toHaveLength(4);
+  });
+});

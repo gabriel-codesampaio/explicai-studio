@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
-import { Editor } from "@tiptap/core";
+import { Editor, type JSONContent } from "@tiptap/core";
 import { describe, expect, it } from "vitest";
+import { BLOCKS } from "../src/features/editor/blocks";
 import { contentExtensions } from "../src/features/editor/extensions";
 import { toDiskMarkdown, toEditorMarkdown } from "../src/lib/imagePaths";
 
@@ -164,7 +165,7 @@ describe("Alerta (blocos GFM)", () => {
     const out = expectStable(md);
     expect(out).toBe(md);
     const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
-    const item = editor.getJSON().content?.[0]?.content?.[0]?.content;
+    const item = (editor.getJSON() as JSONContent).content?.[0]?.content?.[0]?.content;
     expect(item?.map((n) => n.type)).toEqual(["paragraph", "callout", "blockquote"]);
     editor.destroy();
   });
@@ -187,6 +188,24 @@ describe("Alerta (blocos GFM)", () => {
     const md = "> [!NOTE]\n> <script>alert(1)</script>";
     const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
     expect(editor.getHTML()).not.toContain("<script");
+    editor.destroy();
+  });
+});
+
+describe("blocos de alerta no editor", () => {
+  const run = (id: string, editor: Editor) =>
+    // biome-ignore lint/suspicious/noExplicitAny: o editor do core basta para o comando
+    BLOCKS.find((b) => b.id === id)?.run({ editor: editor as any, pickImage: () => {} });
+
+  it("transforma o parágrafo, troca o tipo sem perder o texto e volta a texto", () => {
+    const editor = new Editor({ extensions: contentExtensions(), content: "Salve antes.", contentType: "markdown" });
+    editor.commands.setTextSelection(3);
+    run("callout-tip", editor);
+    expect(editor.getMarkdown().trimEnd()).toBe("> [!TIP]\n> Salve antes.");
+    run("callout-caution", editor);
+    expect(editor.getMarkdown().trimEnd()).toBe("> [!CAUTION]\n> Salve antes.");
+    run("paragraph", editor);
+    expect(editor.getMarkdown().trimEnd()).toBe("Salve antes.");
     editor.destroy();
   });
 });
