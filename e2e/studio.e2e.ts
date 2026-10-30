@@ -727,3 +727,66 @@ test("barra da seleção na primeira linha não cobre a barra fixa nem as dicas 
   const overlap = (tb?.y ?? 0) < (mb?.y ?? 0) + (mb?.height ?? 0) && (tb?.y ?? 0) + (tb?.height ?? 0) > (mb?.y ?? 0);
   expect(overlap).toBe(false);
 });
+
+for (const [label, ext] of [
+  ["Site (HTML)", ".html"],
+  ["Markdown para IA", ".md"],
+] as const) {
+  test(`exportar ${ext}: carregamento visível, depois formato, páginas e caminho`, async ({ page, request }) => {
+    const { slug } = await setup(request, `Manual Feedback ${ext}`, ["Início", "Segunda"]);
+    let release: () => void = () => {};
+    const gate = new Promise<void>((r) => {
+      release = r;
+    });
+    await page.route("**/export", async (route) => {
+      await gate;
+      await route.continue();
+    });
+    await page.goto(`/#/${slug}`);
+    await page.getByRole("button", { name: "Exportar manual" }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.getByText(label, { exact: true }).click();
+    await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+
+    const busy = dialog.getByRole("button", { name: "Exportando…" });
+    await expect(busy).toBeDisabled();
+    await expect(dialog).toHaveAttribute("aria-busy", "true");
+    await expect(dialog.getByRole("status")).toContainText("Exportando…");
+    // Esc não fecha no meio da exportação.
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeVisible();
+
+    release();
+    const done = dialog.getByRole("status");
+    await expect(done).toContainText(`${label} exportado`);
+    await expect(done).toContainText("2 páginas");
+    const path = (await done.locator("code").textContent()) ?? "";
+    expect(path.startsWith("exportacao/") && path.endsWith(ext)).toBe(true);
+    await expect(dialog).toHaveAttribute("aria-busy", "false");
+    await expect(dialog.getByRole("link", { name: "Abrir o arquivo" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Copiar caminho" })).toBeVisible();
+  });
+}
+
+test("exportar com erro do servidor: mensagem e Tentar de novo refaz o pedido", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Feedback Erro", ["Início"]);
+  let fail = true;
+  await page.route("**/export", (route) =>
+    fail
+      ? route.fulfill({
+          status: 500,
+          contentType: "application/json",
+          body: JSON.stringify({ error: "Falha simulada ao exportar." }),
+        })
+      : route.continue(),
+  );
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+  await expect(dialog.getByRole("alert")).toContainText("Falha simulada ao exportar.");
+  fail = false;
+  await dialog.getByRole("button", { name: "Tentar de novo" }).click();
+  await expect(dialog.getByRole("status")).toContainText("1 página");
+  await expect(dialog.getByRole("alert")).toHaveCount(0);
+});
