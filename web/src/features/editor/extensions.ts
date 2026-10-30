@@ -7,6 +7,7 @@ import { Placeholder } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
 import StarterKit from "@tiptap/starter-kit";
 import { t } from "../../lib/i18n";
+import { Callout } from "./callout";
 import { TextColor } from "./textColor";
 
 /**
@@ -48,7 +49,7 @@ const ImageSafeParagraph = Paragraph.extend({
  * Extensões que definem o que o editor aceita e como vira Markdown. Usadas pelo editor e pelos testes.
  * O editor troca a imagem pela versão com marcações (`image`); os testes usam a comum, sem React.
  */
-export function contentExtensions(image: AnyExtension = Image) {
+export function contentExtensions(image: AnyExtension = Image, callout: AnyExtension = Callout) {
   return [
     StarterKit.configure({ link: { openOnClick: false, autolink: true }, listItem: false, paragraph: false }),
     ImageSafeParagraph,
@@ -57,6 +58,8 @@ export function contentExtensions(image: AnyExtension = Image) {
     // ao reabrir uma página com imagem dentro de um item de lista.
     image.configure({ inline: true }),
     TableKit.configure({ table: { resizable: false } }),
+    // Antes do blockquote no Markdown: `> [!TIP]` é alerta, o resto da citação continua citação.
+    callout,
     // Depois do StarterKit: a cor fica por dentro do negrito no Markdown, onde o ** ainda é lido.
     TextColor,
     Placeholder.configure({ placeholder: t("Escreva aqui, ou digite / para inserir um bloco. Cole um print com Ctrl+V.") }),

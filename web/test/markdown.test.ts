@@ -131,3 +131,62 @@ describe("Markdown do editor: cor do texto", () => {
     editor.destroy();
   });
 });
+
+describe("Alerta (blocos GFM)", () => {
+  it.each([
+    ["TIP", "tip"],
+    ["WARNING", "warning"],
+    ["CAUTION", "caution"],
+    ["NOTE", "note"],
+  ])("`> [!%s]` volta igual e vira o nó callout", (marker, type) => {
+    const md = `> [!${marker}]\n> Salve antes de sair.`;
+    expect(expectStable(md)).toBe(md);
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    expect(editor.getJSON().content?.[0]).toMatchObject({ type: "callout", attrs: { type } });
+    editor.destroy();
+  });
+
+  it("guarda vários parágrafos, lista e negrito dentro do alerta", () => {
+    const md = "> [!WARNING]\n> Isto apaga **tudo**.\n>\n> - um\n> - dois";
+    expect(expectStable(md)).toBe(md);
+  });
+
+  it("vale dentro de um passo e não confunde com o Resultado", () => {
+    const md = [
+      "1. Clique em **Excluir**.",
+      "",
+      "   > [!CAUTION]",
+      "   > Não dá para desfazer.",
+      "",
+      "   > **Resultado:** o cliente some da lista.",
+      "2. Feche a janela.",
+    ].join("\n");
+    const out = expectStable(md);
+    expect(out).toBe(md);
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    const item = editor.getJSON().content?.[0]?.content?.[0]?.content;
+    expect(item?.map((n) => n.type)).toEqual(["paragraph", "callout", "blockquote"]);
+    editor.destroy();
+  });
+
+  it("tipo desconhecido e citação comum continuam citação", () => {
+    for (const md of ["> [!IMPORTANT]\n> Texto.", "> Só uma citação."]) {
+      const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+      expect(editor.getJSON().content?.[0]?.type).toBe("blockquote");
+      editor.destroy();
+    }
+  });
+
+  it("alerta sem texto ainda volta como alerta", () => {
+    const editor = new Editor({ extensions: contentExtensions(), content: "> [!TIP]", contentType: "markdown" });
+    expect(editor.getJSON().content?.[0]).toMatchObject({ type: "callout", attrs: { type: "tip" } });
+    editor.destroy();
+  });
+
+  it("HTML colado dentro do alerta continua texto", () => {
+    const md = "> [!NOTE]\n> <script>alert(1)</script>";
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    expect(editor.getHTML()).not.toContain("<script");
+    editor.destroy();
+  });
+});
