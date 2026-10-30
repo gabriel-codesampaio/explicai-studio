@@ -9,7 +9,7 @@ interface Props {
   icon: LucideIcon;
   onClick: () => void;
   active?: boolean;
-  /** Mostra o rótulo ao lado do ícone (ações principais, como "Imagem"). */
+  /** Mostra o rótulo ao lado do ícone (ações principais, como "Colar print"; com atalho, ele aparece em mono ao lado). */
   showLabel?: boolean;
 }
 
@@ -37,6 +37,7 @@ export function ToolbarButton({ label, shortcut, icon: Icon, onClick, active, sh
         >
           <Icon className="size-4" aria-hidden />
           {showLabel && <span>{label}</span>}
+          {showLabel && shortcut && <kbd className="font-mono text-[11px] font-normal text-muted-foreground">{shortcut}</kbd>}
         </button>
       </TooltipTrigger>
       <TooltipContent>
