@@ -28,7 +28,7 @@ export function ToolbarButton({ label, shortcut, icon: Icon, onClick, active, sh
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       className={cn(
-        "inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
+        "inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted-foreground [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:min-w-11 [@media(pointer:coarse)]:justify-center transition-colors hover:bg-secondary hover:text-foreground",
         active && "bg-accent text-primary",
         showLabel && "shrink-0 border border-border px-2.5 text-sm font-bold whitespace-nowrap text-foreground",
       )}

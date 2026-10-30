@@ -26,7 +26,7 @@ export function BlockTypeMenu({ editor, pickImage, className }: { editor: Editor
           aria-label={t("Tipo de bloco: {tipo}", { tipo: active.label })}
           onMouseDown={(e) => e.preventDefault()}
           className={cn(
-            "inline-flex h-8 w-52 items-center gap-2 rounded-md px-2.5 text-sm hover:bg-secondary data-[state=open]:bg-secondary",
+            "inline-flex h-8 w-52 items-center gap-2 rounded-md px-2.5 text-sm [@media(pointer:coarse)]:h-11 hover:bg-secondary data-[state=open]:bg-secondary",
             className,
           )}
         >

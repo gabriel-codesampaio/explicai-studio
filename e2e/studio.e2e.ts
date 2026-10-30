@@ -440,3 +440,21 @@ test("lixeira: restaurar fecha o painel e mostra a página restaurada", async ({
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(treePage(page, "Sai")).toBeVisible();
 });
+
+test.describe("toque", () => {
+  test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
+
+  test("alvos de toque: itens do menu Ajustes e botões da barra têm 44 px de altura", async ({ page, request }) => {
+    const { slug } = await setup(request, "Manual Toque", ["Início"]);
+    await page.goto(`/#/${slug}`);
+    // offsetHeight ignora a escala da animação de abertura do menu.
+    const height = (loc: ReturnType<Page["locator"]>) => loc.evaluate((el) => (el as HTMLElement).offsetHeight);
+    expect(await height(page.getByRole("button", { name: "Colar print" }))).toBeGreaterThanOrEqual(44);
+    expect(await height(page.getByRole("button", { name: /Tipo de bloco/ }))).toBeGreaterThanOrEqual(44);
+    expect(await height(page.getByRole("button", { name: "Negrito" }))).toBeGreaterThanOrEqual(44);
+    await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
+    await page.getByRole("dialog", { name: "Páginas do manual" }).getByRole("button", { name: "Ajustes" }).click();
+    for (const name of ["Lixeira", "Aparência", "Atalhos"])
+      expect(await height(page.getByRole("menuitem", { name }))).toBeGreaterThanOrEqual(44);
+  });
+});
