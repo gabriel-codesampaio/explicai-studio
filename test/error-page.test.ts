@@ -3,6 +3,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { errorPage } from "../src/server/errorPage.js";
 import { createStudioServer } from "../src/server/index.js";
 
 let workspace: string;
@@ -39,6 +40,16 @@ describe("página de erro do servidor", () => {
     expect(body).not.toMatch(/<script\s+src=|<link[^>]+href="http/);
   });
 
+  it("traz a marca, o marca-texto, o tema do sistema e o código copiável", async () => {
+    const body = await (await fetch(`${base}/`, html)).text();
+    expect(body).toContain('aria-label="Explicaí Studio"');
+    expect(body).toContain("<mark>não foi encontrado</mark>");
+    expect(body).toContain("prefers-color-scheme:dark");
+    expect(body).toContain("HTTP 500 web-missing");
+    expect(body).toContain("clipboard");
+    expect(body).toContain("<title>O editor não foi encontrado · Explicaí Studio</title>");
+  });
+
   it("segue o idioma do navegador", async () => {
     const res = await fetch(`${base}/`, { headers: { accept: "text/html", "accept-language": "en-US,en;q=0.9" } });
     expect(await res.text()).toContain("The editor was not found");
@@ -48,6 +59,11 @@ describe("página de erro do servidor", () => {
     const res = await fetch(`${base}/api/manuals/nada`, html);
     expect(res.status).toBe(404);
     expect(res.headers.get("content-type")).toContain("application/json");
+  });
+
+  it("a página 404 destaca o que não foi achado, nas duas línguas", () => {
+    expect(errorPage(404, "not-found", "pt")).toContain("<mark>não encontrada</mark>");
+    expect(errorPage(404, "not-found", "en")).toContain("<mark>not found</mark>");
   });
 
   it("com o editor no lugar, o index.html sai normalmente", async () => {
