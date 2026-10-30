@@ -18,7 +18,7 @@ export interface TreeItem {
   file: string;
   /** O arquivo da página sumiu ou está com erro (mexido fora do Studio). */
   problem?: string;
-  /** A página está fixada numa versão guardada para o manual final. */
+  /** A página tem uma Versão do manual: o manual final usa essa versão guardada. */
   published?: string;
   children: TreeItem[];
 }

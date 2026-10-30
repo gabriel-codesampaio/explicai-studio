@@ -131,7 +131,7 @@ note: Revisado pelo suporte
 Texto da página naquele momento.
 ```
 
-O id da versão é o nome do arquivo sem `.md`. Quando `published` está no nó da página em `manual.json`, a exportação usa aquela versão. Sem ele, usa o texto atual. Restaurar uma versão troca o texto atual por ela e antes guarda o texto que estava lá como uma versão "Antes de restaurar". As versões acompanham a página na lixeira, porque ficam pelo id.
+O id da versão é o nome do arquivo sem `.md`. A versão que vai para o manual final se chama "Versão do manual". Quando `published` está no nó da página em `manual.json`, a exportação usa aquela versão. Sem ele, usa o texto atual. Restaurar uma versão troca o texto atual por ela e antes guarda o texto que estava lá como uma versão "Antes de restaurar". As versões acompanham a página na lixeira, porque ficam pelo id.
 
 ## Exportação
 
@@ -141,7 +141,7 @@ A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do
 - `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
 - `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
 
-Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a versão marcada em `published` ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto, e links só passam se forem `http`, `https`, `mailto` ou âncora.
+Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a Versão do manual (a versão apontada por `published`) ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto, e links só passam se forem `http`, `https`, `mailto` ou âncora.
 
 ## Regras
 

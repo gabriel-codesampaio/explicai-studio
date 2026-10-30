@@ -40,7 +40,7 @@ afterEach(async () => {
   await rm(workspace, { recursive: true, force: true });
 });
 
-/** Manual com duas páginas, um passo com print marcado e uma subpágina com versão fixada. */
+/** Manual com duas páginas, um passo com print marcado e uma subpágina com Versão do manual. */
 async function seed() {
   const asset = await saveAsset(dir, "tela.png", png(800, 600));
   const visao = await addPage(dir, { title: "Visão geral", body: "Comece por aqui." });

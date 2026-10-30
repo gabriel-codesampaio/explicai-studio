@@ -30,8 +30,8 @@ export interface CollectOptions {
 const APPROVED: PageStatus[] = ["aprovado", "publicado"];
 
 /**
- * As páginas na ordem da árvore, com o texto que vai para o manual final: a versão marcada
- * "No manual" quando existe, senão o texto atual. Página com problema fica de fora e vira aviso.
+ * As páginas na ordem da árvore, com o texto que vai para o manual final: a Versão do manual
+ * quando existe, senão o texto atual. Página com problema fica de fora e vira aviso.
  * A numeração conta só as páginas que entram, então o sumário não fica com buracos.
  */
 export async function collectPages(dir: string, opts: CollectOptions = {}): Promise<Collected> {

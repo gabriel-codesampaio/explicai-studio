@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)
 
@@ -10,8 +10,8 @@
 A mesma ideia aparece como "versão fixada" (topo da página), "No manual" (lista de versões) e "versão marcada 'No manual'" (exportação).
 
 ## Critérios de aceite
-- [ ] Um termo único em todo o Studio, em pt-BR e en, e no glossário do produto.
-- [ ] Docs (`docs/manual-format.md`) e textos de ajuda atualizados.
+- [x] Um termo único em todo o Studio, em pt-BR e en, e no glossário do produto.
+- [x] Docs (`docs/manual-format.md`) e textos de ajuda atualizados.
 
 ## Onde
 `features/versions/*`, `features/export/ExportDialog.tsx`, `lib/i18n.en.ts`, `docs/`.
@@ -20,4 +20,6 @@ A mesma ideia aparece como "versão fixada" (topo da página), "No manual" (list
 Busca no código pelos termos antigos sem resultado; teste de i18n.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit: 94ee9a3.
+
+Feito: termo "Versão do manual" (en: "Manual version") no selo da página, na lista de versões, no diálogo de exportação, nos avisos, no i18n, nos comentários e em docs/manual-format.md. Busca pelos termos antigos sem resultado. Fora: os botões "Usar no manual" e "Tirar do manual" ficam, são verbos da mesma ideia.

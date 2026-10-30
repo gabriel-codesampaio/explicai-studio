@@ -14,7 +14,7 @@ interface Props {
   onSave: (note: string) => Promise<void>;
   onRestore: (versionId: string) => Promise<void>;
   onPublish: (versionId: string | null) => Promise<void>;
-  /** Página fixada numa versão: o botão avisa. */
+  /** Página com Versão do manual: o botão avisa. */
   pinned: boolean;
 }
 
@@ -68,7 +68,9 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           {t("Versões")}
-          {pinned && <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">{t("versão fixada")}</span>}
+          {pinned && (
+            <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">{t("Versão do manual")}</span>
+          )}
         </button>
       </DialogTrigger>
       <DialogContent className="grid max-h-[90vh] w-[min(96vw,46rem)] max-w-none grid-rows-[auto_auto_minmax(0,1fr)] gap-4 sm:max-w-none">
@@ -76,7 +78,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Versões desta página")}</DialogTitle>
           <DialogDescription>
             {t(
-              'Guarde o texto como está agora para voltar a ele depois. A versão marcada "No manual" é a que vai para o manual final. Sem marcação, vale o texto atual.',
+              'Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que vai para o manual final. Sem ela, vale o texto atual.',
             )}
           </DialogDescription>
         </DialogHeader>
@@ -120,7 +122,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                       <span className="truncate">{noteLabel(v.note)}</span>
                       {v.published && (
                         <span className="shrink-0 rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold text-[#151a33]">
-                          {t("No manual")}
+                          {t("Versão do manual")}
                         </span>
                       )}
                     </span>
