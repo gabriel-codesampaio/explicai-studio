@@ -23,7 +23,7 @@ export function MoreMenu() {
             type="button"
             aria-label={t("Mais opções")}
             title={t("Mais opções")}
-            className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted"
+            className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted [@media(pointer:coarse)]:size-11"
           >
             <MoreHorizontal className="size-4" aria-hidden />
           </button>
