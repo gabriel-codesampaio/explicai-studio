@@ -42,6 +42,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-056](fechados/T-056-testes-fs-e-seguranca.md) | Testes de fs.ts, security.ts e caminho malformado | P2 | feito | f769ffb |
 | [T-057](fechados/T-057-utf8-e-formato-em-disco.md) | UTF-8 e formato em disco | P1 | feito | ac1ea97 |
 | [T-058](fechados/T-058-testes-da-exportacao.md) | Testes da exportação (refs, collect, labels, safeHref, XSS, PDF) | P1 | feito | f83e3ec, 5f32ddf |
+| [T-059](fechados/T-059-deps-de-teste.md) | Dependências de teste (cobertura, Testing Library, axe) | P2 | feito | 40b3e87 |
 | [T-047](fechados/T-047-telas-de-erro.md) | Telas de erro: servidor fora, rota inexistente, erro inesperado | P1 | feito | 83dbbb0 |
 | [T-051](fechados/T-051-paginas-de-erro.md) | Páginas de erro em tela cheia | P1 | feito | f09a58e |
 | [T-046](fechados/T-046-titulo-corrompido.md) | Recusar corpo não UTF-8 que gravava U+FFFD no título | P1 | feito | a29b735 |
