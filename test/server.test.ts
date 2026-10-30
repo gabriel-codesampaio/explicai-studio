@@ -246,3 +246,15 @@ describe("API de imagens sem uso", () => {
     expect(await (await fetch(`${base}/api/manuals/m/assets/unused`)).json()).toEqual({ count: 0 });
   });
 });
+
+describe("API de fontes", () => {
+  it("lista as fontes do manual e serve só os arquivos da lista", async () => {
+    const list = await (await fetch(`${base}/api/fonts`)).json();
+    expect(list.map((f: { id: string }) => f.id)).toContain("lora");
+    const ok = await fetch(`${base}/api/fonts/lora-latin-wght-normal.woff2`);
+    expect(ok.status).toBe(200);
+    expect(ok.headers.get("content-type")).toBe("font/woff2");
+    expect((await fetch(`${base}/api/fonts/OFL-lora.txt`)).status).toBe(404);
+    expect((await fetch(`${base}/api/fonts/..%2Fpackage.json`)).status).toBe(404);
+  });
+});

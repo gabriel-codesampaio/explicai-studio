@@ -5,7 +5,7 @@ import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
 import type { ManualTheme } from "../types.js";
 import { type CollectOptions, collectPages } from "./collect.js";
-import { fontFiles } from "./fonts.js";
+import { FONTS_DIR, fontFiles } from "./fonts.js";
 import { renderHtml } from "./html.js";
 import { renderMarkdown } from "./markdown.js";
 import { printPdf } from "./pdf.js";
@@ -16,9 +16,6 @@ export { findBrowser } from "./pdf.js";
 
 /** Pasta da exportação, dentro do manual. Cada exportação substitui a anterior do mesmo formato. */
 export const EXPORT_DIR = "exportacao";
-
-/** Fontes da marca (OFL), na raiz do pacote: o mesmo caminho vale de `src/` e de `dist/`. */
-const FONTS_DIR = new URL("../../../fonts/", import.meta.url);
 
 export type ExportFormat = "html" | "pdf" | "markdown";
 export const EXPORT_FORMATS: ExportFormat[] = ["html", "pdf", "markdown"];

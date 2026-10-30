@@ -13,6 +13,9 @@ export interface FontSpec {
   italic: boolean;
 }
 
+/** Pasta das fontes (OFL), na raiz do pacote: o mesmo caminho vale de `src/` e de `dist/`. */
+export const FONTS_DIR = new URL("../../../fonts/", import.meta.url);
+
 /** Atkinson (texto) e Archivo (títulos) são as da marca, usadas quando o manual não escolhe outra. */
 export const DEFAULT_TEXT_FONT = "atkinson-hyperlegible-next";
 export const DEFAULT_HEADINGS_FONT = "archivo";
