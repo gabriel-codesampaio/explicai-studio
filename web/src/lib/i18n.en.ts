@@ -298,13 +298,13 @@ export const EN: Record<string, string> = {
     "The Studio hit an error it did not expect. Text that was already saved is still on disk. Reload to continue; if the error comes back, copy the code below and tell whoever maintains the project.",
   "Tentar de novo sem recarregar": "Try again without reloading",
   "Recarregar o Studio": "Reload the Studio",
-  "Algo quebrou nesta tela": "Something broke on this screen",
+  "Algo quebrou *nesta tela*": "Something broke *on this screen*",
   "O link pode estar antigo, ou a página foi excluída ou movida para outro lugar do manual.":
     "The link may be old, or the page was deleted or moved somewhere else in the manual.",
   "O link pode estar antigo, ou o manual foi renomeado, movido ou apagado da pasta.":
     "The link may be old, or the manual was renamed, moved or deleted from the folder.",
-  "Não achamos esta página": "We could not find this page",
-  "Não achamos este manual": "We could not find this manual",
+  "Não achamos *esta página*": "We could not find *this page*",
+  "Não achamos *este manual*": "We could not find *this manual*",
   "O que você escreveu continua nesta tela e será salvo quando o servidor voltar.":
     "What you wrote is still on this screen and will be saved when the server is back.",
   "Sem conexão com o Studio.": "No connection to the Studio.",
@@ -313,7 +313,7 @@ export const EN: Record<string, string> = {
   "Tentamos de novo sozinhos. Tentativas até agora: {n}.": "We keep trying on our own. Attempts so far: {n}.",
   "Tentando de novo…": "Trying again…",
   "Tentar agora": "Try now",
-  "O Studio não está respondendo": "The Studio is not responding",
+  "O Studio *não está respondendo*": "The Studio *is not responding*",
   "Código copiado.": "Code copied.",
   "Copiar código": "Copy code",
   Copiado: "Copied",
@@ -325,4 +325,8 @@ export const EN: Record<string, string> = {
     "The Studio received text that is not UTF-8. Save the content as UTF-8 and send it again.",
   "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.":
     "To make the PDF, Explicaí uses Chrome, Edge or Chromium on your computer, and none was found. Install one of them or set its path in the EXPLICAI_BROWSER variable.",
+  "O Studio só abre *neste computador*": "The Studio only opens *on this computer*",
+  "O servidor *não conseguiu responder*": "The server *could not respond*",
+  "Se continuar, feche o comando explicai no terminal e rode de novo.":
+    "If it keeps happening, stop the explicai command in the terminal and run it again.",
 };
