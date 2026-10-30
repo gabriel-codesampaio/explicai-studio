@@ -31,7 +31,29 @@ meu-workspace/
 }
 ```
 
-A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado: `{ "accent": "#2b4fe0" }` é a cor de títulos, links e números dos passos no HTML e no PDF. O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões).
+A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado (ver abaixo). O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões).
+
+### theme
+
+Todos os campos são opcionais e valem só para o HTML e o PDF; o Markdown exportado não muda. Cores em hexadecimal de 6 dígitos (`#2b4fe0`). Manual sem `theme` exporta como antes.
+
+```json
+"theme": {
+  "text": "#222222",
+  "accent": "#0f7a55",
+  "highlight": "#ffe066",
+  "headings": { "cover": "#000000", "page": "#000000", "h1": "#7a3fc4", "h2": "#000000", "h3": "#000000" }
+}
+```
+
+| Campo | Efeito | Padrão |
+|---|---|---|
+| `text` | Texto do manual; o texto secundário (legendas, rodapé) deriva dele | `#151a33` |
+| `accent` | Links, números dos passos e marcações sobre os prints | `#2b4fe0` |
+| `highlight` | Marca-texto: linha da capa, "Resultado:" e destaque das imagens | `#ffd43b` |
+| `headings` | Cor do título da capa (`cover`), do título da página (`page`) e dos títulos de nível 1 a 3 do editor (`h1`, `h2`, `h3`) | `#000000` |
+
+O core recusa, ao gravar (Studio e MCP), `text`, `accent` e cada cor de `headings` com contraste menor que 4,5:1 com o branco, e um `highlight` que deixe o texto por cima com menos de 4,5:1. A mensagem diz o contraste atual e o mínimo. Editar um campo mantém os outros.
 
 ## Página
 
@@ -102,7 +124,7 @@ A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do
 - `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
 - `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
 
-Cada página entra com a versão marcada em `published` ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto, e links só passam se forem `http`, `https`, `mailto` ou âncora.
+Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a versão marcada em `published` ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto, e links só passam se forem `http`, `https`, `mailto` ou âncora.
 
 ## Regras
 
