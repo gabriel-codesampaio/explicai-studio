@@ -39,6 +39,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-049](fechados/T-049-rodapes-alinhados.md) | Rodapés da barra lateral e da página na mesma linha | P2 | feito | 12a493c |
 | [T-050](fechados/T-050-cor-do-texto-44px.md) | Cor do texto com 44 px em toque e barra da seleção sem cobrir a fixa | P2 | feito | b46e5fb |
 | [T-052](fechados/T-052-feedback-do-export.md) | Feedback visual ao exportar o manual | P2 | feito | 8fe288a |
+| [T-056](fechados/T-056-testes-fs-e-seguranca.md) | Testes de fs.ts, security.ts e caminho malformado | P2 | feito | f769ffb |
 | [T-047](fechados/T-047-telas-de-erro.md) | Telas de erro: servidor fora, rota inexistente, erro inesperado | P1 | feito | 83dbbb0 |
 | [T-051](fechados/T-051-paginas-de-erro.md) | Páginas de erro em tela cheia | P1 | feito | f09a58e |
 | [T-046](fechados/T-046-titulo-corrompido.md) | Recusar corpo não UTF-8 que gravava U+FFFD no título | P1 | feito | a29b735 |
