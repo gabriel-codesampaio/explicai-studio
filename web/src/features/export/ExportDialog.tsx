@@ -30,7 +30,7 @@ const ACCENTS = [
   { id: "grafite", label: t("Grafite"), swatch: "#3d4459" },
 ] as const;
 
-/** Botão "Exportar manual" da barra lateral: escolhe o formato e a cor, exporta e mostra onde ficou. */
+/** Botão "Exportar manual" do topo da página: escolhe o formato e a cor, exporta e mostra onde ficou. */
 export function ExportDialog() {
   const studio = useStudioContext();
   const [format, setFormat] = useState<ExportFormat>("html");
@@ -63,7 +63,7 @@ export function ExportDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full justify-start">
+        <Button>
           <Download aria-hidden /> {t("Exportar manual")}
         </Button>
       </DialogTrigger>

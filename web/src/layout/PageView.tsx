@@ -4,6 +4,7 @@ import { Fragment, useState } from "react";
 import { Editor } from "@/features/editor/Editor";
 import { useHeadings } from "@/features/editor/headings";
 import { PageOutline, PageOutlineButton } from "@/features/editor/PageOutline";
+import { ExportDialog } from "@/features/export/ExportDialog";
 import { StatusMenu } from "@/features/pages/StatusMenu";
 import { PinnedNotice } from "@/features/versions/PinnedNotice";
 import { VersionsPanel } from "@/features/versions/VersionsPanel";
@@ -57,6 +58,7 @@ export function PageView({ manual, page }: Props) {
                 </Fragment>
               ))}
             </nav>
+            {manual.pages.length > 0 && <ExportDialog />}
             <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
             {editor && headings.length > 0 && <PageOutlineButton editor={editor} headings={headings} />}
             <VersionsPanel

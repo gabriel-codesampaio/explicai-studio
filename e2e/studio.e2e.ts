@@ -254,11 +254,12 @@ test("Aparência mostra só Tema e Idioma, e o Studio fica no cobalto mesmo com 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.locator("html")).not.toHaveAttribute("data-accent", /.*/);
 
-  await page.getByRole("button", { name: "Aparência", exact: true }).click();
+  await page.getByRole("button", { name: "Mais opções" }).click();
+  await page.getByRole("menuitem", { name: "Aparência" }).click();
   await expect(page.getByRole("group", { name: "Tema" })).toBeVisible();
   await expect(page.getByRole("group", { name: "Idioma da interface" })).toBeVisible();
   await expect(page.getByText("Cor de destaque")).toHaveCount(0);
-  await expect(page.getByRole("dialog").getByRole("button")).toHaveCount(5); // 3 temas + 2 idiomas
+  await expect(page.getByRole("dialog").getByRole("button")).toHaveCount(6); // 3 temas + 2 idiomas + Fechar
 
   // Cobalto nos dois temas: --primary pinta botões, foco e marcadores.
   const primary = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--primary").trim());
@@ -310,4 +311,28 @@ test("barra: troca de manual pelo cabeçalho e abre a busca pela linha", async (
   await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeHidden();
+});
+
+test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo menu ⋯, com foco de volta", async ({
+  page,
+  request,
+}) => {
+  const { slug } = await setup(request, "Manual Menu", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  const sidebar = page.locator("aside").first();
+  await expect(sidebar.getByRole("button", { name: "Exportar manual" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Exportar manual" })).toHaveCount(1);
+  const more = page.getByRole("button", { name: "Mais opções" });
+  for (const [item, title] of [
+    ["Lixeira", "Lixeira deste manual"],
+    ["Aparência", "Aparência"],
+    ["Atalhos", "Atalhos de teclado"],
+  ] as const) {
+    await more.click();
+    await page.getByRole("menuitem", { name: item }).click();
+    await expect(page.getByRole("dialog", { name: title })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(more).toBeFocused();
+  }
 });
