@@ -49,7 +49,8 @@
   --accent-foreground: var(--tinta);
   --destructive: var(--coral);
   --border: var(--linha);
-  --input: var(--linha);
+  /* Borda de campo e de select: componente de interface precisa de 3:1 (WCAG 1.4.11). Divisória e card seguem em --border. */
+  --input: #7d849e;
   --ring: var(--cobalto);
   /* Canto quase reto (decisão do T-009): o arredondado fica com o símbolo e os marcadores. */
   --radius: 3px;
@@ -71,6 +72,7 @@
   --tinta: #eceef7;
   --grafite: #a3aac4;
   --linha: #2a3050;
+  --input: #6a74a0;
   --cobalto: #8098ff;
   --sobre-cobalto: #0e1120;
   --marca-faixa: rgba(255, 212, 59, 0.3);
