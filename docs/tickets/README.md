@@ -36,7 +36,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-066](T-066-revisao-de-design-erros-e-export.md) | Revisão de design das páginas de erro (T-051) e do feedback do export (T-052) | P3 | aberto | design |
 | [T-067](T-067-decodeuricomponent-sem-guarda.md) | decodeURIComponent sem guarda no hash e nas anotações | P2 | aberto | frontend |
 | [T-068](T-068-fonte-na-pagina-de-erro-do-servidor.md) | Página HTML de erro do servidor sem a fonte Archivo | P3 | aberto | frontend |
-| [T-069](T-069-uri-malformed-em-ingles.md) | Mensagem "URI malformed" em inglês no 400 do servidor | P3 | aberto | frontend |
 
 ## Fechados
 
@@ -81,3 +80,4 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-011](fechados/T-011-amarelo-com-um-sentido.md) | Dar ao amarelo um sentido só (conteúdo e página ativa) | P2 | feito | dd8b1b9 |
 | [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
 | [T-007](fechados/T-007-icones-decorativos.md) | Tirar os ícones que só decoram e usar a extensão do arquivo na exportação | P1 | feito | 205d9c4 |
+| [T-069](fechados/T-069-uri-malformed-em-ingles.md) | Mensagem "URI malformed" em inglês no 400 do servidor | P3 | feito | ef631c1 |
