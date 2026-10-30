@@ -72,7 +72,10 @@ test("servidor cai com o Studio aberto: aviso no topo, texto continua e salva so
   await page.route("**/api/**", (route) => (down ? route.abort("connectionrefused") : route.continue()));
   await editor.click();
   await page.keyboard.type("Texto digitado sem servidor.");
-  await expect(page.getByRole("alert").filter({ hasText: "Sem conexão com o Studio." })).toBeVisible();
+  const banner = page.getByRole("alert").filter({ hasText: "Sem conexão com o Studio." });
+  await expect(banner).toBeVisible();
+  // Sem faixa colorida na lateral: o aviso se destaca pelo ícone, pelo texto e pela borda de baixo.
+  await expect(banner).toHaveCSS("border-left-width", "0px");
   await expect(page.getByText("Não foi possível salvar. O texto continua na tela.")).toBeVisible();
   await expect(editor).toContainText("Texto digitado sem servidor.");
   down = false;

@@ -11,7 +11,7 @@ export function ConnectionBanner({ checking, onRetry }: Props) {
   return (
     <div
       role="alert"
-      className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 border-b border-l-4 border-border border-l-destructive bg-card px-4 py-1 text-sm"
+      className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 border-b border-destructive/50 bg-destructive/10 px-4 py-1 text-sm"
     >
       <WifiOff className="size-4 shrink-0 text-destructive" aria-hidden />
       <span className="min-w-0 flex-1 basis-64">
