@@ -977,3 +977,16 @@ test("fonte do manual pela barra: editor, diálogo Exportar e recarga mostram a 
   await expect(toolbar.getByRole("button", { name: "Fonte do manual: Lora" })).toBeVisible();
   await expect.poll(family).toContain("Lora");
 });
+
+test("o status aparece escrito ao lado do nome, na árvore e na busca", async ({ page, request }) => {
+  const { slug, pages } = await setup(request, "Manual Status", ["Início", "Cadastro"]);
+  await request.put(`/api/manuals/${slug}/pages/${pages[1]?.id}`, { data: { status: "revisao" } });
+  await page.goto(`/#/${slug}`);
+
+  await expect(treePage(page, "Cadastro Em revisão")).toBeVisible();
+  await expect(treePage(page, "Início")).toBeVisible();
+
+  await page.keyboard.press("Control+p");
+  await page.getByRole("combobox", { name: "Buscar página pelo título" }).fill("cadastro");
+  await expect(page.getByRole("option", { name: /Cadastro.*Em revisão/ })).toBeVisible();
+});
