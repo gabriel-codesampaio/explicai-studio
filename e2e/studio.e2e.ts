@@ -126,7 +126,7 @@ test("barra da seleção: selecionar texto abre a barra, pinta de vermelho, põe
   const menu = page.getByRole("toolbar", { name: "Formatar seleção" });
   await expect(menu).toBeVisible();
   await menu.getByRole("button", { name: "Cor do texto" }).click();
-  await page.getByRole("group", { name: "Cor do texto" }).getByRole("button", { name: "Vermelho" }).click();
+  await page.getByRole("menuitem", { name: "Vermelho" }).click();
   await menu.getByRole("button", { name: "Negrito" }).click();
 
   const red = editor(page).locator('[data-color="red"]');
@@ -138,6 +138,37 @@ test("barra da seleção: selecionar texto abre a barra, pinta de vermelho, põe
   await expect(editor(page).locator('[data-color="red"]')).toHaveText("Excluir");
   await editor(page).click();
   await expect(page.getByRole("toolbar", { name: "Formatar seleção" })).toBeHidden();
+});
+
+test("cor do texto pela barra fixa, só com o teclado, e a dica mostra o nome", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Cor Teclado", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.keyboard.type("Clique em Excluir");
+  const toolbar = page.getByRole("toolbar", { name: "Formatação" });
+  const trigger = toolbar.getByRole("button", { name: "Cor do texto" });
+  await trigger.hover();
+  await expect(page.getByRole("tooltip")).toContainText("Cor do texto");
+  await page.keyboard.press("Shift+Control+ArrowLeft");
+
+  // Sai do editor para a barra fixa e anda pelas setas até o botão de cor.
+  await page.keyboard.press("Shift+Tab");
+  await toolbar.getByRole("button", { name: /Tipo de bloco/ }).focus();
+  while (!(await trigger.evaluate((el) => el === document.activeElement))) await page.keyboard.press("ArrowRight");
+  await page.keyboard.press("Enter");
+  const items = page.getByRole("menuitem");
+  await expect(items.filter({ hasText: "Cor padrão" })).toBeVisible();
+  await expect(items.filter({ hasText: "Azul" })).toBeVisible();
+  await expect(items.filter({ hasText: "Cor padrão" })).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(items.filter({ hasText: "Cinza" })).toBeFocused();
+  await page.keyboard.press("ArrowDown");
+  await expect(items.filter({ hasText: "Vermelho" })).toBeFocused();
+  await page.keyboard.press("Enter");
+
+  await expect(editor(page).locator('[data-color="red"]')).toHaveText("Excluir");
+  await expect(editor(page)).toBeFocused();
+  await page.keyboard.press("Escape");
 });
 
 test("excluir página vai para a lixeira e Desfazer traz de volta", async ({ page, request }) => {

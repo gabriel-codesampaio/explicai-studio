@@ -3,6 +3,7 @@ import { Bold, Code, ImageIcon, Italic, Link2, Table, TableColumnsSplit, TableRo
 import { useRovingFocus } from "@/hooks/useRovingFocus";
 import { t } from "@/lib/i18n";
 import { BlockTypeMenu } from "./BlockTypeMenu";
+import { TextColorMenu } from "./TextColorMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
 
 interface Props {
@@ -46,6 +47,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
         onClick={() => chain().toggleCode().run()}
       />
       <Btn icon={Link2} label={t("Link")} shortcut="Ctrl+K" active={s.link} onClick={onEditLink} />
+      <TextColorMenu editor={editor} roving />
       <Divider />
       <Btn icon={ImageIcon} label={t("Colar print")} shortcut="Ctrl+V" showLabel onClick={onPickImage} />
       {s.inTable ? (

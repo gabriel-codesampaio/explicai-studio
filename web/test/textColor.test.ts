@@ -3,7 +3,8 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { contrast } from "../../src/core/export/color";
 import { TEXT_COLORS as EXPORT_COLORS } from "../../src/core/export/textColors";
-import { TEXT_COLORS } from "../src/features/editor/textColor";
+import { TEXT_COLOR_LABELS, TEXT_COLORS } from "../src/features/editor/textColor";
+import { EN } from "../src/lib/i18n.en";
 
 const styles = path.join(import.meta.dirname, "..", "src", "styles");
 const tokens = readFileSync(path.join(styles, "tokens.css"), "utf8");
@@ -12,6 +13,11 @@ const [light = "", dark = ""] = tokens.split(':root[data-theme="dark"]');
 const token = (block: string, name: string) => new RegExp(`--${name}: *(#[0-9a-f]{6})`).exec(block)?.[1] ?? "";
 
 describe("paleta da cor do texto", () => {
+  it("cada cor tem nome em português e em inglês para o menu", () => {
+    expect(Object.keys(TEXT_COLOR_LABELS)).toEqual([...TEXT_COLORS]);
+    for (const label of Object.values(TEXT_COLOR_LABELS)) expect(EN[label], label).toBeTruthy();
+  });
+
   it("editor e export usam os mesmos nomes, e cada um tem regra no CSS do editor", () => {
     expect(Object.keys(EXPORT_COLORS)).toEqual([...TEXT_COLORS]);
     for (const name of TEXT_COLORS) {

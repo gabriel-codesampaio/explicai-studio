@@ -7,6 +7,16 @@ import { Mark } from "@tiptap/core";
 export const TEXT_COLORS = ["gray", "red", "orange", "green", "blue", "purple"] as const;
 export type TextColorName = (typeof TEXT_COLORS)[number];
 
+/** Nome de cada cor na interface (passe por t()). */
+export const TEXT_COLOR_LABELS: Record<TextColorName, string> = {
+  gray: "Cinza",
+  red: "Vermelho",
+  orange: "Laranja",
+  green: "Verde",
+  blue: "Azul",
+  purple: "Roxo",
+};
+
 const isTextColor = (value: string | null): value is TextColorName => (TEXT_COLORS as readonly string[]).includes(value ?? "");
 
 declare module "@tiptap/core" {
