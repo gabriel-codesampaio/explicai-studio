@@ -470,7 +470,7 @@ test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3
     const rgb = (el: Element, prop: "borderTopColor" | "backgroundColor") =>
       (getComputedStyle(el)[prop].match(/\d+/g) ?? []).slice(0, 3).map(Number);
     const l = (c: number[]) => {
-      const [r, g, b] = c.map((v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
+      const [r = 0, g = 0, b = 0] = c.map((v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
       return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     };
     const a = l(rgb(swatch, "borderTopColor"));
