@@ -93,6 +93,10 @@ O frontmatter pode ter `status`, a etapa da página no fluxo de aprovação: `re
 
 Um link para outra página do manual é um link Markdown relativo ao arquivo: `[Cadastro](./cadastrar-cliente.md)`, ou `./cadastrar-cliente.md#campos` para uma seção. Todas as páginas ficam em `pages/`, então o caminho é sempre `./nome.md`. Quando uma página é renomeada, os links das outras páginas são atualizados.
 
+## Cor do texto
+
+Um trecho colorido fica como `<span data-color="red">texto</span>`, com o nome de uma cor da paleta: `gray`, `red`, `orange`, `green`, `blue` ou `purple`. Dentro do `span` vale Markdown comum (`**negrito**`). Nome fora da paleta é ignorado pelo editor. No HTML e no PDF cada nome vira uma cor com contraste AA no branco; qualquer outro HTML continua saindo como texto. O Markdown exportado leva só o texto, sem o `span`.
+
 ## Anotações da imagem
 
 `assets/<imagem>.json`. Todas as coordenadas vão de 0 a 1, relativas à largura e à altura da imagem, para funcionarem em qualquer tamanho de tela.
@@ -141,7 +145,7 @@ A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do
 - `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
 - `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
 
-Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a Versão do manual (a versão apontada por `published`) ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto, e links só passam se forem `http`, `https`, `mailto` ou âncora.
+Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a Versão do manual (a versão apontada por `published`) ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto (só a cor do texto passa, ver acima), e links só passam se forem `http`, `https`, `mailto` ou âncora.
 
 ## Regras
 
