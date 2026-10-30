@@ -1,5 +1,5 @@
 import path from "node:path";
-import { type APIRequestContext, expect, type Page, test } from "@playwright/test";
+import { type APIRequestContext, expect, type Locator, type Page, test } from "@playwright/test";
 
 const IMAGE = path.join(import.meta.dirname, "fixtures", "tela.png");
 
@@ -636,3 +636,62 @@ test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3
   });
   expect(ratio).toBeGreaterThanOrEqual(3);
 });
+
+/** Menor contraste entre a borda de um campo e os fundos que a tocam (o do próprio campo e o do que está atrás). */
+const borderContrast = (field: Locator) =>
+  field.evaluate((el) => {
+    // Em foco a borda vira a cor do anel; o que vale aqui é a borda em repouso.
+    (el as HTMLElement).blur();
+    const rgba = (c: string) => (c.match(/[\d.]+/g) ?? []).map(Number);
+    const lum = (c: number[]) => {
+      const [r = 0, g = 0, b = 0] = c
+        .slice(0, 3)
+        .map((v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const ratio = (a: number[], b: number[]) => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
+    const opaque = (node: Element | null) => {
+      for (let n = node; n; n = n.parentElement) {
+        const c = rgba(getComputedStyle(n).backgroundColor);
+        if ((c[3] ?? 1) === 1) return c;
+      }
+      return [255, 255, 255];
+    };
+    const border = rgba(getComputedStyle(el).borderTopColor);
+    const own = rgba(getComputedStyle(el).backgroundColor);
+    const backgrounds = [opaque(el.parentElement), ...((own[3] ?? 1) === 1 ? [own] : [])];
+    return Math.min(...backgrounds.map((bg) => ratio(border, bg)));
+  });
+
+for (const mode of ["light", "dark"] as const) {
+  test(`campos de texto e select: a borda tem contraste de 3:1 no tema ${mode} (WCAG 1.4.11)`, async ({ page, request }) => {
+    await page.addInitScript((m) => localStorage.setItem("explicai:aparencia", JSON.stringify({ mode: m })), mode);
+    const { slug, pages } = await setup(request, `Manual Campos ${mode}`, ["Origem", "Destino"]);
+    await page.goto(`/#/${slug}/${pages[0]?.id}`);
+    await editor(page).click();
+    await page.keyboard.type("veja aqui");
+    await page.keyboard.press("Shift+Home");
+    await page.keyboard.press("Control+k");
+    expect(await borderContrast(page.getByLabel("Link para uma página ou endereço"))).toBeGreaterThanOrEqual(3);
+    await page.keyboard.press("Escape");
+
+    await page.locator('input[type="file"]').setInputFiles(IMAGE);
+    await editor(page).getByRole("img", { name: "tela" }).click();
+    await page.getByRole("button", { name: "Marcar imagem" }).click();
+    const dialog = page.getByRole("dialog", { name: "Marcar imagem" });
+    const box = await dialog.getByRole("img").boundingBox();
+    if (!box) throw new Error("imagem sem tamanho");
+    await dialog.getByRole("button", { name: "Área clicável" }).click();
+    await page.mouse.move(box.x + box.width * 0.2, box.y + box.height * 0.2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5, { steps: 5 });
+    await page.mouse.up();
+    expect(await borderContrast(dialog.getByLabel("Destino da área 1"))).toBeGreaterThanOrEqual(3);
+    await page.keyboard.press("Escape");
+
+    await page.getByRole("button", { name: "Exportar manual" }).click();
+    const exportDialog = page.getByRole("dialog");
+    await exportDialog.getByText("Cores do manual").click();
+    expect(await borderContrast(exportDialog.getByLabel("Cor do texto: código da cor"))).toBeGreaterThanOrEqual(3);
+  });
+}
