@@ -681,7 +681,10 @@ test.describe("rodapés alinhados", () => {
   test.describe("toque", () => {
     test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
-    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar de novo tem 44 px", async ({ page, request }) => {
+    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar de novo tem 44 px", async ({
+      page,
+      request,
+    }) => {
       const { slug } = await setup(request, "Manual Rodape Celular", ["Início"]);
       await page.goto(`/#/${slug}`);
       // offsetHeight ignora a escala da animação de abertura da gaveta.
@@ -691,9 +694,7 @@ test.describe("rodapés alinhados", () => {
       const drawer = page.getByRole("dialog", { name: "Páginas do manual" });
       const side = drawer.getByRole("button", { name: "Ajustes" }).locator("..");
       expect(Math.abs((await height(side)) - foot)).toBeLessThanOrEqual(1);
-      await expect
-        .poll(async () => ((await side.boundingBox())?.y ?? 0) + (await height(side)))
-        .toBeGreaterThanOrEqual(799);
+      await expect.poll(async () => ((await side.boundingBox())?.y ?? 0) + (await height(side))).toBeGreaterThanOrEqual(799);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
       await page.keyboard.press("Escape");
       // Servidor fora: o salvamento falha e a barra de status mostra o botão.
@@ -718,10 +719,12 @@ test("barra da seleção na primeira linha não cobre a barra fixa nem as dicas 
   const menu = page.getByRole("toolbar", { name: "Formatar seleção" });
   await expect(menu).toBeVisible();
   const fixed = page.getByRole("toolbar", { name: "Formatação" });
-  await expect.poll(async () => {
-    const [m, f] = await Promise.all([menu.boundingBox(), fixed.boundingBox()]);
-    return (m?.y ?? 0) >= (f?.y ?? 0) + (f?.height ?? 0) - 1;
-  }).toBe(true);
+  await expect
+    .poll(async () => {
+      const [m, f] = await Promise.all([menu.boundingBox(), fixed.boundingBox()]);
+      return (m?.y ?? 0) >= (f?.y ?? 0) + (f?.height ?? 0) - 1;
+    })
+    .toBe(true);
   // Cor do texto em toque tem 44 px (teste "alvos de toque"); aqui, a dica da barra fixa aparece e fica livre.
   await fixed.getByRole("button", { name: "Negrito" }).hover();
   const tip = page.getByRole("tooltip");
