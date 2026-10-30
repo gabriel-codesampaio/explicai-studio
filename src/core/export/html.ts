@@ -1,5 +1,7 @@
 import { Marked, type Tokens } from "marked";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
+import { ANNOTATION_CSS } from "./annotationCss.js";
+import { arrowShape, legendRows } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
@@ -150,25 +152,27 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     .join("");
   const unit = Math.max(w, h);
   const px = (p: Point) => ({ x: p.x * w, y: p.y * h });
+  const f1 = (n: number) => n.toFixed(1);
   const arrows = a.arrows.length
     ? `<svg class="arrows" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">${a.arrows
         .map(({ from, to }) => {
-          const f = px(from);
-          const t = px(to);
-          const angle = Math.atan2(t.y - f.y, t.x - f.x);
-          const size = unit * 0.022;
-          const wing = (d: number) =>
-            `${(t.x - size * Math.cos(angle + d)).toFixed(1)},${(t.y - size * Math.sin(angle + d)).toFixed(1)}`;
-          return `<line x1="${f.x.toFixed(1)}" y1="${f.y.toFixed(1)}" x2="${t.x.toFixed(1)}" y2="${t.y.toFixed(1)}" stroke-width="${(unit * 0.005).toFixed(1)}"/><polygon points="${t.x.toFixed(1)},${t.y.toFixed(1)} ${wing(0.45)} ${wing(-0.45)}"/>`;
+          const t = unit * 0.005;
+          const { shaft: s, head } = arrowShape(px(from), px(to), t);
+          const line = `x1="${f1(s.x1)}" y1="${f1(s.y1)}" x2="${f1(s.x2)}" y2="${f1(s.y2)}"`;
+          const pts = head.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ");
+          return `<line class="halo" ${line} stroke-width="${f1(t * 2.2)}"/><polygon class="halo" points="${pts}" stroke-width="${f1(t * 1.2)}"/><line ${line} stroke-width="${f1(t)}"/><polygon points="${pts}"/>`;
         })
         .join("")}</svg>`
     : "";
   const markers = a.markers
-    .map((m) => `<span class="mk" style="left:${pct(m.x)};top:${pct(m.y)}" aria-hidden="true">${m.n}</span>`)
+    .map((m) => `<span class="mk" style="left:${pct(m.x)};top:${pct(m.y)}" data-n="${m.n}" aria-hidden="true"></span>`)
     .join("");
-  const legend = [...a.markers]
-    .sort((x, y) => x.n - y.n)
-    .map((m) => `<span role="listitem"><span class="n">${m.n}</span> ${esc(m.label ?? "")}</span>`)
+  const legend = legendRows(a.markers)
+    .map((r) => {
+      const nums = r.numbers.map((n) => `<span class="n">${n}</span>`).join("");
+      const text = r.label ? esc(r.label) : `<span class="none">${L.noDescription}</span>`;
+      return `<span class="row" role="listitem">${nums}<span>${text}</span></span>`;
+    })
     .join("");
 
   return `<span class="shot"><span class="frame" style="aspect-ratio:${w} / ${h}"><img src="${esc(info.asset)}" alt="${esc(alt)}" loading="lazy">${highlights}${arrows}${hotspots}${markers}</span>${
@@ -177,7 +181,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
 }
 
 const CSS = `
-:root{--accent:#2b4fe0;--anotacao:#2b4fe0;--anotacao-fundo:rgba(43,79,224,.08);--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--marca-halo:rgba(255,212,59,.3);--t-cover:#000;--t-page:#000;--t-h1:#000;--t-h2:#000;--t-h3:#000;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
+:root{--accent:#2b4fe0;--anotacao:#2b4fe0;--anotacao-fundo:rgba(43,79,224,.08);--sobre-anotacao:#fff;--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--t-cover:#000;--t-page:#000;--t-h1:#000;--t-h2:#000;--t-h3:#000;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
 --texto:"Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif;--display:"Archivo","Arial Narrow",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
 *{box-sizing:border-box}
 body{margin:0;background:#fff;color:var(--tinta);font:16px/1.65 var(--texto);-webkit-font-smoothing:antialiased}
@@ -222,16 +226,7 @@ ${Object.entries(CALLOUT_COLORS)
   .map(([type, hex]) => `.callout[data-callout="${type}"]{--c:${type === "note" ? "var(--accent)" : hex}}`)
   .join("")}
 .shot{display:block;margin:.6em 0}
-.frame{position:relative;display:block;max-width:100%;width:fit-content}
-.frame img{display:block;max-width:100%;height:auto;border:1px solid var(--linha);border-radius:8px}
-.hl{position:absolute;border:2px solid var(--marca);background:var(--marca-halo);border-radius:3px}
-.hot{position:absolute;border:2px dashed var(--anotacao);background:var(--anotacao-fundo);border-radius:3px}
-.arrows{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-.arrows line{stroke:var(--anotacao);stroke-linecap:round}
-.arrows polygon{fill:var(--anotacao)}
-.mk{position:absolute;transform:translate(-50%,-50%);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--anotacao);color:#fff;font:600 13px var(--mono);box-shadow:0 0 0 2px #fff,0 2px 6px rgba(21,26,51,.35)}
-.legend{display:grid;gap:4px;margin-top:8px;font-size:15px}
-.legend .n{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:6px;border-radius:50%;background:var(--anotacao);color:#fff;font:600 11px var(--mono);vertical-align:1px}
+${ANNOTATION_CSS}
 .missing{color:#c8411f;font-style:italic}
 ${Object.entries(TEXT_COLORS)
   .map(([name, hex]) => `[data-color="${name}"]{color:${hex}}`)
