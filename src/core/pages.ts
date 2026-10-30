@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { readFile, rm } from "node:fs/promises";
+import { rm } from "node:fs/promises";
 import path from "node:path";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
-import { atomicWrite, relativePosix, resolveInside, uniquePath } from "./fs.js";
+import { atomicWrite, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { PAGES_DIR, readManual, updateManual } from "./manuals.js";
 import { slugify } from "./text.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
@@ -76,7 +76,7 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
 async function readPageFile(dir: string, file: string): Promise<{ title: string; status: PageStatus; body: string }> {
   let text: string;
   try {
-    text = await readFile(resolveInside(dir, file), "utf8");
+    text = await readText(resolveInside(dir, file));
   } catch (err) {
     if ((err as { code?: string }).code === "ENOENT") {
       throw new Error(`O arquivo ${file} não foi encontrado. Ele foi apagado ou renomeado fora do Studio.`);
@@ -143,7 +143,7 @@ async function relink(dir: string, files: string[], from: string, to: string): P
   const pattern = new RegExp(`(\\]\\()(?:\\./)?${escaped}(?=[)#])`, "g");
   for (const file of files) {
     const abs = resolveInside(dir, file);
-    const text = await readFile(abs, "utf8");
+    const text = await readText(abs);
     const updated = text.replace(pattern, `$1./${name(to)}`);
     if (updated !== text) await atomicWrite(abs, updated);
   }

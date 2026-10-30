@@ -1,7 +1,7 @@
-import { mkdir, readdir, readFile } from "node:fs/promises";
+import { mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
-import { atomicWrite, exists, resolveInside, uniquePath } from "./fs.js";
+import { atomicWrite, exists, readText, resolveInside, uniquePath } from "./fs.js";
 import { readManual, updateManual } from "./manuals.js";
 import { readPage, updatePage } from "./pages.js";
 import { findNode } from "./tree.js";
@@ -86,7 +86,7 @@ export async function publishVersion(dir: string, pageId: string, versionId: str
 async function readVersionFile(file: string, published: string | undefined): Promise<Version> {
   let text: string;
   try {
-    text = await readFile(file, "utf8");
+    text = await readText(file);
   } catch (err) {
     if ((err as { code?: string }).code === "ENOENT") throw new Error(`Versão não encontrada: ${path.basename(file, ".md")}`);
     throw err;

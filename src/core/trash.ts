@@ -1,8 +1,8 @@
 import { randomUUID } from "node:crypto";
-import { mkdir, readdir, readFile, rename, rm } from "node:fs/promises";
+import { mkdir, readdir, rename, rm } from "node:fs/promises";
 import path from "node:path";
 import { splitFrontmatter } from "./frontmatter.js";
-import { atomicWrite, exists, relativePosix, resolveInside, uniquePath } from "./fs.js";
+import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { PAGES_DIR, updateManual } from "./manuals.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
 import type { PageNode } from "./types.js";
@@ -35,9 +35,9 @@ export async function listTrash(dir: string): Promise<TrashItem[]> {
   for (const trashId of await readdir(root)) {
     const entryFile = path.join(root, trashId, "entry.json");
     if (!(await exists(entryFile))) continue;
-    const entry = JSON.parse(await readFile(entryFile, "utf8")) as TrashEntry;
+    const entry = JSON.parse(await readText(entryFile)) as TrashEntry;
     const pageFile = path.join(root, trashId, entry.node.file);
-    const data: Record<string, unknown> = (await exists(pageFile)) ? splitFrontmatter(await readFile(pageFile, "utf8")).data : {};
+    const data: Record<string, unknown> = (await exists(pageFile)) ? splitFrontmatter(await readText(pageFile)).data : {};
     const title = typeof data.title === "string" ? data.title : "";
     items.push({ trashId, pageId: entry.node.id, title, pages: flatten([entry.node]).length, deletedAt: entry.deletedAt });
   }
@@ -73,7 +73,7 @@ export async function removePage(dir: string, id: string): Promise<{ trashId: st
  */
 export async function restorePage(dir: string, trashId: string): Promise<void> {
   const trash = resolveInside(path.join(dir, TRASH_DIR), trashId);
-  const entry = JSON.parse(await readFile(path.join(trash, "entry.json"), "utf8")) as TrashEntry;
+  const entry = JSON.parse(await readText(path.join(trash, "entry.json"))) as TrashEntry;
 
   for (const n of flatten([entry.node])) {
     const from = path.join(trash, n.file);
