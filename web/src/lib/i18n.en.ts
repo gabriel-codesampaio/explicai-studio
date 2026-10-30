@@ -133,6 +133,7 @@ export const EN: Record<string, string> = {
   Lixeira: "Trash",
   "Lixeira deste manual": "Trash for this manual",
   "Mais ações para {nome}": "More actions for {nome}",
+  Manual: "Manual",
   "Manuais nesta pasta": "Manuals in this folder",
   Marcador: "Marker",
   "Marcando imagens": "Marking up images",

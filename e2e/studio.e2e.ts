@@ -294,3 +294,20 @@ test("exportação mostra o nome de cada cor do manual", async ({ page, request 
     /^#(2b4fe0|8098ff)$/,
   );
 });
+
+test("barra: troca de manual pelo cabeçalho e abre a busca pela linha", async ({ page, request }) => {
+  const a = await setup(request, "Manual Cabeçalho A", ["Alfa"]);
+  await setup(request, "Manual Cabeçalho B", ["Beta"]);
+  await page.goto(`/#/${a.slug}`);
+
+  const switcher = page.getByRole("button", { name: /Manual Cabeçalho A/ });
+  await switcher.focus();
+  await page.keyboard.press("Enter");
+  await page.getByRole("menuitem", { name: "Manual Cabeçalho B" }).click();
+  await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Beta");
+
+  await page.getByRole("button", { name: /Buscar página/ }).click();
+  await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeHidden();
+});

@@ -24,12 +24,18 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex w-full items-center gap-2 rounded-md border border-border bg-background px-2.5 py-2 text-left hover:bg-muted data-[state=open]:bg-muted"
+          className="group -mx-1 flex w-[calc(100%+0.5rem)] flex-col items-start gap-0.5 rounded-md px-1 py-1 text-left outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-muted"
         >
-          <span className="min-w-0 flex-1 truncate font-display text-[15px] font-semibold [font-stretch:105%]">
-            {current?.title ?? t("Escolha um manual")}
+          <span className="rotulo text-muted-foreground">{t("Manual")}</span>
+          <span className="flex w-full items-center gap-2">
+            <span className="min-w-0 flex-1 truncate font-display text-lg font-semibold leading-tight [font-stretch:105%]">
+              {current?.title ?? t("Escolha um manual")}
+            </span>
+            <ChevronsUpDown
+              className="size-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-data-[state=open]:opacity-100"
+              aria-hidden
+            />
           </span>
-          <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width) min-w-56">
