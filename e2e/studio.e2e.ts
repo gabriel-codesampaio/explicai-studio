@@ -185,6 +185,18 @@ test("Ctrl+P busca a página pelo título, sem acento, e abre com Enter", async 
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Relatórios de vendas");
 });
 
+test("a árvore e a busca mostram a numeração do sumário, como 2.1 numa subpágina", async ({ page, request }) => {
+  const { slug, pages } = await setup(request, "Manual Numerado", ["Início", "Clientes"]);
+  await request.post(`/api/manuals/${slug}/pages`, { data: { title: "Cadastro", parentId: pages[1]?.id } });
+  await page.goto(`/#/${slug}`);
+  await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Início");
+  await expect(treePage(page, "Cadastro")).toContainText("2.1");
+
+  await page.keyboard.press("Control+p");
+  await page.getByRole("combobox", { name: "Buscar página pelo título" }).fill("cadastro");
+  await expect(page.getByRole("option")).toContainText("2.1");
+});
+
 test("marcação: arrasta o destaque com Selecionar e Desfazer volta ao lugar", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Mover", ["Tela"]);
   await page.goto(`/#/${slug}`);
