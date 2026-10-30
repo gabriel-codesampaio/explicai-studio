@@ -102,6 +102,7 @@ export function flattenItems(items: TreeItem[]): TreeItem[] {
 /**
  * Número de cada página (1, 2, 2.1), a mesma regra do sumário exportado (`collectPages`): ordem da
  * árvore e um nível por profundidade. Página com problema não entra e os filhos sobem para o lugar dela.
+ * Exportando só as aprovadas, o sumário renumera e pode diferir daqui: a árvore numera sempre todas.
  */
 export function numberPages(items: TreeItem[]): Map<string, string> {
   const numbers = new Map<string, string>();
