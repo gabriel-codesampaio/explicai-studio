@@ -2,7 +2,7 @@
 
 Ideia original no caderno (30/10/2026): `#app` - Inverter a ordem do botão de Exportar, colocar ele sempre a direita, com cores que chamem a atenção
 
-Complementa [T-006](../tickets/fechados/T-006-exportar-no-topo.md), que levou "Exportar manual" para o topo da página. Ideia do caderno (#app): "Inverter a ordem do botão de Exportar, colocar ele sempre a direita, com cores que chamem a atenção".
+Complementa [T-006](../../tickets/fechados/T-006-exportar-no-topo.md), que levou "Exportar manual" para o topo da página. Ideia do caderno (#app): "Inverter a ordem do botão de Exportar, colocar ele sempre a direita, com cores que chamem a atenção".
 
 ## Problema
 Quem termina de escrever e quer entregar o manual procura "Exportar manual" no canto onde as ferramentas costumam guardar a ação final (direita). Hoje ele é o primeiro de quatro itens do topo, e os três vizinhos são texto cinza pequeno, então a ação principal fica no meio do grupo. Hipótese: sem usuário real que tenha reclamado; é leitura do caderno.
