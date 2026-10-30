@@ -60,6 +60,12 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
           },
         }),
       }),
+      Extension.create({
+        name: "endShortcut",
+        // O Ctrl+End nativo move só o cursor do navegador, e o ProseMirror o lê depois (selectionchange).
+        // Um Enter logo em seguida via o cursor antigo e abria a linha antes da imagem final.
+        addKeyboardShortcuts: () => ({ "Mod-End": ({ editor: ed }) => ed.commands.focus("end") }),
+      }),
       FileHandler.configure({
         allowedMimeTypes: IMAGE_TYPES,
         onPaste: (ed, files) => upload(ed, files, ed.state.selection.anchor),

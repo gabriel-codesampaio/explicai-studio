@@ -221,8 +221,7 @@ test.describe("edição", () => {
     );
   });
 
-  // T-070: o cursor às vezes fica antes da imagem (cerca de 1 em 5).
-  test.fixme("Ctrl+End numa página que termina na imagem leva o cursor para depois dela", async ({ page, request }) => {
+  test("Ctrl+End numa página que termina na imagem leva o cursor para depois dela", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Fim", "Texto.\n\n![Tela](../assets/tela.png)");
     await page.goto(`/#/${slug}/${id}`);
     await expect(images(page)).toHaveCount(1);
