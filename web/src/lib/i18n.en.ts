@@ -131,7 +131,9 @@ export const EN: Record<string, string> = {
   "Guardar versão": "Save version",
   'Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que vai para o manual final. Sem ela, vale o texto atual.':
     'Save the text as it is now to come back to it later. The "Manual version" is the one that goes into the final manual. Without one, the current text is used.',
+  Idioma: "Language",
   "Idioma da interface": "Interface language",
+  "Muda só o Studio, neste navegador.": "Changes only the Studio, in this browser.",
   Imagem: "Image",
   "Colar print": "Paste screenshot",
   "Inserir bloco": "Insert block",
