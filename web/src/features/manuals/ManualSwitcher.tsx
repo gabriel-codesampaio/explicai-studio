@@ -32,7 +32,7 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
               {current?.title ?? t("Escolha um manual")}
             </span>
             <ChevronsUpDown
-              className="size-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-data-[state=open]:opacity-100"
+              className="size-4 shrink-0 text-muted-foreground opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 group-data-[state=open]:opacity-100 [@media(hover:none)]:opacity-100"
               aria-hidden
             />
           </span>
