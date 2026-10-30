@@ -575,8 +575,7 @@ for (const width of [375, 1280]) {
   }
 }
 
-// T-071: Esc fecha o balão mas o foco cai no body.
-test.fixme("teclado: o balão da descrição abre ao selecionar a imagem, o Tab chega em Marcar imagem e o Esc devolve o foco ao editor", async ({
+test("teclado: o balão da descrição abre ao selecionar a imagem, o Tab chega em Marcar imagem e o Esc devolve o foco ao editor", async ({
   page,
   request,
 }) => {
@@ -589,4 +588,6 @@ test.fixme("teclado: o balão da descrição abre ao selecionar a imagem, o Tab 
   await page.keyboard.press("Escape");
   await expect(alt).toBeHidden();
   await expect(editor(page)).toBeFocused();
+  await page.keyboard.press("Backspace");
+  await expect(images(page)).toHaveCount(0);
 });
