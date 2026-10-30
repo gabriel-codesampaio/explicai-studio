@@ -20,7 +20,6 @@ import {
 /** Acento, emoji (par substituto) e CJK: o que vai para o disco volta igual, em UTF-8 sem BOM. */
 const TITLE = "Ação ✓ 日本語 🚀 Revisão";
 const BODY = "Olá, **mundo** 🌍\n\nSegunda linha com çãõ e 𝒳.\n";
-
 const BOM = Buffer.from([0xef, 0xbb, 0xbf]);
 
 let workspace: string;
@@ -34,6 +33,7 @@ afterEach(async () => {
 });
 
 const startsWithBom = (b: Buffer) => b.subarray(0, 3).equals(BOM);
+const withBom = async (file: string) => writeFile(file, Buffer.concat([BOM, await readFile(file)]));
 
 describe("UTF-8 de ida e volta", () => {
   it("manual.json: título com acento e emoji volta igual, sem BOM e com \\n final", async () => {
@@ -129,6 +129,13 @@ describe("UTF-8 de ida e volta", () => {
 });
 
 describe("BOM e CRLF vindos de editores do Windows", () => {
+  it("manual.json com BOM abre", async () => {
+    const { dir } = await createManual(workspace, { title: "Com BOM", language: "pt-BR" });
+    await withBom(path.join(dir, "manual.json"));
+    expect((await readManual(dir)).title).toBe("Com BOM");
+    expect((await listManuals(workspace)).map((m) => m.meta.title)).toEqual(["Com BOM"]);
+  });
+
   it("manual.json com CRLF abre e é regravado sem perder nada", async () => {
     const { dir } = await createManual(workspace, { title: "CRLF", language: "pt-BR" });
     const page = await addPage(dir, { title: "A" });
@@ -137,6 +144,14 @@ describe("BOM e CRLF vindos de editores do Windows", () => {
     expect((await readManual(dir)).pages[0]?.id).toBe(page.id);
     await updatePage(dir, page.id, { title: "B" });
     expect((await readManual(dir)).pages[0]?.file).toBe("pages/b.md");
+  });
+
+  it("página escrita à mão com BOM mantém título e corpo", async () => {
+    const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
+    const page = await addPage(dir, { title: "Original", body: "corpo" });
+    await withBom(path.join(dir, page.file));
+    expect(await readPage(dir, page.id)).toMatchObject({ title: "Original", body: "corpo" });
+    expect((await readPageTree(dir))[0]).toMatchObject({ title: "Original" });
   });
 
   it("página com CRLF (frontmatter e corpo) abre com título, status e corpo certos", async () => {

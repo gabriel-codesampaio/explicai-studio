@@ -1,7 +1,7 @@
-import { mkdir, readdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readdir, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
-import { atomicWrite, exists, relativePosix, resolveInside, uniquePath } from "./fs.js";
+import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { ASSETS_DIR } from "./manuals.js";
 import { slugify } from "./text.js";
 import type { Annotations } from "./types.js";
@@ -21,7 +21,7 @@ export async function saveAsset(dir: string, fileName: string, data: Uint8Array)
 export async function readAnnotations(dir: string, assetPath: string): Promise<Annotations> {
   const file = annotationsFile(dir, assetPath);
   if (!(await exists(file))) return emptyAnnotations();
-  return parseAnnotations(JSON.parse(await readFile(file, "utf8")));
+  return parseAnnotations(JSON.parse(await readText(file)));
 }
 
 export async function writeAnnotations(dir: string, assetPath: string, input: unknown): Promise<Annotations> {
@@ -56,7 +56,7 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
     if (!(await exists(root))) continue;
     for (const file of await readdir(root, { recursive: true })) {
       if (!file.endsWith(".md")) continue;
-      for (const [, name] of (await readFile(path.join(root, file), "utf8")).matchAll(MENTION)) {
+      for (const [, name] of (await readText(path.join(root, file))).matchAll(MENTION)) {
         if (name) used.add(decodeURI(name));
       }
     }

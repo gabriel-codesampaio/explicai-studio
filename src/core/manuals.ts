@@ -1,6 +1,6 @@
-import { mkdir, readdir, readFile } from "node:fs/promises";
+import { mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
-import { atomicWrite, exists, uniquePath } from "./fs.js";
+import { atomicWrite, exists, readText, uniquePath } from "./fs.js";
 import { required, slugify } from "./text.js";
 import { FORMAT_VERSION, type Manual, type ManualMeta } from "./types.js";
 
@@ -42,7 +42,7 @@ export async function listManuals(workspace: string): Promise<Manual[]> {
 export async function readManual(dir: string): Promise<ManualMeta> {
   let meta: Partial<ManualMeta> | null;
   try {
-    meta = JSON.parse(await readFile(path.join(dir, META_FILE), "utf8")) as Partial<ManualMeta> | null;
+    meta = JSON.parse(await readText(path.join(dir, META_FILE))) as Partial<ManualMeta> | null;
   } catch (err) {
     if (err instanceof SyntaxError)
       throw new Error(`O ${META_FILE} do manual "${path.basename(dir)}" não é um JSON válido: ${err.message}`);
