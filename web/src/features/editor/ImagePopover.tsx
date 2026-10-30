@@ -36,6 +36,7 @@ export function ImagePopover({ editor, onAnnotate }: { editor: Editor; onAnnotat
       onClose={() => setDismissedAt(image?.pos ?? null)}
       getRect={rect}
       label={t("Descrição da imagem")}
+      onEscape={() => editor.commands.focus()}
     >
       {image && (
         <div className="grid gap-2">
