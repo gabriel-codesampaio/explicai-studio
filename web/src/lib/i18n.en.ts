@@ -168,7 +168,7 @@ export const EN: Record<string, string> = {
   "Não foi possível enviar a imagem.": "Could not upload the image.",
   "Não foi possível exportar o manual.": "Could not export the manual.",
   "Não foi possível salvar as marcações.": "Could not save the markups.",
-  "Não foi possível salvar.": "Could not save.",
+  "Não foi possível salvar. O texto continua na tela.": "Could not save. Your text is still on screen.",
   Negrito: "Bold",
   "Nenhum bloco com esse nome.": "No block with that name.",
   "Nenhuma página ainda.": "No pages yet.",
@@ -287,4 +287,42 @@ export const EN: Record<string, string> = {
   "Fonte do texto": "Text font",
   "Fonte dos títulos": "Heading font",
   padrão: "default",
+  "A conexão com o Studio voltou.": "The connection to the Studio is back.",
+  "Não foi possível abrir este manual": "Could not open this manual",
+  "Criar um manual novo": "Create a new manual",
+  "Abrir {nome}": "Open {nome}",
+  "Abrir a primeira página": "Open the first page",
+  "Abrindo o Studio…": "Opening the Studio…",
+  "Não foi possível abrir o Studio": "Could not open the Studio",
+  "O Studio encontrou um erro que não esperava. O texto que já foi salvo continua no disco. Recarregue para continuar; se o erro voltar, copie o código abaixo e conte para quem mantém o projeto.":
+    "The Studio hit an error it did not expect. Text that was already saved is still on disk. Reload to continue; if the error comes back, copy the code below and tell whoever maintains the project.",
+  "Tentar de novo sem recarregar": "Try again without reloading",
+  "Recarregar o Studio": "Reload the Studio",
+  "Algo quebrou nesta tela": "Something broke on this screen",
+  "O link pode estar antigo, ou a página foi excluída ou movida para outro lugar do manual.":
+    "The link may be old, or the page was deleted or moved somewhere else in the manual.",
+  "O link pode estar antigo, ou o manual foi renomeado, movido ou apagado da pasta.":
+    "The link may be old, or the manual was renamed, moved or deleted from the folder.",
+  "Não achamos esta página": "We could not find this page",
+  "Não achamos este manual": "We could not find this manual",
+  "O que você escreveu continua nesta tela e será salvo quando o servidor voltar.":
+    "What you wrote is still on this screen and will be saved when the server is back.",
+  "Sem conexão com o Studio.": "No connection to the Studio.",
+  "O servidor do Studio foi fechado ou está reiniciando. Quando ele voltar, esta tela abre o Studio sozinha. Se você usa o terminal, confira se o comando explicai ainda está rodando.":
+    "The Studio server was closed or is restarting. When it is back, this screen opens the Studio by itself. If you use the terminal, check that the explicai command is still running.",
+  "Tentamos de novo sozinhos. Tentativas até agora: {n}.": "We keep trying on our own. Attempts so far: {n}.",
+  "Tentando de novo…": "Trying again…",
+  "Tentar agora": "Try now",
+  "O Studio não está respondendo": "The Studio is not responding",
+  "Código copiado.": "Code copied.",
+  "Copiar código": "Copy code",
+  Copiado: "Copied",
+  "Não foi possível falar com o Studio. Ele pode ter sido fechado ou estar reiniciando.":
+    "Could not reach the Studio. It may have been closed or may be restarting.",
+  "O Studio só aceita pedidos deste computador. Abra-o por localhost ou 127.0.0.1.":
+    "The Studio only accepts requests from this computer. Open it through localhost or 127.0.0.1.",
+  "O Studio recebeu um texto que não está em UTF-8. Salve o conteúdo em UTF-8 e envie de novo.":
+    "The Studio received text that is not UTF-8. Save the content as UTF-8 and send it again.",
+  "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.":
+    "To make the PDF, Explicaí uses Chrome, Edge or Chromium on your computer, and none was found. Install one of them or set its path in the EXPLICAI_BROWSER variable.",
 };

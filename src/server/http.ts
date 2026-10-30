@@ -6,6 +6,8 @@ export class HttpError extends Error {
   constructor(
     readonly status: number,
     message: string,
+    /** Identifica o erro para a interface traduzir (a mensagem fica em português para curl e MCP). */
+    readonly code?: string,
   ) {
     super(message);
   }
@@ -69,7 +71,7 @@ export async function readJson(req: IncomingMessage): Promise<Record<string, unk
     // fatal: um cliente em Latin-1/cp1252 (curl no Windows) mandaria "í" como 0xED, e o decode comum o trocaria por U+FFFD gravado em disco.
     text = new TextDecoder("utf-8", { fatal: true }).decode(raw);
   } catch {
-    throw new HttpError(400, "O corpo da requisição não está em UTF-8 válido. Envie o JSON em UTF-8.");
+    throw new HttpError(400, "O corpo da requisição não está em UTF-8 válido. Envie o JSON em UTF-8.", "invalid-utf8");
   }
   let data: unknown;
   try {

@@ -109,17 +109,30 @@ export class ApiError extends Error {
     message: string,
     readonly code?: string,
     readonly params: Record<string, string | number> = {},
+    /** Status HTTP; 0 quando o pedido nem chegou ao servidor. */
+    readonly status = 0,
   ) {
     super(message);
   }
 }
 
+/** O Studio não respondeu: fetch falhou, ou o proxy do Vite devolveu 502/503/504 (servidor reiniciando). */
+export const isOffline = (err: unknown): boolean => err instanceof ApiError && err.code === "offline";
+
+const GATEWAY_DOWN = [502, 503, 504];
+
 async function call<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, init);
+  let res: Response;
+  try {
+    res = await fetch(url, init);
+  } catch {
+    throw new ApiError("Servidor fora.", "offline");
+  }
   const data: unknown = await res.json().catch(() => ({}));
   if (!res.ok) {
     const { error, code, params } = data as { error?: string; code?: string; params?: Record<string, string | number> };
-    throw new ApiError(error ?? t("Erro {status}", { status: res.status }), code, params);
+    if (!code && GATEWAY_DOWN.includes(res.status)) throw new ApiError("Servidor fora.", "offline", {}, res.status);
+    throw new ApiError(error ?? t("Erro {status}", { status: res.status }), code, params, res.status);
   }
   return data as T;
 }
@@ -186,7 +199,17 @@ export const api = {
 const ratio = (n: unknown) => Number(n).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 /** Erros do núcleo com código: o texto vem do i18n, no idioma da interface. Sem código conhecido, vale a mensagem do servidor. */
+const forbidden = () => t("O Studio só aceita pedidos deste computador. Abra-o por localhost ou 127.0.0.1.");
+
 const CODED: Record<string, (p: Record<string, string | number>) => string> = {
+  offline: () => t("Não foi possível falar com o Studio. Ele pode ter sido fechado ou estar reiniciando."),
+  "forbidden-host": forbidden,
+  "forbidden-origin": forbidden,
+  "invalid-utf8": () => t("O Studio recebeu um texto que não está em UTF-8. Salve o conteúdo em UTF-8 e envie de novo."),
+  "no-browser": () =>
+    t(
+      "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.",
+    ),
   "no-approved-pages": () => t("Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas."),
   "low-contrast": (p) =>
     t("A cor de {label} tem contraste {ratio}:1 com o branco; o mínimo é {min}:1. Escolha uma cor mais escura.", {

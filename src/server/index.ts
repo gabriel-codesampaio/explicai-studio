@@ -1,5 +1,6 @@
 import { createServer, type Server } from "node:http";
 import { ExplicaiError } from "../core/errors.js";
+import { errorPage, pickLang } from "./errorPage.js";
 import { HttpError, send, sendJson, statusOf } from "./http.js";
 import { matchRoute, type Route, type StudioOptions } from "./router.js";
 import { assetRoutes } from "./routes/assets.js";
@@ -36,7 +37,20 @@ export function createStudioServer(opts: StudioOptions): Server {
       await send(res, await match.route.handle({ req, url, params: match.params, rest: match.rest, opts }));
     } catch (err) {
       const { code, params } = err instanceof ExplicaiError ? err : ({} as Partial<ExplicaiError>);
-      sendJson(res, statusOf(err), { error: err instanceof Error ? err.message : String(err), code, params });
+      const errorCode = code ?? (err instanceof HttpError ? err.code : undefined);
+      const status = statusOf(err);
+      // Quem abre o Studio no navegador recebe uma página legível; a API e os arquivos continuam em JSON.
+      const [first] = (req.url ?? "/").split("?")[0]?.split("/").filter(Boolean) ?? [];
+      if (first !== "api" && first !== "files" && req.headers.accept?.includes("text/html")) {
+        const html = errorPage(
+          status,
+          errorCode ?? (status === 404 ? "not-found" : "error"),
+          pickLang(req.headers["accept-language"]),
+        );
+        res.writeHead(status, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
+        return void res.end(html);
+      }
+      sendJson(res, status, { error: err instanceof Error ? err.message : String(err), code: errorCode, params });
     }
   });
 }

@@ -5,6 +5,7 @@ import "@fontsource-variable/jetbrains-mono";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { locale } from "./lib/i18n";
 import { followSystemTheme } from "./lib/theme";
 import "./styles/index.css";
@@ -17,6 +18,8 @@ document.documentElement.lang = locale;
 followSystemTheme();
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary root>
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
 );

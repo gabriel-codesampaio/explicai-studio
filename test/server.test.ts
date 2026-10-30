@@ -1,4 +1,5 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import http from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -64,6 +65,27 @@ describe("API do Studio", () => {
   it("recusa requisição vinda de outro site", async () => {
     const res = await fetch(`${base}/api/manuals`, { headers: { origin: "https://site-malicioso.com" } });
     expect(res.status).toBe(403);
+    expect((await res.json()).code).toBe("forbidden-origin");
+  });
+
+  it("recusa Host que não é local com código próprio", async () => {
+    const res = await new Promise<{ status: number; body: string }>((resolve, reject) => {
+      const url = new URL(base);
+      const req = http.request(
+        { host: "127.0.0.1", port: url.port, path: "/api/manuals", headers: { host: "exemplo.com" } },
+        (r) => {
+          let body = "";
+          r.on("data", (c) => {
+            body += c;
+          });
+          r.on("end", () => resolve({ status: r.statusCode ?? 0, body }));
+        },
+      );
+      req.on("error", reject);
+      req.end();
+    });
+    expect(res.status).toBe(403);
+    expect(JSON.parse(res.body).code).toBe("forbidden-host");
   });
 
   it("exclui para a lixeira, lista e restaura", async () => {
@@ -288,7 +310,9 @@ describe("corpo da requisição em UTF-8", () => {
   it("recusa corpo em Latin-1 em vez de gravar U+FFFD", async () => {
     const res = await post(`${base}/api/manuals`, Buffer.from('{"title":"In\xedcio"}', "latin1"));
     expect(res.status).toBe(400);
-    expect((await res.json()).error).toMatch(/UTF-8/);
+    const body = await res.json();
+    expect(body.error).toMatch(/UTF-8/);
+    expect(body.code).toBe("invalid-utf8");
     expect(await (await fetch(`${base}/api/manuals`)).json()).toEqual([]);
   });
 });
