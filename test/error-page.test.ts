@@ -66,6 +66,20 @@ describe("página de erro do servidor", () => {
     expect(errorPage(404, "not-found", "en")).toContain("<mark>not found</mark>");
   });
 
+  it("declara as fontes da marca servidas pelo próprio servidor, sem CDN", async () => {
+    const body = await (await fetch(`${base}/`, html)).text();
+    const urls = [...body.matchAll(/url\((\/api\/fonts\/[^)]+)\)/g)].map((m) => m[1] as string);
+    expect(urls).toContain("/api/fonts/archivo-latin-wght-normal.woff2");
+    expect(urls).toContain("/api/fonts/atkinson-hyperlegible-next-latin-400-normal.woff2");
+    expect(body).toContain('font-family:"Archivo"');
+    expect(body).not.toMatch(/url\(https?:/);
+    for (const url of urls) {
+      const res = await fetch(`${base}${url}`);
+      expect(res.status, url).toBe(200);
+      await res.arrayBuffer();
+    }
+  });
+
   it("com o editor no lugar, o index.html sai normalmente", async () => {
     await writeFile(path.join(webDir, "index.html"), "<!doctype html><title>Studio</title>");
     const res = await fetch(`${base}/#/qualquer`, html);
