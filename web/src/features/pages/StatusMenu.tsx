@@ -12,9 +12,29 @@ import { t } from "@/lib/i18n";
 import { STATUSES, statusOf } from "@/lib/status";
 import { cn } from "@/lib/utils";
 
-/** Bolinha de cor do status. Sempre acompanhada do nome, escrito ou para leitor de tela. */
+/** Bolinha de cor do status. Rascunho é anel vazio, para a forma também diferenciar. Sempre vem com o nome escrito. */
 export function StatusDot({ status, className }: { status: PageStatus; className?: string }) {
-  return <span className={cn("inline-block size-2 shrink-0 rounded-full", statusOf(status).dot, className)} aria-hidden />;
+  return (
+    <span
+      className={cn(
+        "inline-block size-2 shrink-0 rounded-full",
+        status === "rascunho" ? "border-[1.5px] border-current" : "bg-current",
+        className,
+      )}
+      aria-hidden
+    />
+  );
+}
+
+/** Nome do status ao lado da bolinha, na cor da etapa (contraste de 4,5:1 medido em web/test/pageStatus.test.ts). */
+export function StatusLabel({ status, className }: { status: PageStatus; className?: string }) {
+  const info = statusOf(status);
+  return (
+    <span className={cn("inline-flex shrink-0 items-center gap-1.5", className)} style={{ color: `var(--${info.token})` }}>
+      <StatusDot status={status} />
+      {info.label}
+    </span>
+  );
 }
 
 /** Status da página no topo dela: rascunho, em revisão, aprovado ou publicado. */
@@ -25,10 +45,10 @@ export function StatusMenu({ status, onChange }: { status: PageStatus; onChange:
         <button
           type="button"
           aria-label={t("Status da página: {status}", { status: statusOf(status).label })}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium [@media(pointer:coarse)]:min-h-11 hover:bg-muted data-[state=open]:bg-muted"
         >
-          <StatusDot status={status} /> {statusOf(status).label}
-          <ChevronDown className="size-3" aria-hidden />
+          <StatusLabel status={status} />
+          <ChevronDown className="size-3 text-muted-foreground" aria-hidden />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
@@ -38,7 +58,7 @@ export function StatusMenu({ status, onChange }: { status: PageStatus; onChange:
             <DropdownMenuRadioItem key={s.id} value={s.id} className="items-start">
               <span className="grid leading-tight">
                 <span className="flex items-center gap-2">
-                  <StatusDot status={s.id} /> {s.label}
+                  <StatusLabel status={s.id} />
                 </span>
                 <span className="text-xs text-muted-foreground">{s.hint}</span>
               </span>

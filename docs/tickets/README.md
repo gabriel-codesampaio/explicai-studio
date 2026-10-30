@@ -13,7 +13,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
 | [T-013](T-013-tela-dividida.md) | Manter a árvore visível em tela dividida (~960 px) | P2 | aberto | frontend |
 | [T-014](T-014-atalhos-de-marcacao.md) | Atalhos de letra nas ferramentas de marcação | P2 | aberto | frontend |
-| [T-017](T-017-status-legivel.md) | Status da página mais legível | P2 | aberto | design |
 | [T-023](T-023-marcacao-no-celular.md) | Deixar a legenda editável no diálogo de marcação em 375 px | P2 | aberto | frontend |
 | [T-026](T-026-aparencia-no-celular.md) | Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro | P2 | aberto | design |
 | [T-027](T-027-tokens-do-escuro.md) | Alinhar as cores do tema escuro ao brand book | P2 | aberto | design |
@@ -42,6 +41,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-017](fechados/T-017-status-legivel.md) | Status da página mais legível | P2 | feito | 87eeb8e |
 | [T-065](fechados/T-065-fonte-do-manual-na-barra.md) | Escolher a fonte do manual pela barra de ferramentas | P2 | feito | bb4acc8 |
 | [T-012](fechados/T-012-marcacoes-do-brand-book.md) | Marcações como no brand book | P2 | feito | 6be64a9 |
 | [T-068](fechados/T-068-fonte-na-pagina-de-erro-do-servidor.md) | Página HTML de erro do servidor sem a fonte Archivo | P3 | feito | 9838432 |
