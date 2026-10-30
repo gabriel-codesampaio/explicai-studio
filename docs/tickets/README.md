@@ -10,6 +10,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-071](fechados/T-071-esc-no-balao-da-imagem-perde-o-foco.md) | Esc no balão da descrição da imagem joga o foco para o body | P2 | feito | cbcd5a4 |
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
 | [T-013](T-013-tela-dividida.md) | Manter a árvore visível em tela dividida (~960 px) | P2 | aberto | frontend |
 | [T-014](T-014-atalhos-de-marcacao.md) | Atalhos de letra nas ferramentas de marcação | P2 | aberto | frontend |
@@ -36,7 +37,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-065](T-065-fonte-do-manual-na-barra.md) | Escolher a fonte do manual pela barra de ferramentas | P2 | aberto | frontend |
 | [T-068](T-068-fonte-na-pagina-de-erro-do-servidor.md) | Página HTML de erro do servidor sem a fonte Archivo | P3 | aberto | frontend |
 | [T-070](T-070-ctrl-end-antes-da-imagem.md) | Ctrl+End nem sempre leva o cursor para depois da imagem | P3 | aberto | frontend |
-| [T-071](T-071-esc-no-balao-da-imagem-perde-o-foco.md) | Esc no balão da descrição da imagem joga o foco para o body | P2 | aberto | frontend |
 
 ## Fechados
 
