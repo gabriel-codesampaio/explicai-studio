@@ -77,3 +77,6 @@ Observar depois: a pessoa (ou quem testar) acha a Lixeira sem ajuda? A Lixeira �
 
 ## Não verificado
 Comportamento em dispositivo de toque real; contraste medido; rodapé do Linear, Confluence, Obsidian, GitBook, Scribe e Tango; se existe tecla global para Atalhos.
+
+## Decisões tomadas (2026-10-30)
+- Opção A, com "Ajustes", tema atual em Aparência, sem ícone e mantendo o menu. → [T-040](../../tickets/fechados/T-040-rodape-ajustes.md), feito.

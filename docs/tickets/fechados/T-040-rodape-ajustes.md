@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: [Discovery do rodapé da barra](../../discovery/2026-10-30-rodape-da-barra.md) (2026-10-30), opção A
+- Origem: [Discovery do rodapé da barra](../../discovery/archives/2026-10-30-rodape-da-barra.md) (2026-10-30), opção A
 
 ## Problema
 O rodapé da barra lateral era um "⋯" de 32 px sem texto, igual ao "⋯" da árvore de páginas mas com outro sentido. O menu era mais estreito que a coluna e não mostrava o estado do tema.
