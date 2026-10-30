@@ -287,7 +287,9 @@ test("exportação mostra o nome de cada cor do manual", async ({ page, request 
   const { slug } = await setup(request, "Manual Cores", ["Início"]);
   await page.goto(`/#/${slug}`);
   await page.getByRole("button", { name: "Exportar manual" }).click();
-  const colors = page.getByRole("dialog").getByRole("group", { name: "Cor do manual" });
+  // As cores ficam dentro de "Cores do manual", fechado por padrão.
+  await page.getByRole("dialog").getByText("Cores do manual").click();
+  const colors = page.getByRole("dialog");
   // O botão não tem aria-label: o nome acessível é o texto visível ao lado da bolinha.
   for (const name of ["Cobalto", "Esmeralda", "Ameixa", "Grafite"])
     await expect(colors.getByRole("button", { name, exact: true })).toBeVisible();
