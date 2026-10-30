@@ -1,4 +1,4 @@
-import { Keyboard, MoreHorizontal, Palette, Trash2 } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
@@ -29,17 +29,9 @@ export function MoreMenu() {
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="top" align="start">
-          {manual && (
-            <DropdownMenuItem onSelect={() => setPanel("trash")}>
-              <Trash2 aria-hidden /> {t("Lixeira")}
-            </DropdownMenuItem>
-          )}
-          <DropdownMenuItem onSelect={() => setPanel("appearance")}>
-            <Palette aria-hidden /> {t("Aparência")}
-          </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setPanel("shortcuts")}>
-            <Keyboard aria-hidden /> {t("Atalhos")}
-          </DropdownMenuItem>
+          {manual && <DropdownMenuItem onSelect={() => setPanel("trash")}>{t("Lixeira")}</DropdownMenuItem>}
+          <DropdownMenuItem onSelect={() => setPanel("appearance")}>{t("Aparência")}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setPanel("shortcuts")}>{t("Atalhos")}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       {manual && (

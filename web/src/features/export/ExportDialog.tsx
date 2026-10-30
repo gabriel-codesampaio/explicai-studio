@@ -1,4 +1,4 @@
-import { Download, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,9 +63,7 @@ export function ExportDialog() {
       }}
     >
       <DialogTrigger asChild>
-        <Button>
-          <Download aria-hidden /> {t("Exportar manual")}
-        </Button>
+        <Button>{t("Exportar manual")}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
