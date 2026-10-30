@@ -3,6 +3,7 @@ import { type KeyboardEvent, useEffect, useEffectEvent, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { t } from "@/lib/i18n";
+import { statusOf } from "@/lib/status";
 import { searchPages } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { StatusDot } from "./StatusMenu";
@@ -99,6 +100,11 @@ export function PageSearch({ open, onOpenChange }: Props) {
               onKeyDown={() => {}}
               className={cn("flex cursor-pointer items-center gap-2 rounded-md px-3 py-2", i === index && "bg-accent")}
             >
+              {m.number && (
+                <span aria-hidden className="shrink-0 font-mono text-xs tabular-nums text-primary">
+                  {m.number}
+                </span>
+              )}
               <span className="grid min-w-0 flex-1 leading-tight">
                 <span className="truncate text-sm font-bold">{m.item.title || t("Sem título")}</span>
                 {m.path.length > 0 && (
@@ -112,7 +118,12 @@ export function PageSearch({ open, onOpenChange }: Props) {
                   </span>
                 )}
               </span>
-              {m.item.status !== "rascunho" && <StatusDot status={m.item.status} />}
+              {m.item.status !== "rascunho" && (
+                <span title={statusOf(m.item.status).label} className="inline-flex">
+                  <StatusDot status={m.item.status} />
+                  <span className="sr-only">({statusOf(m.item.status).label})</span>
+                </span>
+              )}
               {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
             </div>
           ))}
