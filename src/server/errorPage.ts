@@ -31,6 +31,10 @@ const TEXTS: Record<string, Record<Lang, [title: string, text: string]>> = {
       "The Studio only accepts requests from this computer. Open it through localhost or 127.0.0.1.",
     ],
   },
+  "malformed-url": {
+    pt: ["Endereço *malformado*", "Este endereço tem um % que o Studio não entende. Volte para o início e escolha o manual."],
+    en: ["Malformed *address*", "This address has a % the Studio cannot read. Go back to the start and pick the manual."],
+  },
   "not-found": {
     pt: ["Página *não encontrada*", "Este endereço não existe no Studio. Volte para o início e escolha o manual."],
     en: ["Page *not found*", "This address does not exist in the Studio. Go back to the start and pick the manual."],
