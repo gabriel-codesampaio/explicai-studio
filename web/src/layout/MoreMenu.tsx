@@ -26,7 +26,7 @@ export function MoreMenu() {
   const bind = (id: Panel) => ({ open: panel === id, onOpenChange: (open: boolean) => setPanel(open ? id : null) });
 
   return (
-    <div className="mt-auto border-t border-border pt-3">
+    <div className="sticky bottom-0 z-10 -mx-3 mt-auto flex h-(--rodape-h) shrink-0 flex-col justify-center border-t border-border bg-card px-3">
       <DropdownMenu onOpenChange={(open) => open && setMode(readAppearance().mode)}>
         <DropdownMenuTrigger asChild>
           {/* Mesmo jeito de "Buscar página": linha com texto, não um ⋯ igual ao da árvore. */}

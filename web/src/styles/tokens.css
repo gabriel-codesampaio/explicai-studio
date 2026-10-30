@@ -48,6 +48,8 @@
   --ring: var(--cobalto);
   /* Canto quase reto (decisão do T-009): o arredondado fica com o símbolo e os marcadores. */
   --radius: 3px;
+  /* Altura única dos rodapés (barra lateral e barra de status): a borda de cima fica na mesma linha. */
+  --rodape-h: 3rem;
 
   /* fontes da marca (o @theme abaixo expõe como font-sans, font-display e font-mono) */
   --fonte-texto: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, sans-serif;

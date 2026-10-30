@@ -18,7 +18,7 @@ const time = (d: Date) => d.toLocaleTimeString(locale, { hour: "2-digit", minute
  */
 export function StatusBar({ path, state, savedAt, onRetry }: Props) {
   return (
-    <footer className="sticky bottom-0 z-10 flex items-center justify-between gap-4 border-t border-border bg-background/95 px-8 py-2 text-[13px] backdrop-blur-sm">
+    <footer className="sticky bottom-0 z-10 flex min-h-(--rodape-h) items-center justify-between gap-4 border-t border-border bg-background/95 px-8 text-[13px] backdrop-blur-sm">
       <span className="flex min-w-0 items-center gap-2 text-muted-foreground">
         <span className="truncate font-mono text-xs" title={path}>
           {path}
@@ -40,7 +40,7 @@ export function StatusBar({ path, state, savedAt, onRetry }: Props) {
           <>
             <AlertCircle className="size-3.5 text-destructive" aria-hidden />
             <span className="text-destructive">{t("Não foi possível salvar. O texto continua na tela.")}</span>
-            <button type="button" onClick={onRetry} className="font-bold text-primary underline-offset-2 hover:underline">
+            <button type="button" onClick={onRetry} className="font-bold text-primary underline-offset-2 hover:underline [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11">
               {t("Tentar de novo")}
             </button>
           </>
