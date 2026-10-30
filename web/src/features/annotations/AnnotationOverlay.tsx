@@ -1,5 +1,6 @@
 import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
+import { arrowShape } from "@/lib/annotationShapes";
 import type { Annotations, Handle, Point, Rect } from "@/lib/annotations";
 import { cn } from "@/lib/utils";
 
@@ -27,13 +28,6 @@ function useSize() {
     return () => observer.disconnect();
   }, []);
   return { ref, size };
-}
-
-/** Ponta da seta: triângulo na direção de `from` para `to`, em pixels. */
-function arrowHead(from: Point, to: Point, size = 12): string {
-  const angle = Math.atan2(to.y - from.y, to.x - from.x);
-  const wing = (a: number) => `${to.x - size * Math.cos(angle + a)},${to.y - size * Math.sin(angle + a)}`;
-  return `${to.x},${to.y} ${wing(0.45)} ${wing(-0.45)}`;
 }
 
 /**
@@ -74,7 +68,7 @@ export function AnnotationOverlay({ annotations, selectedId, onGrab }: Props) {
           key={h.id}
           onPointerDown={pick(h.id)}
           className={cn(
-            "absolute block rounded-[3px] border-2 border-marca bg-marca/30",
+            "absolute block rounded-[3px] border-2 border-marca before:absolute before:inset-0 before:bg-marca before:mix-blend-multiply before:content-['']",
             ring(h.id),
             interactive && "cursor-move",
           )}
@@ -98,22 +92,28 @@ export function AnnotationOverlay({ annotations, selectedId, onGrab }: Props) {
       {size.w > 0 && annotations.arrows.length > 0 && (
         <svg className="absolute inset-0 overflow-visible" width={size.w} height={size.h} role="presentation">
           {annotations.arrows.map((a) => {
-            const from = px(a.from);
-            const to = px(a.to);
+            const thickness = a.id === selectedId ? 5 : 3.5;
+            const { shaft, head } = arrowShape(px(a.from), px(a.to), thickness);
+            const pts = head.map((p) => `${p.x},${p.y}`).join(" ");
             return (
               <g key={a.id} onPointerDown={pick(a.id)} className={cn(interactive && "cursor-move")}>
                 {/* Faixa larga e transparente para facilitar o clique na seta. */}
-                <line x1={from.x} y1={from.y} x2={to.x} y2={to.y} stroke="transparent" strokeWidth={14} />
+                <line x1={px(a.from).x} y1={px(a.from).y} x2={px(a.to).x} y2={px(a.to).y} stroke="transparent" strokeWidth={14} />
+                {/* Contorno branco: a seta se lê sobre print claro e escuro (igual ao .halo do export). */}
+                <g stroke="#fff" strokeOpacity={0.9} strokeLinejoin="round" strokeLinecap="round">
+                  <line x1={shaft.x1} y1={shaft.y1} x2={shaft.x2} y2={shaft.y2} strokeWidth={thickness * 2.2} />
+                  <polygon points={pts} fill="#fff" strokeWidth={thickness * 1.2} />
+                </g>
                 <line
-                  x1={from.x}
-                  y1={from.y}
-                  x2={to.x}
-                  y2={to.y}
+                  x1={shaft.x1}
+                  y1={shaft.y1}
+                  x2={shaft.x2}
+                  y2={shaft.y2}
                   stroke="var(--anotacao)"
-                  strokeWidth={a.id === selectedId ? 5 : 3.5}
+                  strokeWidth={thickness}
                   strokeLinecap="round"
                 />
-                <polygon points={arrowHead(from, to)} fill="var(--anotacao)" />
+                <polygon points={pts} fill="var(--anotacao)" />
               </g>
             );
           })}
@@ -124,7 +124,8 @@ export function AnnotationOverlay({ annotations, selectedId, onGrab }: Props) {
           key={m.id}
           onPointerDown={pick(m.id)}
           className={cn(
-            "absolute grid size-7 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-anotacao font-mono text-[13px] font-semibold text-white before:content-[attr(data-n)] shadow-[0_0_0_2px_#fff,0_2px_6px_rgb(21_26_51/0.35)]",
+            "absolute size-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-anotacao shadow-[0_0_0_2px_#fff,inset_0_0_0_2px_#fff]",
+            "before:absolute before:-top-3 before:-left-3 before:grid before:size-5 before:place-items-center before:rounded-full before:bg-anotacao before:font-mono before:text-[11px] before:font-semibold before:text-sobre-anotacao before:shadow-[0_0_0_2px_#fff] before:content-[attr(data-n)]",
             ring(m.id),
             interactive && "cursor-move",
           )}

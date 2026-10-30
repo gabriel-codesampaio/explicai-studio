@@ -79,7 +79,7 @@
   height: 1.55em;
   border-radius: 50%;
   background: var(--anotacao);
-  color: #fff;
+  color: var(--sobre-anotacao);
   font-family: var(--fonte-mono);
   font-size: 0.82em;
   font-weight: 700;

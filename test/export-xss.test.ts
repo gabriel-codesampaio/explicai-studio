@@ -160,7 +160,7 @@ describe("exportação: escape contra XSS", () => {
     });
     const doc = await html();
     expectNoActiveContent(doc);
-    expect(doc).toContain('<span class="n">1</span> &quot;&gt;&lt;script&gt;');
+    expect(doc).toContain('<span class="n">1</span><span>&quot;&gt;&lt;script&gt;');
     expect(doc).toContain("Ir para Alvo &quot;&gt;&lt;script&gt;");
     expect(doc).not.toContain('onmouseover="alert');
   });

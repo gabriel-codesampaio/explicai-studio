@@ -17,8 +17,9 @@
   --selecao: rgba(43, 79, 224, 0.2);
   --coral: #c8411f;
   --acento: var(--cobalto);
-  /* Marcações sobre o print são conteúdo do manual: mesma cor em qualquer tema ou destaque do Studio. */
+  /* Marcações sobre o print: caneta azul do brand book; no escuro, o azul claro dele (--sobre-anotacao é a cor do número). */
   --anotacao: #2b4fe0;
+  --sobre-anotacao: #ffffff;
   /* Cor do texto escolhida na barra da seleção. A do manual exportado fica em src/core/export/textColors.ts. */
   --cor-gray: #5c6478;
   --cor-red: #c3261b;
@@ -74,6 +75,8 @@
   --linha: #2a3050;
   --input: #6a74a0;
   --cobalto: #8098ff;
+  --anotacao: #7088ff;
+  --sobre-anotacao: #0e1120;
   --sobre-cobalto: #0e1120;
   --marca-faixa: rgba(255, 212, 59, 0.3);
   --selecao: rgba(128, 152, 255, 0.35);
@@ -113,6 +116,7 @@
   --color-ring: var(--ring);
   --color-marca: var(--marca);
   --color-anotacao: var(--anotacao);
+  --color-sobre-anotacao: var(--sobre-anotacao);
   --color-marca-faixa: var(--marca-faixa);
   --color-superficie: var(--superficie);
 

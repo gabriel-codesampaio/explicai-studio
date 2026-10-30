@@ -91,7 +91,13 @@ describe("exportação", () => {
     expect(html).toContain('<span class="num">2.1</span> Editar');
     expect(html).toContain('<img src="assets/tela.png" alt="Tela de clientes"');
     expect(html).toContain("aspect-ratio:800 / 600");
-    expect(html).toMatch(/class="mk" style="left:25\.000%;top:50\.000%"[^>]*>1</);
+    expect(html).toMatch(/class="mk" style="left:25\.000%;top:50\.000%" data-n="1"/);
+    expect(html).toContain('<span class="n">1</span><span>Botão Novo cliente</span>');
+    // seta com ponta fechada: haste, triângulo de 3 vértices e o mesmo par com contorno branco
+    expect(html.match(/<polygon points="[\d.,\- ]+"\/>/g)).toHaveLength(1);
+    expect(html.match(/<polygon class="halo" points="(?:[\d.-]+,[\d.-]+ ?){3}"/g)).toHaveLength(1);
+    expect(html).toContain(".hl::before{");
+    expect(html).toContain("mix-blend-mode:multiply");
     expect(html).toContain("Botão Novo cliente");
     expect(html).toContain(`class="hot" href="#p-${visao.id}"`);
     expect(html).toContain(`<a href="#p-${visao.id}">visão geral</a>`);
