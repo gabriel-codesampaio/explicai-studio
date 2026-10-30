@@ -47,7 +47,7 @@ export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
           onEnter();
         }
       }}
-      className="block w-full resize-none overflow-hidden border-b-2 border-transparent bg-transparent pb-1 font-display text-[2.125rem] leading-tight font-extrabold tracking-tight text-balance [font-stretch:105%] outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-marca"
+      className="block w-full resize-none overflow-hidden border-b-2 border-transparent bg-transparent pb-1 font-display text-[2.125rem] leading-tight font-extrabold tracking-tight text-balance [font-stretch:105%] outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-primary"
     />
   );
 }

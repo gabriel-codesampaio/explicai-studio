@@ -154,7 +154,7 @@ export function ExportDialog() {
           </p>
         )}
         {result && (
-          <div role="status" className="grid gap-1 rounded-md border-l-4 border-marca bg-marca/15 px-3 py-2 text-sm">
+          <div role="status" className="grid gap-1 text-sm text-primary">
             <p>
               {tn(result.pages, "Pronto: {n} página exportada em", "Pronto: {n} páginas exportadas em")}{" "}
               <code className="font-mono text-xs">{result.file}</code>, {t("dentro da pasta do manual.")}
