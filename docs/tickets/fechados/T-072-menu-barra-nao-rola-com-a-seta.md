@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: pedido da pessoa em 2026-10-30
 
@@ -22,4 +22,6 @@ No menu "/" (SlashMenu.tsx), descer com a seta move o destaque para itens de bai
 Teste primeiro; e2e da área; medir no navegador, claro e escuro, 1280 e 375 px.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Commit: 84a6cda (teste 233f4cb).
+- Feito: SlashMenu rola o item ativo com `scrollIntoView({ block: "nearest" })` só nas setas; PageSearch rola o resultado ativo. BlockTypeMenu, TextColorMenu e FontMenu (Radix) já mantinham o foco à vista: teste de BlockTypeMenu passou sem mudança. Conferido no Chrome DevTools MCP, escuro, 1280x420: após 7 setas, scrollTop 93 e item dentro da lista.
+- Fora: 375 px só pelo e2e (altura baixa, não largura); cabeçalho de grupo não é fixo, então não cobre o item.
