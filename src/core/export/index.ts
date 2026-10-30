@@ -1,5 +1,6 @@
 import { copyFile, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
+import { ExplicaiError } from "../errors.js";
 import { atomicWrite, relativePosix, resolveInside } from "../fs.js";
 import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
@@ -37,7 +38,10 @@ export interface ExportResult {
 export async function exportManual(dir: string, format: ExportFormat, opts: CollectOptions = {}): Promise<ExportResult> {
   const collected = await collectPages(dir, opts);
   if (opts.onlyApproved && collected.pages.length === 0) {
-    throw new Error("Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.");
+    throw new ExplicaiError(
+      "no-approved-pages",
+      "Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.",
+    );
   }
   const images = await loadImages(dir, collected.pages);
   const root = resolveInside(dir, EXPORT_DIR);

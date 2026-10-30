@@ -1,4 +1,5 @@
 import { createServer, type Server } from "node:http";
+import { ExplicaiError } from "../core/errors.js";
 import { HttpError, send, sendJson, statusOf } from "./http.js";
 import { matchRoute, type Route, type StudioOptions } from "./router.js";
 import { assetRoutes } from "./routes/assets.js";
@@ -34,7 +35,8 @@ export function createStudioServer(opts: StudioOptions): Server {
       if (!match) throw new HttpError(segments[0] === "api" ? 405 : 404, "Rota não encontrada.");
       await send(res, await match.route.handle({ req, url, params: match.params, rest: match.rest, opts }));
     } catch (err) {
-      sendJson(res, statusOf(err), { error: err instanceof Error ? err.message : String(err) });
+      const { code, params } = err instanceof ExplicaiError ? err : ({} as Partial<ExplicaiError>);
+      sendJson(res, statusOf(err), { error: err instanceof Error ? err.message : String(err), code, params });
     }
   });
 }

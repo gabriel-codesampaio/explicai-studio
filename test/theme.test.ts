@@ -39,6 +39,13 @@ describe("tema do manual", () => {
     expect((await readManual(dir)).theme).toBeUndefined();
   });
 
+  it("o erro de contraste traz código e parâmetros estáveis para a interface traduzir", async () => {
+    const err = await setManualTheme(dir, { headings: { page: "#aaaaaa" } }).catch((e: unknown) => e);
+    expect(err).toMatchObject({ code: "low-contrast", params: { label: "título da página", min: 4.5 } });
+    const realce = await setManualTheme(dir, { highlight: "#101040" }).catch((e: unknown) => e);
+    expect(realce).toMatchObject({ code: "low-contrast-highlight", params: { min: 4.5 } });
+  });
+
   it("realce escuro demais para o texto por cima é recusado", async () => {
     await expect(setManualTheme(dir, { highlight: "#101040" })).rejects.toThrow(/sobre o realce/);
     await setManualTheme(dir, { highlight: "#ffe066" });

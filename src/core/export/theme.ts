@@ -1,3 +1,4 @@
+import { ExplicaiError } from "../errors.js";
 import { HEADING_SLOTS, type HeadingSlot, type ManualTheme } from "../types.js";
 import { contrast, contrastWithWhite, HEX, muted, overWhite, withAlpha } from "./color.js";
 import {
@@ -46,8 +47,10 @@ function hexOf(value: unknown, label: string): string | null {
 function readable(hex: string, label: string): string {
   const c = contrastWithWhite(hex);
   if (c < MIN_CONTRAST) {
-    throw new Error(
+    throw new ExplicaiError(
+      "low-contrast",
       `A cor de ${label} tem contraste ${num(c)}:1 com o branco; o mínimo é ${num(MIN_CONTRAST)}:1. Escolha uma cor mais escura.`,
+      { label, ratio: c, min: MIN_CONTRAST },
     );
   }
   return hex;
@@ -107,8 +110,10 @@ export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch):
   if (next.highlight) {
     const c = contrast(overWhite(next.highlight, HIGHLIGHT_ALPHA), next.text ?? DEFAULT_TEXT);
     if (c < MIN_CONTRAST) {
-      throw new Error(
+      throw new ExplicaiError(
+        "low-contrast-highlight",
         `O texto sobre o realce tem contraste ${num(c)}:1; o mínimo é ${num(MIN_CONTRAST)}:1. Escolha um realce mais claro.`,
+        { ratio: c, min: MIN_CONTRAST },
       );
     }
   }
