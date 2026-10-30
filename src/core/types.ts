@@ -22,9 +22,23 @@ export interface ManualMeta {
   pages: PageNode[];
 }
 
+/** Onde o manual exportado tem título: a capa, o título da página e os níveis 1 a 3 do editor. */
+export const HEADING_SLOTS = ["cover", "page", "h1", "h2", "h3"] as const;
+export type HeadingSlot = (typeof HEADING_SLOTS)[number];
+
+/**
+ * Cores do manual exportado, todas em hexadecimal (#2b4fe0). Campo ausente = cor da marca.
+ * Texto, títulos e destaque precisam de contraste de 4,5:1 com o branco.
+ */
 export interface ManualTheme {
-  /** Cor de destaque em hexadecimal (#2b4fe0): títulos, links e números dos passos no HTML e no PDF. */
+  /** Destaque: links, números dos passos e marcações sobre os prints. */
   accent?: string;
+  /** Texto do manual. */
+  text?: string;
+  /** Marca-texto: capa, "Resultado:" e destaque das imagens. */
+  highlight?: string;
+  /** Cor de cada tipo de título. Sem escolha, saem pretos. */
+  headings?: Partial<Record<HeadingSlot, string>>;
 }
 
 export interface Manual {

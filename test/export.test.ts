@@ -144,7 +144,7 @@ describe("exportação", () => {
     expect((await readManual(dir)).theme).toEqual({ accent: "#0f7a55" });
     const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
     expect(html).toContain("--accent:#0f7a55");
-    await setManualTheme(dir, {});
+    await setManualTheme(dir, { accent: null });
     expect((await readManual(dir)).theme).toBeUndefined();
   });
 

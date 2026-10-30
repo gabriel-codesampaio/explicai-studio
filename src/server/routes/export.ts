@@ -19,14 +19,12 @@ export const exportRoutes: Route[] = [
     },
   },
   {
-    // { accent: "#2b4fe0" } escolhe a cor do manual exportado; { accent: null } volta à da marca.
+    // Muda só os campos enviados: { accent?, text?, highlight?, headings?: { cover?, page?, h1?, h2?, h3? } },
+    // cada um em hexadecimal ou null para voltar à cor da marca. O core confere formato e contraste (400).
     method: "PUT",
     path: "/api/manuals/:slug/theme",
     handle: async (ctx) => {
-      const body = await readJson(ctx.req);
-      const accent = body.accent === null ? undefined : optionalString(body.accent);
-      if (accent === undefined && body.accent !== null) throw new HttpError(400, "Informe accent (texto ou null).");
-      await setManualTheme(manualDir(ctx), accent ? { accent } : {});
+      await setManualTheme(manualDir(ctx), await readJson(ctx.req));
       return json({ ok: true });
     },
   },

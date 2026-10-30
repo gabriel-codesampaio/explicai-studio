@@ -4,9 +4,7 @@ import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
-
-/** Cor da marca, quando o manual não escolheu outra. */
-export const DEFAULT_ACCENT = "#2b4fe0";
+import { themeCss } from "./theme.js";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
@@ -15,7 +13,6 @@ const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
 export function renderHtml(collected: Collected, images: Map<string, ImageInfo>): string {
   const { meta, pages } = collected;
   const L = labelsFor(meta.language);
-  const accent = meta.theme?.accent ?? DEFAULT_ACCENT;
   const toc = pages
     .map(
       (p) =>
@@ -31,7 +28,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
-<style>${CSS.replace("__ACCENT__", accent)}</style>
+<style>${CSS}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
@@ -68,9 +65,9 @@ function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, I
     gfm: true,
     renderer: {
       // Os títulos ficam abaixo do título da página, sem pular nível (ver exportLevels).
-      heading({ tokens, text }: Tokens.Heading) {
+      heading({ tokens, text, depth }: Tokens.Heading) {
         const level = levels[next++] ?? 6;
-        return `<h${level} id="${headingAnchor(page.id, text)}">${this.parser.parseInline(tokens)}</h${level}>\n`;
+        return `<h${level} class="t${Math.min(depth, 3)}" id="${headingAnchor(page.id, text)}">${this.parser.parseInline(tokens)}</h${level}>\n`;
       },
       link({ href, tokens }: Tokens.Link) {
         const target = pageLink(href, pages) ?? safeHref(href);
@@ -160,7 +157,7 @@ const CSS = `
 @font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:block}
 @font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block}
-:root{--accent:__ACCENT__;--anotacao:#2b4fe0;--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
+:root{--accent:#2b4fe0;--anotacao:#2b4fe0;--anotacao-fundo:rgba(43,79,224,.08);--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--marca-halo:rgba(255,212,59,.3);--t-cover:#000;--t-page:#000;--t-h1:#000;--t-h2:#000;--t-h3:#000;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
 --texto:"Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif;--display:"Archivo","Arial Narrow",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
 *{box-sizing:border-box}
 body{margin:0;background:#fff;color:var(--tinta);font:16px/1.65 var(--texto);-webkit-font-smoothing:antialiased}
@@ -174,11 +171,12 @@ body{margin:0;background:#fff;color:var(--tinta);font:16px/1.65 var(--texto);-we
 .num{font-family:var(--mono);font-size:.8em;color:var(--accent);margin-right:4px}
 main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .cover{padding:48px 0 32px;border-bottom:3px solid var(--marca);margin-bottom:24px}
-.cover h1{margin:0;font:800 clamp(32px,5vw,48px)/1.1 var(--display);letter-spacing:-.02em}
+.cover h1{margin:0;color:var(--t-cover);font:800 clamp(32px,5vw,48px)/1.1 var(--display);letter-spacing:-.02em}
 .cover p{margin:8px 0 0;color:var(--grafite)}
 .page{padding-top:32px;scroll-margin-top:16px}
-.page-title{margin:0 0 12px;font:800 30px/1.2 var(--display);letter-spacing:-.01em}
+.page-title{margin:0 0 12px;color:var(--t-page);font:800 30px/1.2 var(--display);letter-spacing:-.01em}
 .page-body h3,.page-body h4,.page-body h5,.page-body h6{font-family:var(--display);line-height:1.25;margin:1.4em 0 .4em;scroll-margin-top:16px}
+.page-body .t1{color:var(--t-h1)}.page-body .t2{color:var(--t-h2)}.page-body .t3{color:var(--t-h3)}
 .page-body h3{font-size:22px}.page-body h4{font-size:19px}.page-body h5,.page-body h6{font-size:17px}
 .page-body p{margin:.6em 0}
 .page-body a{color:var(--accent);text-underline-offset:.2em}
@@ -200,8 +198,8 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .shot{display:block;margin:.6em 0}
 .frame{position:relative;display:block;max-width:100%;width:fit-content}
 .frame img{display:block;max-width:100%;height:auto;border:1px solid var(--linha);border-radius:8px}
-.hl{position:absolute;border:2px solid var(--marca);background:rgba(255,212,59,.3);border-radius:3px}
-.hot{position:absolute;border:2px dashed var(--anotacao);background:rgba(43,79,224,.08);border-radius:3px}
+.hl{position:absolute;border:2px solid var(--marca);background:var(--marca-halo);border-radius:3px}
+.hot{position:absolute;border:2px dashed var(--anotacao);background:var(--anotacao-fundo);border-radius:3px}
 .arrows{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .arrows line{stroke:var(--anotacao);stroke-linecap:round}
 .arrows polygon{fill:var(--anotacao)}

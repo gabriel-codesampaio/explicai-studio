@@ -3,12 +3,12 @@ import path from "node:path";
 import { atomicWrite, relativePosix, resolveInside } from "../fs.js";
 import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
-import type { ManualTheme } from "../types.js";
 import { type CollectOptions, collectPages } from "./collect.js";
 import { renderHtml } from "./html.js";
 import { renderMarkdown } from "./markdown.js";
 import { printPdf } from "./pdf.js";
 import { type ImageInfo, loadImages } from "./refs.js";
+import { mergeTheme, type ThemePatch } from "./theme.js";
 
 export { findBrowser } from "./pdf.js";
 
@@ -67,13 +67,14 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   return result(pdf);
 }
 
-/** Cor do manual exportado. Só aceita hexadecimal de 6 dígitos; sem cor, volta à da marca. */
-export async function setManualTheme(dir: string, theme: ManualTheme): Promise<void> {
-  if (theme.accent !== undefined && !/^#[0-9a-f]{6}$/i.test(theme.accent)) {
-    throw new Error("Cor inválida: use o formato #2b4fe0.");
-  }
+/**
+ * Muda a aparência do manual exportado. Só os campos de `patch` mudam (`null` apaga o campo);
+ * cores sem contraste suficiente são recusadas.
+ */
+export async function setManualTheme(dir: string, patch: ThemePatch): Promise<void> {
   await updateManual(dir, (meta) => {
-    if (theme.accent) meta.theme = { ...meta.theme, accent: theme.accent.toLowerCase() };
+    const theme = mergeTheme(meta.theme, patch);
+    if (Object.keys(theme).length) meta.theme = theme;
     else delete meta.theme;
   });
 }
