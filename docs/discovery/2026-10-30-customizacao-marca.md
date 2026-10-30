@@ -53,6 +53,12 @@ Padrão: logo + cor + tirar a marca da ferramenta é pago em todos. Fonte própr
 4. Remover o rodapé "Explicaí"? → Manter por ora.
 5. Fonte entra agora? → Não; esperar pedido real.
 
+## Decisões tomadas (2026-10-30)
+A pessoa esclareceu o pedido: o manual exportado não pode ficar preso às cores do Explicaí. Hoje só `--accent` muda; texto (`--tinta`), amarelo (`--marca`), anotações (`--anotacao`) e cinzas são fixos (`html.ts:155`).
+- **Cores do manual:** cor do texto, cor de cada nível de título (padrão preto, a pessoa escolhe), cor de realce no lugar do amarelo e cor de destaque livre. → [T-029](../tickets/T-029-cores-do-manual.md)
+- **Fontes:** entram agora, com um leque de fontes para escolher (texto e títulos separados). Muda a decisão 5. → [T-030](../tickets/T-030-fontes-do-manual.md)
+- Logo, contraste (decisão 2), atalhos (3) e rodapé (4): seguem as recomendações acima até a pessoa dizer o contrário; logo ainda sem ticket.
+
 ## Rascunho de spec (opção A)
 - **Escopo:** `theme.logo` (caminho em `assets/`) e `theme.accent` com qualquer hex. Logo na capa e no topo do sumário do HTML e do PDF. Campo hex + 4 atalhos no ExportDialog. Upload de logo. Atualizar `docs/manual-format.md`. Sem `FORMAT_VERSION` novo.
 - **Critérios de aceite:**

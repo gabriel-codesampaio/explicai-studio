@@ -30,6 +30,8 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-026](T-026-aparencia-no-celular.md) | Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro | P2 | aberto | design |
 | [T-027](T-027-tokens-do-escuro.md) | Alinhar as cores do tema escuro ao brand book | P2 | aberto | design |
 | [T-028](T-028-textos-sem-traducao.md) | Traduzir os textos que ainda aparecem em português com a interface em inglês | P2 | aberto | frontend |
+| [T-029](T-029-cores-do-manual.md) | Deixar a pessoa escolher as cores do manual exportado | P2 | aberto | frontend |
+| [T-030](T-030-fontes-do-manual.md) | Deixar a pessoa escolher as fontes do manual exportado | P2 | aberto | frontend |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo com print | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
 | [T-021](T-021-serve-limpa-temporarios.md) | Apagar as pastas temporárias que o e2e/serve.mjs cria | P3 | aberto | qa |
