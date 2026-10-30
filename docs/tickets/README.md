@@ -1,3 +1,4 @@
+| [T-029](fechados/T-029-cores-do-manual.md) | Deixar a pessoa escolher as cores do manual exportado | P2 | feito | 230d294 |
 | [T-011](fechados/T-011-amarelo-com-um-sentido.md) | Dar ao amarelo um sentido só (conteúdo e página ativa) | P2 | feito | dd8b1b9 |
 | [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
 # Tickets
@@ -30,7 +31,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-026](T-026-aparencia-no-celular.md) | Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro | P2 | aberto | design |
 | [T-027](T-027-tokens-do-escuro.md) | Alinhar as cores do tema escuro ao brand book | P2 | aberto | design |
 | [T-028](T-028-textos-sem-traducao.md) | Traduzir os textos que ainda aparecem em português com a interface em inglês | P2 | aberto | frontend |
-| [T-029](T-029-cores-do-manual.md) | Deixar a pessoa escolher as cores do manual exportado | P2 | aberto | frontend |
 | [T-030](T-030-fontes-do-manual.md) | Deixar a pessoa escolher as fontes do manual exportado | P2 | aberto | frontend |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo com print | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
