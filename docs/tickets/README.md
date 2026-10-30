@@ -32,13 +32,13 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-024](T-024-indice-sem-rolagem-lateral.md) | Tirar a rolagem horizontal de "Nesta página" com título longo | P3 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | aberto | qa |
 | [T-065](T-065-fonte-do-manual-na-barra.md) | Escolher a fonte do manual pela barra de ferramentas | P2 | aberto | frontend |
-| [T-066](T-066-revisao-de-design-erros-e-export.md) | Revisão de design das páginas de erro (T-051) e do feedback do export (T-052) | P3 | aberto | design |
 | [T-068](T-068-fonte-na-pagina-de-erro-do-servidor.md) | Página HTML de erro do servidor sem a fonte Archivo | P3 | aberto | frontend |
 
 ## Fechados
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-066](fechados/T-066-revisao-de-design-erros-e-export.md) | Revisão de design das páginas de erro (T-051) e do feedback do export (T-052) | P3 | feito | 708e54c |
 | [T-063](fechados/T-063-popover-da-imagem-no-rodape.md) | Popover da descrição da imagem não pode encostar no rodapé | P2 | feito | d3f5b38 |
 | [T-048](fechados/T-048-botao-imagem.md) | Botão "Imagem" na barra fixa, sem o atalho ao lado | P2 | feito | cd07ddb |
 | [T-049](fechados/T-049-rodapes-alinhados.md) | Rodapés da barra lateral e da página na mesma linha | P2 | feito | 12a493c |
