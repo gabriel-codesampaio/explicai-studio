@@ -2,11 +2,10 @@ import { TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
-import { statusOf } from "@/lib/status";
 import { type DropZone, dropTarget, findItem, numberPages } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { type PageAction, PageActions } from "./PageActions";
-import { StatusDot } from "./StatusMenu";
+import { StatusLabel } from "./StatusMenu";
 import { useTreeKeyboard } from "./useTreeKeyboard";
 
 const DRAG_TYPE = "text/x-explicai-page";
@@ -93,7 +92,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                 tabIndex={item.id === tabStop ? 0 : -1}
                 aria-current={selected ? "page" : undefined}
                 onClick={() => onSelect(item.id)}
-                className="min-w-0 flex-1 truncate py-1.5 pl-2 text-left text-[14.5px]"
+                className="flex min-w-0 flex-1 items-center py-1.5 pl-2 text-left text-[14.5px]"
               >
                 {numbers.get(item.id) && (
                   <span aria-hidden className="mr-1.5 inline-block shrink-0 font-mono text-xs tabular-nums text-primary">
@@ -103,6 +102,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                 {/* A página aberta ganha a faixa de marca-texto, como numa revisão no papel. */}
                 <span
                   className={cn(
+                    "min-w-0 truncate",
                     selected
                       ? "bg-[linear-gradient(transparent_50%,var(--marca-faixa)_50%)] font-bold text-foreground"
                       : "text-foreground/85",
@@ -111,12 +111,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                 >
                   {item.title || (item.problem ? item.file.split("/").pop() : t("Sem título"))}
                 </span>
-                {item.status !== "rascunho" && (
-                  <span title={statusOf(item.status).label} className="ml-1.5 inline-flex align-[1px]">
-                    <StatusDot status={item.status} />
-                    <span className="sr-only">({statusOf(item.status).label})</span>
-                  </span>
-                )}
+                {item.status !== "rascunho" && <StatusLabel status={item.status} className="ml-2 text-xs font-medium" />}
                 {item.problem && (
                   <span title={item.problem} className="ml-1.5 inline-flex align-[-2px] text-destructive">
                     <TriangleAlert className="size-3.5" aria-hidden />

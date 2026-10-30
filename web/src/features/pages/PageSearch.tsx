@@ -3,10 +3,9 @@ import { type KeyboardEvent, useEffect, useEffectEvent, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { t } from "@/lib/i18n";
-import { statusOf } from "@/lib/status";
 import { searchPages } from "@/lib/tree";
 import { cn } from "@/lib/utils";
-import { StatusDot } from "./StatusMenu";
+import { StatusLabel } from "./StatusMenu";
 
 interface Props {
   open: boolean;
@@ -118,12 +117,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
                   </span>
                 )}
               </span>
-              {m.item.status !== "rascunho" && (
-                <span title={statusOf(m.item.status).label} className="inline-flex">
-                  <StatusDot status={m.item.status} />
-                  <span className="sr-only">({statusOf(m.item.status).label})</span>
-                </span>
-              )}
+              {m.item.status !== "rascunho" && <StatusLabel status={m.item.status} className="text-xs font-medium" />}
               {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
             </div>
           ))}
