@@ -65,7 +65,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
       <DialogTrigger asChild>
         <button
           type="button"
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           {t("Versões")}
           {pinned && (

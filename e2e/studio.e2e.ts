@@ -493,7 +493,8 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     if (exportBtn && Math.abs(exportBtn.top - (others[2]?.top ?? 0)) < 1)
       expect(exportBtn.left).toBeGreaterThan(others[2]?.left ?? 0);
     expect(Math.abs((exportBtn?.right ?? 0) - rowRight)).toBeLessThan(1);
-    expect(exportBtn?.height).toBeGreaterThanOrEqual(44);
+    // Alvo de toque: todos os itens do topo têm 44 px.
+    for (const b of buttons) expect(b.height).toBeGreaterThanOrEqual(44);
     expect(scrollW).toBeLessThanOrEqual(innerW);
 
     await page.getByRole("button", { name: "Versões" }).focus();

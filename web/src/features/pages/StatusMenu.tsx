@@ -25,7 +25,7 @@ export function StatusMenu({ status, onChange }: { status: PageStatus; onChange:
         <button
           type="button"
           aria-label={t("Status da página: {status}", { status: statusOf(status).label })}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted"
+          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted"
         >
           <StatusDot status={status} /> {statusOf(status).label}
           <ChevronDown className="size-3" aria-hidden />
