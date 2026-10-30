@@ -232,7 +232,5 @@ export function searchBlocks(query: string): Block[] {
 
 /** Separa a lista do menu por grupo; grupo sem bloco fica de fora. */
 export function groupBlocks(blocks: Block[]) {
-  return BLOCK_GROUPS.map((g) => ({ ...g, items: blocks.filter((b) => b.group === g.id) })).filter(
-    (g) => g.items.length > 0,
-  );
+  return BLOCK_GROUPS.map((g) => ({ ...g, items: blocks.filter((b) => b.group === g.id) })).filter((g) => g.items.length > 0);
 }

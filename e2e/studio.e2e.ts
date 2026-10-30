@@ -50,6 +50,26 @@ test("menu / insere passos numerados", async ({ page, request }) => {
   await expect(editor(page).locator("ol li")).toHaveText("Abra o menu Clientes.");
 });
 
+test("menu /: blocos em grupos, setas e Enter seguem a ordem do menu e a busca filtra", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Grupos", ["Grupos"]);
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.keyboard.type("/");
+  const menu = page.getByRole("listbox", { name: "Inserir bloco" });
+  await expect(menu.getByRole("group")).toHaveCount(4);
+  await expect(menu.locator("p.rotulo")).toHaveText(["Estrutura", "Passo a passo", "Alertas", "Mídia"]);
+
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Seção");
+  await expect(editor(page).locator("h1")).toHaveText("Seção");
+
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("/tabel");
+  await expect(menu.getByRole("group")).toHaveCount(1);
+  await expect(menu.locator("p.rotulo")).toHaveText(["Mídia"]);
+});
+
 test("Enter no texto cria parágrafo em página com texto, imagem e texto vindos da API", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Enter", []);
   await request.post(`/api/manuals/${slug}/pages`, {
