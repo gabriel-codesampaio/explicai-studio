@@ -19,6 +19,13 @@
   --acento: var(--cobalto);
   /* Marcações sobre o print são conteúdo do manual: mesma cor em qualquer tema ou destaque do Studio. */
   --anotacao: #2b4fe0;
+  /* Cor do texto escolhida na barra da seleção. A do manual exportado fica em src/core/export/textColors.ts. */
+  --cor-gray: #5c6478;
+  --cor-red: #c3261b;
+  --cor-orange: #b04a00;
+  --cor-green: #17793a;
+  --cor-blue: #1f58d6;
+  --cor-purple: #7a3cc8;
 
   /* nomes do shadcn */
   --background: var(--papel);
@@ -63,6 +70,12 @@
   --selecao: rgba(128, 152, 255, 0.35);
   --coral: #ff8a70;
   --acento: #ffd43b;
+  --cor-gray: #a3aac4;
+  --cor-red: #ff8b7e;
+  --cor-orange: #ffa95e;
+  --cor-green: #6fd193;
+  --cor-blue: #8eb1ff;
+  --cor-purple: #c9a2ff;
 
   --secondary: #1d2238;
   --muted: #1b2034;

@@ -91,3 +91,43 @@ describe("Markdown do editor: imagem solta entre textos", () => {
     expect(out).toContain("Depois.");
   });
 });
+
+describe("Markdown do editor: cor do texto", () => {
+  it("guarda a cor como span com data-color e volta igual", () => {
+    const md = 'Clique em <span data-color="red">Excluir</span> com cuidado.';
+    expect(expectStable(md)).toBe(md);
+  });
+
+  it("cor junto com negrito, por fora e por dentro, não se perde", () => {
+    for (const md of ['**<span data-color="blue">Salvar</span>**', '<span data-color="green">tudo **certo** aqui</span>']) {
+      const out = expectStable(md);
+      expect(out).toContain('data-color="');
+      expect(out).not.toContain("&lt;");
+      const editor = new Editor({ extensions: contentExtensions(), content: out, contentType: "markdown" });
+      expect(editor.getText()).not.toContain("**");
+      expect(editor.getText()).not.toContain("<span");
+      editor.destroy();
+    }
+  });
+
+  it("o que o editor grava de cor com negrito no meio reabre igual", () => {
+    const editor = new Editor({
+      extensions: contentExtensions(),
+      content: '<p><span data-color="green">tudo <strong>certo</strong> aqui</span></p>',
+    });
+    const md = editor.getMarkdown();
+    editor.destroy();
+    expect(expectStable(md)).toBe(md);
+    expect(md).toContain("**");
+  });
+
+  it("cor fora da paleta não vira cor", () => {
+    const editor = new Editor({
+      extensions: contentExtensions(),
+      content: '<span data-color="hotpink">oi</span>',
+      contentType: "markdown",
+    });
+    expect(editor.getMarkdown()).not.toContain('data-color="hotpink"');
+    editor.destroy();
+  });
+});

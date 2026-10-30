@@ -180,3 +180,23 @@
   color: var(--grafite);
   pointer-events: none;
 }
+
+/* Cor do texto (marca textColor): uma variável por nome, com versão clara e escura em tokens.css. */
+.tiptap [data-color="gray"] {
+  color: var(--cor-gray);
+}
+.tiptap [data-color="red"] {
+  color: var(--cor-red);
+}
+.tiptap [data-color="orange"] {
+  color: var(--cor-orange);
+}
+.tiptap [data-color="green"] {
+  color: var(--cor-green);
+}
+.tiptap [data-color="blue"] {
+  color: var(--cor-blue);
+}
+.tiptap [data-color="purple"] {
+  color: var(--cor-purple);
+}
