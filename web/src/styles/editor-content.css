@@ -121,15 +121,22 @@
   color: var(--grafite);
   font-style: italic;
 }
-/* Citação dentro do passo é o "Resultado:": marca-texto em vez de cinza. */
+/* Citação dentro do passo é o "Resultado:": rótulo pequeno e o texto em marca-texto, sem caixa. */
 .tiptap li > blockquote {
   margin-top: 0.5em;
-  padding: 6px 12px;
-  border-left: 3px solid var(--marca);
-  border-radius: 0 6px 6px 0;
-  background: var(--marca-faixa);
+  padding: 0;
+  border: 0;
   color: var(--tinta);
   font-style: normal;
+}
+.tiptap li > blockquote > p {
+  display: inline;
+  background: linear-gradient(transparent 50%, var(--marca-faixa) 50%);
+}
+.tiptap li > blockquote > p > strong:first-child {
+  font: 700 0.78em var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 .tiptap img {
   max-width: 100%;

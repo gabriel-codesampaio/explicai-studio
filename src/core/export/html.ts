@@ -160,7 +160,7 @@ const CSS = `
 @font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal;font-display:block}
 @font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:block}
 @font-face{font-family:"Atkinson Hyperlegible Next";src:url(fonts/atkinson-hyperlegible-next-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block}
-:root{--accent:__ACCENT__;--anotacao:#2b4fe0;--marca:#ffd43b;--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
+:root{--accent:__ACCENT__;--anotacao:#2b4fe0;--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
 --texto:"Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif;--display:"Archivo","Arial Narrow",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
 *{box-sizing:border-box}
 body{margin:0;background:#fff;color:var(--tinta);font:16px/1.65 var(--texto);-webkit-font-smoothing:antialiased}
@@ -194,7 +194,9 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .page-body>ol>li,.page-body li>ol>li{counter-increment:passo;position:relative}
 .page-body>ol>li+li,.page-body li>ol>li+li{margin-top:.6em}
 .page-body>ol>li::before,.page-body li>ol>li::before{content:counter(passo);position:absolute;left:-2.25em;top:.12em;display:grid;place-items:center;width:1.55em;height:1.55em;border-radius:50%;background:var(--accent);color:#fff;font:700 .82em var(--mono)}
-.page-body li>blockquote{padding:6px 12px;border-left:3px solid var(--marca);border-radius:0 6px 6px 0;background:rgba(255,212,59,.35);color:var(--tinta)}
+.page-body li>blockquote{margin:.6em 0 0;padding:0;border:0;color:var(--tinta)}
+.page-body li>blockquote>p{display:inline;background:linear-gradient(transparent 50%,var(--marca-faixa) 50%)}
+.page-body li>blockquote>p>strong:first-child{font:700 .78em var(--mono);letter-spacing:.04em;text-transform:uppercase}
 .shot{display:block;margin:.6em 0}
 .frame{position:relative;display:block;max-width:100%;width:fit-content}
 .frame img{display:block;max-width:100%;height:auto;border:1px solid var(--linha);border-radius:8px}
