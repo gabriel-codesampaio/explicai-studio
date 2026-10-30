@@ -41,6 +41,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-050](fechados/T-050-cor-do-texto-44px.md) | Cor do texto com 44 px em toque e barra da seleção sem cobrir a fixa | P2 | feito | b46e5fb |
 | [T-047](fechados/T-047-telas-de-erro.md) | Telas de erro: servidor fora, rota inexistente, erro inesperado | P1 | feito | 83dbbb0 |
 | [T-046](fechados/T-046-titulo-corrompido.md) | Recusar corpo não UTF-8 que gravava U+FFFD no título | P1 | feito | a29b735 |
 | [T-044](fechados/T-044-colar-print-fora-da-tela-no-celular.md) | "Colar print" fica fora da tela em 375 px | P2 | feito | — |
