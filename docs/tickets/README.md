@@ -42,6 +42,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-040](fechados/T-040-rodape-ajustes.md) | Rodapé da barra lateral como a linha "Ajustes" | P2 | feito | — |
 | [T-010](fechados/T-010-barra-colar-print.md) | "Colar print" com Ctrl+V na barra de ferramentas | P1 | feito | 428cbc6 |
 | [T-016](fechados/T-016-um-nome-para-versao.md) | Um nome só para a versão do manual final | P2 | feito | 94ee9a3 |
 | [T-015](fechados/T-015-so-aprovadas-sem-aprovadas.md) | "Só páginas aprovadas" desabilitado quando não há nenhuma | P2 | feito | bf91cab |
