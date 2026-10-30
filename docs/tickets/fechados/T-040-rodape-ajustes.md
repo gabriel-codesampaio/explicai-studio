@@ -17,3 +17,5 @@ O rodapé da barra lateral era um "⋯" de 32 px sem texto, igual ao "⋯" da á
 
 ## Registro
 Commit na branch feature/t-040-rodape-ajustes. Verificado: `npm run check` verde, e2e 20/20 ("barra enxuta" e "tela estreita" agora procuram "Ajustes"), conferido no Chrome em 1280 px no tema escuro. Fora: atalho de teclado em "Atalhos" (não existe tecla global); contraste do texto cinza não medido; toque real não testado.
+
+Nota (T-045): a pessoa pediu ícones nos itens e no gatilho depois deste ticket, e Idioma virou item próprio; o critério "sem ícone" acima deixou de valer. Ver [T-045](T-045-menu-ajustes.md).

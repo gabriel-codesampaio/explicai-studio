@@ -46,6 +46,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-041](fechados/T-041-cor-pelo-teclado.md) | Cor do texto com nome visível e pelo teclado | P1 | feito | — |
 | [T-042](fechados/T-042-erros-traduzidos.md) | Erros do núcleo traduzidos na interface em inglês | P3 | feito | — |
 | [T-043](fechados/T-043-botao-exportar.md) | Exportar manual como último item do topo, à direita | P2 | feito | — |
+| [T-045](fechados/T-045-menu-ajustes.md) | Menu Ajustes com Idioma próprio, ícones e cursor de mão | P2 | feito | — |
 | [T-040](fechados/T-040-rodape-ajustes.md) | Rodapé da barra lateral como a linha "Ajustes" | P2 | feito | — |
 | [T-039](fechados/T-039-barra-na-selecao.md) | Barra flutuante na seleção, com cor do texto | P1 | feito | a39f7cf |
 | [T-010](fechados/T-010-barra-colar-print.md) | "Colar print" com Ctrl+V na barra de ferramentas | P1 | feito | 428cbc6 |
