@@ -97,6 +97,19 @@ Um link para outra página do manual é um link Markdown relativo ao arquivo: `[
 
 Um trecho colorido fica como `<span data-color="red">texto</span>`, com o nome de uma cor da paleta: `gray`, `red`, `orange`, `green`, `blue` ou `purple`. Dentro do `span` vale Markdown comum (`**negrito**`). Nome fora da paleta é ignorado pelo editor. No HTML e no PDF cada nome vira uma cor com contraste AA no branco; qualquer outro HTML continua saindo como texto. O Markdown exportado leva só o texto, sem o `span`.
 
+## Alertas
+
+Um alerta é uma citação cuja primeira linha é um marcador do GFM, o mesmo que o GitHub desenha:
+
+```markdown
+> [!TIP]
+> Salve com **Ctrl+S** antes de sair.
+```
+
+Os tipos são `[!TIP]` (Dica), `[!WARNING]` (Atenção), `[!CAUTION]` (Erro) e `[!NOTE]` (Nota). O marcador fica sozinho na primeira linha e o corpo é Markdown comum (parágrafos, listas, negrito). Vale também dentro de um passo, recuado como o resto do item, e não se confunde com o "Resultado:", que continua sendo uma citação comum. Outro marcador (como `[!IMPORTANT]`) e a citação sem marcador seguem como citação. Não muda o `FORMAT_VERSION`: para qualquer leitor de Markdown o alerta ainda é uma citação.
+
+No Studio cada tipo tem cor fixa e um ícone; a Nota usa a cor de destaque do manual. No HTML e no PDF o alerta sai como painel com o rótulo em texto (Dica, Atenção, Erro, Nota; Tip, Warning, Error, Note nos manuais em inglês), com contraste AA. O Markdown exportado mantém o marcador. HTML colado dentro do alerta continua saindo como texto.
+
 ## Anotações da imagem
 
 `assets/<imagem>.json`. Todas as coordenadas vão de 0 a 1, relativas à largura e à altura da imagem, para funcionarem em qualquer tamanho de tela.

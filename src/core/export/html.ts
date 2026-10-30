@@ -1,5 +1,6 @@
 import { Marked, type Tokens } from "marked";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
+import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
@@ -84,6 +85,17 @@ function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, I
         const info = asset ? images.get(asset) : undefined;
         if (!info) return `<span class="missing">[${L.missingImage}: ${esc(text || href)}]</span>`;
         return renderShot(info, text, pages, L);
+      },
+      // Alerta GFM vira painel com rótulo em texto; outra citação segue como estava.
+      blockquote({ tokens }: Tokens.Blockquote) {
+        const callout = readCallout(tokens);
+        if (!callout)
+          return `<blockquote>
+${this.parser.parse(tokens)}</blockquote>
+`;
+        return `<div class="callout" data-callout="${callout.type}" role="note"><p class="callout-label">${L.callouts[callout.type]}</p>
+${this.parser.parse(callout.body)}</div>
+`;
       },
       // HTML colado no texto sai como texto: o manual exportado não roda código de ninguém.
       // Só a cor do texto passa, e só com um nome da paleta (ver textColors.ts).
@@ -203,6 +215,12 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .page-body li>blockquote{margin:.6em 0 0;padding:0;border:0;color:var(--tinta)}
 .page-body li>blockquote>p{display:inline;background:linear-gradient(transparent 50%,var(--marca-faixa) 50%)}
 .page-body li>blockquote>p>strong:first-child{font:700 .78em var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.page-body .callout{margin:.8em 0;padding:10px 14px;border:1px solid color-mix(in srgb,var(--c) 35%,#fff);border-left:4px solid var(--c);border-radius:3px;background:color-mix(in srgb,var(--c) 8%,#fff);color:var(--tinta)}
+.page-body .callout>:last-child{margin-bottom:0}
+.page-body .callout-label{margin:0 0 .3em;color:color-mix(in srgb,var(--c) 85%,#000);font:700 .78em var(--mono);letter-spacing:.06em;text-transform:uppercase}
+${Object.entries(CALLOUT_COLORS)
+  .map(([type, hex]) => `.callout[data-callout="${type}"]{--c:${type === "note" ? "var(--accent)" : hex}}`)
+  .join("")}
 .shot{display:block;margin:.6em 0}
 .frame{position:relative;display:block;max-width:100%;width:fit-content}
 .frame img{display:block;max-width:100%;height:auto;border:1px solid var(--linha);border-radius:8px}
@@ -227,7 +245,7 @@ body{font-size:11.5pt}
 .layout{display:block}.toc{display:none}main{max-width:none;padding:0}
 .cover{padding:30vh 0 0;border:0;break-after:page}
 .page{break-before:page;padding-top:0}
-.shot,.page-body table,.page-body pre,.page-body li{break-inside:avoid}
+.shot,.callout,.page-body table,.page-body pre,.page-body li{break-inside:avoid}
 .page-body a{color:var(--tinta)}
 .hot{border-style:dashed}
 }

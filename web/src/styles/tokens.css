@@ -26,6 +26,11 @@
   --cor-green: #17793a;
   --cor-blue: #1f58d6;
   --cor-purple: #7a3cc8;
+  /* Alerta do manual: cor fixa por tipo (verde, laranja, vermelho), sem amarelo, que é do marca-texto. */
+  --aviso-tip: var(--cor-green);
+  --aviso-warning: var(--cor-orange);
+  --aviso-caution: var(--cor-red);
+  --aviso-note: var(--cobalto);
 
   /* nomes do shadcn */
   --background: var(--papel);

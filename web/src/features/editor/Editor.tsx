@@ -8,6 +8,7 @@ import { assetPathFromSrc } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { toDiskMarkdown, toEditorMarkdown } from "@/lib/imagePaths";
+import { CalloutWithView } from "./calloutExtension";
 import { syncSelectionFromDom } from "./domSelection";
 import { contentExtensions } from "./extensions";
 import { ImagePopover } from "./ImagePopover";
@@ -42,7 +43,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
 
   const editor = useEditor({
     extensions: [
-      ...contentExtensions(AnnotatedImage.configure({ slug })),
+      ...contentExtensions(AnnotatedImage.configure({ slug }), CalloutWithView),
       SlashCommand.configure({ pickImage }),
       Extension.create({
         name: "linkShortcut",

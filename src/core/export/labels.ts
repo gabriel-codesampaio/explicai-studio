@@ -11,6 +11,7 @@ export interface Labels {
   hotspotPage: (title: string) => string;
   removedPage: string;
   untitled: string;
+  callouts: Record<string, string>;
 }
 
 const PT: Labels = {
@@ -25,6 +26,7 @@ const PT: Labels = {
   hotspotPage: (title) => `Área clicável: leva à página "${title}"`,
   removedPage: "removida",
   untitled: "Sem título",
+  callouts: { tip: "Dica", warning: "Atenção", caution: "Erro", note: "Nota" },
 };
 
 const EN: Labels = {
@@ -39,6 +41,7 @@ const EN: Labels = {
   hotspotPage: (title) => `Clickable area: goes to the page "${title}"`,
   removedPage: "removed",
   untitled: "Untitled",
+  callouts: { tip: "Tip", warning: "Warning", caution: "Error", note: "Note" },
 };
 
 /** Manual em português (pt, pt-BR, pt-PT) recebe os textos em português; os outros, em inglês. */

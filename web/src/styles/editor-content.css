@@ -138,6 +138,60 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
+/* Alerta: painel na cor do tipo (tokens --aviso-*). O rótulo é texto, então a cor nunca é o único sinal. */
+.tiptap .callout {
+  --c: var(--aviso-note);
+  margin: 0.75em 0;
+  padding: 8px 14px 10px;
+  border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+  border-left: 4px solid var(--c);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--c) 8%, var(--superficie));
+  color: var(--tinta);
+}
+.tiptap .callout[data-callout="tip"] {
+  --c: var(--aviso-tip);
+}
+.tiptap .callout[data-callout="warning"] {
+  --c: var(--aviso-warning);
+}
+.tiptap .callout[data-callout="caution"] {
+  --c: var(--aviso-caution);
+}
+.tiptap > .callout {
+  max-width: 46rem;
+}
+.tiptap .callout-head {
+  margin-bottom: 2px;
+}
+.tiptap .callout-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: -6px;
+  padding: 2px 6px;
+  border-radius: var(--radius);
+  color: var(--c);
+  font: 700 0.78rem var(--fonte-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tiptap .callout-type:hover,
+.tiptap .callout-type[data-state="open"] {
+  background: color-mix(in srgb, var(--c) 14%, transparent);
+}
+.tiptap .callout-type svg {
+  width: 16px;
+  height: 16px;
+}
+.tiptap .callout-type svg:last-child {
+  width: 12px;
+  height: 12px;
+  opacity: 0.7;
+}
+.tiptap .callout-body > * + * {
+  margin-top: 0.5em;
+}
 .tiptap img {
   max-width: 100%;
   height: auto;
@@ -199,4 +253,9 @@
 }
 .tiptap [data-color="purple"] {
   color: var(--cor-purple);
+}
+@media (pointer: coarse) {
+  .tiptap .callout-type {
+    min-height: 44px;
+  }
 }

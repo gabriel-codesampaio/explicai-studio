@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { t } from "../../lib/i18n";
 import { fold } from "../../lib/text";
+import { CALLOUT_TYPES, type CalloutType } from "./callout";
+import { CALLOUT_ICONS } from "./calloutIcons";
 
 export interface BlockContext {
   editor: Editor;
@@ -73,6 +75,25 @@ function insertResult(editor: Editor) {
     .run();
 }
 
+const CALLOUT_BLOCK_LABELS: Record<CalloutType, () => string> = {
+  tip: () => t("Alerta: Dica"),
+  warning: () => t("Alerta: Atenção"),
+  caution: () => t("Alerta: Erro"),
+  note: () => t("Alerta: Nota"),
+};
+const CALLOUT_HINTS: Record<CalloutType, () => string> = {
+  tip: () => t("Um atalho ou um jeito melhor de fazer"),
+  warning: () => t("Algo que exige cuidado"),
+  caution: () => t("Um risco que não dá para desfazer"),
+  note: () => t("Uma informação a mais"),
+};
+const CALLOUT_KEYWORDS: Record<CalloutType, string[]> = {
+  tip: ["dica", "tip", "hint"],
+  warning: ["atencao", "cuidado", "warning"],
+  caution: ["erro", "perigo", "risco", "caution", "error"],
+  note: ["nota", "info", "informacao", "note"],
+};
+
 /** Fonte única dos blocos: usada pelo seletor da barra de ferramentas e pelo menu "/". */
 export const BLOCKS: Block[] = [
   {
@@ -83,7 +104,8 @@ export const BLOCKS: Block[] = [
     keywords: ["paragrafo", "texto", "paragraph", "text"],
     isTextType: true,
     isActive: (e) => e.isActive("paragraph"),
-    run: ({ editor }) => chain(editor).setParagraph().run(),
+    // Dentro de um alerta, "Texto" tira o bloco do alerta.
+    run: ({ editor }) => (editor.isActive("callout") ? chain(editor).unsetCallout() : chain(editor).setParagraph()).run(),
   },
   ...([1, 2, 3] as const).map(
     (level): Block => ({
@@ -136,6 +158,18 @@ export const BLOCKS: Block[] = [
     isActive: (e) => e.isActive("blockquote"),
     run: ({ editor }) => chain(editor).toggleBlockquote().run(),
   },
+  ...CALLOUT_TYPES.map(
+    (type): Block => ({
+      id: `callout-${type}`,
+      label: CALLOUT_BLOCK_LABELS[type](),
+      hint: CALLOUT_HINTS[type](),
+      icon: CALLOUT_ICONS[type],
+      keywords: ["alerta", "aviso", "destaque", "alert", "callout", "warning", ...CALLOUT_KEYWORDS[type]],
+      isTextType: true,
+      isActive: (e) => e.isActive("callout", { type }),
+      run: ({ editor }) => chain(editor).setCallout(type).run(),
+    }),
+  ),
   {
     id: "code",
     label: t("Bloco de código"),

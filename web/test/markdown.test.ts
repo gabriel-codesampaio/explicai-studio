@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
-import { Editor } from "@tiptap/core";
+import { Editor, type JSONContent } from "@tiptap/core";
 import { describe, expect, it } from "vitest";
+import { BLOCKS } from "../src/features/editor/blocks";
 import { contentExtensions } from "../src/features/editor/extensions";
 import { toDiskMarkdown, toEditorMarkdown } from "../src/lib/imagePaths";
 
@@ -128,6 +129,83 @@ describe("Markdown do editor: cor do texto", () => {
       contentType: "markdown",
     });
     expect(editor.getMarkdown()).not.toContain('data-color="hotpink"');
+    editor.destroy();
+  });
+});
+
+describe("Alerta (blocos GFM)", () => {
+  it.each([
+    ["TIP", "tip"],
+    ["WARNING", "warning"],
+    ["CAUTION", "caution"],
+    ["NOTE", "note"],
+  ])("`> [!%s]` volta igual e vira o nó callout", (marker, type) => {
+    const md = `> [!${marker}]\n> Salve antes de sair.`;
+    expect(expectStable(md)).toBe(md);
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    expect(editor.getJSON().content?.[0]).toMatchObject({ type: "callout", attrs: { type } });
+    editor.destroy();
+  });
+
+  it("guarda vários parágrafos, lista e negrito dentro do alerta", () => {
+    const md = "> [!WARNING]\n> Isto apaga **tudo**.\n>\n> - um\n> - dois";
+    expect(expectStable(md)).toBe(md);
+  });
+
+  it("vale dentro de um passo e não confunde com o Resultado", () => {
+    const md = [
+      "1. Clique em **Excluir**.",
+      "",
+      "   > [!CAUTION]",
+      "   > Não dá para desfazer.",
+      "",
+      "   > **Resultado:** o cliente some da lista.",
+      "2. Feche a janela.",
+    ].join("\n");
+    const out = expectStable(md);
+    expect(out).toBe(md);
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    const item = (editor.getJSON() as JSONContent).content?.[0]?.content?.[0]?.content;
+    expect(item?.map((n) => n.type)).toEqual(["paragraph", "callout", "blockquote"]);
+    editor.destroy();
+  });
+
+  it("tipo desconhecido e citação comum continuam citação", () => {
+    for (const md of ["> [!IMPORTANT]\n> Texto.", "> Só uma citação."]) {
+      const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+      expect(editor.getJSON().content?.[0]?.type).toBe("blockquote");
+      editor.destroy();
+    }
+  });
+
+  it("alerta sem texto ainda volta como alerta", () => {
+    const editor = new Editor({ extensions: contentExtensions(), content: "> [!TIP]", contentType: "markdown" });
+    expect(editor.getJSON().content?.[0]).toMatchObject({ type: "callout", attrs: { type: "tip" } });
+    editor.destroy();
+  });
+
+  it("HTML colado dentro do alerta continua texto", () => {
+    const md = "> [!NOTE]\n> <script>alert(1)</script>";
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    expect(editor.getHTML()).not.toContain("<script");
+    editor.destroy();
+  });
+});
+
+describe("blocos de alerta no editor", () => {
+  const run = (id: string, editor: Editor) =>
+    // biome-ignore lint/suspicious/noExplicitAny: o editor do core basta para o comando
+    BLOCKS.find((b) => b.id === id)?.run({ editor: editor as any, pickImage: () => {} });
+
+  it("transforma o parágrafo, troca o tipo sem perder o texto e volta a texto", () => {
+    const editor = new Editor({ extensions: contentExtensions(), content: "Salve antes.", contentType: "markdown" });
+    editor.commands.setTextSelection(3);
+    run("callout-tip", editor);
+    expect(editor.getMarkdown().trimEnd()).toBe("> [!TIP]\n> Salve antes.");
+    run("callout-caution", editor);
+    expect(editor.getMarkdown().trimEnd()).toBe("> [!CAUTION]\n> Salve antes.");
+    run("paragraph", editor);
+    expect(editor.getMarkdown().trimEnd()).toBe("Salve antes.");
     editor.destroy();
   });
 });

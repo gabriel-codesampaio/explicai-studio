@@ -27,7 +27,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
 | [T-032](T-032-logo-do-cliente.md) | Logo do cliente na capa do manual exportado | P2 | aberto | frontend |
 | [T-033](T-033-exportar-sem-rodape.md) | Exportar o manual sem o rodapé do Explicaí | P3 | aberto | frontend |
-| [T-034](T-034-bloco-de-aviso.md) | Bloco de aviso (Dica, Atenção, Erro, Nota) | P2 | aberto | frontend |
 | [T-035](T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | aberto | frontend |
 | [T-036](T-036-corretor-do-navegador.md) | Deixar o corretor do navegador explícito no editor e explicar na ajuda | P3 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
@@ -67,3 +66,4 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-019](fechados/T-019-cores-so-no-manual.md) | Tirar as cores extras do Studio e manter só no manual exportado | P1 | feito | 240c3fb |
 | [T-009](fechados/T-009-raio-de-papel.md) | Raio de 3 px na interface de trabalho | P1 | feito | 8a5867c |
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
+| [T-034](fechados/T-034-bloco-de-aviso.md) | Bloco de aviso (Dica, Atenção, Erro, Nota) | P2 | feito | 6144b88 |
