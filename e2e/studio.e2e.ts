@@ -581,6 +581,26 @@ test("botão Exportar manual em 1280 px: último à direita, altura de botão pr
 test.describe("toque", () => {
   test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
+  test("barra rolável: Colar print aparece sem rolar, o degradê indica mais botões e as setas levam até a Tabela", async ({
+    page,
+    request,
+  }) => {
+    const { slug } = await setup(request, "Manual Barra", ["Início"]);
+    await page.goto(`/#/${slug}`);
+    const bar = page.getByRole("toolbar", { name: "Formatação" });
+    const fades = bar.locator("xpath=..").locator("span[aria-hidden].pointer-events-none");
+    const opacity = (i: number) => fades.nth(i).evaluate((el) => getComputedStyle(el).opacity);
+    const colar = await page.getByRole("button", { name: "Colar print" }).boundingBox();
+    expect((colar?.x ?? 0) + (colar?.width ?? 0)).toBeLessThanOrEqual(375);
+    await expect.poll(() => opacity(1)).toBe("1");
+    expect(await opacity(0)).toBe("0");
+    await page.getByRole("button", { name: /Tipo de bloco/ }).focus();
+    await page.keyboard.press("End");
+    await expect(page.getByRole("button", { name: "Tabela" })).toBeInViewport();
+    await expect.poll(() => opacity(1)).toBe("0");
+    await expect.poll(() => opacity(0)).toBe("1");
+  });
+
   test("alvos de toque: itens do menu Ajustes e botões da barra têm 44 px de altura", async ({ page, request }) => {
     const { slug } = await setup(request, "Manual Toque", ["Início"]);
     await page.goto(`/#/${slug}`);

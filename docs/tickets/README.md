@@ -21,7 +21,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-014](T-014-atalhos-de-marcacao.md) | Atalhos de letra nas ferramentas de marcação | P2 | aberto | frontend |
 | [T-017](T-017-status-legivel.md) | Status da página mais legível | P2 | aberto | design |
 | [T-023](T-023-marcacao-no-celular.md) | Deixar a legenda editável no diálogo de marcação em 375 px | P2 | aberto | frontend |
-| [T-025](T-025-barra-no-celular.md) | Mostrar que a barra de ferramentas rola em 375 px | P2 | aberto | frontend |
 | [T-026](T-026-aparencia-no-celular.md) | Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro | P2 | aberto | design |
 | [T-027](T-027-tokens-do-escuro.md) | Alinhar as cores do tema escuro ao brand book | P2 | aberto | design |
 | [T-028](T-028-textos-sem-traducao.md) | Traduzir os textos que ainda aparecem em português com a interface em inglês | P2 | aberto | frontend |
@@ -33,7 +32,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-036](T-036-corretor-do-navegador.md) | Deixar o corretor do navegador explícito no editor e explicar na ajuda | P3 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-038](T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | aberto | design |
-| [T-044](T-044-colar-print-fora-da-tela-no-celular.md) | "Colar print" fica fora da tela em 375 px | P2 | aberto | frontend |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
 | [T-021](T-021-serve-limpa-temporarios.md) | Apagar as pastas temporárias que o e2e/serve.mjs cria | P3 | aberto | qa |
@@ -44,6 +42,8 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
 | [T-046](fechados/T-046-titulo-corrompido.md) | Recusar corpo não UTF-8 que gravava U+FFFD no título | P1 | feito | a29b735 |
+| [T-044](fechados/T-044-colar-print-fora-da-tela-no-celular.md) | "Colar print" fica fora da tela em 375 px | P2 | feito | — |
+| [T-025](fechados/T-025-barra-no-celular.md) | Mostrar que a barra de ferramentas rola em 375 px | P2 | feito | — |
 | [T-041](fechados/T-041-cor-pelo-teclado.md) | Cor do texto com nome visível e pelo teclado | P1 | feito | — |
 | [T-042](fechados/T-042-erros-traduzidos.md) | Erros do núcleo traduzidos na interface em inglês | P3 | feito | — |
 | [T-043](fechados/T-043-botao-exportar.md) | Exportar manual como último item do topo, à direita | P2 | feito | — |
