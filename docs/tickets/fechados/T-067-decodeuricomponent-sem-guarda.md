@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: pedido da pessoa em 2026-10-30
 
@@ -20,4 +20,6 @@
 Teste primeiro (unit ou e2e da área); medir no navegador, claro e escuro, 1280 e 375 px.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Commit: 82a28b5.
+- Feito: helper `decodeComponent` em `web/src/lib/text.ts` (devolve o texto cru se o `%` for malformado), usado em `hashRoute.ts` e `annotations.ts`. Grep em web/src: não há outro decodeURI. Testes em text, hashRoute e annotations.
+- Fora: medição no navegador (claro/escuro, 1280/375); o hash malformado vira slug cru e cai na tela de manual não encontrado já existente.

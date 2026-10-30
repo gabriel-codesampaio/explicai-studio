@@ -10,6 +10,23 @@ interface Props {
   children: ReactNode;
 }
 
+const MARGEM = 8;
+
+/**
+ * Área útil do editor: entre a barra fixa de cima e o rodapé, com margem. Medida ao abrir, porque
+ * os dois são sticky e o rodapé muda de altura com o texto.
+ */
+function collisionPadding() {
+  const bar = document.querySelector("[data-editor-toolbar]")?.getBoundingClientRect();
+  const footer = document.querySelector("footer")?.getBoundingClientRect();
+  return {
+    top: Math.max(MARGEM, (bar?.bottom ?? 0) + MARGEM),
+    bottom: Math.max(MARGEM, footer ? window.innerHeight - footer.top + MARGEM : 0),
+    left: MARGEM,
+    right: MARGEM,
+  };
+}
+
 /** Balão preso a um ponto do editor, sem elemento de gatilho. Usado pelo link e pela imagem. */
 export function AnchoredPopover({ open, onClose, getRect, label, children }: Props) {
   return (
@@ -18,9 +35,10 @@ export function AnchoredPopover({ open, onClose, getRect, label, children }: Pro
       <PopoverContent
         align="start"
         side="bottom"
-        sideOffset={8}
+        sideOffset={MARGEM}
+        collisionPadding={collisionPadding()}
         aria-label={label}
-        className="w-80 p-3 shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
+        className="max-h-(--radix-popover-content-available-height) w-80 overflow-y-auto p-3 shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
         onOpenAutoFocus={(e) => {
           // Foca o primeiro campo, não o balão inteiro.
           e.preventDefault();

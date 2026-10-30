@@ -97,6 +97,53 @@ test("imagem: envia, descreve, marca e a legenda aparece na página", async ({ p
   expect(saved.markers).toMatchObject([{ n: 1, label: "Botão Novo cliente" }]);
 });
 
+for (const [width, height] of [
+  [1280, 800],
+  [375, 700],
+  [1280, 420],
+  [375, 420],
+] as const) {
+  test(`popover da imagem no fim da página (${width} x ${height} px) não cruza o rodapé nem a barra fixa e mantém o botão visível`, async ({
+    page,
+    request,
+  }) => {
+    await page.setViewportSize({ width, height });
+    const { slug } = await setup(request, `Manual Popover ${width}`, []);
+    const filler = Array.from({ length: 30 }, (_, i) => `Parágrafo ${i + 1}.`).join("\n\n");
+    await request.post(`/api/manuals/${slug}/pages`, {
+      data: { title: "Imagem no fim", body: `${filler}\n\n![Tela](../assets/tela.png)` },
+    });
+    await page.goto(`/#/${slug}`);
+    // Em tela estreita a árvore fica numa gaveta e a única página já abre sozinha.
+    const item = page.getByRole("button", { name: "Imagem no fim", exact: true });
+    if (await item.isVisible()) await item.click();
+    await editor(page).getByRole("img", { name: "Tela" }).click();
+    const popover = page.getByRole("dialog", { name: "Descrição da imagem" });
+    await expect(popover).toBeVisible();
+    const marcar = popover.getByRole("button", { name: "Marcar imagem" });
+    await expect(marcar).toBeVisible();
+    // Sem espaço, o balão encolhe e rola por dentro: o botão tem de ser alcançável.
+    await marcar.scrollIntoViewIfNeeded();
+    const footer = page.locator("footer");
+    const bar = page.getByRole("toolbar", { name: "Formatação" });
+    await expect
+      .poll(async () => {
+        const [p, f, b, m] = await Promise.all([
+          popover.boundingBox(),
+          footer.boundingBox(),
+          bar.boundingBox(),
+          marcar.boundingBox(),
+        ]);
+        if (!p || !f || !b || !m) return "sem caixa";
+        if (p.y + p.height > f.y - 8 + 0.5) return `cruza o rodapé: ${p.y + p.height} > ${f.y}`;
+        if (p.y < b.y + b.height + 8 - 0.5) return `cruza a barra fixa: ${p.y} < ${b.y + b.height}`;
+        if (m.y + m.height > p.y + p.height + 0.5) return "botão cortado";
+        return "ok";
+      })
+      .toBe("ok");
+  });
+}
+
 test('barra: "Imagem" mostra só o texto, a dica traz o Ctrl+V, abre o seletor de arquivo e a dica do / fica só no placeholder', async ({
   page,
   request,

@@ -25,12 +25,21 @@ const routes: Route[] = [
   ...webRoutes,
 ];
 
+/** Um `%` malformado no endereço é erro de quem pediu (400 com código estável), não falha do servidor. */
+function decodeSegment(segment: string): string {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    throw new HttpError(400, "O endereço pedido tem um % malformado. Confira o endereço e tente de novo.", "malformed-url");
+  }
+}
+
 export function createStudioServer(opts: StudioOptions): Server {
   return createServer(async (req, res) => {
     try {
       assertLocalRequest(req);
       const url = new URL(req.url ?? "/", "http://localhost");
-      const segments = url.pathname.split("/").filter(Boolean).map(decodeURIComponent);
+      const segments = url.pathname.split("/").filter(Boolean).map(decodeSegment);
       const method = req.method ?? "GET";
       const match = matchRoute(routes, method, segments);
       if (!match) throw new HttpError(segments[0] === "api" ? 405 : 404, "Rota não encontrada.");

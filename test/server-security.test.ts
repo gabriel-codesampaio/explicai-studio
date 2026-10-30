@@ -67,7 +67,9 @@ describe("servidor local: caminho malformado", () => {
     for (const p of ["/api/manuals/%E0%A4%A", "/api/manuals/%", "/api/manuals/%zz/pages", "/files/m/%FF"]) {
       const res = await raw(p);
       expect(res.status, p).toBe(400);
-      expect(JSON.parse(res.body).error).toBeTruthy();
+      const body = JSON.parse(res.body);
+      expect(body.code, p).toBe("malformed-url");
+      expect(body.error, p).toMatch(/endereço/i);
     }
   });
 

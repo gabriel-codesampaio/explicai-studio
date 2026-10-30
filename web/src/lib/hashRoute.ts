@@ -1,12 +1,14 @@
 /** Rota no hash: `#/<manual>/<página>`. Assim, recarregar a aba volta para o mesmo lugar. */
 
+import { decodeComponent } from "./text";
+
 export interface Location {
   slug: string | null;
   pageId: string | null;
 }
 
 export function readLocation(): Location {
-  const [slug, pageId] = window.location.hash.replace(/^#\/?/, "").split("/").map(decodeURIComponent);
+  const [slug, pageId] = window.location.hash.replace(/^#\/?/, "").split("/").map(decodeComponent);
   return { slug: slug || null, pageId: pageId || null };
 }
 
