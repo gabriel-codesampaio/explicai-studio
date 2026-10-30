@@ -636,3 +636,45 @@ test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3
   });
   expect(ratio).toBeGreaterThanOrEqual(3);
 });
+
+test("alerta: entra pelo / e pelo seletor de bloco, troca o tipo no próprio bloco e continua depois de recarregar", async ({
+  page,
+  request,
+}) => {
+  const { slug } = await setup(request, "Manual Alerta", ["Cuidados"]);
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+
+  await page.keyboard.type("/dica");
+  await expect(page.getByRole("option", { name: /Alerta: Dica/ })).toBeVisible();
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Salve antes de sair.");
+  const callouts = editor(page).locator(".callout");
+  await expect(callouts.first()).toHaveAttribute("data-callout", "tip");
+  await expect(callouts.first().getByRole("button", { name: "Tipo de alerta: Dica" })).toBeVisible();
+
+  // Enter numa linha vazia sai do alerta; o seletor de bloco põe o próximo parágrafo como Atenção.
+  await page.keyboard.press("Enter");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("Isto apaga o cliente.");
+  await page.getByRole("button", { name: /Tipo de bloco/ }).click();
+  await page.getByRole("menuitem", { name: "Alerta: Atenção" }).click();
+  await expect(callouts).toHaveCount(2);
+  await expect(callouts.nth(1)).toHaveAttribute("data-callout", "warning");
+
+  // Troca de tipo no próprio bloco.
+  await callouts
+    .nth(1)
+    .getByRole("button", { name: /Tipo de alerta/ })
+    .click();
+  await page.getByRole("menuitem", { name: "Erro" }).click();
+  await expect(callouts.nth(1)).toHaveAttribute("data-callout", "caution");
+  await expect(callouts.nth(1).getByRole("button", { name: "Tipo de alerta: Erro" })).toBeVisible();
+
+  await expect(page.getByRole("status")).toContainText("Salvo às");
+  await page.reload();
+  await expect(callouts).toHaveCount(2);
+  await expect(callouts.nth(0)).toContainText("Salve antes de sair.");
+  await expect(callouts.nth(1)).toHaveAttribute("data-callout", "caution");
+  await expect(callouts.nth(1)).toContainText("Isto apaga o cliente.");
+});
