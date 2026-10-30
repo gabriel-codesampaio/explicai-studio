@@ -1,6 +1,7 @@
 # T-018: Página vazia que ensina o primeiro passo com print
 
 - Prioridade: P3
+- Tamanho: P
 - Status: aberto
 - Agente: design
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

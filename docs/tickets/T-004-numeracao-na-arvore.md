@@ -1,6 +1,7 @@
 # T-004: Mostrar a numeração 2.1 na árvore de páginas e na busca
 
 - Prioridade: P1
+- Tamanho: M
 - Status: aberto
 - Agente: frontend
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

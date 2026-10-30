@@ -1,6 +1,7 @@
 # T-024: Tirar a rolagem horizontal de "Nesta página" com título longo
 
 - Prioridade: P3
+- Tamanho: P
 - Status: aberto
 - Agente: design
 - Origem: Prints de referência do P1 (design, 2026-10-29)

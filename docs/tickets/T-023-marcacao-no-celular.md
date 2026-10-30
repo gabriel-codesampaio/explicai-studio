@@ -1,6 +1,7 @@
 # T-023: Deixar a legenda editável no diálogo de marcação em 375 px
 
 - Prioridade: P2
+- Tamanho: M
 - Status: aberto
 - Agente: frontend
 - Origem: Prints de referência do P1 (design, 2026-10-29)

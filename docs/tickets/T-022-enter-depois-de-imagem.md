@@ -1,6 +1,7 @@
 # T-022: Corrigir o Enter que não cria parágrafo em página com imagem vinda do Markdown
 
 - Prioridade: P1
+- Tamanho: M
 - Status: aberto
 - Agente: frontend
 - Origem: Prints de referência do P1 (design, 2026-10-29)

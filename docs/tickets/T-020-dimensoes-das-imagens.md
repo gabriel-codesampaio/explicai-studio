@@ -1,6 +1,7 @@
 # T-020: Dimensões das imagens no HTML exportado
 
 - Prioridade: P3
+- Tamanho: P
 - Status: aberto
 - Agente: core
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

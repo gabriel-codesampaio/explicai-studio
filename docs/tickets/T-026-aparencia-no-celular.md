@@ -1,6 +1,7 @@
 # T-026: Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro
 
 - Prioridade: P2
+- Tamanho: M
 - Status: aberto
 - Agente: design
 - Origem: Revisão de design do T-019 (2026-10-29)

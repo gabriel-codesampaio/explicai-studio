@@ -1,6 +1,7 @@
 # T-008: Menu "/" com prévia do bloco e grupos, sem ícones em quadrado
 
 - Prioridade: P1
+- Tamanho: G
 - Status: aberto
 - Agente: frontend
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

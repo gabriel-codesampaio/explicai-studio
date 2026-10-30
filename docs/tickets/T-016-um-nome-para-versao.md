@@ -1,6 +1,7 @@
 # T-016: Um nome só para a versão do manual final
 
 - Prioridade: P2
+- Tamanho: P
 - Status: aberto
 - Agente: frontend
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

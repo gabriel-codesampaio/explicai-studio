@@ -1,6 +1,7 @@
 # T-014: Atalhos de letra nas ferramentas de marcação
 
 - Prioridade: P2
+- Tamanho: M
 - Status: aberto
 - Agente: frontend
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

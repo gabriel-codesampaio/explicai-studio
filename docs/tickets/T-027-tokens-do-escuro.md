@@ -1,6 +1,7 @@
 # T-027: Alinhar as cores do tema escuro ao brand book
 
 - Prioridade: P2
+- Tamanho: M
 - Status: aberto
 - Agente: design
 - Origem: Prints de referência do P1 e revisão do T-019 (2026-10-29)

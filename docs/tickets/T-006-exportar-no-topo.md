@@ -1,6 +1,7 @@
 # T-006: Levar "Exportar manual" para o topo da página como botão principal
 
 - Prioridade: P1
+- Tamanho: M
 - Status: aberto
 - Agente: frontend
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

@@ -1,6 +1,7 @@
 # T-007: Tirar os ícones que só decoram e usar a extensão do arquivo na exportação
 
 - Prioridade: P1
+- Tamanho: P
 - Status: aberto
 - Agente: design
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

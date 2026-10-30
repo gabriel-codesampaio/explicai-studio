@@ -1,6 +1,7 @@
 # T-012: Marcações como no brand book
 
 - Prioridade: P2
+- Tamanho: G
 - Status: aberto
 - Agente: frontend
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

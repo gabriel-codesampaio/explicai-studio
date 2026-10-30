@@ -1,6 +1,7 @@
 # T-028: Traduzir os textos que ainda aparecem em português com a interface em inglês
 
 - Prioridade: P2
+- Tamanho: P
 - Status: aberto
 - Agente: frontend
 - Origem: Verificação do T-019 (qa, 2026-10-29)

@@ -1,6 +1,7 @@
 # T-003: Usar rótulos de seção em mono maiúsculo, como no brand book
 
 - Prioridade: P1
+- Tamanho: M
 - Status: aberto
 - Agente: design
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

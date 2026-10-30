@@ -1,6 +1,7 @@
 # T-017: Status da página mais legível
 
 - Prioridade: P2
+- Tamanho: P
 - Status: aberto
 - Agente: design
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

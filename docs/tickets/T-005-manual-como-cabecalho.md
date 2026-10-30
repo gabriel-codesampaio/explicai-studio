@@ -1,6 +1,7 @@
 # T-005: Mostrar o nome do manual como cabeçalho, sem caixa
 
 - Prioridade: P1
+- Tamanho: M
 - Status: aberto
 - Agente: design
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

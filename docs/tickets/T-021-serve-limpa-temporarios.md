@@ -1,6 +1,7 @@
 # T-021: Apagar as pastas temporárias que o e2e/serve.mjs cria
 
 - Prioridade: P3
+- Tamanho: P
 - Status: aberto
 - Agente: qa
 - Origem: Combinado com a pessoa (2026-10-29)

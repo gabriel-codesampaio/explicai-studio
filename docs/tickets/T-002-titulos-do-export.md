@@ -1,6 +1,7 @@
 # T-002: Corrigir o pulo de nível de título no manual exportado
 
 - Prioridade: P2
+- Tamanho: P
 - Status: aberto
 - Agente: core
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)

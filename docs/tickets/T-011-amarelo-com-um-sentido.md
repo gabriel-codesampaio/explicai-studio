@@ -1,6 +1,7 @@
 # T-011: Dar ao amarelo um sentido só (conteúdo e página ativa)
 
 - Prioridade: P2
+- Tamanho: M
 - Status: aberto
 - Agente: design
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)
