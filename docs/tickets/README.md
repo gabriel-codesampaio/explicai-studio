@@ -1,3 +1,4 @@
+| [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
 # Tickets
 
 Fila de trabalho do Studio. Formato e ciclo de vida: skill `tickets` do plugin [explicai-workflow](https://github.com/gabriel-codesampaio/explicai-workflow).
@@ -17,7 +18,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-007](T-007-icones-decorativos.md) | Tirar os ícones que só decoram e usar a extensão do arquivo na exportação | P1 | em andamento | design |
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
 | [T-010](T-010-barra-colar-print.md) | "Colar print" com Ctrl+V na barra de ferramentas | P1 | aberto | frontend |
-| [T-002](T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | aberto | core |
 | [T-011](T-011-amarelo-com-um-sentido.md) | Dar ao amarelo um sentido só (conteúdo e página ativa) | P2 | aberto | design |
 | [T-012](T-012-marcacoes-do-brand-book.md) | Marcações como no brand book | P2 | aberto | frontend |
 | [T-013](T-013-tela-dividida.md) | Manter a árvore visível em tela dividida (~960 px) | P2 | aberto | frontend |
