@@ -2,7 +2,8 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { contrastWithWhite } from "../src/core/export/color.js";
+import { CALLOUT_COLORS } from "../src/core/export/callout.js";
+import { contrast, contrastWithWhite, overWhite } from "../src/core/export/color.js";
 import { imageSize } from "../src/core/export/imageSize.js";
 import { TEXT_COLORS } from "../src/core/export/textColors.js";
 import {
@@ -237,5 +238,79 @@ describe("exportação: cor do texto", () => {
     const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
     expect(md).toContain("Clique em **Excluir**,");
     expect(md).not.toContain('data-color="red"');
+  });
+});
+
+describe("alertas no HTML", () => {
+  const body = [
+    "> [!TIP]",
+    "> Salve com **Ctrl+S**.",
+    "",
+    "> [!WARNING]",
+    ">",
+    "> Isto muda o cadastro. <script>alert(1)</script>",
+    "",
+    "> [!CAUTION]",
+    "> Não dá para desfazer.",
+    "",
+    "> [!NOTE]",
+    "",
+    "> [!IMPORTANT]",
+    "> Fica como citação.",
+    "",
+    "> Citação comum.",
+    "",
+    "1. Exclua.",
+    "",
+    "   > [!CAUTION]",
+    "   > Confirme antes.",
+    "",
+    "   > **Resultado:** some da lista.",
+  ].join("\n");
+
+  async function exported(language: string) {
+    const m = await createManual(workspace, { title: `Alertas ${language}`, language });
+    await addPage(m.dir, { title: "Cuidados", body });
+    const r = await exportManual(m.dir, "html");
+    return readFile(path.join(m.dir, r.file), "utf8");
+  }
+
+  it("mostra rótulo em texto e o corpo, sem o marcador, em cada tipo", async () => {
+    const html = await exported("pt-BR");
+    for (const [type, label] of [
+      ["tip", "Dica"],
+      ["warning", "Atenção"],
+      ["caution", "Erro"],
+      ["note", "Nota"],
+    ]) {
+      expect(html).toMatch(new RegExp(`<div class="callout" data-callout="${type}"[^>]*><p class="callout-label">${label}</p>`));
+    }
+    expect(html).toMatch(
+      /data-callout="tip"[^>]*><p class="callout-label">Dica<\/p>\s*<p>Salve com <strong>Ctrl\+S<\/strong>\.<\/p>/,
+    );
+    expect(html).not.toMatch(/\[!(TIP|WARNING|CAUTION|NOTE)\]/);
+    expect(html.match(/data-callout="caution"/g)).toHaveLength(2 + 1); // 2 no corpo + 1 na regra de CSS
+  });
+
+  it("segue o idioma do manual e deixa citação e Resultado como estavam", async () => {
+    const html = await exported("en");
+    expect(html).toContain('<p class="callout-label">Warning</p>');
+    expect(html).toContain("<blockquote>\n<p>[!IMPORTANT]");
+    expect(html).toContain("<blockquote>\n<p>Citação comum.</p>");
+    expect(html).toContain("<strong>Resultado:</strong> some da lista.");
+  });
+
+  it("HTML colado dentro do alerta continua como texto", async () => {
+    const html = await exported("pt-BR");
+    expect(html).toContain("&lt;script&gt;alert(1)&lt;/script&gt;");
+    expect(html).not.toContain("<script>alert(1)");
+  });
+
+  it("rótulo e texto passam de 4,5:1 sobre o fundo de cada tipo", () => {
+    for (const hex of Object.values(CALLOUT_COLORS)) {
+      const bg = overWhite(hex, 0.08);
+      expect(contrast(hex, bg)).toBeGreaterThanOrEqual(4.5);
+      expect(contrast("#151a33", bg)).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });
