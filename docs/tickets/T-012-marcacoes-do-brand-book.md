@@ -15,6 +15,8 @@ No brand book o alvo ganha contorno tracejado com o número no canto; no Studio 
 - [ ] Área clicável continua diferente do marcador.
 - [ ] O mesmo desenho no editor e no HTML exportado; no tema escuro do Studio, a cor de anotação do brand book.
 - [ ] Coordenadas e formato dos JSONs de marcação não mudam.
+- [ ] Seta (AnnotationOverlay e `.arrows line/polygon` do export em `src/core/export/html.ts`): ponta fechada (triângulo preenchido), centrada no fim da haste e girada no ângulo dela, proporcional à espessura, igual no editor e no HTML/PDF, em qualquer ângulo e em setas curtas (hoje a ponta aparece como traço solto em diagonal).
+- [ ] Legenda das marcações (AnnotationLegend, `.legend` no export): respiro entre o print e a legenda; espaço vertical uniforme e mais compacto entre itens; número e texto na mesma linha de base; igual no editor e no export, claro e escuro. Itens "Sem descrição" em série com tratamento menos repetitivo (o design decide).
 
 ## Onde
 `features/annotations/AnnotationOverlay.tsx`, `features/annotations/AnnotationLegend.tsx`, `styles/tokens.css`, `src/core/export/html.ts`.
