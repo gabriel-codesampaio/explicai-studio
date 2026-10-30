@@ -28,7 +28,8 @@ async function paste(page: Page, files: Upload[], text?: string) {
   await editor(page).evaluate(
     (el, { list, text }) => {
       const dt = new DataTransfer();
-      for (const f of list) dt.items.add(new File([Uint8Array.from(atob(f.b64), (c) => c.charCodeAt(0))], f.name, { type: f.type }));
+      for (const f of list)
+        dt.items.add(new File([Uint8Array.from(atob(f.b64), (c) => c.charCodeAt(0))], f.name, { type: f.type }));
       if (text) dt.setData("text/plain", text);
       el.dispatchEvent(new ClipboardEvent("paste", { clipboardData: dt, bubbles: true, cancelable: true }));
     },
@@ -41,7 +42,8 @@ async function drop(page: Page, files: Upload[], at: { x: number; y: number }) {
   await editor(page).evaluate(
     (el, { list, at }) => {
       const dt = new DataTransfer();
-      for (const f of list) dt.items.add(new File([Uint8Array.from(atob(f.b64), (c) => c.charCodeAt(0))], f.name, { type: f.type }));
+      for (const f of list)
+        dt.items.add(new File([Uint8Array.from(atob(f.b64), (c) => c.charCodeAt(0))], f.name, { type: f.type }));
       const init = { dataTransfer: dt, bubbles: true, cancelable: true, clientX: at.x, clientY: at.y };
       el.dispatchEvent(new DragEvent("dragover", init));
       el.dispatchEvent(new DragEvent("drop", init));
@@ -52,7 +54,9 @@ async function drop(page: Page, files: Upload[], at: { x: number; y: number }) {
 
 const srcs = (page: Page) => images(page).evaluateAll((els) => els.map((e) => e.getAttribute("src")));
 const loaded = (page: Page) =>
-  images(page).evaluateAll((els) => els.every((e) => (e as HTMLImageElement).complete && (e as HTMLImageElement).naturalWidth > 0));
+  images(page).evaluateAll((els) =>
+    els.every((e) => (e as HTMLImageElement).complete && (e as HTMLImageElement).naturalWidth > 0),
+  );
 
 test.describe("entrada", () => {
   test("botão Imagem aceita várias imagens de uma vez, cada uma com seu arquivo", async ({ page, request }) => {
@@ -129,7 +133,10 @@ test.describe("entrada", () => {
     expect(order.indexOf("img")).toBeLessThan(order.length - 1);
   });
 
-  test("nome com acento e espaço vira nome seguro, a imagem abre e a descrição guarda o nome original", async ({ page, request }) => {
+  test("nome com acento e espaço vira nome seguro, a imagem abre e a descrição guarda o nome original", async ({
+    page,
+    request,
+  }) => {
     const { slug } = await setup(request, "Imagem Nome");
     await page.goto(`/#/${slug}`);
     await editor(page).click();
@@ -209,7 +216,9 @@ test.describe("edição", () => {
     await page.keyboard.type("Depois da imagem.");
     await expect(editor(page).locator("p").last()).toHaveText("Depois da imagem.");
     await saved(page);
-    expect(await pageBody(request, slug, pages[0]?.id as string)).toMatch(/!\[tela\]\(\.\.\/assets\/tela\.png\)\s+Depois da imagem\./);
+    expect(await pageBody(request, slug, pages[0]?.id as string)).toMatch(
+      /!\[tela\]\(\.\.\/assets\/tela\.png\)\s+Depois da imagem\./,
+    );
   });
 
   // T-070: o cursor às vezes fica antes da imagem (cerca de 1 em 5).
@@ -227,7 +236,11 @@ test.describe("edição", () => {
   });
 
   test("imagem dentro de um passo continua dentro do passo ao salvar e recarregar", async ({ page, request }) => {
-    const { slug, id } = await withImage(request, "Imagem Passo", "1. Abra a tela.\n\n   ![Tela](../assets/tela.png)\n\n2. Clique em Novo.");
+    const { slug, id } = await withImage(
+      request,
+      "Imagem Passo",
+      "1. Abra a tela.\n\n   ![Tela](../assets/tela.png)\n\n2. Clique em Novo.",
+    );
     await page.goto(`/#/${slug}/${id}`);
     await expect(editor(page).locator("ol li .node-image img")).toHaveCount(1);
     await editor(page).getByText("Clique em Novo.").click();
@@ -257,7 +270,9 @@ test.describe("edição", () => {
   test("mover a imagem arrastando para o texto de baixo", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Mover");
     await page.goto(`/#/${slug}/${id}`);
-    await editor(page).locator(".node-image").dragTo(editor(page).getByText("Depois."), { targetPosition: { x: 40, y: 20 } });
+    await editor(page)
+      .locator(".node-image")
+      .dragTo(editor(page).getByText("Depois."), { targetPosition: { x: 40, y: 20 } });
     await saved(page);
     const body = await pageBody(request, slug, id);
     expect(body.indexOf("![Tela]")).toBeGreaterThan(body.indexOf("Depoi"));
@@ -339,7 +354,9 @@ test.describe("marcações", () => {
     await page.goto(`/#/${slug}/${id}`);
     await openImage(page);
     await page.getByRole("button", { name: "Marcar imagem" }).click();
-    await markDialog(page).getByRole("img").click({ position: { x: 40, y: 40 } });
+    await markDialog(page)
+      .getByRole("img")
+      .click({ position: { x: 40, y: 40 } });
     await expect(markDialog(page).getByRole("textbox", { name: "O que o marcador 1 mostra" })).toBeVisible();
     await markDialog(page).getByRole("button", { name: "Cancelar" }).click();
     await expect(markDialog(page)).toBeHidden();
@@ -349,11 +366,227 @@ test.describe("marcações", () => {
   test("a legenda aparece na página e continua depois de recarregar", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Legenda");
     await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, {
-      data: { version: 1, markers: [{ id: "m1", n: 1, x: 0.3, y: 0.3, label: "Menu Clientes" }], highlights: [], arrows: [], hotspots: [] },
+      data: {
+        version: 1,
+        markers: [{ id: "m1", n: 1, x: 0.3, y: 0.3, label: "Menu Clientes" }],
+        highlights: [],
+        arrows: [],
+        hotspots: [],
+      },
     });
     await page.goto(`/#/${slug}/${id}`);
     await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
     await page.reload();
     await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
   });
+});
+
+const unused = async (request: APIRequestContext, slug: string) =>
+  (await (await request.get(`/api/manuals/${slug}/assets/unused`)).json()).count as number;
+const fileStatus = async (request: APIRequestContext, slug: string, asset: string) =>
+  (await request.get(`/files/${slug}/${asset}`)).status();
+const exportApi = async (request: APIRequestContext, slug: string, format: string) =>
+  (await (await request.post(`/api/manuals/${slug}/export`, { data: { format } })).json()) as {
+    file: string;
+    url: string;
+    warnings: string[];
+  };
+const marks = {
+  version: 1,
+  markers: [{ id: "m1", n: 1, x: 0.3, y: 0.3, label: "Menu Clientes" }],
+  highlights: [{ id: "h1", x: 0.1, y: 0.1, w: 0.2, h: 0.2 }],
+  arrows: [],
+  hotspots: [],
+};
+
+test.describe("persistência", () => {
+  test("versão guardada e restaurada mantém a imagem e as marcações", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Versao");
+    await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, { data: marks });
+    const v = await (await request.post(`/api/manuals/${slug}/pages/${id}/versions`, { data: { note: "com imagem" } })).json();
+    await request.put(`/api/manuals/${slug}/pages/${id}`, { data: { body: "Só texto." } });
+    await request.post(`/api/manuals/${slug}/pages/${id}/versions/${v.id}/restore`);
+    await page.goto(`/#/${slug}/${id}`);
+    await expect(images(page)).toHaveCount(1);
+    expect(await loaded(page)).toBe(true);
+    await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
+  });
+
+  test("página na lixeira mantém a imagem fora da limpeza e restaurar traz a imagem de volta", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Lixeira");
+    expect(await unused(request, slug)).toBe(0);
+    const trash = await (await request.delete(`/api/manuals/${slug}/pages/${id}`)).json();
+    expect(await unused(request, slug)).toBe(0);
+    expect(await fileStatus(request, slug, "assets/tela.png")).toBe(200);
+    await request.post(`/api/manuals/${slug}/trash/${trash.trashId ?? trash.id}/restore`);
+    await page.goto(`/#/${slug}/${id}`);
+    await expect(images(page)).toHaveCount(1);
+    expect(await loaded(page)).toBe(true);
+  });
+
+  test("renomear a página não quebra a imagem", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Renomear");
+    await request.put(`/api/manuals/${slug}/pages/${id}`, { data: { title: "Outro nome" } });
+    await page.goto(`/#/${slug}/${id}`);
+    await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Outro nome");
+    await expect(images(page)).toHaveCount(1);
+    expect(await loaded(page)).toBe(true);
+  });
+
+  test("imagem sem uso é contada e a limpeza move para a lixeira sem tocar nas usadas", async ({ request }) => {
+    const { slug } = await withImage(request, "Imagem Sem Uso");
+    await request.post(`/api/manuals/${slug}/assets?name=solta.png`, { data: PNG });
+    expect(await unused(request, slug)).toBe(1);
+    await request.post(`/api/manuals/${slug}/assets/clean`);
+    expect(await unused(request, slug)).toBe(0);
+    expect(await fileStatus(request, slug, "assets/solta.png")).toBe(404);
+    expect(await fileStatus(request, slug, "assets/tela.png")).toBe(200);
+  });
+});
+
+test.describe("exportação com imagem", () => {
+  test("HTML e Markdown levam a imagem e as marcações; o PDF sai", async ({ request }) => {
+    const { slug } = await withImage(request, "Imagem Exporta");
+    await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, { data: marks });
+    const html = await exportApi(request, slug, "html");
+    const htmlText = await (await request.get(html.url)).text();
+    expect(htmlText).toContain("Menu Clientes");
+    expect(htmlText).toContain('src="assets/tela.png"');
+    expect((await request.get(html.url.replace("index.html", "assets/tela.png"))).status()).toBe(200);
+    const md = await exportApi(request, slug, "markdown");
+    expect(await (await request.get(md.url)).text()).toMatch(/!\[Tela\]\(assets\/tela\.png\)[\s\S]*1\. Menu Clientes/);
+    const pdf = await request.post(`/api/manuals/${slug}/export`, { data: { format: "pdf" } });
+    expect(pdf.status()).toBe(200);
+    const pdfFile = await (await request.get((await pdf.json()).url)).body();
+    expect(pdfFile.subarray(0, 4).toString()).toBe("%PDF");
+  });
+
+  test("imagem que sumiu: o diálogo de exportação mostra o aviso com o nome do arquivo", async ({ page, request }) => {
+    const { slug } = await setup(request, "Imagem Sumiu", [{ title: "Tela", body: "![Sumiu](../assets/sumiu.png)" }]);
+    await page.goto(`/#/${slug}`);
+    await page.getByRole("button", { name: "Exportar manual" }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.getByText("Site (HTML)", { exact: true }).click();
+    await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+    await expect(dialog.getByText(/Atenção: 1 aviso/)).toBeVisible();
+    await expect(dialog).toContainText("assets/sumiu.png");
+  });
+});
+
+test.describe("robustez do envio", () => {
+  test("rede cai no envio: avisa, nada entra, o texto segue e o segundo envio funciona", async ({ page, request }) => {
+    const { slug } = await setup(request, "Imagem Rede");
+    await page.route("**/assets?*", (route) => route.abort("failed"));
+    await page.goto(`/#/${slug}`);
+    await editor(page).click();
+    await fileInput(page).setInputFiles(IMAGE);
+    await expect(page.getByText("Não foi possível falar com o Studio")).toBeVisible();
+    await expect(images(page)).toHaveCount(0);
+    await page.keyboard.type("texto continua");
+    await page.unroute("**/assets?*");
+    await fileInput(page).setInputFiles(IMAGE);
+    await expect(images(page)).toHaveCount(1);
+    await expect(editor(page)).toContainText("texto continua");
+  });
+
+  test("servidor responde 500 no envio: mostra a mensagem do servidor e a página segue editável", async ({ page, request }) => {
+    const { slug } = await setup(request, "Imagem 500");
+    await page.route("**/assets?*", (route) =>
+      route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({ error: "Disco cheio simulado." }) }),
+    );
+    await page.goto(`/#/${slug}`);
+    await editor(page).click();
+    await fileInput(page).setInputFiles(IMAGE);
+    await expect(page.getByText("Disco cheio simulado.")).toBeVisible();
+    await expect(images(page)).toHaveCount(0);
+    await page.keyboard.type("ainda edita");
+    await expect(editor(page)).toContainText("ainda edita");
+  });
+
+  test("envio lento: dá para escrever enquanto sobe, e a imagem entra no fim", async ({ page, request }) => {
+    const { slug } = await setup(request, "Imagem Lenta");
+    let release: () => void = () => {};
+    const gate = new Promise<void>((r) => {
+      release = r;
+    });
+    await page.route("**/assets?*", async (route) => {
+      await gate;
+      await route.continue();
+    });
+    await page.goto(`/#/${slug}`);
+    await editor(page).click();
+    await fileInput(page).setInputFiles(IMAGE);
+    await page.keyboard.type("escrevendo enquanto sobe");
+    await expect(editor(page)).toContainText("escrevendo enquanto sobe");
+    await expect(images(page)).toHaveCount(0);
+    release();
+    await expect(images(page)).toHaveCount(1);
+    await expect(editor(page)).toContainText("escrevendo enquanto sobe");
+  });
+
+  test("duas abas enviando a mesma imagem ficam com arquivos diferentes", async ({ page, context, request }) => {
+    const { slug, pages } = await setup(request, "Imagem Duas Abas", [{ title: "A" }, { title: "B" }]);
+    const outra = await context.newPage();
+    await page.goto(`/#/${slug}/${pages[0]?.id}`);
+    await outra.goto(`/#/${slug}/${pages[1]?.id}`);
+    await editor(page).click();
+    await editor(outra).click();
+    await fileInput(page).setInputFiles(IMAGE);
+    await expect(images(page)).toHaveCount(1);
+    await outra.bringToFront();
+    await fileInput(outra).setInputFiles(IMAGE);
+    await expect(images(page)).toHaveCount(1);
+    await expect(images(outra)).toHaveCount(1);
+    expect(await srcs(page)).not.toEqual(await srcs(outra));
+    expect(await loaded(page)).toBe(true);
+    expect(await loaded(outra)).toBe(true);
+  });
+});
+
+for (const width of [375, 1280]) {
+  for (const mode of ["light", "dark"]) {
+    test(`tela em ${width} px, tema ${mode}: sem rolagem lateral, imagem cabe e sem violação grave de acessibilidade`, async ({
+      page,
+      request,
+    }) => {
+      const { slug, id } = await withImage(request, `Imagem Tela ${width} ${mode}`);
+      await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, { data: marks });
+      await page.setViewportSize({ width, height: 800 });
+      await page.addInitScript((m) => localStorage.setItem("explicai:aparencia", JSON.stringify({ mode: m })), mode);
+      await page.goto(`/#/${slug}/${id}`);
+      await expect(page.locator("html")).toHaveAttribute("data-theme", mode);
+      await expect(images(page)).toHaveCount(1);
+      expect(await loaded(page)).toBe(true);
+      const m = await page.evaluate(() => {
+        const img = document.querySelector(".node-image img") as HTMLImageElement;
+        return {
+          scroll: document.documentElement.scrollWidth - window.innerWidth,
+          right: img.getBoundingClientRect().right,
+          vw: window.innerWidth,
+        };
+      });
+      expect(m.scroll).toBeLessThanOrEqual(0);
+      expect(m.right).toBeLessThanOrEqual(m.vw);
+      await expect(editor(page).getByRole("img", { name: "Tela" })).toBeVisible();
+      const axe = await new AxeBuilder({ page }).analyze();
+      const grave = axe.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+      expect(grave.map((v) => `${v.id}: ${v.nodes[0]?.target}`)).toEqual([]);
+    });
+  }
+}
+
+// T-071: Esc fecha o balão mas o foco cai no body.
+test.fixme("teclado: o balão da descrição abre ao selecionar a imagem, o Tab chega em Marcar imagem e o Esc devolve o foco ao editor", async ({
+  page,
+  request,
+}) => {
+  const { slug, id } = await withImage(request, "Imagem Teclado");
+  await page.goto(`/#/${slug}/${id}`);
+  const alt = await openImage(page);
+  await expect(alt).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Marcar imagem" })).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(alt).toBeHidden();
+  await expect(editor(page)).toBeFocused();
 });
