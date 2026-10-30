@@ -11,7 +11,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
-| [T-012](T-012-marcacoes-do-brand-book.md) | Marcações como no brand book | P2 | aberto | frontend |
 | [T-013](T-013-tela-dividida.md) | Manter a árvore visível em tela dividida (~960 px) | P2 | aberto | frontend |
 | [T-014](T-014-atalhos-de-marcacao.md) | Atalhos de letra nas ferramentas de marcação | P2 | aberto | frontend |
 | [T-017](T-017-status-legivel.md) | Status da página mais legível | P2 | aberto | design |
@@ -39,6 +38,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-012](fechados/T-012-marcacoes-do-brand-book.md) | Marcações como no brand book | P2 | feito | 6be64a9 |
 | [T-063](fechados/T-063-popover-da-imagem-no-rodape.md) | Popover da descrição da imagem não pode encostar no rodapé | P2 | feito | d3f5b38 |
 | [T-048](fechados/T-048-botao-imagem.md) | Botão "Imagem" na barra fixa, sem o atalho ao lado | P2 | feito | cd07ddb |
 | [T-049](fechados/T-049-rodapes-alinhados.md) | Rodapés da barra lateral e da página na mesma linha | P2 | feito | 12a493c |
