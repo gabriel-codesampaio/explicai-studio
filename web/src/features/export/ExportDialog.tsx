@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +15,7 @@ import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
+import { busyLabel, ExportStatus } from "./ExportStatus";
 import { ThemeFields } from "./ThemeFields";
 
 const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] = [
@@ -51,7 +52,8 @@ export function ExportDialog() {
   return (
     <Dialog
       onOpenChange={(open) => {
-        if (!open) return;
+        // Fechar no meio da exportação esconderia o resultado; o botão e o Esc esperam o fim.
+        if (!open || busy) return;
         setResult(null);
         setError(null);
       }}
@@ -60,13 +62,20 @@ export function ExportDialog() {
         {/* Primário do topo: mais peso que os vizinhos de texto e 44 px em tela de toque. */}
         <Button className="font-semibold [@media(pointer:coarse)]:h-11">{t("Exportar manual")}</Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent
+        className="max-h-[90vh] overflow-y-auto sm:max-w-lg"
+        aria-busy={busy}
+        showCloseButton={!busy}
+        onEscapeKeyDown={(e) => busy && e.preventDefault()}
+        onPointerDownOutside={(e) => busy && e.preventDefault()}
+        onInteractOutside={(e) => busy && e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
           <DialogDescription>{t('Cada página entra com a "Versão do manual" ou, sem ela, com o texto atual.')}</DialogDescription>
         </DialogHeader>
 
-        <fieldset className="grid gap-2">
+        <fieldset className="grid gap-2" disabled={busy}>
           <legend className="mb-2 rotulo">{t("Formato")}</legend>
           {FORMATS.map(({ id, label, hint, ext }) => (
             <label
@@ -124,33 +133,17 @@ export function ExportDialog() {
             {error}
           </p>
         )}
-        {result && (
-          <div role="status" className="grid gap-1 text-sm text-primary">
-            <p>
-              {tn(result.pages, "Pronto: {n} página exportada em", "Pronto: {n} páginas exportadas em")}{" "}
-              <code className="font-mono text-xs">{result.file}</code>, {t("dentro da pasta do manual.")}
-            </p>
-            {result.warnings.length > 0 && (
-              <ul className="list-disc pl-5 text-destructive">
-                {result.warnings.map((w) => (
-                  <li key={w}>{t("Ficou de fora: {motivo}", { motivo: w })}</li>
-                ))}
-              </ul>
-            )}
-            <a
-              href={result.url}
-              target="_blank"
-              rel="noreferrer"
-              className="flex w-fit items-center gap-1 font-bold text-primary underline-offset-2 hover:underline"
-            >
-              <ExternalLink className="size-3.5" aria-hidden /> Abrir {result.format === "pdf" ? "o PDF" : "o arquivo"}
-            </a>
-          </div>
-        )}
+        <ExportStatus
+          busy={busy}
+          format={format}
+          formatLabel={FORMATS.find((f) => f.id === (result?.format ?? format))?.label ?? format}
+          result={result}
+        />
 
         <DialogFooter>
-          <Button onClick={() => void run()} disabled={busy}>
-            {busy ? t("Exportando…") : t("Exportar")}
+          <Button onClick={() => void run()} disabled={busy} className="[@media(pointer:coarse)]:h-11">
+            {busy && <Loader2 className="animate-spin motion-reduce:animate-none" aria-hidden />}
+            {busy ? busyLabel(format) : error ? t("Tentar de novo") : t("Exportar")}
           </Button>
         </DialogFooter>
       </DialogContent>
