@@ -34,6 +34,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-065](T-065-fonte-do-manual-na-barra.md) | Escolher a fonte do manual pela barra de ferramentas | P2 | aberto | frontend |
 | [T-066](T-066-revisao-de-design-erros-e-export.md) | Revisão de design das páginas de erro (T-051) e do feedback do export (T-052) | P3 | aberto | design |
 | [T-068](T-068-fonte-na-pagina-de-erro-do-servidor.md) | Página HTML de erro do servidor sem a fonte Archivo | P3 | aberto | frontend |
+| [T-070](T-070-ctrl-end-antes-da-imagem.md) | Ctrl+End nem sempre leva o cursor para depois da imagem | P3 | aberto | frontend |
 
 ## Fechados
 
