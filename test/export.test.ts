@@ -73,6 +73,11 @@ async function seed() {
 }
 
 describe("exportação", () => {
+  it("recusa exportar só as aprovadas quando nenhuma página está aprovada", async () => {
+    await seed();
+    await expect(exportManual(dir, "html", { onlyApproved: true })).rejects.toThrow(/aprovada/);
+  });
+
   it("HTML: um arquivo com sumário numerado, marcações sobre o print e links entre páginas", async () => {
     const { visao, sub } = await seed();
     const result = await exportManual(dir, "html");

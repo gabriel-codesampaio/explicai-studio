@@ -310,6 +310,14 @@ test("exportação mostra o nome de cada cor do manual", async ({ page, request 
   );
 });
 
+test('exportação: "Só páginas aprovadas" fica desabilitado sem página aprovada', async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Sem Aprovadas", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  await expect(page.getByRole("dialog").getByRole("checkbox", { name: /Só páginas aprovadas/ })).toBeDisabled();
+  await expect(page.getByRole("dialog").getByText("Nenhuma página está aprovada ou publicada.")).toBeVisible();
+});
+
 test("barra: troca de manual pelo cabeçalho e abre a busca pela linha", async ({ page, request }) => {
   const a = await setup(request, "Manual Cabeçalho A", ["Alfa"]);
   await setup(request, "Manual Cabeçalho B", ["Beta"]);

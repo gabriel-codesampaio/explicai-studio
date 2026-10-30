@@ -12,6 +12,8 @@ export const EN: Record<string, string> = {
   "{n} arquivos de imagem que nenhuma página usa, contando versões e lixeira.":
     "{n} image files that no page uses, counting versions and trash.",
   "{n} arquivos foram para {pasta}.": "{n} files went to {pasta}.",
+  "Nenhuma página está aprovada ou publicada. Aprove uma página para usar esta opção.":
+    "No page is approved or published. Approve a page to use this option.",
   "{n} página aprovada ou publicada neste manual. As outras ficam de fora.":
     "{n} approved or published page in this manual. The others are left out.",
   "{n} páginas": "{n} pages",
