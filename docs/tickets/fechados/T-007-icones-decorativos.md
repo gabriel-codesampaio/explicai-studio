@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: em andamento
+- Status: fechado
 - Agente: design
 - Origem: Crítica de design 2026-10-29 (26/40, .impeccable/critique/)
 
@@ -27,4 +27,4 @@ O que foi feito: saíram BookOpen (ManualSwitcher), FileText (StatusBar), BookCh
 
 Lote 2: 41f51f8/9e78b09 alinhou a coluna de descrição do ShortcutsDialog; 25453de tirou os ícones do botão Exportar, de Versões e do ⋯. Atalhos aprovado no escuro (print em `C:/Users/PC/explicai-prints/p1/T-007/`).
 
-Falta para fechar: ver a exportação depois do `w-14` e o PinnedNotice sem ícone.
+Verificado no navegador (claro e escuro, 1280 e 375 px): `.html`, `.pdf` e `.md` cabem sem corte nem rolagem lateral na exportação; PinnedNotice só com texto. Fechado.
