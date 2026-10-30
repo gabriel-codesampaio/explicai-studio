@@ -13,6 +13,7 @@ export async function insertImages(
   pos: number,
   onError: (message: string) => void,
 ): Promise<void> {
+  let at = pos;
   for (const file of files) {
     try {
       const { path } = await api.uploadAsset(slug, file);
@@ -20,8 +21,9 @@ export async function insertImages(
       editor
         .chain()
         .focus()
-        .insertContentAt(pos, { type: "image", attrs: { src: assetUrl(slug, path), alt } })
+        .insertContentAt(at, { type: "image", attrs: { src: assetUrl(slug, path), alt } })
         .run();
+      at += 1; // a próxima entra depois desta; na mesma posição a ordem sairia invertida
     } catch (err) {
       onError(errorMessage(err, t("Não foi possível enviar a imagem.")));
     }
