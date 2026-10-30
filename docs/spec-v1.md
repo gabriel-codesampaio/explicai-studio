@@ -37,7 +37,7 @@ O **Explicaí Agent** é um servidor MCP que permite a uma IA montar manuais com
 - Vários manuais por pasta de trabalho.
 
 **Exportação**
-- Cores do manual por cliente: texto, títulos por nível, destaque e realce em hexadecimal livre, com contraste mínimo de 4,5:1.
+- Cores do manual por cliente: texto, títulos por nível, destaque e realce em hexadecimal livre, com contraste mínimo de 4,5:1, e fonte do texto e dos títulos entre oito fontes OFL empacotadas (lista em `docs/manual-format.md`). Logo do cliente fica de fora.
 - **Markdown:** uma pasta com um `.md` por página e as imagens, pensada para ser lida por IAs.
 - **HTML:** um site estático com navegação lateral, em que as áreas clicáveis funcionam.
 - **PDF:** com sumário e numeração de páginas.
