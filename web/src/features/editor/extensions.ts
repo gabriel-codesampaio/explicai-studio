@@ -7,6 +7,7 @@ import { Placeholder } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
 import StarterKit from "@tiptap/starter-kit";
 import { t } from "../../lib/i18n";
+import { TextColor } from "./textColor";
 
 /**
  * Item de lista que separa os blocos de dentro (texto, print, "Resultado:") por linha em branco.
@@ -56,6 +57,8 @@ export function contentExtensions(image: AnyExtension = Image) {
     // ao reabrir uma página com imagem dentro de um item de lista.
     image.configure({ inline: true }),
     TableKit.configure({ table: { resizable: false } }),
+    // Depois do StarterKit: a cor fica por dentro do negrito no Markdown, onde o ** ainda é lido.
+    TextColor,
     Placeholder.configure({ placeholder: t("Escreva aqui, ou digite / para inserir um bloco. Cole um print com Ctrl+V.") }),
     Markdown.configure({ markedOptions: { gfm: true } }),
   ];
