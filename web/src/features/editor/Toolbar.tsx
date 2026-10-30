@@ -47,7 +47,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
   const edges = useScrollEdges(scroller);
 
   return (
-    <div className="sticky top-0 z-10 -mx-2 border-b border-border bg-background/95 backdrop-blur-sm">
+    <div data-editor-toolbar className="sticky top-0 z-10 -mx-2 border-b border-border bg-background/95 backdrop-blur-sm">
       <div
         ref={scroller}
         role="toolbar"
