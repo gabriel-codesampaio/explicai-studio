@@ -1,4 +1,4 @@
-import { AlertCircle, Check, FileText, Loader2 } from "lucide-react";
+import { AlertCircle, Check, Loader2 } from "lucide-react";
 import type { SaveState } from "@/hooks/useAutosave";
 import { locale, t } from "@/lib/i18n";
 
@@ -20,7 +20,6 @@ export function StatusBar({ path, state, savedAt, onRetry }: Props) {
   return (
     <footer className="sticky bottom-0 z-10 flex items-center justify-between gap-4 border-t border-border bg-background/95 px-8 py-2 text-[13px] backdrop-blur-sm">
       <span className="flex min-w-0 items-center gap-2 text-muted-foreground">
-        <FileText className="size-3.5 shrink-0" aria-hidden />
         <span className="truncate font-mono text-xs" title={path}>
           {path}
         </span>

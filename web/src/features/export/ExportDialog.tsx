@@ -1,4 +1,4 @@
-import { Bot, Download, ExternalLink, FileText, Globe, type LucideIcon } from "lucide-react";
+import { Download, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,10 +16,10 @@ import { t, tn } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 
-const FORMATS: { id: ExportFormat; label: string; hint: string; Icon: LucideIcon }[] = [
-  { id: "html", label: t("Site (HTML)"), hint: t("Um arquivo para publicar ou abrir no navegador."), Icon: Globe },
-  { id: "pdf", label: "PDF", hint: t("Para imprimir ou mandar por e-mail."), Icon: FileText },
-  { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), Icon: Bot },
+const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] = [
+  { id: "html", label: t("Site (HTML)"), hint: t("Um arquivo para publicar ou abrir no navegador."), ext: ".html" },
+  { id: "pdf", label: "PDF", hint: t("Para imprimir ou mandar por e-mail."), ext: ".pdf" },
+  { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), ext: ".md" },
 ];
 
 /** Cores do manual exportado (o Studio fica sempre no cobalto). A primeira é a da marca. */
@@ -77,7 +77,7 @@ export function ExportDialog() {
 
         <fieldset className="grid gap-2">
           <legend className="mb-2 rotulo">{t("Formato")}</legend>
-          {FORMATS.map(({ id, label, hint, Icon }) => (
+          {FORMATS.map(({ id, label, hint, ext }) => (
             <label
               key={id}
               className={cn(
@@ -93,7 +93,9 @@ export function ExportDialog() {
                 onChange={() => setFormat(id)}
                 className="sr-only"
               />
-              <Icon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+              <span className="w-12 shrink-0 font-mono text-lg leading-tight font-medium text-primary" aria-hidden>
+                {ext}
+              </span>
               <span className="grid leading-tight">
                 <span className="text-sm font-bold">{label}</span>
                 <span className="text-xs text-muted-foreground">{hint}</span>
