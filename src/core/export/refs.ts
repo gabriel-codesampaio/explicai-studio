@@ -1,7 +1,7 @@
 import path from "node:path";
 import { readAnnotations } from "../assets.js";
 import { exists, resolveInside } from "../fs.js";
-import { slugify } from "../text.js";
+import { decodeUri, slugify } from "../text.js";
 import type { Annotations } from "../types.js";
 import type { ExportPage } from "./collect.js";
 import { imageSize, type Size } from "./imageSize.js";
@@ -18,7 +18,7 @@ const IMAGE = /!\[[^\]]*\]\(([^)\s]+)/g;
 /** `../assets/tela.png` (como está na página) → `assets/tela.png`. Imagem de fora do manual: null. */
 export function assetFromSrc(src: string): string | null {
   if (/^[a-z][a-z0-9+.-]*:/i.test(src)) return null;
-  const p = path.posix.normalize(path.posix.join("pages", decodeURI(src)));
+  const p = path.posix.normalize(path.posix.join("pages", decodeUri(src)));
   return p.startsWith("assets/") ? p : null;
 }
 
@@ -49,9 +49,9 @@ export const headingAnchor = (pageId: string, text: string) => `p-${pageId}--${s
 export function pageLink(href: string, pages: ExportPage[]): string | null {
   const m = /^(?:\.\/)?([^/#?]+\.md)(?:#(.+))?$/.exec(href);
   if (!m) return null;
-  const page = pages.find((p) => p.fileName === decodeURI(m[1] ?? ""));
+  const page = pages.find((p) => p.fileName === decodeUri(m[1] ?? ""));
   if (!page) return null;
-  return `#${m[2] ? headingAnchor(page.id, decodeURI(m[2])) : pageAnchor(page.id)}`;
+  return `#${m[2] ? headingAnchor(page.id, decodeUri(m[2])) : pageAnchor(page.id)}`;
 }
 
 /** Só endereços seguros saem como link no manual exportado. */

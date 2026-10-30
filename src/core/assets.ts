@@ -3,7 +3,7 @@ import path from "node:path";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
 import { atomicWrite, exists, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { ASSETS_DIR } from "./manuals.js";
-import { slugify } from "./text.js";
+import { decodeUri, slugify } from "./text.js";
 import type { Annotations } from "./types.js";
 
 const IMAGE_EXT = /^\.(png|jpe?g|gif|webp|svg)$/;
@@ -57,7 +57,7 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
     for (const file of await readdir(root, { recursive: true })) {
       if (!file.endsWith(".md")) continue;
       for (const [, name] of (await readFile(path.join(root, file), "utf8")).matchAll(MENTION)) {
-        if (name) used.add(decodeURI(name));
+        if (name) used.add(decodeUri(name));
       }
     }
   }

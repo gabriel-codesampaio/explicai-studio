@@ -16,3 +16,12 @@ export function required(value: string, what: string): string {
   if (!v) throw new Error(`O ${what} não pode ficar vazio.`);
   return v;
 }
+
+/** decodeURI que não lança: um `%` solto num link ou numa imagem (`100%.png`) é texto comum, não motivo para a exportação falhar. */
+export function decodeUri(text: string): string {
+  try {
+    return decodeURI(text);
+  } catch {
+    return text;
+  }
+}

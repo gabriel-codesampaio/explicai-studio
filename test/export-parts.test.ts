@@ -40,6 +40,11 @@ describe("assetFromSrc", () => {
       expect(assetFromSrc(src), src).toBeNull();
     }
   });
+
+  it("não derruba a exportação com % solto no endereço (URIError)", () => {
+    expect(() => assetFromSrc("../assets/100%.png")).not.toThrow();
+    expect(assetFromSrc("../assets/100%.png")).toBe("assets/100%.png");
+  });
 });
 
 describe("âncoras e links entre páginas", () => {
@@ -70,6 +75,11 @@ describe("âncoras e links entre páginas", () => {
     ]) {
       expect(pageLink(href, pages), href).toBeNull();
     }
+  });
+
+  it("não derruba a exportação com % solto no link", () => {
+    expect(() => pageLink("./100%.md", pages)).not.toThrow();
+    expect(() => pageLink("./pagina-a.md#100%", pages)).not.toThrow();
   });
 });
 
@@ -243,6 +253,15 @@ describe("collectPages e loadImages", () => {
     expect([...images.keys()]).toEqual([asset]);
     expect(images.get(asset)?.size).toEqual({ w: 640, h: 480 });
     expect(images.get(asset)?.annotations.markers).toEqual([]);
+  });
+
+  it("exportar com % solto em imagem e link não quebra e mantém o texto", async () => {
+    await addPage(dir, { title: "Alvo" });
+    await addPage(dir, { title: "P", body: "[x](./100%.md) e ![y](../assets/100%.png) e [z](./alvo.md#100%)" });
+    for (const format of ["html", "markdown"] as const) {
+      const result = await exportManual(dir, format);
+      expect((await readFile(path.join(dir, result.file), "utf8")).length).toBeGreaterThan(0);
+    }
   });
 
   it("imagem de uma versão guardada não vaza para outro manual", async () => {
