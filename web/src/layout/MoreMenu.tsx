@@ -1,19 +1,23 @@
+import { Keyboard, Languages, Settings, SunMoon, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { TrashPanel } from "@/features/pages/TrashPanel";
 import { AppearancePanel } from "@/features/settings/AppearancePanel";
+import { LANGS, LanguagePanel } from "@/features/settings/LanguagePanel";
 import { useStudioContext } from "@/hooks/StudioContext";
-import { t } from "@/lib/i18n";
+import { lang, t } from "@/lib/i18n";
 import { type Mode, readAppearance } from "@/lib/theme";
 
-type Panel = "trash" | "appearance" | "shortcuts";
+type Panel = "trash" | "appearance" | "language" | "shortcuts";
 
 /** Alvo de toque de 44 px em tela de toque, como a linha "Ajustes". */
-const TOUCH = "[@media(pointer:coarse)]:min-h-11";
+const TOUCH = "group/item [@media(pointer:coarse)]:min-h-11";
+/** Ícone só ajuda a achar o item (T-045): o texto é o nome acessível. */
+const ICON = "size-3.5 text-muted-foreground group-data-[highlighted]/item:text-foreground";
 const MODE_LABELS: Record<Mode, string> = { light: "Claro", dark: "Escuro", system: "Sistema" };
 
-/** Menu "Ajustes" do rodapé da barra lateral: Lixeira, Aparência e Atalhos, cada um abrindo seu painel. */
+/** Menu "Ajustes" do rodapé da barra lateral: Lixeira, Aparência, Idioma e Atalhos, cada um abrindo seu painel. */
 export function MoreMenu() {
   const { manual, restorePage } = useStudioContext();
   const [panel, setPanel] = useState<Panel | null>(null);
@@ -28,23 +32,27 @@ export function MoreMenu() {
           {/* Mesmo jeito de "Buscar página": linha com texto, não um ⋯ igual ao da árvore. */}
           <button
             type="button"
-            className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted [@media(pointer:coarse)]:min-h-11"
+            className="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted [@media(pointer:coarse)]:min-h-11"
           >
-            {t("Ajustes")}
+            <Settings className="size-3.5" aria-hidden /> {t("Ajustes")}
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="top" align="start" className="w-(--radix-dropdown-menu-trigger-width)">
           {manual && (
             <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("trash")}>
-              {t("Lixeira")}
+              <Trash2 className={ICON} aria-hidden /> {t("Lixeira")}
             </DropdownMenuItem>
           )}
           <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("appearance")}>
-            {t("Aparência")}
+            <SunMoon className={ICON} aria-hidden /> {t("Aparência")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{t(MODE_LABELS[mode])}</span>
           </DropdownMenuItem>
+          <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("language")}>
+            <Languages className={ICON} aria-hidden /> {t("Idioma")}
+            <span className="ml-auto font-mono text-[11px] text-muted-foreground">{LANGS.find((l) => l.id === lang)?.label}</span>
+          </DropdownMenuItem>
           <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("shortcuts")}>
-            {t("Atalhos")}
+            <Keyboard className={ICON} aria-hidden /> {t("Atalhos")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -56,6 +64,7 @@ export function MoreMenu() {
         />
       )}
       <AppearancePanel {...bind("appearance")} />
+      <LanguagePanel {...bind("language")} />
       <ShortcutsDialog {...bind("shortcuts")} />
     </div>
   );

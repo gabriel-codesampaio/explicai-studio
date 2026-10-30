@@ -325,7 +325,7 @@ test.describe("interface em inglês", () => {
   });
 });
 
-test("Aparência mostra só Tema e Idioma, e o Studio fica no cobalto mesmo com cor antiga gravada", async ({ page, request }) => {
+test("Aparência mostra só o Tema, e o Studio fica no cobalto mesmo com cor antiga gravada", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Aparência", ["Início"]);
   const errors: string[] = [];
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
@@ -343,9 +343,9 @@ test("Aparência mostra só Tema e Idioma, e o Studio fica no cobalto mesmo com 
   await page.getByRole("button", { name: "Ajustes" }).click();
   await page.getByRole("menuitem", { name: "Aparência" }).click();
   await expect(page.getByRole("group", { name: "Tema" })).toBeVisible();
-  await expect(page.getByRole("group", { name: "Idioma da interface" })).toBeVisible();
+  await expect(page.getByRole("group", { name: "Idioma da interface" })).toHaveCount(0);
   await expect(page.getByText("Cor de destaque")).toHaveCount(0);
-  await expect(page.getByRole("dialog").getByRole("button")).toHaveCount(6); // 3 temas + 2 idiomas + Fechar
+  await expect(page.getByRole("dialog").getByRole("button")).toHaveCount(4); // 3 temas + Fechar
 
   // Cobalto nos dois temas: --primary pinta botões, foco e marcadores.
   const primary = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--primary").trim());
@@ -409,7 +409,7 @@ test("barra: troca de manual pelo cabeçalho e abre a busca pela linha", async (
   await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeHidden();
 });
 
-test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo menu Ajustes, com foco de volta", async ({
+test("barra enxuta: Exportar só no topo e Lixeira, Aparência, Idioma e Atalhos pelo menu Ajustes, com foco de volta", async ({
   page,
   request,
 }) => {
@@ -422,6 +422,7 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo me
   for (const [item, title] of [
     ["Lixeira", "Lixeira deste manual"],
     ["Aparência", "Aparência"],
+    ["Idioma", "Idioma"],
     ["Atalhos", "Atalhos de teclado"],
   ] as const) {
     await more.click();
@@ -431,6 +432,28 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência e Atalhos pelo me
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(more).toBeFocused();
   }
+  // Ícone decorativo e cursor de mão: o texto segue sendo o nome acessível.
+  await more.click();
+  // Com o menu aberto o gatilho sai da árvore de acessibilidade: acha por CSS.
+  const trigger = page.locator("button[aria-haspopup=menu]", { hasText: "Ajustes" });
+  await expect(trigger.locator("svg[aria-hidden]")).toHaveCount(1);
+  for (const item of await page.getByRole("menuitem").all()) {
+    await expect(item.locator("svg[aria-hidden]")).toHaveCount(1);
+    await expect(item).toHaveCSS("cursor", "pointer");
+  }
+  await expect(trigger).toHaveCSS("cursor", "pointer");
+  await expect(page.getByRole("menuitem", { name: "Idioma" })).toContainText("Português");
+  await page.keyboard.press("Escape");
+});
+
+test("Idioma: painel próprio troca o idioma e o menu mostra o atual", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Idioma", ["Início"]);
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Ajustes" }).click();
+  await page.getByRole("menuitem", { name: "Idioma" }).click();
+  await page.getByRole("dialog", { name: "Idioma" }).getByRole("button", { name: "English" }).click();
+  await page.getByRole("button", { name: "Settings" }).click();
+  await expect(page.getByRole("menuitem", { name: "Language" })).toContainText("English");
 });
 
 test("tela estreita: painéis de Ajustes abrem sobre a gaveta, Esc fecha só o painel e o foco volta a Ajustes", async ({
@@ -447,6 +470,7 @@ test("tela estreita: painéis de Ajustes abrem sobre a gaveta, Esc fecha só o p
   for (const [item, title] of [
     ["Lixeira", "Lixeira deste manual"],
     ["Aparência", "Aparência"],
+    ["Idioma", "Idioma"],
     ["Atalhos", "Atalhos de teclado"],
   ] as const) {
     await more.click();
@@ -567,7 +591,7 @@ test.describe("toque", () => {
     expect(await height(page.getByRole("button", { name: "Negrito" }))).toBeGreaterThanOrEqual(44);
     await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
     await page.getByRole("dialog", { name: "Páginas do manual" }).getByRole("button", { name: "Ajustes" }).click();
-    for (const name of ["Lixeira", "Aparência", "Atalhos"])
+    for (const name of ["Lixeira", "Aparência", "Idioma", "Atalhos"])
       expect(await height(page.getByRole("menuitem", { name }))).toBeGreaterThanOrEqual(44);
   });
 });

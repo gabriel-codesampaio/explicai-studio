@@ -82,3 +82,4 @@ Comportamento em dispositivo de toque real; contraste medido; rodapé do Linear,
 
 ## Decisões tomadas (2026-10-30)
 - Opção A, com "Ajustes", tema atual em Aparência, sem ícone e mantendo o menu. → [T-040](../../tickets/fechados/T-040-rodape-ajustes.md), feito.
+- Depois, a pessoa pediu ícones nos itens do menu (Lixeira, Aparência, Idioma, Atalhos e no gatilho), contra a recomendação desta discovery: servem para achar o item rápido. Idioma também virou item próprio. → [T-045](../../tickets/fechados/T-045-menu-ajustes.md), feito.
