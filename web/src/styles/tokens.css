@@ -13,6 +13,8 @@
   --sobre-cobalto: #ffffff;
   --marca: #ffd43b;
   --marca-faixa: rgba(255, 212, 59, 0.55);
+  /* Seleção de texto no Studio: cobalto translúcido, para o amarelo ficar só no conteúdo realçado. */
+  --selecao: rgba(43, 79, 224, 0.2);
   --coral: #c8411f;
   --acento: var(--cobalto);
   /* Marcações sobre o print são conteúdo do manual: mesma cor em qualquer tema ou destaque do Studio. */
@@ -58,6 +60,7 @@
   --cobalto: #8098ff;
   --sobre-cobalto: #0e1120;
   --marca-faixa: rgba(255, 212, 59, 0.3);
+  --selecao: rgba(128, 152, 255, 0.35);
   --coral: #ff8a70;
   --acento: #ffd43b;
 

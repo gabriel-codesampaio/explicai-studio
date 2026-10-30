@@ -18,7 +18,7 @@
     scrollbar-color: var(--linha) transparent;
   }
   ::selection {
-    background: var(--marca-faixa);
+    background: var(--selecao);
     color: inherit;
   }
   :focus-visible {
