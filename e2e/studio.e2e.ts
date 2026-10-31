@@ -1010,3 +1010,71 @@ test("o status aparece escrito ao lado do nome, na árvore e na busca", async ({
   await page.getByRole("combobox", { name: "Buscar página pelo título" }).fill("cadastro");
   await expect(page.getByRole("option", { name: /Cadastro.*Em revisão/ })).toBeVisible();
 });
+
+/** O item está inteiro dentro do retângulo visível da lista que rola. */
+async function dentroDaLista(item: Locator, lista: Locator) {
+  const [i, l] = await Promise.all([item.boundingBox(), lista.boundingBox()]);
+  if (!i || !l) throw new Error("sem caixa para medir");
+  expect(i.y).toBeGreaterThanOrEqual(l.y - 0.5);
+  expect(i.y + i.height).toBeLessThanOrEqual(l.y + l.height + 0.5);
+}
+
+test("menu /: com a lista rolando, a seta mantém o item ativo à vista, também ao dar a volta", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Rolagem", ["Rolagem"]);
+  await page.setViewportSize({ width: 1280, height: 420 });
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.keyboard.type("/");
+  const menu = page.getByRole("listbox", { name: "Inserir bloco" });
+  const options = menu.getByRole("option");
+  const total = await options.count();
+  const active = menu.locator('[aria-selected="true"]');
+  expect((await menu.evaluate((el) => el.scrollHeight - el.clientHeight)) > 0).toBe(true);
+
+  for (let n = 1; n < total; n++) {
+    await page.keyboard.press("ArrowDown");
+    await dentroDaLista(active, menu);
+  }
+  await page.keyboard.press("ArrowDown"); // volta ao primeiro
+  await expect(options.first()).toHaveAttribute("aria-selected", "true");
+  await dentroDaLista(active, menu);
+  await page.keyboard.press("ArrowUp"); // e ao último
+  await expect(options.last()).toHaveAttribute("aria-selected", "true");
+  await dentroDaLista(active, menu);
+});
+
+test("Ctrl+P: com muitas páginas, a seta mantém o resultado ativo à vista", async ({ page, request }) => {
+  const titles = Array.from({ length: 25 }, (_, n) => `Página ${n + 1}`);
+  const { slug } = await setup(request, "Manual Busca Longa", titles);
+  await page.setViewportSize({ width: 1280, height: 420 });
+  await page.goto(`/#/${slug}`);
+  await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Página 1");
+  await page.keyboard.press("Control+p");
+  const box = page.getByRole("combobox", { name: "Buscar página pelo título" });
+  const list = page.getByRole("listbox", { name: "Páginas encontradas" });
+  const active = list.locator('[aria-selected="true"]');
+  for (let n = 1; n < titles.length; n++) {
+    await box.press("ArrowDown");
+    await dentroDaLista(active, list);
+  }
+  await box.press("ArrowDown");
+  await expect(list.getByRole("option").first()).toHaveAttribute("aria-selected", "true");
+  await dentroDaLista(active, list);
+  await box.press("ArrowUp");
+  await dentroDaLista(active, list);
+});
+
+test("menu Texto da barra: com a janela baixa, a seta leva o foco a itens sempre à vista", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Menu Barra", ["Barra"]);
+  await page.setViewportSize({ width: 1280, height: 300 });
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.getByRole("button", { name: /^Tipo de bloco/ }).click();
+  const menu = page.getByRole("menu");
+  const items = menu.getByRole("menuitem");
+  const total = await items.count();
+  for (let n = 0; n < total; n++) {
+    await page.keyboard.press("ArrowDown");
+    await dentroDaLista(menu.locator(":focus"), menu);
+  }
+});

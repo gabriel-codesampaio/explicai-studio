@@ -1,4 +1,4 @@
-import { type Ref, useImperativeHandle, useState } from "react";
+import { type Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { type Block, groupBlocks } from "../blocks";
@@ -24,13 +24,24 @@ export function SlashMenu({ items, command, ref }: Props) {
     setIndex(0);
   }
 
+  // Só o teclado rola a lista: com o mouse o item já está sob o cursor, e rolar moveria outro para baixo dele.
+  const listRef = useRef<HTMLDivElement>(null);
+  const byKey = useRef(false);
+  useEffect(() => {
+    if (!byKey.current) return;
+    byKey.current = false;
+    listRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "nearest" });
+  }); // sem lista de dependências: a flag `byKey` já faz o filtro
+
   useImperativeHandle(ref, () => ({
     onKeyDown: (event) => {
       if (event.key === "ArrowDown") {
+        byKey.current = true;
         setIndex((i) => (i + 1) % Math.max(items.length, 1));
         return true;
       }
       if (event.key === "ArrowUp") {
+        byKey.current = true;
         setIndex((i) => (i - 1 + items.length) % Math.max(items.length, 1));
         return true;
       }
@@ -45,6 +56,7 @@ export function SlashMenu({ items, command, ref }: Props) {
 
   return (
     <div
+      ref={listRef}
       role="listbox"
       aria-label={t("Inserir bloco")}
       className="z-50 max-h-80 w-80 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
