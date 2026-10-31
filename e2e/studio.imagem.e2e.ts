@@ -186,10 +186,21 @@ const openImage = async (page: Page) => {
 };
 /** Seleciona a imagem pelo teclado (Shift+seta sobre ela), sem abrir o balão da descrição. */
 const selectImageByKeyboard = async (page: Page) => {
+  await expect(images(page)).toHaveCount(1); // com o conteúdo já no editor, a seleção não é desfeita por um carregamento tardio
   await editor(page).getByText("Antes.").click();
   await page.keyboard.press("End");
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("Shift+ArrowRight");
+  // O ProseMirror só copia a imagem depois de processar a seleção; copiar antes copiava um parágrafo vazio.
+  await expect
+    .poll(() =>
+      editor(page).evaluate((el) => {
+        const dt = new DataTransfer();
+        el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
+        return dt.getData("text/html").includes("<img");
+      }),
+    )
+    .toBe(true);
 };
 const markDialog = (page: Page) => page.getByRole("dialog", { name: "Marcar imagem" });
 const annotations = (request: APIRequestContext, slug: string) =>
