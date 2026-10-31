@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { collisionPadding } from "./editorArea";
 import { TableMenuItems } from "./TableMenuItems";
 import { ADD_COLUMN_AFTER, ADD_ROW_AFTER, COLUMN_ACTIONS, ROW_ACTIONS, type TableAction } from "./tableCommands";
 import { useTableTarget } from "./useTableTarget";
@@ -79,7 +80,12 @@ export function TableControls({ editor, host }: Props) {
         </TooltipTrigger>
         <TooltipContent>{label}</TooltipContent>
       </Tooltip>
-      <DropdownMenuContent align="start" className="w-56" onCloseAutoFocus={(e) => e.preventDefault()}>
+      <DropdownMenuContent
+        align="start"
+        collisionPadding={collisionPadding()}
+        className="w-56"
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
         <TableMenuItems editor={editor} actions={actions} cellPos={target.pos} />
       </DropdownMenuContent>
     </DropdownMenu>
