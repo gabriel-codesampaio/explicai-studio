@@ -39,12 +39,14 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-070](T-070-ctrl-end-antes-da-imagem.md) | Ctrl+End nem sempre leva o cursor para depois da imagem | P3 | aberto | frontend |
 | [T-071](T-071-esc-no-balao-da-imagem-perde-o-foco.md) | Esc no balão da descrição da imagem joga o foco para o body | P2 | aberto | frontend |
 | [T-073](T-073-controles-na-tabela.md) | Controles de tabela direto na tabela | P2 | aberto | frontend |
+| [T-072](T-072-menu-barra-nao-rola-com-a-seta.md) | Menu "/": o item ativo some quando a seta desce | P1 | aberto | frontend |
 | [T-074](T-074-e2e-copiar-imagem-usa-a-area-de-transferencia.md) | e2e de copiar e colar a imagem falha às vezes na suíte completa | P3 | aberto | qa |
 
 ## Fechados
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-073](fechados/T-073-controles-na-tabela.md) | Controles de tabela direto na tabela | P2 | feito | 236239e |
 | [T-017](fechados/T-017-status-legivel.md) | Status da página mais legível | P2 | feito | 87eeb8e |
 | [T-008](fechados/T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | feito | 1ba09e3 |
 | [T-065](fechados/T-065-fonte-do-manual-na-barra.md) | Escolher a fonte do manual pela barra de ferramentas | P2 | feito | bb4acc8 |

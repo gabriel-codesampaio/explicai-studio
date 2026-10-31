@@ -1,5 +1,5 @@
 import { type Editor, useEditorState } from "@tiptap/react";
-import { Bold, Code, ImageIcon, Italic, Link2, Table, TableColumnsSplit, TableRowsSplit, Trash2 } from "lucide-react";
+import { Bold, Code, ImageIcon, Italic, Link2, Table, TableColumnsSplit, TableRowsSplit } from "lucide-react";
 import { useRef } from "react";
 import { useRovingFocus } from "@/hooks/useRovingFocus";
 import { useScrollEdges } from "@/hooks/useScrollEdges";
@@ -7,6 +7,7 @@ import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { BlockTypeMenu } from "./BlockTypeMenu";
 import { FontMenu } from "./FontMenu";
+import { TableToolbarMenu } from "./TableToolbarMenu";
 import { TextColorMenu } from "./TextColorMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
 
@@ -82,7 +83,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
           <>
             <Btn icon={TableRowsSplit} label={t("Adicionar linha")} onClick={() => chain().addRowAfter().run()} />
             <Btn icon={TableColumnsSplit} label={t("Adicionar coluna")} onClick={() => chain().addColumnAfter().run()} />
-            <Btn icon={Trash2} label={t("Remover tabela")} onClick={() => chain().deleteTable().run()} />
+            <TableToolbarMenu editor={editor} />
           </>
         ) : (
           <Btn
