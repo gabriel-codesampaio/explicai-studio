@@ -186,10 +186,21 @@ const openImage = async (page: Page) => {
 };
 /** Seleciona a imagem pelo teclado (Shift+seta sobre ela), sem abrir o balão da descrição. */
 const selectImageByKeyboard = async (page: Page) => {
+  await expect(images(page)).toHaveCount(1); // com o conteúdo já no editor, a seleção não é desfeita por um carregamento tardio
   await editor(page).getByText("Antes.").click();
   await page.keyboard.press("End");
   await page.keyboard.press("ArrowRight");
   await page.keyboard.press("Shift+ArrowRight");
+  // O ProseMirror só copia a imagem depois de processar a seleção; copiar antes copiava um parágrafo vazio.
+  await expect
+    .poll(() =>
+      editor(page).evaluate((el) => {
+        const dt = new DataTransfer();
+        el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
+        return dt.getData("text/html").includes("<img");
+      }),
+    )
+    .toBe(true);
 };
 const markDialog = (page: Page) => page.getByRole("dialog", { name: "Marcar imagem" });
 const annotations = (request: APIRequestContext, slug: string) =>
@@ -278,17 +289,25 @@ test.describe("edição", () => {
     await expect(images(page)).toHaveCount(1);
   });
 
-  test("copiar a imagem e colar em outra página usa o mesmo arquivo", async ({ page, request, context }) => {
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  test("copiar a imagem e colar em outra página usa o mesmo arquivo", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Copiar");
     const outra = await (await request.post(`/api/manuals/${slug}/pages`, { data: { title: "Outra" } })).json();
     await page.goto(`/#/${slug}/${id}`);
     await selectImageByKeyboard(page);
-    await page.keyboard.press("Control+c");
+    // Evento sintético com um DataTransfer da própria página: a área de transferência do sistema é de todos os processos e
+    // qualquer outra cópia entre o Ctrl+C e o Ctrl+V (outro Chrome, outra execução) trocava o conteúdo.
+    await editor(page).evaluate((el) => {
+      const dt = new DataTransfer();
+      (window as unknown as { __copiado: DataTransfer }).__copiado = dt;
+      el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
+    });
     await page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: "Outra", exact: true }).click();
     await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Outra");
     await editor(page).click();
-    await page.keyboard.press("Control+v");
+    await editor(page).evaluate((el) => {
+      const dt = (window as unknown as { __copiado: DataTransfer }).__copiado;
+      el.dispatchEvent(new ClipboardEvent("paste", { clipboardData: dt, bubbles: true, cancelable: true }));
+    });
     await expect(images(page)).toHaveCount(1);
     await saved(page);
     expect(await pageBody(request, slug, outra.id)).toContain("../assets/tela.png");

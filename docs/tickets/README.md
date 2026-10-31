@@ -10,6 +10,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-074](fechados/T-074-e2e-copiar-imagem-usa-a-area-de-transferencia.md) | e2e de copiar e colar a imagem falha às vezes na suíte completa | P3 | feito | dd7572f |
 | [T-071](fechados/T-071-esc-no-balao-da-imagem-perde-o-foco.md) | Esc no balão da descrição da imagem joga o foco para o body | P2 | feito | cbcd5a4 |
 | [T-070](fechados/T-070-ctrl-end-antes-da-imagem.md) | Ctrl+End nem sempre leva o cursor para depois da imagem | P3 | feito | 6ead6cd |
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
