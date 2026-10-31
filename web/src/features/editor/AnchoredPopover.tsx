@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
+import { collisionPadding, MARGEM } from "./editorArea";
 
 interface Props {
   open: boolean;
@@ -10,23 +11,6 @@ interface Props {
   /** Esc fechou o balão: quem usa decide para onde vai o foco (o balão não tem gatilho a que voltar). */
   onEscape?: () => void;
   children: ReactNode;
-}
-
-const MARGEM = 8;
-
-/**
- * Área útil do editor: entre a barra fixa de cima e o rodapé, com margem. Medida ao abrir, porque
- * os dois são sticky e o rodapé muda de altura com o texto.
- */
-function collisionPadding() {
-  const bar = document.querySelector("[data-editor-toolbar]")?.getBoundingClientRect();
-  const footer = document.querySelector("footer")?.getBoundingClientRect();
-  return {
-    top: Math.max(MARGEM, (bar?.bottom ?? 0) + MARGEM),
-    bottom: Math.max(MARGEM, footer ? window.innerHeight - footer.top + MARGEM : 0),
-    left: MARGEM,
-    right: MARGEM,
-  };
 }
 
 /** Balão preso a um ponto do editor, sem elemento de gatilho. Usado pelo link e pela imagem. */

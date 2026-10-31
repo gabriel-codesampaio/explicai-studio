@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { t } from "@/lib/i18n";
 import { CALLOUT_TYPES, type CalloutType, calloutLabel } from "./callout";
 import { CALLOUT_ICONS } from "./calloutIcons";
+import { collisionPadding } from "./editorArea";
 
 /**
  * O alerta no editor: painel na cor do tipo, ícone, rótulo (que também troca o tipo) e o texto editável.
@@ -30,7 +31,7 @@ export function CalloutView({ node, editor, updateAttributes }: NodeViewProps) {
               <ChevronDown aria-hidden />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" onCloseAutoFocus={(e) => e.preventDefault()}>
+          <DropdownMenuContent align="start" collisionPadding={collisionPadding()} onCloseAutoFocus={(e) => e.preventDefault()}>
             {CALLOUT_TYPES.map((tp) => {
               const Ic = CALLOUT_ICONS[tp];
               return (

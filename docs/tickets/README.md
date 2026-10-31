@@ -42,12 +42,12 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-073](T-073-controles-na-tabela.md) | Controles de tabela direto na tabela | P2 | aberto | frontend |
 | [T-072](T-072-menu-barra-nao-rola-com-a-seta.md) | Menu "/": o item ativo some quando a seta desce | P1 | aberto | frontend |
 | [T-074](T-074-e2e-copiar-imagem-usa-a-area-de-transferencia.md) | e2e de copiar e colar a imagem falha às vezes na suíte completa | P3 | aberto | qa |
-| [T-075](T-075-menu-barra-atras-da-barra-fixa.md) | Menu "/" aparece atrás da barra fixa | P1 | aberto | frontend |
 
 ## Fechados
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-075](fechados/T-075-menu-barra-atras-da-barra-fixa.md) | Menu "/" aparece atrás da barra fixa | P1 | feito | bd8dfca |
 | [T-073](fechados/T-073-controles-na-tabela.md) | Controles de tabela direto na tabela | P2 | feito | 236239e |
 | [T-017](fechados/T-017-status-legivel.md) | Status da página mais legível | P2 | feito | 87eeb8e |
 | [T-008](fechados/T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | feito | 1ba09e3 |

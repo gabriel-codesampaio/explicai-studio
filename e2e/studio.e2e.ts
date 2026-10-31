@@ -1078,3 +1078,28 @@ test("menu Texto da barra: com a janela baixa, a seta leva o foco a itens sempre
     await dentroDaLista(menu.locator(":focus"), menu);
   }
 });
+
+for (const height of [420, 520, 800]) {
+  test(`menu / na primeira linha (viewport ${height}): fica abaixo da barra fixa e o primeiro item é clicável`, async ({
+    page,
+    request,
+  }) => {
+    const { slug } = await setup(request, `Manual Barra ${height}`, ["Barra"]);
+    await page.setViewportSize({ width: 1280, height });
+    await page.goto(`/#/${slug}`);
+    await editor(page).click();
+    await page.keyboard.type("/");
+    const menu = page.getByRole("listbox", { name: "Inserir bloco" });
+    await expect(menu).toBeVisible();
+    const bar = await page.locator("[data-editor-toolbar]").boundingBox();
+    const box = await menu.boundingBox();
+    const first = await menu.getByRole("option").first().boundingBox();
+    if (!bar || !box || !first) throw new Error("sem caixa para medir");
+    expect(box.y).toBeGreaterThanOrEqual(bar.y + bar.height);
+    const hit = await page.evaluate(
+      ({ x, y }) => document.elementFromPoint(x, y)?.closest('[role="option"]')?.textContent ?? null,
+      { x: first.x + first.width / 2, y: first.y + first.height / 2 },
+    );
+    expect(hit).not.toBeNull();
+  });
+}

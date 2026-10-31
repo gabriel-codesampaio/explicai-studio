@@ -1,7 +1,9 @@
+import { flip, size } from "@floating-ui/dom";
 import { Extension } from "@tiptap/core";
 import { ReactRenderer } from "@tiptap/react";
 import Suggestion from "@tiptap/suggestion";
 import { type Block, searchBlocks } from "../blocks";
+import { collisionPadding } from "../editorArea";
 import { SlashMenu, type SlashMenuHandle } from "./SlashMenu";
 
 export interface SlashOptions {
@@ -24,6 +26,18 @@ export const SlashCommand = Extension.create<SlashOptions>({
         editor: this.editor,
         char: "/",
         startOfLine: false,
+        // Abre onde cabe entre a barra fixa e o rodapé; sem espaço dos dois lados, a lista rola por dentro.
+        flip: false,
+        floatingUi: {
+          middleware: [
+            flip(() => ({ padding: collisionPadding() })),
+            size(() => ({
+              padding: collisionPadding(),
+              apply: ({ availableHeight, elements }) =>
+                elements.floating.style.setProperty("--slash-max-h", `${availableHeight}px`),
+            })),
+          ],
+        },
         // Só no começo de um bloco vazio ou depois de um espaço, para não disparar em "e/ou".
         allow: ({ state, range }) => {
           const before = state.doc.textBetween(Math.max(range.from - 1, 0), range.from, "\n", "\n");

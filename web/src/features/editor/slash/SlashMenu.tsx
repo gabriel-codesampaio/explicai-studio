@@ -59,7 +59,7 @@ export function SlashMenu({ items, command, ref }: Props) {
       ref={listRef}
       role="listbox"
       aria-label={t("Inserir bloco")}
-      className="z-50 max-h-80 w-80 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
+      className="z-50 max-h-[min(20rem,var(--slash-max-h,20rem))] w-80 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
     >
       {items.length === 0 ? (
         <p className="px-3 py-2 text-sm text-muted-foreground">{t("Nenhum bloco com esse nome.")}</p>
