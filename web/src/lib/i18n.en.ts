@@ -34,6 +34,7 @@ export const EN: Record<string, string> = {
   "{n} páginas": "{n} pages",
   "Abrir o PDF": "Open the PDF",
   "Abrir o arquivo": "Open the file",
+  Fechar: "Close",
   "{n} páginas aprovadas ou publicadas neste manual. As outras ficam de fora.":
     "{n} approved or published pages in this manual. The others are left out.",
   "3 × 3 com cabeçalho": "3 × 3 with header",
