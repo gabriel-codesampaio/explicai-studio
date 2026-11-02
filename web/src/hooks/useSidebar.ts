@@ -1,8 +1,9 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
 const KEY = "explicai:barra-lateral";
-/** A partir desta largura (lg) a barra lateral é uma coluna; abaixo, uma gaveta por cima do editor. */
-const WIDE = "(min-width: 64rem)";
+/** A partir desta largura (900 px, tela dividida) a barra lateral é uma coluna; abaixo, uma gaveta. Navigation.tsx usa a mesma largura nas classes `min-[56.25rem]:`. */
+export const COLUMN_MIN_REM = 56.25;
+const WIDE = `(min-width: ${COLUMN_MIN_REM}rem)`;
 
 function readCollapsed(): boolean {
   try {

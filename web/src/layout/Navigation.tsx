@@ -1,4 +1,5 @@
 import { PanelLeftOpen } from "lucide-react";
+import { Brand } from "@/components/Brand";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import type { SidebarState } from "@/hooks/useSidebar";
 import { t } from "@/lib/i18n";
@@ -13,13 +14,13 @@ interface Props {
 const SHORTCUT = "Ctrl+\\";
 
 /**
- * Onde a barra lateral aparece: coluna fixa (ou recolhida num trilho) em tela larga,
- * gaveta por cima do editor em tela estreita, como a do sistema dividida ao lado ou o celular.
+ * Onde a barra lateral aparece: coluna fixa (ou recolhida num trilho) a partir de 900 px (14rem até 1023, 17,5rem depois),
+ * gaveta por cima do editor abaixo disso, como no celular.
  */
 export function Navigation({ sidebar, onSearch }: Props) {
   return (
     <>
-      <div className="hidden h-full shrink-0 lg:block">
+      <div className="hidden h-full shrink-0 min-[56.25rem]:block">
         {sidebar.collapsed ? (
           <div className="flex h-full w-12 flex-col items-center border-r border-border bg-card pt-4">
             <button
@@ -35,7 +36,7 @@ export function Navigation({ sidebar, onSearch }: Props) {
             <div aria-hidden className="mt-auto h-(--rodape-h) w-full shrink-0 border-t border-border" />
           </div>
         ) : (
-          <div className="h-full w-[17.5rem]">
+          <div className="h-full w-56 lg:w-[17.5rem]">
             <Sidebar onCollapse={sidebar.collapse} onSearch={onSearch} />
           </div>
         )}
@@ -45,7 +46,7 @@ export function Navigation({ sidebar, onSearch }: Props) {
         <DialogContent
           showCloseButton={false}
           aria-describedby={undefined}
-          className="top-0 left-0 h-full w-[min(17.5rem,85vw)] max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 p-0 sm:max-w-none lg:hidden data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
+          className="top-0 left-0 h-full w-[min(17.5rem,85vw)] max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 p-0 sm:max-w-none min-[56.25rem]:hidden data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
         >
           <DialogTitle className="sr-only">{t("Páginas do manual")}</DialogTitle>
           <Sidebar
@@ -65,7 +66,7 @@ export function Navigation({ sidebar, onSearch }: Props) {
 /** Topo da área principal em tela estreita: abre a gaveta das páginas e mostra em qual manual você está. */
 export function MobileBar({ title, onOpen }: { title: string; onOpen: () => void }) {
   return (
-    <div className="flex h-12 shrink-0 items-center gap-2 border-b border-border bg-card px-3 lg:hidden">
+    <div className="flex h-12 shrink-0 items-center gap-2 border-b border-border bg-card px-3 min-[56.25rem]:hidden">
       <button
         type="button"
         onClick={onOpen}
@@ -74,6 +75,7 @@ export function MobileBar({ title, onOpen }: { title: string; onOpen: () => void
       >
         <PanelLeftOpen className="size-4" aria-hidden /> {t("Páginas")}
       </button>
+      <Brand />
       <span className="truncate text-sm text-muted-foreground">{title}</span>
     </div>
   );
