@@ -19,7 +19,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-023](T-023-marcacao-no-celular.md) | Deixar a legenda editável no diálogo de marcação em 375 px | P2 | aberto | frontend |
 | [T-026](T-026-aparencia-no-celular.md) | Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro | P2 | aberto | design |
 | [T-027](T-027-tokens-do-escuro.md) | Alinhar as cores do tema escuro ao brand book | P2 | aberto | design |
-| [T-028](T-028-textos-sem-traducao.md) | Traduzir os textos que ainda aparecem em português com a interface em inglês | P2 | aberto | frontend |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
 | [T-032](T-032-logo-do-cliente.md) | Logo do cliente na capa do manual exportado | P2 | aberto | frontend |
 | [T-033](T-033-exportar-sem-rodape.md) | Exportar o manual sem o rodapé do Explicaí | P3 | aberto | frontend |
@@ -47,6 +46,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-028](fechados/T-028-textos-sem-traducao.md) | Traduzir os textos que ainda aparecem em português com a interface em inglês | P2 | feito | 4b1b5ff |
 | [T-075](fechados/T-075-menu-barra-atras-da-barra-fixa.md) | Menu "/" aparece atrás da barra fixa | P1 | feito | bd8dfca |
 | [T-073](fechados/T-073-controles-na-tabela.md) | Controles de tabela direto na tabela | P2 | feito | 236239e |
 | [T-017](fechados/T-017-status-legivel.md) | Status da página mais legível | P2 | feito | 87eeb8e |

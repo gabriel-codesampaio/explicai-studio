@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: Verificação do T-019 (qa, 2026-10-29)
 
@@ -19,4 +19,4 @@ Com a interface em inglês ainda aparecem em português: o link "Abrir o arquivo
 Snapshot de acessibilidade com a interface em inglês; `web/test/i18n.test.ts`.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit 4b1b5ff. O link "Abrir o arquivo"/"Abrir o PDF" já passava por `t()` (em `ExportStatus.tsx`) e tinha chave em inglês. Faltavam o "Fechar" do diálogo (`dialog.tsx`) e o `aria-label` da nav em `Sidebar.tsx`; agora usam `t()`, com a chave nova `Fechar` em `i18n.en.ts` ("Páginas do manual" já existia). `i18n.test.ts` varre todo `t("...")` e falha se faltar a chave, então cobre os três. Seletores do e2e ficam iguais (rodam em português). check verde, 365 testes. Fica de fora: snapshot de acessibilidade no navegador em inglês.
