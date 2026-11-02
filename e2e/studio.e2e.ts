@@ -1103,3 +1103,65 @@ for (const height of [420, 520, 800]) {
     expect(hit).not.toBeNull();
   });
 }
+
+for (const theme of ["light", "dark"] as const) {
+  test(`painéis Aparência e Idioma em 375 px (${theme}): opções dentro da tela e a marcada se destaca por mais que o peso`, async ({
+    page,
+    request,
+  }) => {
+    const { slug } = await setup(request, `Manual Celular ${theme}`, ["Início"]);
+    await page.setViewportSize({ width: 375, height: 700 });
+    await page.addInitScript((mode) => {
+      if (!sessionStorage.getItem("semeado")) {
+        localStorage.setItem("explicai:aparencia", JSON.stringify({ mode }));
+        sessionStorage.setItem("semeado", "1");
+      }
+    }, theme);
+    await page.goto(`/#/${slug}`);
+
+    // Cor qualquer do CSS (oklch, lab...) vira sRGB pelo canvas, para medir o contraste.
+    const marked = (dialog: Locator) =>
+      dialog.getByRole("button", { pressed: true }).evaluate((el) => {
+        const rgb = (css: string) => {
+          const c = document.createElement("canvas").getContext("2d") as CanvasRenderingContext2D;
+          c.fillStyle = "#000";
+          c.fillStyle = css;
+          c.fillRect(0, 0, 1, 1);
+          return [...c.getImageData(0, 0, 1, 1).data].slice(0, 3);
+        };
+        const lin = (v: number) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
+        const lumin = ([r = 0, g = 0, b = 0]: number[]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+        const shadow = getComputedStyle(el).boxShadow;
+        const color = /(rgba?\([^)]*\)|oklch\([^)]*\)|lab\([^)]*\)|color\([^)]*\)|#[0-9a-f]+)/i;
+        // O anel (ring-2) é a sombra com 2px de espalhamento; a outra é a sombra leve do botão.
+        const ring =
+          shadow
+            .split(/,(?![^(]*\))/)
+            .find((x) => /\s2px(\s|$)/.test(x))
+            ?.match(color)?.[0] ?? "#000";
+        const track = rgb(getComputedStyle(el.parentElement as HTMLElement).backgroundColor);
+        const [hi = 0, lo = 0] = [lumin(rgb(ring)), lumin(track)].sort((x, y) => y - x);
+        return (hi + 0.05) / (lo + 0.05);
+      });
+
+    for (const [item, group] of [
+      ["Aparência", "Tema"],
+      ["Idioma", "Idioma da interface"],
+    ] as const) {
+      await page
+        .getByRole("button", { name: /Mostrar as páginas/ })
+        .click({ timeout: 1000 })
+        .catch(() => {});
+      await page.getByRole("button", { name: "Ajustes" }).click();
+      await page.getByRole("menuitem", { name: item }).click();
+      const dialog = page.getByRole("dialog");
+      for (const b of await dialog.getByRole("group", { name: group }).getByRole("button").all()) {
+        const box = await b.boundingBox();
+        expect(box && box.x >= 0 && box.x + box.width <= 375).toBe(true);
+        expect(box && box.height >= 40).toBe(true);
+      }
+      expect(await marked(dialog)).toBeGreaterThanOrEqual(3);
+      await page.keyboard.press("Escape");
+    }
+  });
+}

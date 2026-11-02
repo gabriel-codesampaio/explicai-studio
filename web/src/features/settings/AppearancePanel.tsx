@@ -33,7 +33,7 @@ export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenC
                 type="button"
                 aria-pressed={look.mode === id}
                 onClick={() => change({ mode: id })}
-                className="flex flex-col items-center gap-1 rounded-sm py-1.5 text-xs text-muted-foreground hover:text-foreground aria-pressed:bg-card aria-pressed:font-bold aria-pressed:text-foreground aria-pressed:shadow-xs"
+                className="flex flex-col items-center gap-1 rounded-sm min-h-11 py-1.5 text-xs text-muted-foreground hover:text-foreground aria-pressed:bg-card aria-pressed:font-bold aria-pressed:text-foreground aria-pressed:shadow-xs aria-pressed:ring-2 aria-pressed:ring-primary"
               >
                 <Icon className="size-4" aria-hidden /> {label}
               </button>
