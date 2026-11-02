@@ -15,6 +15,13 @@ it("recusa do logo vira texto da interface, com o motivo", () => {
   );
 });
 
+it("logo fora do formato esperado ou sumido tem texto da interface", () => {
+  expect(errorMessage(new ApiError("x", "logo-path"))).toBe("O logo precisa estar na pasta assets/ do manual.");
+  expect(errorMessage(new ApiError("x", "logo-missing", { logo: "assets/a.png" }))).toBe(
+    "O logo assets/a.png não está mais no manual. Envie o arquivo de novo.",
+  );
+});
+
 it("código desconhecido usa a mensagem do servidor", () => {
   expect(errorMessage(new ApiError("texto do servidor", "outro"))).toBe("texto do servidor");
 });

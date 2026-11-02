@@ -223,6 +223,8 @@ const CODED: Record<string, (p: Record<string, string | number>) => string> = {
     ),
   "no-approved-pages": () => t("Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas."),
   "logo-type": () => t("O logo precisa ser PNG, JPG ou SVG. Escolha outro arquivo."),
+  "logo-path": () => t("O logo precisa estar na pasta assets/ do manual."),
+  "logo-missing": (p) => t("O logo {logo} não está mais no manual. Envie o arquivo de novo.", { logo: String(p.logo) }),
   "logo-size": (p) => t("O logo passa de {max} MB. Reduza o arquivo e envie de novo.", { max: String(p.max) }),
   "low-contrast": (p) =>
     t("A cor de {label} tem contraste {ratio}:1 com o branco; o mínimo é {min}:1. Escolha uma cor mais escura.", {

@@ -306,6 +306,9 @@ export const EN: Record<string, string> = {
   "Logo do cliente": "Client logo",
   "Aparece na capa e no topo do sumário do HTML e do PDF. PNG, JPG ou SVG, até 1 MB.":
     "Shown on the cover and at the top of the contents in the HTML and PDF. PNG, JPG or SVG, up to 1 MB.",
+  "O logo precisa estar na pasta assets/ do manual.": "The logo must be in the manual's assets/ folder.",
+  "O logo {logo} não está mais no manual. Envie o arquivo de novo.":
+    "The logo {logo} is no longer in the manual. Upload the file again.",
   "Enviar logo": "Upload logo",
   "Trocar logo": "Replace logo",
   "Tirar logo": "Remove logo",
