@@ -28,7 +28,14 @@ const GROUPS: { title: string; keys: [string, string][] }[] = [
   },
   {
     title: "Marcando imagens",
-    keys: [["Delete", "Excluir a marcação selecionada"]],
+    keys: [
+      ["V", "Ferramenta Selecionar"],
+      ["M", "Ferramenta Marcador"],
+      ["D", "Ferramenta Destaque"],
+      ["S", "Ferramenta Seta"],
+      ["A", "Ferramenta Área clicável"],
+      ["Delete", "Excluir a marcação selecionada"],
+    ],
   },
 ];
 

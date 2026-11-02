@@ -6,6 +6,7 @@ import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
 import { type Annotations, type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
 import { errorMessage, type TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
+import { TOOL_KEYS, toolForKey } from "@/lib/toolShortcuts";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { AnnotationCanvas } from "./AnnotationCanvas";
@@ -86,6 +87,12 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
         }}
         onKeyDown={(e) => {
           const target = e.target as HTMLElement;
+          const shortcut = toolForKey(e);
+          if (shortcut) {
+            e.preventDefault();
+            setTool(shortcut);
+            return;
+          }
           if ((e.key === "Delete" || e.key === "Backspace") && selectedId && draft && !target.closest("input, select")) {
             e.preventDefault();
             change(removeAnnotation(draft, selectedId));
@@ -108,13 +115,19 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               key={id}
               type="button"
               aria-pressed={tool === id}
+              aria-label={label}
+              aria-keyshortcuts={TOOL_KEYS[id]}
+              title={`${label} (${TOOL_KEYS[id]})`}
               onClick={() => setTool(id)}
               className={cn(
-                "flex h-9 items-center gap-2 rounded-md border px-3 text-sm",
+                "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-sm",
                 tool === id ? "border-primary bg-accent font-bold text-primary" : "border-border hover:bg-muted",
               )}
             >
-              <Icon className="size-4" aria-hidden /> {label}
+              <Icon className="size-4" aria-hidden />
+              <kbd className="font-mono text-xs" aria-hidden>
+                {TOOL_KEYS[id]}
+              </kbd>
             </button>
           ))}
         </div>
