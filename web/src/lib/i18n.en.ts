@@ -303,6 +303,17 @@ export const EN: Record<string, string> = {
   "Virar subpágina ou subir um nível": "Make it a subpage or move up a level",
   "Voltar à lista": "Back to the list",
   "Cores do manual": "Manual colors",
+  "Logo do cliente": "Client logo",
+  "Aparece na capa e no topo do sumário do HTML e do PDF. PNG, JPG ou SVG, até 1 MB.":
+    "Shown on the cover and at the top of the contents in the HTML and PDF. PNG, JPG or SVG, up to 1 MB.",
+  "Enviar logo": "Upload logo",
+  "Trocar logo": "Replace logo",
+  "Tirar logo": "Remove logo",
+  "Logo do manual": "Manual logo",
+  "Não foi possível enviar o logo.": "Could not upload the logo.",
+  "O logo precisa ser PNG, JPG ou SVG. Escolha outro arquivo.": "The logo must be PNG, JPG or SVG. Pick another file.",
+  "O logo passa de {max} MB. Reduza o arquivo e envie de novo.":
+    "The logo is over {max} MB. Shrink the file and upload it again.",
   "Cor de realce": "Highlight color",
   "Cor de destaque": "Accent color",
   "Cor do texto": "Text color",
