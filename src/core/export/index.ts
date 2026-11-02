@@ -15,6 +15,7 @@ import { printPdf } from "./pdf.js";
 import { type ImageInfo, loadImages } from "./refs.js";
 import { mergeTheme, type ThemePatch, usedFonts } from "./theme.js";
 
+export { logoSizeError } from "./logo.js";
 export { findBrowser } from "./pdf.js";
 
 /** Pasta da exportação, dentro do manual. Cada exportação substitui a anterior do mesmo formato. */
@@ -96,7 +97,12 @@ export async function setManualLogo(dir: string, fileName: string, data: Uint8Ar
   if (!LOGO_EXT.test(path.extname(fileName))) throw logoTypeError();
   if (data.byteLength > LOGO_MAX_BYTES) throw logoSizeError();
   const logo = await saveAsset(dir, fileName, data);
-  await setManualTheme(dir, { logo });
+  try {
+    await setManualTheme(dir, { logo });
+  } catch (err) {
+    await rm(resolveInside(dir, logo), { force: true }); // não deixa o arquivo novo órfão
+    throw err;
+  }
   return logo;
 }
 
@@ -119,8 +125,9 @@ async function copyLogo(dir: string, out: string, theme: ManualTheme | undefined
     const logo = checkLogoPath(theme.logo);
     await copyFile(resolveInside(dir, logo), path.join(out, logo));
     return logo;
-  } catch {
-    warnings.push(`Logo não encontrado: ${theme.logo}`);
+  } catch (err) {
+    const missing = (err as NodeJS.ErrnoException).code === "ENOENT";
+    warnings.push(missing ? `Logo não encontrado: ${theme.logo}` : `Logo não copiado (${theme.logo}): ${(err as Error).message}`);
     return null;
   }
 }
