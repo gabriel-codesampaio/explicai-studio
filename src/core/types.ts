@@ -41,6 +41,8 @@ export interface ManualTheme {
   headings?: Partial<Record<HeadingSlot, string>>;
   /** Fontes do manual, pelo nome da lista de `export/fonts.ts` (`inter`, `lora`…). Sem escolha: Atkinson e Archivo. */
   fonts?: { text?: string; headings?: string };
+  /** Logo do cliente na capa e no topo do sumário: `assets/<arquivo>`, PNG, JPG ou SVG de até 1 MB. */
+  logo?: string;
 }
 
 export interface Manual {

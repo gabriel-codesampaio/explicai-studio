@@ -9,6 +9,7 @@ export {
   type ExportResult,
   exportManual,
   findBrowser,
+  setManualLogo,
   setManualTheme,
 } from "./export/index.js";
 export { resolveInside } from "./fs.js";

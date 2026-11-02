@@ -14,7 +14,7 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
 const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
 
 /** Um arquivo HTML com o manual inteiro: sumário ao lado, uma seção por página, marcações sobre os prints. */
-export function renderHtml(collected: Collected, images: Map<string, ImageInfo>): string {
+export function renderHtml(collected: Collected, images: Map<string, ImageInfo>, logo: string | null = null): string {
   const { meta, pages } = collected;
   const L = labelsFor(meta.language);
   const toc = pages
@@ -23,6 +23,10 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>)
         `<li style="--d:${p.depth}"><a href="#${pageAnchor(p.id)}"><span class="num">${p.number}</span> ${esc(p.title)}</a></li>`,
     )
     .join("\n");
+  const logoImg = logo
+    ? `<img class="logo" src="${esc(logo)}" alt="">
+`
+    : "";
   const sections = pages.map((p) => renderPage(p, pages, images, L)).join("\n");
 
   return `<!doctype html>
@@ -38,14 +42,14 @@ ${CSS}${themeCss(meta.theme)}</style>
 <body>
 <div class="layout">
 <nav class="toc" aria-label="${L.toc}">
-<p class="toc-title">${esc(meta.title)}</p>
+${logoImg}<p class="toc-title">${esc(meta.title)}</p>
 <ol>
 ${toc}
 </ol>
 </nav>
 <main>
 <header class="cover">
-<h1>${esc(meta.title)}</h1>
+${logoImg}<h1>${esc(meta.title)}</h1>
 <p>${L.pages(pages.length)}</p>
 </header>
 ${sections}
@@ -196,6 +200,9 @@ body{margin:0;background:#fff;color:var(--tinta);font:16px/1.65 var(--texto);-we
 main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .cover{padding:48px 0 32px;border-bottom:3px solid var(--marca);margin-bottom:24px}
 .cover h1{margin:0;color:var(--t-cover);font:800 clamp(32px,5vw,48px)/1.1 var(--display);letter-spacing:-.02em}
+.logo{display:block;width:auto;height:auto;object-fit:contain}
+.cover .logo{max-height:96px;max-width:min(280px,100%);margin:0 0 24px}
+.toc .logo{max-height:48px;max-width:100%;margin:0 0 16px}
 .cover p{margin:8px 0 0;color:var(--grafite)}
 .page{padding-top:32px;scroll-margin-top:16px}
 .page-title{margin:0 0 12px;color:var(--t-page);font:800 30px/1.2 var(--display);letter-spacing:-.01em}

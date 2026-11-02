@@ -1,5 +1,6 @@
 import { copyFile, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
+import { saveAsset } from "../assets.js";
 import { ExplicaiError } from "../errors.js";
 import { atomicWrite, relativePosix, resolveInside } from "../fs.js";
 import { updateManual } from "../manuals.js";
@@ -8,6 +9,7 @@ import type { ManualTheme } from "../types.js";
 import { type CollectOptions, collectPages } from "./collect.js";
 import { FONTS_DIR, fontFiles } from "./fonts.js";
 import { renderHtml } from "./html.js";
+import { checkLogoFile, checkLogoPath, LOGO_EXT, LOGO_MAX_BYTES, logoSizeError, logoTypeError } from "./logo.js";
 import { renderMarkdown } from "./markdown.js";
 import { printPdf } from "./pdf.js";
 import { type ImageInfo, loadImages } from "./refs.js";
@@ -65,8 +67,9 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   const out = await freshDir(path.join(root, "html"));
   await copyImages(dir, images, out);
   await copyFonts(out, collected.meta.theme);
+  const logo = await copyLogo(dir, out, collected.meta.theme, warnings);
   const html = path.join(out, "index.html");
-  await atomicWrite(html, renderHtml(collected, images));
+  await atomicWrite(html, renderHtml(collected, images, logo));
   if (format === "html") return result(html);
 
   const pdf = path.join(root, `${slugify(collected.meta.title) || "manual"}.pdf`);
@@ -80,11 +83,21 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
  * cores sem contraste suficiente são recusadas.
  */
 export async function setManualTheme(dir: string, patch: ThemePatch): Promise<void> {
+  if (typeof patch.logo === "string") await checkLogoFile(dir, checkLogoPath(patch.logo));
   await updateManual(dir, (meta) => {
     const theme = mergeTheme(meta.theme, patch);
     if (Object.keys(theme).length) meta.theme = theme;
     else delete meta.theme;
   });
+}
+
+/** Grava o logo em `assets/` (PNG, JPG ou SVG, até 1 MB) e o põe no tema. Devolve o caminho. */
+export async function setManualLogo(dir: string, fileName: string, data: Uint8Array): Promise<string> {
+  if (!LOGO_EXT.test(path.extname(fileName))) throw logoTypeError();
+  if (data.byteLength > LOGO_MAX_BYTES) throw logoSizeError();
+  const logo = await saveAsset(dir, fileName, data);
+  await setManualTheme(dir, { logo });
+  return logo;
 }
 
 async function freshDir(dir: string): Promise<string> {
@@ -97,6 +110,19 @@ async function freshDir(dir: string): Promise<string> {
 async function copyImages(dir: string, images: Map<string, ImageInfo>, out: string): Promise<void> {
   await mkdir(path.join(out, "assets"), { recursive: true });
   for (const asset of images.keys()) await copyFile(resolveInside(dir, asset), path.join(out, asset));
+}
+
+/** Copia o logo do tema. Sumiu do disco: avisa e o manual sai sem ele. */
+async function copyLogo(dir: string, out: string, theme: ManualTheme | undefined, warnings: string[]): Promise<string | null> {
+  if (!theme?.logo) return null;
+  try {
+    const logo = checkLogoPath(theme.logo);
+    await copyFile(resolveInside(dir, logo), path.join(out, logo));
+    return logo;
+  } catch {
+    warnings.push(`Logo não encontrado: ${theme.logo}`);
+    return null;
+  }
 }
 
 /** Só as fontes que o tema usa vão com o HTML (e a licença OFL de cada uma), para o manual abrir igual sem internet. */
