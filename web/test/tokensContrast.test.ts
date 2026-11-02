@@ -2,18 +2,18 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const css = readFileSync(new URL("../src/styles/tokens.css", import.meta.url), "utf8");
-const bloco = (sel: string) => css.slice(css.indexOf(sel)).split("}")[0];
+const bloco = (sel: string) => css.slice(css.indexOf(sel)).split("}")[0] ?? "";
 const token = (b: string, n: string) => new RegExp(`--${n}: *(#[0-9a-f]{6})`, "i").exec(b)?.[1] ?? "";
 
 const lum = (hex: string) => {
-  const [r, g, b] = [1, 3, 5].map((i) => {
+  const [r = 0, g = 0, b = 0] = [1, 3, 5].map((i) => {
     const c = parseInt(hex.slice(i, i + 2), 16) / 255;
     return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
   });
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 };
 const contraste = (a: string, b: string) => {
-  const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+  const [x = 0, y = 0] = [lum(a), lum(b)].sort((p, q) => q - p);
   return (x + 0.05) / (y + 0.05);
 };
 
