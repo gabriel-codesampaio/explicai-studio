@@ -315,6 +315,35 @@ test.describe("edição", () => {
 });
 
 test.describe("marcações", () => {
+  test("atalhos V/M/D/S/A trocam de ferramenta, mas não ao digitar num campo", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Atalhos");
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Marcar imagem" }).click();
+    const dialog = markDialog(page);
+    const tool = (name: string) => dialog.getByRole("button", { name, exact: true });
+
+    for (const [key, name] of [
+      ["v", "Selecionar"],
+      ["d", "Destaque"],
+      ["s", "Seta"],
+      ["a", "Área clicável"],
+      ["m", "Marcador"],
+    ] as const) {
+      await page.keyboard.press(key);
+      await expect(tool(name)).toHaveAttribute("aria-pressed", "true");
+    }
+    await page.keyboard.press("Control+a");
+    await expect(tool("Marcador")).toHaveAttribute("aria-pressed", "true");
+
+    await dialog.getByRole("img").click({ position: { x: 60, y: 60 } });
+    const campo = dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" });
+    await campo.fill("");
+    await campo.pressSequentially("vsa");
+    await expect(campo).toHaveValue("vsa");
+    await expect(tool("Marcador")).toHaveAttribute("aria-pressed", "true");
+  });
+
   test("cria marcador, destaque, seta e área clicável, apaga e desfaz; só o Salvar grava", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Marcas");
     await page.goto(`/#/${slug}/${id}`);
