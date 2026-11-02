@@ -1,4 +1,4 @@
-import { mkdtemp, readdir, readFile, rm, stat } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -202,6 +202,8 @@ describe("pastas", () => {
 describe("theme", () => {
   it("o exemplo do documento é aceito, e o manual.json guarda exatamente o que ele diz", async () => {
     const theme = JSON.parse(`{${blocks("theme", "json")[0]}}`).theme as Record<string, unknown>;
+    // O logo do exemplo precisa existir em assets/: o core confere o arquivo ao gravar.
+    await writeFile(path.join(dir, String(theme.logo)), new Uint8Array([1]));
     await setManualTheme(dir, theme);
     expect((await readManual(dir)).theme).toEqual(theme);
   });
