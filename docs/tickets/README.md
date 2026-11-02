@@ -16,7 +16,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-008](T-008-menu-barra-com-previa.md) | Menu "/" com prévia do bloco e grupos, sem ícones em quadrado | P1 | aberto | frontend |
 | [T-013](fechados/T-013-tela-dividida.md) | Manter a árvore visível em tela dividida (~960 px) | P2 | feito | c4b1f33 |
 | [T-023](T-023-marcacao-no-celular.md) | Deixar a legenda editável no diálogo de marcação em 375 px | P2 | aberto | frontend |
-| [T-026](T-026-aparencia-no-celular.md) | Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro | P2 | aberto | design |
+| [T-026](fechados/T-026-aparencia-no-celular.md) | Abrir o painel Aparência dentro da tela no celular e marcar a opção escolhida no escuro | P2 | feito | 0eeb73a |
 | [T-027](T-027-tokens-do-escuro.md) | Alinhar as cores do tema escuro ao brand book | P2 | aberto | design |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
 | [T-032](T-032-logo-do-cliente.md) | Logo do cliente na capa do manual exportado | P2 | aberto | frontend |
