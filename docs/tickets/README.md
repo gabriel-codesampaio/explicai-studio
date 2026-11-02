@@ -106,4 +106,4 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-081](T-081-duas-marcas-com-gaveta-aberta.md) | Duas marcas visíveis com a gaveta aberta abaixo de 900 px | P3 | aberto | frontend |
 | [T-082](T-082-svg-servido-sem-csp.md) | Servir SVG de assets/ com CSP restritiva | P3 | aberto | frontend |
 | [T-083](T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | aberto | frontend |
-| [T-084](T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | aberto | design |
+| [T-084](fechados/T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | feito | design |
