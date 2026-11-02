@@ -17,7 +17,6 @@ const contraste = (a: string, b: string) => {
   return (x + 0.05) / (y + 0.05);
 };
 
-
 const temas = { claro: bloco(":root {"), escuro: bloco(':root[data-theme="dark"]') };
 const herdado = (tema: keyof typeof temas, n: string) => token(temas[tema], n) || token(temas.claro, n);
 
