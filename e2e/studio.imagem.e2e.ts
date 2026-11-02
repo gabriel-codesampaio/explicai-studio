@@ -344,6 +344,40 @@ test.describe("marcações", () => {
     await expect(tool("Marcador")).toHaveAttribute("aria-pressed", "true");
   });
 
+  for (const scheme of ["light", "dark"] as const)
+    test(`em 375 px a legenda aparece sem rolar e o rodapé não cobre os campos (${scheme})`, async ({ page, request }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.setViewportSize({ width: 375, height: 812 });
+      const { slug, id } = await withImage(request, "Imagem Celular");
+      await page.goto(`/#/${slug}/${id}`);
+      await openImage(page);
+      await page.getByRole("button", { name: "Marcar imagem" }).click();
+      const dialog = markDialog(page);
+      const box = await dialog.getByRole("img").boundingBox();
+      if (!box) throw new Error("sem caixa");
+      for (const f of [0.2, 0.5]) await page.mouse.click(box.x + box.width * f, box.y + box.height * f);
+      const campo = dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" });
+      // Sem rolar: o primeiro campo já cabe na área de rolagem, acima do rodapé.
+      const m = await dialog.evaluate((el) => {
+        const r = (n: Element | null) => n?.getBoundingClientRect();
+        const campo = el.querySelector('input[aria-label="O que o marcador 1 mostra"]');
+        return {
+          campo: r(campo),
+          area: r(el.querySelector(".overflow-auto")),
+          rodape: r(el.querySelector('[data-slot="dialog-footer"]')),
+          dialog: r(el),
+        };
+      });
+      if (!m.campo || !m.area || !m.rodape || !m.dialog) throw new Error("sem caixa");
+      expect(m.campo.bottom).toBeLessThanOrEqual(m.area.bottom);
+      expect(m.area.bottom).toBeLessThanOrEqual(m.rodape.top);
+      expect(m.dialog.bottom).toBeLessThanOrEqual(812);
+      // Botões lado a lado: o rodapé não come a altura da área de rolagem.
+      expect(m.rodape.height).toBeLessThanOrEqual(48);
+      await campo.fill("Legenda no celular");
+      await expect(campo).toHaveValue("Legenda no celular");
+    });
+
   test("cria marcador, destaque, seta e área clicável, apaga e desfaz; só o Salvar grava", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Marcas");
     await page.goto(`/#/${slug}/${id}`);

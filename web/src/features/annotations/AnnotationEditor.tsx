@@ -79,7 +79,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
-        className="grid max-h-[94vh] w-[min(96vw,80rem)] max-w-none grid-rows-[auto_auto_minmax(0,1fr)_auto] gap-4 sm:max-w-none"
+        className="grid max-h-[94vh] w-[min(96vw,80rem)] p-4 sm:p-6 max-w-none grid-rows-[auto_auto_minmax(0,1fr)_auto] gap-4 sm:max-w-none"
         onOpenAutoFocus={(e) => {
           // O foco abre na ferramenta ativa, para não haver dois botões destacados ao mesmo tempo.
           e.preventDefault();
@@ -161,9 +161,9 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           <p className="text-muted-foreground">{t("Carregando as marcações…")}</p>
         )}
 
-        <DialogFooter className="items-center gap-3">
-          <Button variant="ghost" onClick={undo} disabled={past.length === 0} className="sm:mr-auto" title="Ctrl+Z">
-            <Undo2 aria-hidden /> {t("Desfazer")}
+        <DialogFooter className="flex-row flex-wrap items-center justify-end gap-2 sm:gap-3">
+          <Button variant="ghost" onClick={undo} disabled={past.length === 0} className="mr-auto" title="Ctrl+Z">
+            <Undo2 aria-hidden /> <span className="sr-only sm:not-sr-only">{t("Desfazer")}</span>
           </Button>
           {error && (
             <p role="alert" className="text-sm text-destructive">
