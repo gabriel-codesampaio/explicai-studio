@@ -72,7 +72,7 @@ const FACES = FONTS.filter((f) => f.id === "atkinson-hyperlegible-next" || f.id 
 // Mesmos valores de web/src/styles/tokens.css e do wordmark de base.css.
 const CSS = `${FACES}
 :root{color-scheme:light dark;--p:#f5f6fa;--t:#151a33;--g:#575e78;--c:#2b4fe0;--s:#fff;--l:#dce0eb;--m:rgba(255,212,59,.55);--a:#2b4fe0}
-@media(prefers-color-scheme:dark){:root{--p:#0e1120;--t:#eceef7;--g:#a3aac4;--c:#8098ff;--s:#0e1120;--l:#2a3050;--m:rgba(255,212,59,.3);--a:#ffd43b}}
+@media(prefers-color-scheme:dark){:root{--p:#0e1120;--t:#eceef7;--g:#9ca3bd;--c:#7088ff;--s:#0e1120;--l:#2a3050;--m:rgba(255,212,59,.3);--a:#ffd43b}}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--p);color:var(--t);font:17px/1.5 "Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif}
 header,main{width:100%;max-width:64rem;margin:0 auto}

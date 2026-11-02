@@ -423,7 +423,7 @@ test("Aparência mostra só o Tema, e o Studio fica no cobalto mesmo com cor ant
 
   // Cobalto nos dois temas: --primary pinta botões, foco e marcadores.
   const primary = () => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--primary").trim());
-  expect(await primary()).toBe("#8098ff");
+  expect(await primary()).toBe("#7088ff");
   await page.getByRole("button", { name: "Claro" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   expect(await primary()).toBe("#2b4fe0");
@@ -454,7 +454,7 @@ test("exportação mostra o nome de cada cor do manual", async ({ page, request 
   expect(exported).toContain("--accent:#7a3fc4");
   // O Studio continua no cobalto depois de escolher a cor do manual.
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--primary").trim())).toMatch(
-    /^#(2b4fe0|8098ff)$/,
+    /^#(2b4fe0|7088ff)$/,
   );
 });
 
