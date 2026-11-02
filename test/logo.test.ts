@@ -1,8 +1,10 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanUnusedAssets, findUnusedAssets } from "../src/core/assets.js";
 import { addPage, createManual, exportManual, readManual, setManualLogo, setManualTheme } from "../src/core/index.js";
+import * as manuals from "../src/core/manuals.js";
 
 let workspace: string;
 let dir: string;
@@ -14,7 +16,10 @@ beforeEach(async () => {
   dir = (await createManual(workspace, { title: "Manual", language: "pt-BR" })).dir;
   await addPage(dir, { title: "A", body: "texto" });
 });
-afterEach(() => rm(workspace, { recursive: true, force: true }));
+afterEach(async () => {
+  vi.restoreAllMocks();
+  await rm(workspace, { recursive: true, force: true });
+});
 
 const exportHtml = async () => readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
 
@@ -105,5 +110,33 @@ describe("logo do cliente", () => {
     expect((await readManual(dir)).theme).toEqual({ accent: "#0f7a55", fonts: { text: "lora" } });
     await setManualTheme(dir, { accent: null, fonts: null });
     expect((await readManual(dir)).theme).toBeUndefined();
+  });
+
+  it("a limpeza de imagens sem uso não leva o logo do tema", async () => {
+    const logo = await setManualLogo(dir, "marca.png", PNG);
+    await writeFile(path.join(dir, "assets", "solta.png"), PNG);
+    expect(await findUnusedAssets(dir)).toEqual(["assets/solta.png"]);
+    await cleanUnusedAssets(dir);
+    expect(await readFile(path.join(dir, logo))).toEqual(Buffer.from(PNG));
+    expect(await exportHtml()).toContain('class="logo"');
+  });
+
+  it("se o tema não aceita o logo depois da gravação, o arquivo novo não fica órfão", async () => {
+    const before = await readdir(path.join(dir, "assets")).catch(() => []);
+    vi.spyOn(manuals, "updateManual").mockRejectedValueOnce(new Error("disco cheio"));
+    await expect(setManualLogo(dir, "marca.png", PNG)).rejects.toThrow("disco cheio");
+    expect(await readdir(path.join(dir, "assets")).catch(() => [])).toEqual(before);
+    expect((await readManual(dir)).theme).toBeUndefined();
+  });
+
+  it("erro que não é arquivo ausente aparece no aviso com a mensagem real", async () => {
+    const logo = await setManualLogo(dir, "marca.png", PNG);
+    await rm(path.join(dir, logo));
+    await mkdir(path.join(dir, logo)); // pasta no lugar do arquivo: copiar falha com EISDIR, não ENOENT
+    const res = await exportManual(dir, "html");
+    const msg = res.warnings.join();
+    expect(msg).toContain(logo);
+    expect(msg).not.toContain("Logo não encontrado");
+    expect(msg).toContain("Logo não copiado");
   });
 });

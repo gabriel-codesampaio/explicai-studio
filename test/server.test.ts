@@ -254,6 +254,7 @@ describe("API de exportação", () => {
     expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({ logo });
     expect(await (await up("marca.gif", 10)).json()).toMatchObject({ code: "logo-type" });
     expect(await (await up("grande.png", 1024 * 1024 + 1)).json()).toMatchObject({ code: "logo-size" });
+    expect(await (await up("enorme.png", 3 * 1024 * 1024)).json()).toMatchObject({ code: "logo-size" });
     await fetch(`${base}/api/manuals/m/theme`, json("PUT", { logo: null }));
     expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({});
   });
