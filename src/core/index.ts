@@ -9,6 +9,7 @@ export {
   type ExportResult,
   exportManual,
   findBrowser,
+  logoSizeError,
   setManualLogo,
   setManualTheme,
 } from "./export/index.js";
