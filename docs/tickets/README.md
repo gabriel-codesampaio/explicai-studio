@@ -98,3 +98,9 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-067](fechados/T-067-decodeuricomponent-sem-guarda.md) | decodeURIComponent sem guarda no hash e nas anotações | P2 | feito | 82a28b5 |
 | [T-069](fechados/T-069-uri-malformed-em-ingles.md) | Mensagem "URI malformed" em inglês no 400 do servidor | P3 | feito | ef631c1 |
 | [T-072](fechados/T-072-menu-barra-nao-rola-com-a-seta.md) | Menu "/": o item ativo some quando a seta desce | P1 | feito | 84a6cda |
+| [T-076](T-076-titulo-sem-tooltip-na-arvore.md) | Título truncado na árvore estreita sem tooltip | P3 | aberto | frontend |
+| [T-077](T-077-botoes-de-marcacao-no-toque.md) | Botões da barra de marcação abaixo de 44 px e sem nome no toque | P3 | aberto | design |
+| [T-078](T-078-grupo-exportar-deslocado-em-375.md) | Grupo Versões / Rascunho / Exportar deslocado em 375 px | P3 | aberto | design |
+| [T-079](T-079-breakpoint-900-duplicado.md) | Breakpoint de 900 px duplicado em COLUMN_MIN_REM e Navigation.tsx | P3 | aberto | frontend |
+| [T-080](T-080-gitignore-sem-env.md) | Incluir .env no .gitignore | P3 | aberto | qa |
+| [T-081](T-081-duas-marcas-com-gaveta-aberta.md) | Duas marcas visíveis com a gaveta aberta abaixo de 900 px | P3 | aberto | frontend |
