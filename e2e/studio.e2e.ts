@@ -1103,3 +1103,36 @@ for (const height of [420, 520, 800]) {
     expect(hit).not.toBeNull();
   });
 }
+
+test("exportação: logo do cliente entra na capa do HTML, a recusa diz o motivo e tirar o logo mantém a cor", async ({
+  page,
+  request,
+}) => {
+  const { slug } = await setup(request, "Manual Logo", ["Início"]);
+  await request.put(`/api/manuals/${slug}/theme`, { data: { accent: "#7a3fc4" } });
+  await page.goto(`/#/${slug}`);
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const dialog = page.getByRole("dialog");
+
+  const file = dialog.getByLabel("Logo do cliente", { exact: true });
+  await file.setInputFiles({ name: "gif.gif", mimeType: "image/gif", buffer: Buffer.from("GIF89a") });
+  await expect(dialog.getByRole("alert")).toContainText("PNG, JPG ou SVG");
+  await file.setInputFiles({ name: "grande.png", mimeType: "image/png", buffer: Buffer.alloc(1024 * 1024 + 1) });
+  await expect(dialog.getByRole("alert")).toContainText("passa de 1 MB");
+
+  await file.setInputFiles(IMAGE);
+  await expect(dialog.getByRole("img", { name: "Logo do manual" })).toBeVisible();
+  await expect(dialog.getByRole("alert")).toHaveCount(0);
+
+  await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+  const href = (await dialog.getByRole("link", { name: "Abrir o arquivo" }).getAttribute("href")) ?? "";
+  const html = await (await request.get(href)).text();
+  const logo = /<header class="cover">\s*<img class="logo" src="([^"]+)"/.exec(html)?.[1];
+  expect(logo).toMatch(/^assets\/tela.*\.png$/);
+  expect((await request.get(href.replace("index.html", logo ?? ""))).status()).toBe(200);
+
+  await dialog.getByRole("button", { name: "Tirar logo" }).click();
+  await expect(dialog.getByRole("img", { name: "Logo do manual" })).toHaveCount(0);
+  const detail = await (await request.get(`/api/manuals/${slug}`)).json();
+  expect(detail.theme).toEqual({ accent: "#7a3fc4" });
+});

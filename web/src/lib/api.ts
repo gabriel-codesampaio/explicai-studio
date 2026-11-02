@@ -31,12 +31,15 @@ export interface ManualTheme {
   highlight?: string;
   headings?: Partial<Record<HeadingSlot, string>>;
   fonts?: { text?: string; headings?: string };
+  /** Logo do cliente: `assets/<arquivo>`. */
+  logo?: string;
 }
 
 /** Só os campos enviados mudam; `null` volta o campo ao padrão. */
 export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string | null>> & {
   headings?: Partial<Record<HeadingSlot, string | null>>;
   fonts?: Partial<Record<"text" | "headings", string | null>>;
+  logo?: string | null;
 };
 
 /** Fonte empacotada para o manual exportado. */
@@ -180,6 +183,13 @@ export const api = {
     call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved })),
   setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),
 
+  /** Envia o logo (PNG, JPG ou SVG, até 1 MB); o servidor guarda em assets/ e põe no tema. */
+  uploadLogo: (slug: string, file: File) =>
+    call<{ path: string }>(`${manualUrl(slug)}/logo?name=${encodeURIComponent(file.name || "logo.png")}`, {
+      method: "POST",
+      body: file,
+    }),
+
   getAnnotations: (slug: string, asset: string) =>
     call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`),
   saveAnnotations: (slug: string, asset: string, annotations: Annotations) =>
@@ -212,6 +222,8 @@ const CODED: Record<string, (p: Record<string, string | number>) => string> = {
       "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.",
     ),
   "no-approved-pages": () => t("Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas."),
+  "logo-type": () => t("O logo precisa ser PNG, JPG ou SVG. Escolha outro arquivo."),
+  "logo-size": (p) => t("O logo passa de {max} MB. Reduza o arquivo e envie de novo.", { max: String(p.max) }),
   "low-contrast": (p) =>
     t("A cor de {label} tem contraste {ratio}:1 com o branco; o mínimo é {min}:1. Escolha uma cor mais escura.", {
       label: t(String(p.label)),
