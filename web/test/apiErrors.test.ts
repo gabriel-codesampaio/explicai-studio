@@ -8,6 +8,20 @@ it("erro com código vira o texto da interface, com os parâmetros no formato do
   );
 });
 
+it("recusa do logo vira texto da interface, com o motivo", () => {
+  expect(errorMessage(new ApiError("x", "logo-type"))).toBe("O logo precisa ser PNG, JPG ou SVG. Escolha outro arquivo.");
+  expect(errorMessage(new ApiError("x", "logo-size", { max: 1 }))).toBe(
+    "O logo passa de 1 MB. Reduza o arquivo e envie de novo.",
+  );
+});
+
+it("logo fora do formato esperado ou sumido tem texto da interface", () => {
+  expect(errorMessage(new ApiError("x", "logo-path"))).toBe("O logo precisa estar na pasta assets/ do manual.");
+  expect(errorMessage(new ApiError("x", "logo-missing", { logo: "assets/a.png" }))).toBe(
+    "O logo assets/a.png não está mais no manual. Envie o arquivo de novo.",
+  );
+});
+
 it("código desconhecido usa a mensagem do servidor", () => {
   expect(errorMessage(new ApiError("texto do servidor", "outro"))).toBe("texto do servidor");
 });

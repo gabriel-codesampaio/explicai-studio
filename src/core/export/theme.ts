@@ -11,6 +11,7 @@ import {
   fontStack,
   MONO,
 } from "./fonts.js";
+import { checkLogoPath } from "./logo.js";
 
 /** Contraste mínimo do texto com o fundo (WCAG AA). */
 export const MIN_CONTRAST = 4.5;
@@ -34,6 +35,8 @@ const SLOT_NAMES: Record<HeadingSlot, string> = {
 export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string | null>> & {
   headings?: Partial<Record<HeadingSlot, string | null>> | null;
   fonts?: Partial<Record<"text" | "headings", string | null>> | null;
+  /** Caminho do logo em `assets/`; `null` tira o logo. */
+  logo?: string | null;
 };
 
 const num = (n: number) => n.toFixed(1).replace(".", ",");
@@ -106,6 +109,8 @@ export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch):
       else if (next.fonts) next.fonts[role] = fontOf(id, role).id;
     }
   }
+  if (patch.logo === null) delete next.logo;
+  else if (patch.logo !== undefined) next.logo = checkLogoPath(patch.logo);
   // O realce é fundo: o texto por cima precisa continuar legível.
   if (next.highlight) {
     const c = contrast(overWhite(next.highlight, HIGHLIGHT_ALPHA), next.text ?? DEFAULT_TEXT);

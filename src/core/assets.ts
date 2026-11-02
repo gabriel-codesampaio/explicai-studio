@@ -2,7 +2,7 @@ import { mkdir, readdir, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
 import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
-import { ASSETS_DIR } from "./manuals.js";
+import { ASSETS_DIR, readManual } from "./manuals.js";
 import { decodeUri, slugify } from "./text.js";
 import type { Annotations } from "./types.js";
 
@@ -58,6 +58,9 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
   const assetsDir = path.join(dir, ASSETS_DIR);
   if (!(await exists(assetsDir))) return [];
   const used = new Set<string>();
+  // O logo do tema não está em nenhuma página, mas o export precisa dele.
+  const logo = (await readManual(dir)).theme?.logo;
+  if (logo?.startsWith(`${ASSETS_DIR}/`)) used.add(logo.slice(ASSETS_DIR.length + 1));
   for (const sub of MENTION_DIRS) {
     const root = path.join(dir, sub);
     if (!(await exists(root))) continue;

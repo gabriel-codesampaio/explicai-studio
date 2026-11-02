@@ -16,6 +16,7 @@ import { t, tn } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { busyLabel, ExportStatus } from "./ExportStatus";
+import { LogoField } from "./LogoField";
 import { ThemeFields } from "./ThemeFields";
 
 const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] = [
@@ -126,7 +127,12 @@ export function ExportDialog() {
           </span>
         </label>
 
-        {format !== "markdown" && studio.manual && <ThemeFields theme={studio.manual.theme} />}
+        {format !== "markdown" && studio.manual && (
+          <>
+            <LogoField slug={studio.manual.slug} logo={studio.manual.theme.logo} disabled={busy} />
+            <ThemeFields theme={studio.manual.theme} />
+          </>
+        )}
 
         {error && (
           <p role="alert" className="text-sm text-destructive">

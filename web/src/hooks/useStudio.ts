@@ -249,6 +249,13 @@ export function useStudio() {
     await refreshManual(manual.slug);
   };
 
+  /** Envia o logo do manual exportado. Lança com o motivo se o core recusar o arquivo. */
+  const uploadManualLogo = async (file: File) => {
+    if (!manual) return;
+    await api.uploadLogo(manual.slug, file);
+    await refreshManual(manual.slug);
+  };
+
   const movePage = (id: string, parentId: string | null, index: number) =>
     run(async () => {
       if (!manual) return;
@@ -299,6 +306,7 @@ export function useStudio() {
     publishVersion,
     exportManual,
     setManualTheme,
+    uploadManualLogo,
     setPageStatus,
     createManual,
     editPage,

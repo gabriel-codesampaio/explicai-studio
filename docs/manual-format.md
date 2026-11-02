@@ -43,7 +43,8 @@ Todos os campos são opcionais e valem só para o HTML e o PDF; o Markdown expor
   "accent": "#0f7a55",
   "highlight": "#ffe066",
   "headings": { "cover": "#000000", "page": "#000000", "h1": "#7a3fc4", "h2": "#000000", "h3": "#000000" },
-  "fonts": { "text": "lora", "headings": "playfair-display" }
+  "fonts": { "text": "lora", "headings": "playfair-display" },
+  "logo": "assets/logo-cliente.png"
 }
 ```
 
@@ -53,6 +54,7 @@ Todos os campos são opcionais e valem só para o HTML e o PDF; o Markdown expor
 | `accent` | Links, números dos passos e marcações sobre os prints | `#2b4fe0` |
 | `highlight` | Marca-texto: linha da capa, "Resultado:" e destaque das imagens | `#ffd43b` |
 | `fonts` | Fonte do texto (`text`) e dos títulos (`headings`), pelo nome da lista abaixo | Atkinson Hyperlegible Next e Archivo |
+| `logo` | Logo do cliente, no topo do sumário e na capa do HTML e do PDF | sem logo |
 | `headings` | Cor do título da capa (`cover`), do título da página (`page`) e dos títulos de nível 1 a 3 do editor (`h1`, `h2`, `h3`) | `#000000` |
 
 Fontes empacotadas (todas OFL, copiadas do `@fontsource`; o texto só aceita as que têm itálico):
@@ -69,6 +71,12 @@ Fontes empacotadas (todas OFL, copiadas do `@fontsource`; o texto só aceita as 
 | `playfair-display` | serifada, de título | não | sim |
 
 Nome fora da lista é recusado ao gravar. O HTML leva só as fontes escolhidas, mais a de código (JetBrains Mono), cada uma com a licença em `fonts/OFL-<nome>.txt`, e abre sem internet.
+
+### logo
+
+`theme.logo` é o caminho de um arquivo dentro de `assets/` (`assets/logo-cliente.png`): sem pasta no meio, sem `..`, sem barra invertida. Só PNG, JPG ou SVG, até 1 MB. O core confere o caminho, o tipo e o tamanho ao gravar (Studio e MCP) e recusa com o motivo (`logo-path`, `logo-type`, `logo-size`, `logo-missing`). Campo opcional: manual antigo, sem `logo`, segue válido e exporta como antes.
+
+No export o arquivo é copiado para `assets/` ao lado do `index.html` e entra por `<img>` (o SVG não roda script) na capa e no topo do sumário. O tamanho na capa tem teto (96 px de altura), então um logo grande não estoura a página do PDF. Se o arquivo sumir do disco, o export sai sem logo e avisa. Trocar ou tirar o logo não mexe em cores nem fontes, e mudar cores ou fontes não mexe no logo. O arquivo continua em `assets/` depois de tirar o logo.
 
 O core recusa, ao gravar (Studio e MCP), `text`, `accent` e cada cor de `headings` com contraste menor que 4,5:1 com o branco, e um `highlight` que deixe o texto por cima com menos de 4,5:1. A mensagem diz o contraste atual e o mínimo. Editar um campo mantém os outros.
 

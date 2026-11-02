@@ -245,6 +245,18 @@ describe("API de exportação", () => {
     expect(await low.json()).toMatchObject({ code: "low-contrast", params: { label: "destaque", min: 4.5 } });
     await fetch(`${base}/api/manuals/m/theme`, json("PUT", { accent: null }));
     expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({});
+
+    const up = (name: string, size: number) =>
+      fetch(`${base}/api/manuals/m/logo?name=${name}`, { method: "POST", body: new Uint8Array(size) });
+    const ok = await up("marca.png", 10);
+    expect(ok.status).toBe(201);
+    const { path: logo } = await ok.json();
+    expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({ logo });
+    expect(await (await up("marca.gif", 10)).json()).toMatchObject({ code: "logo-type" });
+    expect(await (await up("grande.png", 1024 * 1024 + 1)).json()).toMatchObject({ code: "logo-size" });
+    expect(await (await up("enorme.png", 3 * 1024 * 1024)).json()).toMatchObject({ code: "logo-size" });
+    await fetch(`${base}/api/manuals/m/theme`, json("PUT", { logo: null }));
+    expect((await (await fetch(`${base}/api/manuals/m`)).json()).theme).toEqual({});
   });
 });
 
