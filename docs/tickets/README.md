@@ -6,6 +6,14 @@ Prioridade: **P0** atinge quem lê o resultado final; **P1** é o pedido princip
 
 Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
+## Lote de bugs
+
+Decisão da pessoa (03/11/2026): bug (comportamento errado, perda de dado, falha de segurança, erro visível) é corrigido agora, em lotes de 2 a 3 tickets, por prioridade. Sugestão (melhoria, acabamento, refatoração, medição, doc) fica aberta, em espera.
+
+Ordem: T-107, T-088, T-092, T-093, T-094 (P2); T-098, T-099, T-100, T-101, T-102, T-103, T-024, T-076, T-077, T-078, T-081, T-080 (P3).
+
+Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T-038, T-064, T-079, T-090, T-091, T-095, T-096, T-097, T-104, T-105, T-106.
+
 ## Abertos
 
 | ID | Título | Prioridade | Status | Agente |
@@ -20,6 +28,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-093](T-093-exportar-em-pasta-temporaria-e-trocar-no-fim.md) | Exportar em pasta temporária e trocar no fim | P2 | aberto | frontend |
 | [T-094](T-094-renomear-arquivo-da-pagina-so-ao-parar-de-dig.md) | Renomear arquivo da página só ao parar de digitar o título | P2 | aberto | frontend |
 | [T-097](T-097-testes-de-concorrencia-usestudio-e-fluxo-de-i.md) | Testes de concorrência, `useStudio` e fluxo de imagem | P2 | aberto | qa |
+| [T-107](T-107-seletor-de-tema-com-duas-opcoes-marcadas.md) | Seletor de tema mostra duas opções marcadas e não bate com o tema aplicado | P2 | aberto | frontend |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
 | [T-021](T-021-serve-limpa-temporarios.md) | Apagar as pastas temporárias que o e2e/serve.mjs cria | P3 | aberto | qa |
@@ -49,11 +58,11 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 ## Fechados
 
 | ID | Título | Prioridade | Status | Commit |
+|----|--------|------------|--------|--------|
 | [T-087](fechados/T-087-autosave-um-put-por-vez-por-pagina.md) | Autosave: um `PUT` por vez por página | P2 | feito | 84c43e9 |
 | [T-089](fechados/T-089-aceitar-origin-so-da-mesma-porta-do-host.md) | Aceitar Origin só da mesma porta do Host | P2 | feito | 0b27143 |
 | [T-086](fechados/T-086-imagens-com-etag-304-streaming-e-loading-lazy.md) | Imagens com ETag/304, streaming e `loading="lazy"` | P1 | feito | 7d7dfe7 |
 | [T-082](fechados/T-082-svg-servido-sem-csp.md) | CSP e sandbox nas respostas de /files/ (SVG na origem do Studio) | P1 | feito | 0b27143 |
-|----|--------|------------|--------|--------|
 | [T-085](fechados/T-085-fila-por-pasta-em-updatemanual-perda-de-mudan.md) | Fila por pasta em `updateManual` (perda de mudança na árvore) | P1 | feito | ca2f2b0 |
 | [T-084](fechados/T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | feito | 5f34c1c |
 | [T-083](fechados/T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | feito | 6676df0 |
