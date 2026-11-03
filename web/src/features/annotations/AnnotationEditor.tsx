@@ -14,6 +14,7 @@ import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
 import { CropPanel } from "./CropPanel";
 import { RedactPanel } from "./RedactPanel";
+import { ReducePanel } from "./ReducePanel";
 
 interface Props {
   slug: string;
@@ -209,6 +210,14 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                   }}
                 />
               )}
+              <ReducePanel
+                slug={slug}
+                asset={asset}
+                src={src}
+                pending={draft.redact.length > 0 || draft.crop.length > 0}
+                inGit={inGit}
+                onApplied={() => setPast([])}
+              />
               <AnnotationList
                 annotations={draft.ann}
                 pages={pages}

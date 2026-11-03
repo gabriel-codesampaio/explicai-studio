@@ -34,8 +34,15 @@ export async function redactImage(slug: string, asset: string, src: string, rect
 }
 
 /** Grava o canvas no lugar da imagem (troca temp+rename no servidor) e renova as cópias do navegador. */
-export async function uploadCanvas(slug: string, asset: string, src: string, canvas: HTMLCanvasElement, type: string) {
-  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.95));
+export async function uploadCanvas(
+  slug: string,
+  asset: string,
+  src: string,
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality = 0.95,
+) {
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
   // Navegador que não sabe gravar o formato devolve PNG: gravar isso no lugar de um .webp quebraria a imagem.
   if (blob?.type !== type) throw new Error("encode");
   await api.redactAsset(slug, asset, blob);
