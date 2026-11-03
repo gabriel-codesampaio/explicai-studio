@@ -19,6 +19,7 @@ Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-118](fechados/T-118-recortar-imagem.md) | Recortar imagem | P2 | feito | 4cac12b |
 | [T-117](fechados/T-117-tamanho-de-exibicao-da-imagem.md) | Tamanho de exibição da imagem (Pequena, Média, Larga) | P2 | feito | 481ee61 |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-038](T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | aberto | design |
