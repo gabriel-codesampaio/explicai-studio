@@ -1,5 +1,5 @@
 import { type Editor, useEditorState } from "@tiptap/react";
-import { Bold, Code, ImageIcon, Italic, Link2, Table, TableColumnsSplit, TableRowsSplit } from "lucide-react";
+import { BetweenHorizontalEnd, BetweenVerticalEnd, Bold, Code, ImageIcon, Italic, Link2, Table } from "lucide-react";
 import { useRef } from "react";
 import { useRovingFocus } from "@/hooks/useRovingFocus";
 import { useScrollEdges } from "@/hooks/useScrollEdges";
@@ -81,8 +81,8 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
         <Divider />
         {s.inTable ? (
           <>
-            <Btn icon={TableRowsSplit} label={t("Adicionar linha")} onClick={() => chain().addRowAfter().run()} />
-            <Btn icon={TableColumnsSplit} label={t("Adicionar coluna")} onClick={() => chain().addColumnAfter().run()} />
+            <Btn icon={BetweenHorizontalEnd} label={t("Adicionar linha")} onClick={() => chain().addRowAfter().run()} />
+            <Btn icon={BetweenVerticalEnd} label={t("Adicionar coluna")} onClick={() => chain().addColumnAfter().run()} />
             <TableToolbarMenu editor={editor} />
           </>
         ) : (

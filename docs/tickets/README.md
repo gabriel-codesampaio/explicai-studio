@@ -16,7 +16,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-038](T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-083](T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | aberto | frontend |
 | [T-087](T-087-autosave-um-put-por-vez-por-pagina.md) | Autosave: um `PUT` por vez por página | P2 | aberto | frontend |
 | [T-088](T-088-limpar-imagens-sem-uso-gravar-a-fila-antes-e-.md) | Limpar imagens sem uso: gravar a fila antes e poupar arquivo novo | P2 | aberto | frontend |
 | [T-089](T-089-aceitar-origin-so-da-mesma-porta-do-host.md) | Aceitar Origin só da mesma porta do Host | P2 | aberto | frontend |
@@ -40,7 +39,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-079](T-079-breakpoint-900-duplicado.md) | Breakpoint de 900 px duplicado em COLUMN_MIN_REM e Navigation.tsx | P3 | aberto | frontend |
 | [T-080](T-080-gitignore-sem-env.md) | Incluir .env no .gitignore | P3 | aberto | qa |
 | [T-081](T-081-duas-marcas-com-gaveta-aberta.md) | Duas marcas visíveis com a gaveta aberta abaixo de 900 px | P3 | aberto | frontend |
-| [T-084](T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | aberto | design |
 | [T-095](T-095-serializar-o-markdown-so-no-flush-do-autosave.md) | Serializar o Markdown só no flush do autosave | P3 | aberto | frontend |
 | [T-096](T-096-readpagetree-le-so-o-frontmatter.md) | `readPageTree` lê só o frontmatter | P3 | aberto | frontend |
 | [T-098](T-098-descartar-resposta-antiga-ao-trocar-de-pagina.md) | Descartar resposta antiga ao trocar de página | P3 | aberto | frontend |
@@ -57,6 +55,8 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-084](fechados/T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | feito | 5f34c1c |
+| [T-083](fechados/T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | feito | 6676df0 |
 | [T-075](fechados/T-075-menu-barra-atras-da-barra-fixa.md) | Menu "/" aparece atrás da barra fixa | P1 | feito | bd8dfca |
 | [T-074](fechados/T-074-e2e-copiar-imagem-usa-a-area-de-transferencia.md) | e2e de copiar e colar a imagem falha às vezes na suíte completa | P3 | feito | dd7572f |
 | [T-073](fechados/T-073-controles-na-tabela.md) | Controles de tabela direto na tabela | P2 | feito | 236239e |
