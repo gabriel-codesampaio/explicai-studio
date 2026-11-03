@@ -42,7 +42,7 @@ export function ImageSizePicker({ slug, src }: { slug: string; src: string }) {
         ))}
       </div>
       {annotations && warnsSmall(annotations) && (
-        <p role="note" className="text-xs text-muted-foreground">
+        <p role="status" className="text-xs text-muted-foreground">
           {t("Com {n} marcadores, a imagem pequena pode amontoá-los. Experimente Média.", { n: annotations.markers.length })}
         </p>
       )}
