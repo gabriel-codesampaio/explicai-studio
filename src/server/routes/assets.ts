@@ -49,6 +49,6 @@ export const assetRoutes: Route[] = [
     // Imagens do manual, usadas pelo editor: /files/<manual>/assets/<arquivo>
     method: "GET",
     path: "/files/:slug/*",
-    handle: (ctx) => file(resolveInside(manualDir(ctx), ctx.rest)),
+    handle: (ctx) => file(resolveInside(manualDir(ctx), ctx.rest), "no-cache", true),
   },
 ];

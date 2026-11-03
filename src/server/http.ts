@@ -14,10 +14,21 @@ export class HttpError extends Error {
 }
 
 /** O que um handler devolve. O servidor transforma em resposta HTTP. */
-export type Reply = { kind: "json"; status: number; body: unknown } | { kind: "file"; path: string; cache: string };
+export type Reply =
+  | { kind: "json"; status: number; body: unknown }
+  | { kind: "file"; path: string; cache: string; untrusted: boolean };
 
 export const json = (body: unknown, status = 200): Reply => ({ kind: "json", status, body });
-export const file = (filePath: string, cache = "no-cache"): Reply => ({ kind: "file", path: filePath, cache });
+/** `untrusted`: arquivo do manual (/files/), que pode ser um SVG com script; sai com CSP e sandbox. */
+export const file = (filePath: string, cache = "no-cache", untrusted = false): Reply => ({
+  kind: "file",
+  path: filePath,
+  cache,
+  untrusted,
+});
+
+const RASTER = new Set([".png", ".jpg", ".jpeg", ".gif", ".webp"]);
+const UNTRUSTED_CSP = "default-src 'none'; style-src 'unsafe-inline'; sandbox";
 
 const MIME: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
@@ -38,10 +49,12 @@ const MIME: Record<string, string> = {
 export async function send(res: ServerResponse, reply: Reply): Promise<void> {
   if (reply.kind === "json") return sendJson(res, reply.status, reply.body);
   const data = await readFile(reply.path);
+  const ext = path.extname(reply.path).toLowerCase();
   res.writeHead(200, {
-    "content-type": MIME[path.extname(reply.path).toLowerCase()] ?? "application/octet-stream",
+    "content-type": MIME[ext] ?? "application/octet-stream",
     "cache-control": reply.cache,
     "x-content-type-options": "nosniff",
+    ...(reply.untrusted && !RASTER.has(ext) ? { "content-security-policy": UNTRUSTED_CSP } : {}),
   });
   res.end(data);
 }
@@ -66,6 +79,14 @@ export async function readBody(req: IncomingMessage, limit: number): Promise<Uin
 
 export async function readJson(req: IncomingMessage): Promise<Record<string, unknown>> {
   const raw = await readBody(req, 5 * 1024 * 1024);
+  // Um POST text/plain de outro site não dispara preflight; exigir JSON fecha essa brecha. Corpo vazio não lê nada.
+  if (raw.length > 0 && !/^application\/json\s*(;|$)/i.test(req.headers["content-type"] ?? "")) {
+    throw new HttpError(
+      415,
+      "Envie o corpo como JSON, com o cabeçalho content-type: application/json.",
+      "unsupported-media-type",
+    );
+  }
   let text: string;
   try {
     // fatal: um cliente em Latin-1/cp1252 (curl no Windows) mandaria "í" como 0xED, e o decode comum o trocaria por U+FFFD gravado em disco.

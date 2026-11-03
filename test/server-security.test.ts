@@ -54,7 +54,8 @@ describe("servidor local: Host e Origin", () => {
       expect(res.status, origin).toBe(403);
       expect(JSON.parse(res.body).code).toBe("forbidden-origin");
     }
-    expect((await raw("/api/manuals", { origin: "http://localhost:5173" })).status).toBe(200);
+    expect((await raw("/api/manuals", { origin: `http://localhost:${port}` })).status).toBe(200);
+    expect((await raw("/api/manuals", { origin: "http://localhost:3000" })).status).toBe(403);
   });
 
   it("não serve arquivo do manual para Host de fora", async () => {
@@ -82,5 +83,53 @@ describe("servidor local: caminho malformado", () => {
   it("..%2f no nome do manual não sai do workspace", async () => {
     const res = await raw("/api/manuals/..%2f..%2fetc/pages");
     expect([400, 404]).toContain(res.status);
+  });
+});
+
+describe("servidor local: arquivos de /files/ e corpo JSON", () => {
+  const base = () => `http://127.0.0.1:${port}`;
+  const CSP = "default-src 'none'; style-src 'unsafe-inline'; sandbox";
+  const mk = () =>
+    fetch(`${base()}/api/manuals`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ title: "M" }),
+    });
+  const up = (name: string, body: string) => fetch(`${base()}/api/manuals/m/assets?name=${name}`, { method: "POST", body });
+
+  it("SVG e outros tipos não raster de /files/ saem com CSP e sandbox; PNG e o app não", async () => {
+    await mk();
+    await up("a.svg", "<svg xmlns='http://www.w3.org/2000/svg'><script>1</script></svg>");
+    await up("b.png", "x");
+    const svg = await fetch(`${base()}/files/m/assets/a.svg`);
+    expect(svg.headers.get("content-security-policy")).toBe(CSP);
+    expect(svg.headers.get("content-type")).toBe("image/svg+xml");
+    expect((await fetch(`${base()}/files/m/manual.json`)).headers.get("content-security-policy")).toBe(CSP);
+    expect((await fetch(`${base()}/files/m/assets/b.png`)).headers.get("content-security-policy")).toBeNull();
+    expect((await fetch(`${base()}/`)).headers.get("content-security-policy")).toBeNull();
+  });
+
+  it("recusa corpo com content-type que não é JSON (text/plain não faz preflight) com 415", async () => {
+    for (const type of ["text/plain", "application/x-www-form-urlencoded"]) {
+      const res = await fetch(`${base()}/api/manuals`, {
+        method: "POST",
+        headers: { "content-type": type },
+        body: JSON.stringify({ title: "X" }),
+      });
+      expect(res.status, type).toBe(415);
+      const body = await res.json();
+      expect(body.code).toBe("unsupported-media-type");
+      expect(body.error).toMatch(/application\/json/);
+    }
+    expect((await (await fetch(`${base()}/api/manuals`)).json()).length).toBe(0);
+  });
+
+  it("aceita application/json com charset", async () => {
+    const res = await fetch(`${base()}/api/manuals`, {
+      method: "POST",
+      headers: { "content-type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ title: "Y" }),
+    });
+    expect(res.status).toBe(201);
   });
 });
