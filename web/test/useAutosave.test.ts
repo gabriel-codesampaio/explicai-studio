@@ -137,4 +137,26 @@ describe("useAutosave", () => {
     expect(pending.defaultPrevented).toBe(true);
     expect(save).toHaveBeenCalledTimes(1);
   });
+
+  it("não dispara outra gravação enquanto a anterior está em curso", async () => {
+    let release!: () => void;
+    const save = vi
+      .fn<(job: Job) => Promise<void>>()
+      .mockImplementationOnce(() => new Promise<void>((r) => (release = r)))
+      .mockResolvedValue();
+    const { result } = renderHook(() => useAutosave(save, 600));
+
+    act(() => result.current.queue("m", "p1", { body: "velho" }));
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(save).toHaveBeenCalledTimes(1);
+
+    act(() => result.current.queue("m", "p1", { body: "novo" }));
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(save).toHaveBeenCalledTimes(1);
+
+    await act(async () => release());
+    expect(save).toHaveBeenCalledTimes(2);
+    expect(save.mock.calls[1]?.[0].patch).toEqual({ body: "novo" });
+    expect(result.current.state).toBe("saved");
+  });
 });

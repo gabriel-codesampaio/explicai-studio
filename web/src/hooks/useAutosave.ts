@@ -23,8 +23,10 @@ export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
   const saveRef = useRef(save);
   saveRef.current = save;
 
-  const flush = useCallback(async () => {
-    window.clearTimeout(timer.current);
+  // Uma gravação por vez: a seguinte espera a anterior e lê a fila só quando chega a sua vez.
+  const inFlight = useRef<Promise<void> | null>(null);
+
+  const run = useCallback(async () => {
     const jobs = [...pending.current.values()];
     pending.current.clear();
     if (jobs.length === 0) return;
@@ -43,6 +45,17 @@ export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
     }
     setState(failed ? "error" : pending.current.size > 0 ? "saving" : "saved");
   }, []);
+
+  const flush = useCallback(() => {
+    window.clearTimeout(timer.current);
+    // Sem gravação em curso, começa já (o `beforeunload` não espera microtarefa).
+    const p = inFlight.current ? inFlight.current.then(run) : run();
+    inFlight.current = p;
+    void p.then(() => {
+      if (inFlight.current === p) inFlight.current = null;
+    });
+    return p;
+  }, [run]);
 
   const queue = useCallback(
     (slug: string, id: string, patch: PagePatch) => {
