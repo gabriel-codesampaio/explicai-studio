@@ -193,6 +193,7 @@ export const EN: Record<string, string> = {
   "Nenhuma página ainda.": "No pages yet.",
   "Nenhuma página com esse título.": "No page with that title.",
   "Nenhuma página excluída.": "No deleted pages.",
+  "Há alterações sem salvar. Salve antes de limpar as imagens.": "There are unsaved changes. Save before cleaning up images.",
   "Nenhuma versão guardada ainda.": "No saved versions yet.",
   "Nesta página": "On this page",
   "No Mac, use Cmd no lugar de Ctrl.": "On a Mac, use Cmd instead of Ctrl.",

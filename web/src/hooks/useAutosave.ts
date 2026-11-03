@@ -54,7 +54,8 @@ export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
     void p.then(() => {
       if (inFlight.current === p) inFlight.current = null;
     });
-    return p;
+    // true = a fila ficou vazia; false = alguma gravação falhou e continua pendente.
+    return p.then(() => pending.current.size === 0);
   }, [run]);
 
   const queue = useCallback(

@@ -12,7 +12,7 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   onRestore: (trashId: string, pageId: string) => Promise<void>;
   /** Grava a fila do autosave: a imagem recém-colada precisa estar numa página no disco antes da limpeza. */
-  flush: () => Promise<void>;
+  flush: () => Promise<boolean>;
 }
 
 /** Painel "Lixeira" (aberto pelo menu "⋯" da barra lateral): lista o que foi excluído neste manual e restaura. */
@@ -33,7 +33,11 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props
   };
   const clean = () =>
     flush()
-      .then(() => api.cleanUnusedAssets(slug))
+      .then((saved) => {
+        // Fila não gravada: a imagem colada ainda não está em página nenhuma no disco.
+        if (!saved) throw new Error(t("Há alterações sem salvar. Salve antes de limpar as imagens."));
+        return api.cleanUnusedAssets(slug);
+      })
       .then(
         ({ moved, folder }) => {
           setUnused(0);
