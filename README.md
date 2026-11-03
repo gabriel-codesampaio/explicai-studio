@@ -7,7 +7,7 @@
 
 Construtor de manuais open source e gratuito. Do print ao manual pronto em PDF, HTML e Markdown.
 
-> Tira o print, que o Explicaí explica.
+> Tira o print e explica. O Explicaí monta o manual.
 
 ## Como usar
 

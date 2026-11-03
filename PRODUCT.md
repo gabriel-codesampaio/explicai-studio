@@ -50,7 +50,7 @@ Construtor de manuais open source e gratuito. Cada manual é uma pasta de Markdo
 ## Brand Commitments
 
 - Nome: Explicaí no texto, `explicai` em código, pacotes e domínios. Nunca "ExplicAI".
-- Slogan: "Tira o print, que o Explicaí explica." Fica em português também na versão em inglês.
+- Slogan: "Tira o print e explica. O Explicaí monta o manual." Fica em português também na versão em inglês.
 - Personalidade: o professor que você gostava. Didático, paciente e preciso, com humor pontual (nunca em mensagem de erro nem em passo de manual).
 - Voz na interface: formal, com "você", uma ideia por frase. O botão diz o que acontece. O erro diz o que deu errado e como resolver.
 - Endosso: "um projeto codesampa.io" no rodapé do site e do README. O fundador não aparece na interface.

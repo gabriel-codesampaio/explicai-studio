@@ -12,6 +12,6 @@ Resumo para quem mexe na tela. Completo: [brand book](https://gabriel-codesampai
 - **Ícones:** só quando identificam a ação sem texto (negrito, link). Ícone decorativo sai.
 - **Botão principal:** um só por tela, sólido em cobalto (ex.: Exportar manual). O resto é texto ou contorno discreto.
 - **Voz:** professor que você gostava. "Você", frase curta, o botão diz o que acontece, o erro diz como resolver. Humor nunca em erro nem em passo de manual.
-- **Slogan:** "Tira o print, que o Explicaí explica." (em português nas duas línguas).
+- **Slogan:** "Tira o print e explica. O Explicaí monta o manual." (em português nas duas línguas).
 - **Nunca:** cara de shadcn padrão (cinza neutro, raio e sombra iguais em tudo), robô para falar de IA, gradiente, comparação com concorrente.
 - **Acessibilidade:** WCAG 2.2 AA; contraste 4,5:1 no texto; foco sempre visível; cor nunca é o único sinal.
