@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: em revisão
 - Agente: frontend (+ design, qa)
 - Origem: `docs/discovery/dimensionar-imagens.md`, opção A e rascunho de spec. Decisões da pessoa em 2026-11-03.
 
@@ -31,4 +31,4 @@ Largura em percentual no `.frame` (`fit-content`) fica circular, então ela vai 
 `npm run check`. Vitest com `--maxWorkers=2`, Playwright com `--workers=2` só nos specs da área, com uma largura e um tema.
 
 ## Registro
-<!-- preenchido ao fechar -->
+Branch feat/t-117-tamanho-imagem (dd19893..23ee5ee). MCP: explicai-mcp está vazio (sem annotate_image), critério "não apaga display" fica para quando o MCP existir: o parseAnnotations do core preserva o campo. Limite: e2e usa print pequeno, sem prova visual do encolhimento nem do PDF.
