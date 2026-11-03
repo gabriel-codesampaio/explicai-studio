@@ -28,6 +28,7 @@ export const EN: Record<string, string> = {
   "Não dá para recortar SVG ou GIF. Use um print em PNG, JPEG ou WebP.":
     "SVG and GIF cannot be cropped. Use a PNG, JPEG or WebP screenshot.",
   "Aplique ou descarte as áreas a ocultar antes de recortar.": "Apply or discard the areas to hide before cropping.",
+  "O recorte cobre a imagem inteira. Reduza o retângulo.": "The crop covers the whole image. Make the rectangle smaller.",
   "A imagem foi recortada, mas as marcações não foram gravadas. Salve de novo.":
     "The image was cropped, but the annotations were not saved. Save again.",
   "Não foi possível recortar. A imagem não foi alterada.": "Could not crop. The image was not changed.",

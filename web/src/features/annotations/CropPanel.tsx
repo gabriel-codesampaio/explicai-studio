@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { saveAnnotations } from "@/lib/annotationStore";
 import type { Annotations, Highlight } from "@/lib/annotations";
 import { cropAnnotations } from "@/lib/cropAnnotations";
-import { cropImage } from "@/lib/cropImage";
+import { cropImage, snapCrop } from "@/lib/cropImage";
 import { t, tn } from "@/lib/i18n";
-import { redactableType } from "@/lib/redactImage";
+import { loadImage, redactableType } from "@/lib/redactImage";
 
 interface Props {
   slug: string;
@@ -29,7 +29,9 @@ export function CropPanel({ slug, asset, src, annotations, crop, hasRedactions, 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const rect = crop[0];
-  const removed = rect ? cropAnnotations(annotations, rect).removed : null;
+  // Pré-visualização com o retângulo livre; ao pedir Aplicar, vale a conta com pixels inteiros (a que o recorte usa).
+  const [exact, setExact] = useState<ReturnType<typeof cropAnnotations>["removed"] | null>(null);
+  const removed = confirming && exact ? exact : rect ? cropAnnotations(annotations, rect).removed : null;
   const total = removed ? removed.markers + removed.highlights + removed.arrows + removed.hotspots : 0;
   const list = removed
     ? [
@@ -43,14 +45,26 @@ export function CropPanel({ slug, asset, src, annotations, crop, hasRedactions, 
     : "";
   const summary = tn(total, "{n} marcação será removida", "{n} marcações serão removidas");
 
-  const ask = () => {
+  const ask = async () => {
     setError(null);
+    if (!rect) return;
     if (!redactableType(asset)) {
       setError(t("Não dá para recortar SVG ou GIF. Use um print em PNG, JPEG ou WebP."));
     } else if (hasRedactions) {
       setError(t("Aplique ou descarte as áreas a ocultar antes de recortar."));
     } else {
-      setConfirming(true);
+      try {
+        const img = await loadImage(src);
+        const snapped = snapCrop(rect, img.naturalWidth, img.naturalHeight);
+        if (snapped.w === 1 && snapped.h === 1) {
+          setError(t("O recorte cobre a imagem inteira. Reduza o retângulo."));
+          return;
+        }
+        setExact(cropAnnotations(annotations, snapped).removed);
+        setConfirming(true);
+      } catch {
+        setError(t("Não foi possível recortar. A imagem não foi alterada."));
+      }
     }
   };
 
@@ -87,7 +101,7 @@ export function CropPanel({ slug, asset, src, annotations, crop, hasRedactions, 
         </p>
       )}
       <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant="outline" onClick={ask} disabled={!rect}>
+        <Button size="sm" variant="outline" onClick={() => void ask()} disabled={!rect}>
           {t("Aplicar recorte")}
         </Button>
         <Button size="sm" variant="ghost" onClick={onDiscard} disabled={!rect}>
