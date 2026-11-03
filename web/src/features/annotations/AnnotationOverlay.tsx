@@ -54,12 +54,12 @@ export function AnnotationOverlay({ annotations, redactions = [], crops = [], se
     (r) => "id" in r && r.id === selectedId,
   );
   const selectedArrow = annotations.arrows.find((a) => a.id === selectedId);
-  // Alça quadrada branca: arrastar muda o tamanho (canto) ou a ponta da seta.
+  // Alça quadrada branca (12 px) dentro de alvo de 24 px: arrastar muda o tamanho (canto) ou a ponta da seta.
   const handle = (key: Handle, p: Point, cursor: string) => (
     <span
       key={key}
       onPointerDown={selectedId ? pick(selectedId, key) : undefined}
-      className="absolute z-10 size-3 -translate-x-1/2 -translate-y-1/2 rounded-sm border-2 border-primary bg-white"
+      className="absolute z-10 grid size-6 -translate-x-1/2 -translate-y-1/2 place-items-center before:size-3 before:rounded-sm before:border-2 before:border-primary before:bg-white before:content-['']"
       style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%`, cursor }}
     />
   );
