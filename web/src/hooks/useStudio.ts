@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
+  ApiError,
   api,
   type ExportFormat,
   errorMessage,
@@ -22,6 +23,9 @@ import { useReconnect } from "./useReconnect";
 /** Tempo sem gravar o título até o arquivo da página mudar de nome. */
 const RENAME_IDLE_MS = 5000;
 
+const isConflict = (err: unknown) => err instanceof ApiError && err.code === "disk-conflict";
+const CONFLICT_TOAST = "disk-conflict";
+
 /** Estado do Studio (manuais, manual aberto, página aberta) e as ações sobre ele. */
 export function useStudio() {
   const [manuals, setManuals] = useState<ManualSummary[] | null>(null);
@@ -39,6 +43,30 @@ export function useStudio() {
   /** Muda quando o texto da página aberta é trocado por fora do editor (restaurar versão), para recriar o editor. */
   const [revision, setRevision] = useState(0);
 
+  /** Versão no disco da página que o Studio leu ou gravou por último (vai no If-Match). */
+  const versions = useRef(new Map<string, string>());
+  const remember = useCallback((p: Page) => {
+    if (p.version) versions.current.set(p.id, p.version);
+  }, []);
+  /** Página cujo arquivo mudou no disco: nada é gravado nela até a pessoa escolher. */
+  const conflict = useRef<{ slug: string; id: string } | null>(null);
+
+  /** Escolha da pessoa no aviso; a implementação fica abaixo, onde as ações de página já existem. */
+  const resolveRef = useRef<(choice: "reload" | "keep") => void>(() => {});
+  /** Aviso fixo até a pessoa escolher: nada é gravado nesta página enquanto isso. */
+  const showConflict = useCallback((slug: string, id: string) => {
+    conflict.current = { slug, id };
+    toast.warning(
+      t("Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão."),
+      {
+        id: CONFLICT_TOAST,
+        duration: Number.POSITIVE_INFINITY,
+        action: { label: t("Recarregar do disco"), onClick: () => resolveRef.current("reload") },
+        cancel: { label: t("Manter a minha versão"), onClick: () => resolveRef.current("keep") },
+      },
+    );
+  }, []);
+
   /** Títulos já gravados cujo arquivo ainda tem o nome antigo: renomeia ao sair da página ou 5 s depois. */
   const renameDue = useRef(new Map<string, { slug: string; title: string }>());
   const renameTimer = useRef<number | undefined>(undefined);
@@ -47,22 +75,30 @@ export function useStudio() {
     for (const [id, { slug, title }] of [...renameDue.current]) {
       renameDue.current.delete(id);
       try {
-        const saved = await api.updatePage(slug, id, { title, fileName: "sync" });
+        const saved = await api.updatePage(slug, id, { title, fileName: "sync" }, versions.current.get(id));
+        remember(saved);
         setPage((p) => (p && p.id === saved.id ? { ...p, file: saved.file } : p));
       } catch (err) {
         renameDue.current.set(id, { slug, title }); // tenta de novo no próximo flush
         if (isOffline(err)) setServerDown(true);
+        else if (isConflict(err)) showConflict(slug, id);
       }
     }
-  }, []);
+  }, [remember, showConflict]);
 
   const autosave = useAutosave(async (job) => {
     // Título em digitação fica no mesmo arquivo; o arquivo muda de nome em settleRenames.
     const patch = job.patch.title === undefined ? job.patch : { ...job.patch, fileName: "keep" as const };
-    const saved = await api.updatePage(job.slug, job.id, patch).catch((err: unknown) => {
+    if (conflict.current?.id === job.id) {
+      showConflict(job.slug, job.id);
+      throw new ApiError("disk-conflict", "disk-conflict", {}, 409);
+    }
+    const saved = await api.updatePage(job.slug, job.id, patch, versions.current.get(job.id)).catch((err: unknown) => {
       if (isOffline(err)) setServerDown(true);
+      else if (isConflict(err)) showConflict(job.slug, job.id);
       throw err;
     });
+    remember(saved);
     if (patch.fileName) {
       renameDue.current.set(job.id, { slug: job.slug, title: saved.title });
       window.clearTimeout(renameTimer.current);
@@ -93,14 +129,18 @@ export function useStudio() {
   /** Número da última abertura de página: resposta de uma abertura antiga não pode sobrescrever a atual. */
   const openSeq = useRef(0);
 
-  const showPage = useCallback(async (slug: string, pageId: string | null) => {
-    const seq = ++openSeq.current;
-    const next = pageId ? await api.getPage(slug, pageId) : null;
-    if (seq !== openSeq.current) return;
-    setPage(next);
-    setNotFound(null);
-    writeLocation({ slug, pageId });
-  }, []);
+  const showPage = useCallback(
+    async (slug: string, pageId: string | null) => {
+      const seq = ++openSeq.current;
+      const next = pageId ? await api.getPage(slug, pageId) : null;
+      if (seq !== openSeq.current) return;
+      if (next) remember(next);
+      setPage(next);
+      setNotFound(null);
+      writeLocation({ slug, pageId });
+    },
+    [remember],
+  );
 
   const refreshManual = useCallback(async (slug: string) => {
     const detail = await api.getManual(slug);
@@ -201,6 +241,7 @@ export function useStudio() {
       if (!manual) return;
       await flush();
       const created = await api.addPage(manual.slug, "", parentId);
+      remember(created);
       openSeq.current++;
       await refreshManual(manual.slug);
       setPage(created);
@@ -253,6 +294,7 @@ export function useStudio() {
       await flush();
       const restored = await api.restoreVersion(manual.slug, page.id, versionId);
       await refreshManual(manual.slug);
+      remember(restored);
       setPage(restored);
       setRevision((r) => r + 1);
       toast(t('Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".'));
@@ -278,7 +320,15 @@ export function useStudio() {
     run(async () => {
       if (!manual || !page) return;
       await flush();
-      const saved = await api.updatePage(manual.slug, page.id, { status });
+      let saved: Page;
+      try {
+        saved = await api.updatePage(manual.slug, page.id, { status }, versions.current.get(page.id));
+      } catch (err) {
+        // A etapa fica na fila: "Manter a minha versão" grava, "Recarregar do disco" descarta.
+        if (isConflict(err)) autosave.queue(manual.slug, page.id, { status });
+        throw err;
+      }
+      remember(saved);
       setPage((p) => (p && p.id === saved.id ? { ...p, status: saved.status } : p));
       await refreshManual(manual.slug);
     });
@@ -309,6 +359,24 @@ export function useStudio() {
       const created = await api.createManual(title, locale);
       setManuals(await api.listManuals());
       await openManual(created.slug);
+    });
+
+  resolveRef.current = (choice) =>
+    run(async () => {
+      const c = conflict.current;
+      if (!c) return;
+      if (choice === "reload") {
+        conflict.current = null;
+        autosave.discard(c.id);
+        renameDue.current.delete(c.id);
+        await refreshManual(c.slug);
+        await showPage(c.slug, c.id);
+        setRevision((r) => r + 1);
+        return;
+      }
+      remember(await api.getPage(c.slug, c.id)); // a versão que está no disco agora vira a base da regravação
+      conflict.current = null;
+      await flush();
     });
 
   /** Edição da página aberta: atualiza a árvore na hora (título) e agenda a gravação. */

@@ -262,6 +262,10 @@ export const EN: Record<string, string> = {
   Tabela: "Table",
   Tema: "Theme",
   "Tentar de novo": "Try again",
+  "Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão.":
+    "This page was changed outside Studio after you opened it. Reload it from disk or keep your version.",
+  "Recarregar do disco": "Reload from disk",
+  "Manter a minha versão": "Keep my version",
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",
   "Tipo de bloco: {tipo}": "Block type: {tipo}",
