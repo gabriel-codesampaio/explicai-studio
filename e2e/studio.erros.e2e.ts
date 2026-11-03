@@ -154,7 +154,7 @@ test("edição feita fora do Studio: o autosave não sobrescreve e o aviso deixa
 
   await page.locator(".ProseMirror").click();
   await page.keyboard.type("Meu texto");
-  await expect(page.getByText("Esta página foi alterada fora do Studio")).toBeVisible();
+  await expect(page.getByText("Esta página mudou fora do Studio")).toBeVisible();
   const disco = await (await request.get(`/api/manuals/${slug}/pages/${id}`)).json();
   expect(disco.body).toContain("escrito por fora");
   expect(disco.body).not.toContain("Meu texto");

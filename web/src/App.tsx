@@ -4,6 +4,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ConnectionBanner } from "@/features/errors/ConnectionBanner";
+import { DiskConflictBanner } from "@/features/errors/DiskConflictBanner";
 import { NotFoundScreen } from "@/features/errors/NotFoundScreen";
 import { RequestErrorScreen } from "@/features/errors/RequestErrorScreen";
 import { ServerDownScreen } from "@/features/errors/ServerDownScreen";
@@ -77,6 +78,9 @@ function Shell() {
         <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
           {!firstRun && <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} />}
           {studio.serverDown && <ConnectionBanner checking={studio.reconnect.checking} onRetry={studio.reconnect.retryNow} />}
+          {studio.diskConflict && (
+            <DiskConflictBanner onReload={() => studio.resolveConflict("reload")} onKeep={() => studio.resolveConflict("keep")} />
+          )}
           {firstRun || studio.creatingManual ? (
             <CreateManual firstRun={firstRun} onCreate={studio.createManual} onCancel={() => studio.setCreatingManual(false)} />
           ) : !manual ? null : !page ? (

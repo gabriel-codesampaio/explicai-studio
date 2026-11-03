@@ -24,7 +24,6 @@ import { useReconnect } from "./useReconnect";
 const RENAME_IDLE_MS = 5000;
 
 const isConflict = (err: unknown) => err instanceof ApiError && err.code === "disk-conflict";
-const CONFLICT_TOAST = "disk-conflict";
 
 /** Estado do Studio (manuais, manual aberto, página aberta) e as ações sobre ele. */
 export function useStudio() {
@@ -51,20 +50,14 @@ export function useStudio() {
   /** Página cujo arquivo mudou no disco: nada é gravado nela até a pessoa escolher. */
   const conflict = useRef<{ slug: string; id: string } | null>(null);
 
-  /** Escolha da pessoa no aviso; a implementação fica abaixo, onde as ações de página já existem. */
+  /** Página com conflito à espera da escolha: a faixa (DiskConflictBanner) só aparece nela. */
+  const [conflictId, setConflictId] = useState<string | null>(null);
+  /** Escolha da pessoa na faixa; a implementação fica abaixo, onde as ações de página já existem. */
   const resolveRef = useRef<(choice: "reload" | "keep") => void>(() => {});
-  /** Aviso fixo até a pessoa escolher: nada é gravado nesta página enquanto isso. */
+  /** Faixa fixa até a pessoa escolher: nada é gravado nesta página enquanto isso. */
   const showConflict = useCallback((slug: string, id: string) => {
     conflict.current = { slug, id };
-    toast.warning(
-      t("Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão."),
-      {
-        id: CONFLICT_TOAST,
-        duration: Number.POSITIVE_INFINITY,
-        action: { label: t("Recarregar do disco"), onClick: () => resolveRef.current("reload") },
-        cancel: { label: t("Manter a minha versão"), onClick: () => resolveRef.current("keep") },
-      },
-    );
+    setConflictId(id);
   }, []);
 
   /** Títulos já gravados cujo arquivo ainda tem o nome antigo: renomeia ao sair da página ou 5 s depois. */
@@ -122,7 +115,7 @@ export function useStudio() {
     } catch (err) {
       // Servidor fora não vira aviso solto: o banner (ou a tela de abertura) cuida, e a reconexão é automática.
       if (isOffline(err)) setServerDown(true);
-      else toast.error(errorMessage(err));
+      else if (!isConflict(err)) toast.error(errorMessage(err)); // conflito: a faixa já explica
     }
   }, []);
 
@@ -366,16 +359,19 @@ export function useStudio() {
       const c = conflict.current;
       if (!c) return;
       if (choice === "reload") {
-        conflict.current = null;
-        autosave.discard(c.id);
-        renameDue.current.delete(c.id);
+        // Só descarta o rascunho depois que a página do disco chegou: se a leitura falhar, nada se perde e a faixa continua.
         await refreshManual(c.slug);
         await showPage(c.slug, c.id);
+        autosave.discard(c.id);
+        renameDue.current.delete(c.id);
+        conflict.current = null;
+        setConflictId(null);
         setRevision((r) => r + 1);
         return;
       }
       remember(await api.getPage(c.slug, c.id)); // a versão que está no disco agora vira a base da regravação
       conflict.current = null;
+      setConflictId(null);
       await flush();
     });
 
@@ -403,6 +399,8 @@ export function useStudio() {
     creatingManual,
     setCreatingManual,
     revision,
+    diskConflict: page !== null && conflictId === page.id,
+    resolveConflict: (choice: "reload" | "keep") => resolveRef.current(choice),
     flush,
     save: { state: autosave.state, savedAt: autosave.savedAt, retry: autosave.retry },
     openManual,

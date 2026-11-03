@@ -264,6 +264,9 @@ export const EN: Record<string, string> = {
   "Tentar de novo": "Try again",
   "Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão.":
     "This page was changed outside Studio after you opened it. Reload it from disk or keep your version.",
+  "Esta página mudou fora do Studio.": "This page changed outside Studio.",
+  "Manter a minha versão grava o seu texto por cima do arquivo. Recarregar do disco descarta o que você escreveu aqui.":
+    "Keep my version writes your text over the file. Reload from disk discards what you wrote here.",
   "Recarregar do disco": "Reload from disk",
   "Manter a minha versão": "Keep my version",
   Texto: "Text",
