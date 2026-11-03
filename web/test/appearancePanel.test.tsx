@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import * as theme from "../src/lib/theme";
 import { AppearancePanel } from "../src/features/settings/AppearancePanel";
+import * as theme from "../src/lib/theme";
 
 const KEY = "explicai:aparencia";
 afterEach(cleanup);

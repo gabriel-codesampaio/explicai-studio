@@ -18,7 +18,7 @@ const time = (d: Date) => d.toLocaleTimeString(locale, { hour: "2-digit", minute
  */
 export function StatusBar({ path, state, savedAt, onRetry }: Props) {
   return (
-    <footer className="sticky bottom-0 z-10 flex min-h-(--rodape-h) flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-border bg-background/95 px-4 py-1 text-[13px] min-[31.25rem]:flex-nowrap min-[31.25rem]:px-8 min-[31.25rem]:py-0 backdrop-blur-sm">
+    <footer className="sticky bottom-0 z-10 flex min-h-(--rodape-h) flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-border bg-background/95 px-4 py-0.5 text-[13px] min-[31.25rem]:flex-nowrap min-[31.25rem]:px-8 min-[31.25rem]:py-0 backdrop-blur-sm">
       <span className="flex min-w-0 basis-full items-center gap-2 text-muted-foreground min-[31.25rem]:basis-auto">
         <span className="truncate font-mono text-xs" title={path}>
           {path}
