@@ -14,7 +14,7 @@ Quem ouve falar do Explicaí (dev solo, software house, redator técnico) não t
 - Manual de exemplo: `exemplos/manual-do-financeiro/` tem uma página "sem-titulo" e `assets/` vazio. `exemplos/` está no `.gitignore` (usado só em `dev:server`). Ou seja, **não existe manual de exemplo versionado nem prints**; é preciso criar.
 - Marca: `docs/marca-resumo.md` e `Manual/brand/discovery/90_SYNTHESIS.md`. Tokens em `web/src/styles/tokens.css`. Fontes Archivo, Atkinson Hyperlegible Next e JetBrains Mono.
 - Posicionamento: hierarquia de mensagem fixa (1. open source e gratuito; 2. do print ao manual pronto; 3. PDF, HTML e Markdown para pessoas e IAs; 4. IA monta pelo MCP). Regra: nunca citar nem comparar com concorrentes. Humor pontual só no site (`90_SYNTHESIS.md`, seção 5): a landing é o lugar permitido.
-- Slogan: "Tira o print, que o Explicaí explica.", em português nas duas línguas. Pendência da marca: linha descritiva em inglês (`90_SYNTHESIS.md`, seção 9).
+- Slogan: "Tira o print e explica. O Explicaí monta o manual.", em português nas duas línguas. Pendência da marca: linha descritiva em inglês (`90_SYNTHESIS.md`, seção 9).
 
 ## Como os outros resolvem
 Não pesquisei concorrentes: a marca proíbe a comparação e a decisão aqui não depende deles. Não afirmo nada sobre Scribe, Tango, GitBook ou Notion. Padrão de landing de ferramenta de desenvolvedor (hipótese, sem fonte): promessa em uma frase, o comando de instalação copiável, uma demonstração visível sem instalar, link para o repositório.
