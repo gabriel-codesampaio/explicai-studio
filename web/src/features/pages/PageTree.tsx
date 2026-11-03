@@ -101,6 +101,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                 )}
                 {/* A página aberta ganha a faixa de marca-texto, como numa revisão no papel. */}
                 <span
+                  title={item.title || (item.problem ? item.file.split("/").pop() : t("Sem título"))}
                   className={cn(
                     "min-w-0 truncate",
                     selected
