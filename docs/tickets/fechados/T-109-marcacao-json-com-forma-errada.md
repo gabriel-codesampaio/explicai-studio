@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: preparação da versão de produção (2026-11-03)
 
@@ -20,4 +20,4 @@ src/core/annotations.ts e quem a chama na exportação
 Teste da área primeiro (vermelho, depois verde); `npm run check`.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit 1004374. `readAnnotations` captura qualquer falha do parse (JSON quebrado ou forma errada) e lança o mesmo `annotations-invalid`; a exportação avisa e segue. Mensagem mantida ("erro de sintaxe"). Fora: ajustar o texto do aviso para forma errada.
