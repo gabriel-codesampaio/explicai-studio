@@ -85,6 +85,30 @@ describe("useStudio: título da página", () => {
   });
 });
 
+describe("useStudio: renomear com autosave em voo (T-120)", () => {
+  it("o sync de 5 s espera o autosave em voo e leva a versão nova", async () => {
+    let n = 0;
+    vi.mocked(api.updatePage).mockImplementation(
+      async (_s, id, patch) => ({ ...pageOf(id), ...patch, version: `v${++n}` }) as Page,
+    );
+    const { result } = await openFirstPage();
+    vi.useFakeTimers();
+    act(() => result.current.editPage({ title: "Novo título" }));
+    await act(() => vi.advanceTimersByTimeAsync(600)); // título gravado (v1); sync marcado para 5,6 s
+    await act(() => vi.advanceTimersByTimeAsync(4300)); // 4,9 s
+    const slow = deferred<Page>();
+    update.mockImplementationOnce(() => slow.promise);
+    act(() => result.current.editPage({ body: "texto" }));
+    await act(() => vi.advanceTimersByTimeAsync(700)); // autosave em voo; o timer do sync dispara
+    expect(update).toHaveBeenCalledTimes(2);
+    slow.resolve({ ...pageOf("p0"), version: "v2" } as Page);
+    await act(() => vi.advanceTimersByTimeAsync(0));
+    expect(update).toHaveBeenCalledTimes(3);
+    expect(update).toHaveBeenLastCalledWith("m", "p0", { title: "Novo título", fileName: "sync" }, "v2");
+    expect(result.current.diskConflict).toBe(false);
+  });
+});
+
 describe("useStudio: conflito com o disco", () => {
   const conflito = () => new ApiError("x", "disk-conflict", {}, 409);
   beforeEach(() => {
@@ -104,7 +128,7 @@ describe("useStudio: conflito com o disco", () => {
     const { result } = await editWithConflict();
     expect(update).toHaveBeenCalledWith("m", "p0", { body: "meu texto" }, "v1");
     expect(result.current.diskConflict).toBe(true);
-    expect(result.current.save.state).toBe("error");
+    expect(result.current.save.state).toBe("conflict");
 
     // Nova digitação não volta ao servidor enquanto o aviso está aberto.
     act(() => result.current.editPage({ body: "meu texto 2" }));
@@ -129,7 +153,7 @@ describe("useStudio: conflito com o disco", () => {
     vi.useRealTimers();
     await act(async () => result.current.resolveConflict("reload"));
     expect(result.current.diskConflict).toBe(true);
-    expect(result.current.save.state).toBe("error");
+    expect(result.current.save.state).toBe("conflict");
   });
 
   it("Manter a minha versão regrava o rascunho com a versão atual do disco", async () => {

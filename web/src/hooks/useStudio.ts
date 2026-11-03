@@ -63,8 +63,12 @@ export function useStudio() {
   /** Títulos já gravados cujo arquivo ainda tem o nome antigo: renomeia ao sair da página ou 5 s depois. */
   const renameDue = useRef(new Map<string, { slug: string; title: string }>());
   const renameTimer = useRef<number | undefined>(undefined);
+  /** Grava a fila do autosave; preenchido abaixo (o autosave usa settleRenames, então vem depois). */
+  const flushQueue = useRef<() => Promise<boolean>>(async () => true);
   const settleRenames = useCallback(async () => {
     window.clearTimeout(renameTimer.current);
+    // Espera o autosave em voo: o sync lê a versão só depois dele (senão leva a antiga e dá 409 falso).
+    if (!(await flushQueue.current())) return;
     for (const [id, { slug, title }] of [...renameDue.current]) {
       renameDue.current.delete(id);
       try {
@@ -101,6 +105,7 @@ export function useStudio() {
     setPage((p) => (p && p.id === saved.id ? { ...p, file: saved.file } : p));
   });
   const autosaveFlush = autosave.flush;
+  flushQueue.current = autosaveFlush;
   /** Grava a fila e, se tudo foi gravado, renomeia os arquivos cujo título mudou. */
   const flush = useCallback(async () => {
     const ok = await autosaveFlush();
@@ -402,7 +407,11 @@ export function useStudio() {
     diskConflict: page !== null && conflictId === page.id,
     resolveConflict: (choice: "reload" | "keep") => resolveRef.current(choice),
     flush,
-    save: { state: autosave.state, savedAt: autosave.savedAt, retry: autosave.retry },
+    save: {
+      state: conflictId !== null && autosave.state === "error" ? ("conflict" as const) : autosave.state,
+      savedAt: autosave.savedAt,
+      retry: autosave.retry,
+    },
     openManual,
     selectPage,
     addPage,

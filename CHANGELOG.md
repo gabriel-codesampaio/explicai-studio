@@ -33,6 +33,7 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 ### Corrigido
 
 - Autosave: grava uma página por vez, guarda uma mudança pendente por página e descarta a resposta antiga ao trocar de página.
+- Autosave: o renome do arquivo (5 s depois do título) espera a gravação em voo e leva a versão nova, sem faixa de conflito falsa; com a faixa de conflito aberta, o rodapé diz "Aguardando sua escolha" em vez de "Não foi possível salvar".
 - Núcleo: `updateManual` passou a ter fila por pasta (sem perder mudanças simultâneas); `addPage` grava o arquivo antes da árvore; a lixeira pula item com `entry.json` quebrado; `findUnusedAssets` ignora arquivo que sumiu; dois envios do mesmo nome de imagem não dão mais `EEXIST`; manual com BOM no começo abre; restaurar uma página fecha a lixeira.
 - Limpeza de imagens sem uso: grava a fila do autosave antes, poupa imagem gravada há menos de 1 minuto e volta a 60 s quando a carência é inválida.
 - Exportação: gera em pasta temporária e troca só no fim; marcação com JSON quebrado ou de forma errada vira aviso e a imagem sai pura; aviso quando a página cita imagem que não existe; `%` solto em link ou imagem não derruba mais a exportação; lê `width` e `height` de SVG; sem pulo de nível de título; "Só páginas aprovadas" fica desabilitado quando nenhuma está aprovada.

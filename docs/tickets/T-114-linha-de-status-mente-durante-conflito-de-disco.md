@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: fechado
 - Agente: frontend
 - Origem: harden do T-038 (2026-11-03)
 

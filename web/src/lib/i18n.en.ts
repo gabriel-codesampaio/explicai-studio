@@ -188,6 +188,7 @@ export const EN: Record<string, string> = {
   "Não foi possível exportar o manual.": "Could not export the manual.",
   "Não foi possível salvar as marcações.": "Could not save the markups.",
   "Não foi possível salvar. O texto continua na tela.": "Could not save. Your text is still on screen.",
+  "Aguardando sua escolha": "Waiting for your choice",
   Negrito: "Bold",
   "Nenhum bloco com esse nome.": "No block with that name.",
   "Nenhuma página ainda.": "No pages yet.",
