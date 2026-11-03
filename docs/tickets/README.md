@@ -10,7 +10,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 Decisão da pessoa (03/11/2026): bug (comportamento errado, perda de dado, falha de segurança, erro visível) é corrigido agora, em lotes de 2 a 3 tickets, por prioridade. Sugestão (melhoria, acabamento, refatoração, medição, doc) fica aberta, em espera.
 
-Ordem: T-107, T-088, T-092, T-093, T-094 (P2); T-098, T-099, T-100, T-101, T-102, T-103, T-024, T-076, T-077, T-078, T-081, T-080 (P3).
+Feitos no lote 1: T-107, T-088, T-092. Ordem do resto: T-093, T-094 (P2); T-098, T-099, T-100, T-101, T-102, T-103, T-024, T-076, T-077, T-078, T-081, T-080 (P3).
 
 Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T-038, T-064, T-079, T-090, T-091, T-095, T-096, T-097, T-104, T-105, T-106.
 
@@ -21,14 +21,11 @@ Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-038](T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-088](T-088-limpar-imagens-sem-uso-gravar-a-fila-antes-e-.md) | Limpar imagens sem uso: gravar a fila antes e poupar arquivo novo | P2 | aberto | frontend |
 | [T-090](T-090-contagem-de-imagens-sem-uso-so-sob-demanda.md) | Contagem de imagens sem uso só sob demanda | P2 | aberto | frontend |
 | [T-091](T-091-imagesize-le-so-o-cabecalho-do-arquivo.md) | `imageSize` lê só o cabeçalho do arquivo | P2 | aberto | frontend |
-| [T-092](T-092-marcacao-com-json-quebrado-vira-aviso-na-expo.md) | Marcação com JSON quebrado vira aviso na exportação | P2 | aberto | frontend |
 | [T-093](T-093-exportar-em-pasta-temporaria-e-trocar-no-fim.md) | Exportar em pasta temporária e trocar no fim | P2 | aberto | frontend |
 | [T-094](T-094-renomear-arquivo-da-pagina-so-ao-parar-de-dig.md) | Renomear arquivo da página só ao parar de digitar o título | P2 | aberto | frontend |
 | [T-097](T-097-testes-de-concorrencia-usestudio-e-fluxo-de-i.md) | Testes de concorrência, `useStudio` e fluxo de imagem | P2 | aberto | qa |
-| [T-107](T-107-seletor-de-tema-com-duas-opcoes-marcadas.md) | Seletor de tema mostra duas opções marcadas e não bate com o tema aplicado | P2 | aberto | frontend |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
 | [T-021](T-021-serve-limpa-temporarios.md) | Apagar as pastas temporárias que o e2e/serve.mjs cria | P3 | aberto | qa |
@@ -59,6 +56,9 @@ Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-107](fechados/T-107-seletor-de-tema-com-duas-opcoes-marcadas.md) | Seletor de tema mostra duas opções marcadas e não bate com o tema aplicado | P2 | feito | 0c31551, 07bbd4a |
+| [T-088](fechados/T-088-limpar-imagens-sem-uso-gravar-a-fila-antes-e-.md) | Limpar imagens sem uso: gravar a fila antes e poupar arquivo novo | P2 | feito | 3b5c332, 6f90a74, c90dce1 |
+| [T-092](fechados/T-092-marcacao-com-json-quebrado-vira-aviso-na-expo.md) | Marcação com JSON quebrado vira aviso na exportação | P2 | feito | 080b62a |
 | [T-087](fechados/T-087-autosave-um-put-por-vez-por-pagina.md) | Autosave: um `PUT` por vez por página | P2 | feito | 84c43e9 |
 | [T-089](fechados/T-089-aceitar-origin-so-da-mesma-porta-do-host.md) | Aceitar Origin só da mesma porta do Host | P2 | feito | 0b27143 |
 | [T-086](fechados/T-086-imagens-com-etag-304-streaming-e-loading-lazy.md) | Imagens com ETag/304, streaming e `loading="lazy"` | P1 | feito | 7d7dfe7 |

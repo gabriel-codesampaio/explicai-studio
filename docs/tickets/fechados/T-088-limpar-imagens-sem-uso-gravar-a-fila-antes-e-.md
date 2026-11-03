@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: auditoria ponytail de 2026-11-02, achado 5 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 

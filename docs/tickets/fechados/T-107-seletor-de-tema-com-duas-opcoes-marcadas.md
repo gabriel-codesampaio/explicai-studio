@@ -2,12 +2,12 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relato da pessoa, 2026-11-03
 
 ## Problema
-Ao abrir o diálogo "Aparência" (TEMA: Claro / Escuro / Sistema), o Studio estava escuro e as opções **Sistema** e **Claro** apareciam marcadas ao mesmo tempo. Print de referência: `C:\Users\PC\AppData\Local\Temp\claude\c--Users-PC-Desktop-Manual\0dfd2dcc-9310-4ff9-8e02-08aa7dda8bdb\images\2.png` (no momento do print, só Claro aparece marcado).
+Ao abrir o diálogo "Aparência" (TEMA: Claro / Escuro / Sistema), o Studio estava escuro e as opções **Sistema** e **Claro** apareciam marcadas ao mesmo tempo. Print de referência: (print de referência) (no momento do print, só Claro aparece marcado).
 
 Evidência no código:
 - `web/src/features/settings/AppearancePanel.tsx:34` marca cada opção com `aria-pressed={look.mode === id}`, e `:36` desenha a marcação só por `aria-pressed:` (fundo, peso, sombra e anel de 2 px).

@@ -2,6 +2,14 @@
 
 Histórico anterior: `docs/passagem-2026-10-30.md` (juntar neste arquivo no próximo lote).
 
+## Lote de bugs 1 (03/11/2026, na main local, sem push)
+- Feitos: T-107 (foco/seletor de tema, Idioma alinhado), T-088 (flush + carência de 60 s + aborta se a fila não gravou), T-092 (JSON de marcação quebrado vira aviso). Check 445 testes; e2e completo 130/131 (a falha, "barra da seleção" studio.e2e.ts:187, é o flaky conhecido: 3/3 na repetição). code-reviewer e seguranca: sem bloqueio.
+- Classificação: bugs em `docs/tickets/README.md` (seção "Lote de bugs"); sugestões ficam em espera.
+- Próximo lote (nesta ordem): T-093, T-094, T-098 (P2/P3 de dado), depois T-099, T-100, T-101, T-102, T-103, e as telas P3 (T-024, T-076, T-077, T-078, T-081), T-080.
+- Cuidado: T-099 e T-064/T-097 cruzam com `docs/discovery/marcacao-de-imagem.md`: só corrigir o bug.
+- Em aberto da revisão: `stat` sequencial em `findUnusedAssets` (assets.ts) sem tratar ENOENT; `parseAnnotations` com JSON válido de forma errada ainda derruba o export; foco do Aparência sem fallback se nenhum botão marcado. Viram ticket só se a pessoa quiser.
+- Worktrees do lote removidos; branches fix/t-107, fix/t-088, fix/t-092 locais.
+
 ## Estado
 - Na main (enviada): lotes 6 e 7, T-083, T-084, T-082+T-089 (CSP em /files/, Origin, 415), T-085 (fila por pasta em `updateManual`), T-086 (ETag/304, streaming, cache de imagens, lazy) e T-087 (autosave um PUT por vez).
 - Verificação final na main: `npm run check` 433 testes; e2e completo 131/131 (E2E_PORT=4490); `studio.imagem.e2e.ts` x8 com 4 workers = 312/312, sem flake. Revisão de código dos três tickets: sem bloqueio. seguranca: sem achado.
