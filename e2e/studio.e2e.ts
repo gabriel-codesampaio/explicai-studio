@@ -1131,16 +1131,10 @@ for (const theme of ["light", "dark"] as const) {
         };
         const lin = (v: number) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4);
         const lumin = ([r = 0, g = 0, b = 0]: number[]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-        const shadow = getComputedStyle(el).boxShadow;
-        const color = /(rgba?\([^)]*\)|oklch\([^)]*\)|lab\([^)]*\)|color\([^)]*\)|#[0-9a-f]+)/i;
-        // Marcada = anel (sombra com 2px de espalhamento, Idioma) ou fundo preenchido (Aparência).
-        const ring =
-          shadow
-            .split(/,(?![^(]*\))/)
-            .find((x) => /\s2px(\s|$)/.test(x))
-            ?.match(color)?.[0] ?? getComputedStyle(el).backgroundColor;
+        // Marcada = preenchida (bg-primary): contraste do preenchimento com a trilha.
+        const fill = rgb(getComputedStyle(el).backgroundColor);
         const track = rgb(getComputedStyle(el.parentElement as HTMLElement).backgroundColor);
-        const [hi = 0, lo = 0] = [lumin(rgb(ring)), lumin(track)].sort((x, y) => y - x);
+        const [hi = 0, lo = 0] = [lumin(fill), lumin(track)].sort((x, y) => y - x);
         return (hi + 0.05) / (lo + 0.05);
       });
 

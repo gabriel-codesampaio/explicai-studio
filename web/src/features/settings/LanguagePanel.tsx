@@ -21,7 +21,7 @@ export function LanguagePanel({ open, onOpenChange }: { open: boolean; onOpenCha
               lang={id}
               aria-pressed={lang === id}
               onClick={() => lang !== id && setLang(id)}
-              className="rounded-sm min-h-11 py-1.5 text-xs text-muted-foreground hover:text-foreground aria-pressed:bg-card aria-pressed:font-bold aria-pressed:text-foreground aria-pressed:shadow-xs aria-pressed:ring-2 aria-pressed:ring-primary"
+              className="rounded-sm min-h-11 py-1.5 text-xs text-muted-foreground hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-muted aria-pressed:bg-primary aria-pressed:font-bold aria-pressed:text-primary-foreground"
             >
               {label}
             </button>

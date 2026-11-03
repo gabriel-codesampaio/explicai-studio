@@ -42,7 +42,7 @@ export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenC
                 type="button"
                 aria-pressed={look.mode === id}
                 onClick={() => change({ mode: id })}
-                className="flex flex-col items-center gap-1 rounded-sm min-h-11 py-1.5 text-xs text-muted-foreground hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 aria-pressed:bg-primary aria-pressed:font-bold aria-pressed:text-primary-foreground"
+                className="flex flex-col items-center gap-1 rounded-sm min-h-11 py-1.5 text-xs text-muted-foreground hover:text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-muted aria-pressed:bg-primary aria-pressed:font-bold aria-pressed:text-primary-foreground"
               >
                 <Icon className="size-4" aria-hidden /> {label}
               </button>
