@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: preparação da versão de produção (2026-11-03)
 
@@ -20,4 +20,4 @@ src/core/assets.ts
 Teste da área primeiro (vermelho, depois verde); `npm run check`.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit e7623cb. Stats via Promise.all; ENOENT tira o arquivo da lista, outro erro continua subindo. Teste com mock de stat em test/unused-assets-race.test.ts.
