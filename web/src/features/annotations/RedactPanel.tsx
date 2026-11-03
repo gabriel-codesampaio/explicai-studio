@@ -3,6 +3,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import type { Highlight } from "@/lib/annotations";
 import { t, tn } from "@/lib/i18n";
+import type { RedactStyle } from "@/lib/redact";
 import { redactableType, redactImage } from "@/lib/redactImage";
 
 interface Props {
@@ -12,13 +13,15 @@ interface Props {
   rects: Highlight[];
   /** A pasta do manual está num repositório git. */
   inGit: boolean;
+  style: RedactStyle;
+  onStyle: (style: RedactStyle) => void;
   onDiscard: () => void;
   /** A imagem já foi trocada no disco. */
   onApplied: () => void;
 }
 
 /** Linha "N áreas a ocultar" com Aplicar e Descartar. Aplicar pede confirmação, porque troca o arquivo e apaga o original. */
-export function RedactPanel({ slug, asset, src, rects, inGit, onDiscard, onApplied }: Props) {
+export function RedactPanel({ slug, asset, src, rects, inGit, style, onStyle, onDiscard, onApplied }: Props) {
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +38,7 @@ export function RedactPanel({ slug, asset, src, rects, inGit, onDiscard, onAppli
   const apply = async () => {
     setBusy(true);
     try {
-      await redactImage(slug, asset, src, rects);
+      await redactImage(slug, asset, src, rects, style);
       onApplied();
     } catch {
       setError(t("Não foi possível ocultar as áreas. A imagem não foi alterada."));
@@ -53,6 +56,25 @@ export function RedactPanel({ slug, asset, src, rects, inGit, onDiscard, onAppli
           ? t("Arraste sobre o dado que deve sumir.")
           : tn(rects.length, "{n} área a ocultar", "{n} áreas a ocultar")}
       </p>
+      <div role="radiogroup" aria-label={t("Estilo")} className="flex gap-2">
+        {(["bar", "blur"] as const).map((s) => (
+          <Button
+            key={s}
+            size="sm"
+            variant={style === s ? "default" : "outline"}
+            role="radio"
+            aria-checked={style === s}
+            onClick={() => onStyle(s)}
+          >
+            {s === "bar" ? t("Tarja") : t("Desfoque")}
+          </Button>
+        ))}
+      </div>
+      {style === "blur" && (
+        <p role="note" className="text-sm text-muted-foreground">
+          {t("Para senha, CPF e números, prefira a tarja.")}
+        </p>
+      )}
       {inGit && (
         <p role="note" className="text-sm text-muted-foreground">
           {t("Esta pasta está no git: o print original continua no histórico depois de ocultar.")}

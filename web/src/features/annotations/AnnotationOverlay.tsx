@@ -2,13 +2,14 @@ import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { arrowShape } from "@/lib/annotationShapes";
 import type { Annotations, Handle, Highlight, Point, Rect } from "@/lib/annotations";
-import { REDACT_CSS } from "@/lib/redact";
+import { REDACT_CSS, type RedactStyle } from "@/lib/redact";
 import { cn } from "@/lib/utils";
 
 interface Props {
   annotations: Annotations;
   /** Áreas a ocultar do rascunho: tarja opaca com borda tracejada. Não são marcações. */
   redactions?: Highlight[];
+  redactStyle?: RedactStyle;
   /** Retângulo do recorte: o que fica fora dele aparece escurecido. */
   crops?: Highlight[];
   selectedId?: string | null;
@@ -39,7 +40,7 @@ function useSize() {
  * Camada sobre a imagem: destaques em marca-texto, áreas clicáveis tracejadas, setas e marcadores
  * numerados em cobalto. Coordenadas de 0 a 1 viram pixels pelo tamanho atual da imagem.
  */
-export function AnnotationOverlay({ annotations, redactions = [], crops = [], selectedId, onGrab }: Props) {
+export function AnnotationOverlay({ annotations, redactions = [], redactStyle = "bar", crops = [], selectedId, onGrab }: Props) {
   const { ref, size } = useSize();
   const px = (p: Point) => ({ x: p.x * size.w, y: p.y * size.h });
   const interactive = Boolean(onGrab);
@@ -102,7 +103,10 @@ export function AnnotationOverlay({ annotations, redactions = [], crops = [], se
             top: `${r.y * 100}%`,
             width: `${r.w * 100}%`,
             height: `${r.h * 100}%`,
-            background: REDACT_CSS,
+            // Prévia do desfoque: o resultado real é pixelado e borrado nos pixels ao aplicar.
+            ...(redactStyle === "blur"
+              ? { backdropFilter: "blur(10px)", background: "rgb(255 255 255 / 0.15)" }
+              : { background: REDACT_CSS }),
           }}
         />
       ))}

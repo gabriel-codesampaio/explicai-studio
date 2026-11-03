@@ -159,6 +159,64 @@ test.describe("ocultar dados", () => {
     expect(pageNow.body).toBe(body);
   });
 
+  test("desfoque: aviso visível, dentro muda, fora não, tamanho se mantém", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, `Ocultar Desfoque ${Date.now()}`);
+    const url = `/files/${slug}/assets/tela.png`;
+    const dialog = await openEditor(page, slug, id);
+    await snapshot(page, url);
+    await dialog.getByRole("button", { name: "Ocultar", exact: true }).click();
+    await expect(dialog.getByRole("radio", { name: "Tarja" })).toHaveAttribute("aria-checked", "true");
+    await expect(dialog.getByText("prefira a tarja")).toHaveCount(0);
+    await dialog.getByRole("radio", { name: "Desfoque" }).click();
+    await expect(dialog.getByText("Para senha, CPF e números, prefira a tarja.")).toBeVisible();
+    const box = await dragOn(page, dialog, [0.25, 0.3], [0.6, 0.45]);
+    const shape = await dialog.locator("[data-redaction]").boundingBox();
+    if (!shape) throw new Error("sem área");
+    const r = {
+      x: (shape.x - box.x) / box.width,
+      y: (shape.y - box.y) / box.height,
+      w: shape.width / box.width,
+      h: shape.height / box.height,
+    };
+    await dialog.getByRole("button", { name: "Aplicar ocultação" }).click();
+    await page
+      .getByRole("dialog", { name: "Ocultar as áreas marcadas?" })
+      .getByRole("button", { name: "Ocultar e apagar o original" })
+      .click();
+    await expect(dialog.getByText("Arraste sobre o dado que deve sumir.")).toBeVisible();
+    const m = await page.evaluate(
+      async ([u, k]) => {
+        const before = (globalThis as unknown as { __px: ImageData }).__px;
+        const bmp = await createImageBitmap(await (await fetch(u as string, { cache: "reload" })).blob());
+        const c = new OffscreenCanvas(bmp.width, bmp.height);
+        const ctx = c.getContext("2d");
+        ctx?.drawImage(bmp, 0, 0);
+        const now = ctx?.getImageData(0, 0, bmp.width, bmp.height);
+        if (!now) throw new Error("sem canvas");
+        const f = k as Frac;
+        const [x0, y0, x1, y1] = [f.x * bmp.width, f.y * bmp.height, (f.x + f.w) * bmp.width, (f.y + f.h) * bmp.height];
+        let insideChanged = 0;
+        let insideCount = 0;
+        let outsideChanged = 0;
+        for (let y = 0; y < bmp.height; y++)
+          for (let x = 0; x < bmp.width; x++) {
+            const i = (y * bmp.width + x) * 4;
+            const same = [0, 1, 2, 3].every((j) => now.data[i + j] === before.data[i + j]);
+            if (x >= x0 + 2 && x < x1 - 2 && y >= y0 + 2 && y < y1 - 2) {
+              insideCount++;
+              if (!same) insideChanged++;
+            } else if ((x < x0 - 2 || x >= x1 + 2 || y < y0 - 2 || y >= y1 + 2) && !same) outsideChanged++;
+          }
+        return { size: [bmp.width, bmp.height], insideChanged, insideCount, outsideChanged };
+      },
+      [url, r] as const,
+    );
+    expect(m.size).toEqual([512, 512]);
+    expect(m.insideCount).toBeGreaterThan(1000);
+    expect(m.insideChanged).toBeGreaterThan(m.insideCount * 0.2);
+    expect(m.outsideChanged).toBe(0);
+  });
+
   test("sair com área não aplicada pergunta antes", async ({ page, request }) => {
     const { slug, id } = await withImage(request, `Ocultar Sair ${Date.now()}`);
     const dialog = await openEditor(page, slug, id);
