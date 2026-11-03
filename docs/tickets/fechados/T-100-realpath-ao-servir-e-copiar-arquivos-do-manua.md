@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: auditoria ponytail de 2026-11-02, achado 17 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
@@ -20,4 +20,4 @@ Ver a seção do achado na auditoria.
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 17 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit 03f0511. Novo `resolveInsideReal` em `src/core/fs.ts` (`realpath` + comparação com a pasta do manual); usado em `/files/` (`src/server/routes/assets.ts`) e em `copyImages`/`copyLogo` da exportação. Teste: `test/symlink.test.ts`, com junction (roda no Windows sem permissão). Fora: `loadImages` ainda lê o cabeçalho da imagem antes da recusa (não vaza conteúdo).
