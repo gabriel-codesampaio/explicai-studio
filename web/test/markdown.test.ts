@@ -209,3 +209,16 @@ describe("blocos de alerta no editor", () => {
     editor.destroy();
   });
 });
+
+describe("imagem no editor: carregamento", () => {
+  it("sai com loading lazy e decoding async no HTML, sem mudar o Markdown", () => {
+    const md = "![alt](assets/a.png)";
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    const html = editor.getHTML();
+    const out = editor.getMarkdown();
+    editor.destroy();
+    expect(html).toContain('loading="lazy"');
+    expect(html).toContain('decoding="async"');
+    expect(out).toBe(md);
+  });
+});

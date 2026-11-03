@@ -64,7 +64,7 @@ export function contentExtensions(image: AnyExtension = Image, callout: AnyExten
     StepListItem,
     // No Markdown a imagem é inline (`![alt](src)` dentro de um parágrafo). Como bloco, ela se perdia
     // ao reabrir uma página com imagem dentro de um item de lista.
-    image.configure({ inline: true }),
+    image.configure({ inline: true, HTMLAttributes: { loading: "lazy", decoding: "async" } }),
     TableKit.configure({ table: { resizable: false } }),
     // Antes do blockquote no Markdown: `> [!TIP]` é alerta, o resto da citação continua citação.
     callout,
