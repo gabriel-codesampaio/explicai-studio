@@ -8,7 +8,7 @@ export const EN: Record<string, string> = {
   "Ferramenta Recortar": "Crop tool",
   "Arraste sobre a parte da imagem que deve ficar": "Drag over the part of the image to keep",
   "Arraste sobre a parte que deve ficar.": "Drag over the part to keep.",
-  "Ajuste o retângulo e aplique.": "Adjust the rectangle and apply.",
+  "Para ajustar o retângulo, use Selecionar (V). Depois aplique.": "To adjust the rectangle, use Select (V). Then apply.",
   "Aplicar recorte": "Apply crop",
   "Recortar a imagem?": "Crop the image?",
   "Recortando…": "Cropping…",
