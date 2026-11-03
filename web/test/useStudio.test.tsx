@@ -1,6 +1,5 @@
 // @vitest-environment happy-dom
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useStudio } from "../src/hooks/useStudio";
 import { ApiError, api, type Page } from "../src/lib/api";
@@ -88,14 +87,7 @@ describe("useStudio: título da página", () => {
 
 describe("useStudio: conflito com o disco", () => {
   const conflito = () => new ApiError("x", "disk-conflict", {}, 409);
-  const lastToast = () =>
-    vi.mocked(toast.warning).mock.lastCall?.[1] as unknown as {
-      action: { onClick: () => void };
-      cancel: { onClick: () => void };
-    };
-
   beforeEach(() => {
-    vi.mocked(toast.warning).mockClear();
     vi.spyOn(api, "getPage").mockImplementation(async (_s, id) => ({ ...pageOf(id), version: "v1" }));
   });
 
@@ -108,10 +100,10 @@ describe("useStudio: conflito com o disco", () => {
     return hook;
   }
 
-  it("envia a versão lida e, no 409, para de gravar e mostra o aviso com as duas ações", async () => {
+  it("envia a versão lida e, no 409, para de gravar e abre a faixa com as duas ações", async () => {
     const { result } = await editWithConflict();
     expect(update).toHaveBeenCalledWith("m", "p0", { body: "meu texto" }, "v1");
-    expect(toast.warning).toHaveBeenCalledTimes(1);
+    expect(result.current.diskConflict).toBe(true);
     expect(result.current.save.state).toBe("error");
 
     // Nova digitação não volta ao servidor enquanto o aviso está aberto.
@@ -124,19 +116,30 @@ describe("useStudio: conflito com o disco", () => {
     const { result } = await editWithConflict();
     const before = result.current.revision;
     vi.useRealTimers();
-    await act(async () => lastToast().action.onClick());
+    await act(async () => result.current.resolveConflict("reload"));
     await waitFor(() => expect(result.current.revision).toBe(before + 1));
     expect(update).toHaveBeenCalledTimes(1);
     expect(result.current.save.state).toBe("idle");
+    expect(result.current.diskConflict).toBe(false);
+  });
+
+  it("Recarregar do disco com a leitura falhando mantém o rascunho e a faixa", async () => {
+    const { result } = await editWithConflict();
+    vi.mocked(api.getPage).mockRejectedValueOnce(new ApiError("x", "boom", {}, 500));
+    vi.useRealTimers();
+    await act(async () => result.current.resolveConflict("reload"));
+    expect(result.current.diskConflict).toBe(true);
+    expect(result.current.save.state).toBe("error");
   });
 
   it("Manter a minha versão regrava o rascunho com a versão atual do disco", async () => {
     const { result } = await editWithConflict();
     vi.mocked(api.getPage).mockResolvedValue({ ...pageOf("p0"), version: "v2" });
     vi.useRealTimers();
-    await act(async () => lastToast().cancel.onClick());
+    await act(async () => result.current.resolveConflict("keep"));
     await waitFor(() => expect(update).toHaveBeenCalledTimes(2));
     expect(update).toHaveBeenLastCalledWith("m", "p0", { body: "meu texto" }, "v2");
     await waitFor(() => expect(result.current.save.state).toBe("saved"));
+    expect(result.current.diskConflict).toBe(false);
   });
 });
