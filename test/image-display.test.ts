@@ -56,7 +56,7 @@ describe("tamanho de exibição (display)", () => {
     await utimes(file, old, old);
     await readAnnotations(dir, asset);
     expect(await readFile(file, "utf8")).toBe(antigo);
-    expect((await stat(file)).mtimeMs).toBe(old.getTime());
+    expect(Math.round((await stat(file)).mtimeMs)).toBe(old.getTime()); // mtimeMs tem fração de ponto flutuante no Linux
   });
 
   it("lixeira leva o JSON com display junto da imagem sem uso", async () => {
