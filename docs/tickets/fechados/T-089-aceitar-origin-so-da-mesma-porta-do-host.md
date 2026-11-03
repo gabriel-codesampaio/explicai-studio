@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: auditoria ponytail de 2026-11-02, achado 6 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
@@ -20,4 +20,4 @@ Host e Origin são checados, mas Origin `http://localhost:3000` passa. Um `POST`
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 6 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit 0b27143. Origin deve ser igual a http://<Host> (porta inclusa); o proxy do Vite não reescreve o Host (changeOrigin desligado), então 5173 continua valendo. readJson recusa corpo não JSON com 415 (unsupported-media-type); corpo vazio passa, e curl/MCP sem Origin também. Testes: test/security.test.ts, test/server-security.test.ts. Upload binário de imagem/logo fica fora (readBody).
