@@ -1,5 +1,8 @@
 <p>
-  <img src="https://gabriel-codesampaio.github.io/explicai-brandbook/logo/explicai-logo-horizontal.svg" alt="Explicaí" height="56">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://gabriel-codesampaio.github.io/explicai-brandbook/logo/explicai-logo-horizontal-escuro.svg">
+    <img src="https://gabriel-codesampaio.github.io/explicai-brandbook/logo/explicai-logo-horizontal.svg" alt="Explicaí" height="56">
+  </picture>
 </p>
 
 Construtor de manuais open source e gratuito. Do print ao manual pronto em PDF, HTML e Markdown.
