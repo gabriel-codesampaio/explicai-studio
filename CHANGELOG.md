@@ -6,7 +6,9 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
-Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reúne o que entrou desde a tag `v0.1.0`.
+## [0.2.0] - 2026-11-03
+
+A 0.1.0 foi a primeira versão do Studio; este bloco reúne o que entrou desde a tag `v0.1.0`.
 
 ### Adicionado
 
@@ -21,6 +23,9 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 - Layout: árvore em coluna estreita de 900 a 1023 px, marca na barra do topo, alvos de toque de 44 px no celular.
 - Testes e CI: GitHub Actions com lint, tipos, testes com cobertura e ponta a ponta; cobertura medida com `npm run test:cov`; testes novos para sistema de arquivos, segurança, UTF-8, exportação, editor e pacote npm.
 - Edição feita fora do Studio (MCP, outro editor): o servidor devolve a versão da página (`If-Match`, 409 `disk-conflict`) e o Studio avisa em vez de sobrescrever, com "Recarregar do disco" e "Manter a minha versão".
+- Imagem: ferramenta Ocultar (O) para dados sensíveis, com Tarja (padrão) ou Desfoque forte (pixelado e borrado), queimados nos pixels; o original é apagado, com aviso quando a pasta está no git e lembrete de que exports antigos ainda têm o original.
+- Imagem: tamanho de exibição Pequena, Média ou Larga, guardado no JSON ao lado da imagem e respeitado no editor, no HTML e no PDF.
+- Imagem: Recortar (R), com as marcações reposicionadas e a confirmação listando as que vão sumir; Reduzir resolução e peso, sugerindo 1600 px de largura e sem nunca ampliar.
 - Pacote npm: CHANGELOG, descrição bilíngue, palavras-chave e README para quem chega pelo npm.
 
 ### Alterado
@@ -28,6 +33,9 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 - O Studio usa sempre o cobalto da marca, com seleção de texto em cobalto translúcido; raio de 3 px vindo de um token; rótulos de seção em mono maiúsculo; ícones decorativos removidos.
 - "Versão do manual" é o nome único da versão apontada para o manual final.
 - Imagens do Studio carregam com `loading="lazy"` e o servidor entrega arquivos com ETag, 304 e streaming.
+- O botão do balão da imagem e o título do editor dizem "Editar imagem" (era "Marcar imagem").
+- Legenda da imagem: três ou mais marcadores seguidos sem descrição viram um selo só com intervalo ("1–8").
+- Lixeira: o painel não conta mais as imagens sem uso ao abrir; o botão fica sempre visível e avisa quando não há nada.
 - O pacote publicado não leva mais os mapas de código (`.map`).
 
 ### Corrigido
@@ -41,6 +49,9 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 - Editor: Enter depois de imagem, ordem de várias imagens coladas, Esc no balão da imagem devolve o foco, Ctrl+End leva ao fim da página, menu `/` não fica atrás da barra fixa nem deixa de rolar com a seta, negrito e link junto de código no texto, popover da imagem ancorado dentro da área útil.
 - Interface: título longo da página não corta ao carregar a fonte; erro ao trocar a fonte do manual aparece; contraste de 3:1 na borda de campo e na amostra de cor nos dois temas, seletor de tema com uma só opção marcada, título longo da árvore truncado, marca que não quebra em duas linhas.
 
+- Telas: foco do painel Aparência sem opção marcada, rodapé em tela estreita mostra o caminho inteiro, botões da barra de marcação com 44 px e nome no toque, grupo Versões/Exportar alinhado em 375 px, uma marca só com a gaveta aberta, "Nesta página" sem rolagem lateral, nome inteiro do título truncado na árvore ao passar o mouse.
+- Desempenho: `imageSize` lê só o começo do arquivo.
+
 ### Segurança
 
 - Recusa link simbólico que sai da pasta do manual ao servir e ao copiar arquivos (`realpath`).
@@ -50,10 +61,12 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 
 ### Interno
 
+- CI: publicação no npm com provenance e release no GitHub ao enviar uma tag `vX.Y.Z`; suíte e2e estável no CI (espera a seleção do editor antes do próximo passo); pastas temporárias do e2e apagadas ao fim.
 - Regras do projeto (Conventional Commits, arquitetura, testes, revisão) e plugin da equipe de agentes; tickets em `docs/tickets`; documentação do formato do manual atualizada com tema, cor do texto, alertas e logo.
 
 ### English summary
 
-New since 0.1.0: bundled OFL fonts and font choice for exports, manual theme colors and client logo, alert blocks, text colors with names, a floating selection toolbar, a richer `/` menu, table row and column controls, annotation shortcuts, full-screen error pages, translated errors, GitHub Actions CI and a much larger test suite. New: warning instead of overwrite when a page changed on disk outside the Studio. Fixes cover autosave races, per-folder write queue, atomic exports, unused-image cleanup and many editor and accessibility details. Security: symlinks that leave the manual folder are refused, CSP on `/files/`, same-port `Origin` check. The npm package no longer ships source maps.
+New since 0.1.0: bundled OFL fonts and font choice for exports, manual theme colors and client logo, alert blocks, text colors with names, a floating selection toolbar, a richer `/` menu, table row and column controls, annotation shortcuts, full-screen error pages, translated errors, GitHub Actions CI and a much larger test suite. New: warning instead of overwrite when a page changed on disk outside the Studio. Image tools: hide sensitive data (solid bar or strong blur burned into the pixels), display size (small, medium, wide), crop with annotations remapped, and resolution/weight reduction. Fixes cover autosave races, per-folder write queue, atomic exports, unused-image cleanup and many editor and accessibility details. Security: symlinks that leave the manual folder are refused, CSP on `/files/`, same-port `Origin` check. The npm package no longer ships source maps.
 
-[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.1.0...v0.2.0
