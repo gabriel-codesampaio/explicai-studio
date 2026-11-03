@@ -1,7 +1,7 @@
 import { createServer, type Server } from "node:http";
 import { ExplicaiError } from "../core/errors.js";
 import { errorPage, pickLang } from "./errorPage.js";
-import { HttpError, send, sendJson, statusOf } from "./http.js";
+import { HttpError, publicMessage, send, sendJson, statusOf } from "./http.js";
 import { matchRoute, type Route, type StudioOptions } from "./router.js";
 import { assetRoutes } from "./routes/assets.js";
 import { exportRoutes } from "./routes/export.js";
@@ -59,7 +59,7 @@ export function createStudioServer(opts: StudioOptions): Server {
         res.writeHead(status, { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" });
         return void res.end(html);
       }
-      sendJson(res, status, { error: err instanceof Error ? err.message : String(err), code: errorCode, params });
+      sendJson(res, status, { error: publicMessage(err), code: errorCode, params });
     }
   });
 }

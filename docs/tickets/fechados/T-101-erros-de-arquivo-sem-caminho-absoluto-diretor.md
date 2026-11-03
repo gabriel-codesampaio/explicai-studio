@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: auditoria ponytail de 2026-11-02, achado 18 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
@@ -20,4 +20,4 @@ Ver a seção do achado na auditoria.
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 18 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit 61e1082. `publicMessage` em `src/server/http.ts` troca ENOENT/EISDIR/EACCES/EPERM por frases fixas na resposta de erro (`src/server/index.ts`); `statusOf` trata EISDIR como 404. Teste: `test/server-errors.test.ts`. Fora: `/files/` de diretório já dava 404 (`send` checa `isFile`); o teste só o trava.
