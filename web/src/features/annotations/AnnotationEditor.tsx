@@ -1,4 +1,4 @@
-import { ArrowUpRight, EyeOff, Hash, Highlighter, Link2, type LucideIcon, MousePointer2, Undo2 } from "lucide-react";
+import { ArrowUpRight, Crop, EyeOff, Hash, Highlighter, Link2, type LucideIcon, MousePointer2, Undo2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
+import { CropPanel } from "./CropPanel";
 import { RedactPanel } from "./RedactPanel";
 
 interface Props {
@@ -35,6 +36,7 @@ const TOOLS: { tool: Tool; label: string; hint: string; Icon: LucideIcon }[] = [
   { tool: "arrow", label: t("Seta"), hint: t("Arraste do início até a ponta da seta"), Icon: ArrowUpRight },
   { tool: "hotspot", label: t("Área clicável"), hint: t("Arraste sobre a área que leva a outra página"), Icon: Link2 },
   { tool: "redact", label: t("Ocultar"), hint: t("Arraste sobre o dado que deve sumir"), Icon: EyeOff },
+  { tool: "crop", label: t("Recortar"), hint: t("Arraste sobre a parte da imagem que deve ficar"), Icon: Crop },
 ];
 
 /** Janela de marcação de uma imagem. Trabalha num rascunho e só grava ao clicar em "Salvar marcações". */
@@ -42,7 +44,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
   const saved = useAnnotations(slug, asset);
   // Enquanto nada foi mexido, o rascunho é o que está gravado.
   const [edited, setEdited] = useState<Draft | null>(null);
-  const draft = edited ?? (saved ? { ann: saved, redact: [] } : null);
+  const draft = edited ?? (saved ? { ann: saved, redact: [], crop: [] } : null);
   // Rascunhos anteriores, para o "Desfazer" (Ctrl+Z). Guarda os 50 últimos passos.
   const [past, setPast] = useState<Draft[]>([]);
   const change = (next: Draft) => {
@@ -108,7 +110,11 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           }
           if ((e.key === "Delete" || e.key === "Backspace") && selectedId && draft && !target.closest("input, select")) {
             e.preventDefault();
-            change({ ann: removeAnnotation(draft.ann, selectedId), redact: draft.redact.filter((r) => r.id !== selectedId) });
+            change({
+              ann: removeAnnotation(draft.ann, selectedId),
+              redact: draft.redact.filter((r) => r.id !== selectedId),
+              crop: draft.crop.filter((r) => r.id !== selectedId),
+            });
             setSelectedId(null);
           }
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !target.closest("input, select, textarea")) {
@@ -178,6 +184,27 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                     // Já virou pixel: não há o que desfazer nem listar.
                     setPast([]);
                     setEdited({ ...draft, redact: [] });
+                    setSelectedId(null);
+                  }}
+                />
+              )}
+              {(tool === "crop" || draft.crop.length > 0) && (
+                <CropPanel
+                  slug={slug}
+                  asset={asset}
+                  src={src}
+                  annotations={draft.ann}
+                  crop={draft.crop}
+                  hasRedactions={draft.redact.length > 0}
+                  inGit={inGit}
+                  onDiscard={() => {
+                    change({ ...draft, crop: [] });
+                    setSelectedId(null);
+                  }}
+                  onApplied={(ann) => {
+                    // Já virou pixel e as marcações vão para o disco: não há o que desfazer.
+                    setPast([]);
+                    setEdited({ ann, redact: [], crop: [] });
                     setSelectedId(null);
                   }}
                 />

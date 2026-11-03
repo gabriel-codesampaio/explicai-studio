@@ -8,6 +8,7 @@ export const TOOL_KEYS: Record<Tool, string> = {
   arrow: "S",
   hotspot: "A",
   redact: "O",
+  crop: "R",
 };
 
 interface KeyLike {

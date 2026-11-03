@@ -35,6 +35,7 @@ const GROUPS: { title: string; keys: [string, string][] }[] = [
       ["S", "Ferramenta Seta"],
       ["A", "Ferramenta Área clicável"],
       ["O", "Ferramenta Ocultar"],
+      ["R", "Ferramenta Recortar"],
       ["Delete", "Excluir a marcação selecionada"],
     ],
   },

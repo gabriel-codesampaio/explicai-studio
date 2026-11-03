@@ -7,7 +7,7 @@ const TYPES: Record<string, string> = { png: "image/png", jpg: "image/jpeg", jpe
 /** Tipo que dá para tarjar, ou null (SVG tem texto e GIF perderia quadros: a interface recusa). */
 export const redactableType = (asset: string): string | null => TYPES[asset.split(".").pop()?.toLowerCase() ?? ""] ?? null;
 
-const loadImage = (src: string) =>
+export const loadImage = (src: string) =>
   new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -30,6 +30,11 @@ export async function redactImage(slug: string, asset: string, src: string, rect
   if (!ctx) throw new Error("canvas");
   ctx.drawImage(img, 0, 0);
   ctx.putImageData(paintRedactions(ctx.getImageData(0, 0, canvas.width, canvas.height), rects), 0, 0);
+  await uploadCanvas(slug, asset, src, canvas, type);
+}
+
+/** Grava o canvas no lugar da imagem (troca temp+rename no servidor) e renova as cópias do navegador. */
+export async function uploadCanvas(slug: string, asset: string, src: string, canvas: HTMLCanvasElement, type: string) {
   const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.95));
   // Navegador que não sabe gravar o formato devolve PNG: gravar isso no lugar de um .webp quebraria a imagem.
   if (blob?.type !== type) throw new Error("encode");

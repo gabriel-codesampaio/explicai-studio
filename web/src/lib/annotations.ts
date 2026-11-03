@@ -106,7 +106,7 @@ export function countAnnotations(ann: Annotations): number {
 }
 
 /** "redact" não é marcação: os retângulos ficam num rascunho à parte e viram pixels ao aplicar. */
-export type Tool = "select" | AnnotationKind | "redact";
+export type Tool = "select" | AnnotationKind | "redact" | "crop";
 
 /**
  * Cria a forma desenhada entre `a` (onde o arraste começou) e `b` (onde terminou).

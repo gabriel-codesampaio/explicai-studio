@@ -21,7 +21,10 @@ function mapRect<T extends Rect>(r: T, c: Rect): T | null {
 
 /** Remapeia as marcações para a imagem recortada em `crop` (coordenadas normalizadas da imagem original) e renumera os marcadores. */
 export function cropAnnotations(a: Annotations, crop: Rect): CropResult {
-  const markers = [...a.markers].sort((p, q) => p.n - q.n).filter((m) => inside(m, crop)).map((m, i) => ({ ...mapPoint(m, crop), n: i + 1 }));
+  const markers = [...a.markers]
+    .sort((p, q) => p.n - q.n)
+    .filter((m) => inside(m, crop))
+    .map((m, i) => ({ ...mapPoint(m, crop), n: i + 1 }));
   const highlights = a.highlights.flatMap((h) => mapRect(h, crop) ?? []);
   const hotspots = a.hotspots.flatMap((h) => mapRect(h, crop) ?? []);
   const arrows = a.arrows

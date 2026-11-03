@@ -9,6 +9,8 @@ interface Props {
   annotations: Annotations;
   /** Áreas a ocultar do rascunho: tarja opaca com borda tracejada. Não são marcações. */
   redactions?: Highlight[];
+  /** Retângulo do recorte: o que fica fora dele aparece escurecido. */
+  crops?: Highlight[];
   selectedId?: string | null;
   /**
    * No editor de marcações, apertar numa marcação (ou numa alça dela) começa a mover ou redimensionar.
@@ -37,7 +39,7 @@ function useSize() {
  * Camada sobre a imagem: destaques em marca-texto, áreas clicáveis tracejadas, setas e marcadores
  * numerados em cobalto. Coordenadas de 0 a 1 viram pixels pelo tamanho atual da imagem.
  */
-export function AnnotationOverlay({ annotations, redactions = [], selectedId, onGrab }: Props) {
+export function AnnotationOverlay({ annotations, redactions = [], crops = [], selectedId, onGrab }: Props) {
   const { ref, size } = useSize();
   const px = (p: Point) => ({ x: p.x * size.w, y: p.y * size.h });
   const interactive = Boolean(onGrab);
@@ -48,7 +50,7 @@ export function AnnotationOverlay({ annotations, redactions = [], selectedId, on
       e.stopPropagation();
       onGrab(id, handle, e);
     };
-  const selectedRect: Rect | undefined = [...annotations.highlights, ...annotations.hotspots, ...redactions].find(
+  const selectedRect: Rect | undefined = [...annotations.highlights, ...annotations.hotspots, ...redactions, ...crops].find(
     (r) => "id" in r && r.id === selectedId,
   );
   const selectedArrow = annotations.arrows.find((a) => a.id === selectedId);
@@ -66,6 +68,25 @@ export function AnnotationOverlay({ annotations, redactions = [], selectedId, on
 
   return (
     <span ref={ref} className={cn("absolute inset-0 block", !interactive && "pointer-events-none")} aria-hidden>
+      {crops.map((r) => {
+        const [x0, y0, x1, y1] = [r.x * 100, r.y * 100, (r.x + r.w) * 100, (r.y + r.h) * 100];
+        return (
+          <span key={r.id} className="absolute inset-0 block">
+            <span
+              className="absolute inset-0 bg-black/55"
+              style={{
+                clipPath: `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${x0}% ${y0}%, ${x0}% ${y1}%, ${x1}% ${y1}%, ${x1}% ${y0}%, ${x0}% ${y0}%)`,
+              }}
+            />
+            <span
+              onPointerDown={pick(r.id)}
+              data-crop
+              className={cn("absolute block border-2 border-dashed border-white", ring(r.id), interactive && "cursor-move")}
+              style={{ left: `${x0}%`, top: `${y0}%`, width: `${r.w * 100}%`, height: `${r.h * 100}%` }}
+            />
+          </span>
+        );
+      })}
       {redactions.map((r) => (
         <span
           key={r.id}

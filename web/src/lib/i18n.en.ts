@@ -3,6 +3,34 @@
  * Texto novo sem entrada aqui aparece em português: o teste i18n.test.ts acusa.
  */
 export const EN: Record<string, string> = {
+  Recortar: "Crop",
+  "Recortar imagem": "Crop image",
+  "Ferramenta Recortar": "Crop tool",
+  "Arraste sobre a parte da imagem que deve ficar": "Drag over the part of the image to keep",
+  "Arraste sobre a parte que deve ficar.": "Drag over the part to keep.",
+  "Ajuste o retângulo e aplique.": "Adjust the rectangle and apply.",
+  "Aplicar recorte": "Apply crop",
+  "Recortar a imagem?": "Crop the image?",
+  "Recortando…": "Cropping…",
+  "Recortar e apagar o original": "Crop and delete the original",
+  "Isto troca o print pela parte recortada. O original será apagado e não dá para voltar.":
+    "This replaces the screenshot with the cropped part. The original is deleted and cannot be restored.",
+  "{n} marcação será removida": "{n} annotation will be removed",
+  "{n} marcações serão removidas": "{n} annotations will be removed",
+  "{n} marcador": "{n} marker",
+  "{n} marcadores": "{n} markers",
+  "{n} destaque": "{n} highlight",
+  "{n} destaques": "{n} highlights",
+  "{n} seta": "{n} arrow",
+  "{n} setas": "{n} arrows",
+  "{n} área clicável": "{n} clickable area",
+  "{n} áreas clicáveis": "{n} clickable areas",
+  "Não dá para recortar SVG ou GIF. Use um print em PNG, JPEG ou WebP.":
+    "SVG and GIF cannot be cropped. Use a PNG, JPEG or WebP screenshot.",
+  "Aplique ou descarte as áreas a ocultar antes de recortar.": "Apply or discard the areas to hide before cropping.",
+  "A imagem foi recortada, mas as marcações não foram gravadas. Salve de novo.":
+    "The image was cropped, but the annotations were not saved. Save again.",
+  "Não foi possível recortar. A imagem não foi alterada.": "Could not crop. The image was not changed.",
   Ocultar: "Hide",
   "Ocultar dados": "Hide sensitive data",
   "Ferramenta Ocultar": "Hide tool",

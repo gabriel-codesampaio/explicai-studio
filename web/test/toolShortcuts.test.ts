@@ -13,6 +13,7 @@ describe("toolForKey", () => {
     expect(toolForKey(key("a"))).toBe("hotspot");
     expect(toolForKey(key("o"))).toBe("redact");
     expect(toolForKey(key("O"))).toBe("redact");
+    expect(toolForKey(key("r"))).toBe("crop");
   });
 
   it("ignora outras teclas", () => {

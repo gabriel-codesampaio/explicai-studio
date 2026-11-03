@@ -18,6 +18,8 @@ import { AnnotationOverlay } from "./AnnotationOverlay";
 export interface Draft {
   ann: Annotations;
   redact: Highlight[];
+  /** Retângulo do recorte (no máximo um), também só na memória até aplicar. */
+  crop: Highlight[];
 }
 
 interface Props {
@@ -40,9 +42,15 @@ function pointIn(el: HTMLElement, e: React.PointerEvent): Point {
 
 const idsOf = (a: Annotations) => [...a.markers, ...a.highlights, ...a.arrows, ...a.hotspots].map((item) => item.id);
 
+const draftIds = (d: Draft) => [...idsOf(d.ann), ...d.redact.map((r) => r.id), ...d.crop.map((r) => r.id)];
+
 /** Rascunho com o `id` arrastado por (dx, dy); id que não existe num dos lados não muda nada ali. */
 function moved(draft: Draft, id: string, handle: Handle, dx: number, dy: number): Draft {
-  return { ann: moveAnnotation(draft.ann, id, handle, dx, dy), redact: moveRedaction(draft.redact, id, handle, dx, dy) };
+  return {
+    ann: moveAnnotation(draft.ann, id, handle, dx, dy),
+    redact: moveRedaction(draft.redact, id, handle, dx, dy),
+    crop: moveRedaction(draft.crop, id, handle, dx, dy),
+  };
 }
 
 /** Rascunho com a forma desenhada entre `a` e `b`, ou null se o arraste foi curto demais. */
@@ -50,6 +58,11 @@ function drawn(draft: Draft, tool: Exclude<Tool, "select">, a: Point, b: Point, 
   if (tool === "redact") {
     const redact = addRedaction(draft.redact, a, b);
     return redact && { ...draft, redact };
+  }
+  if (tool === "crop") {
+    // Um recorte só: desenhar de novo troca o anterior.
+    const crop = addRedaction([], a, b);
+    return crop && { ...draft, crop };
   }
   const ann = addShape(draft.ann, tool, a, b, target);
   return ann && { ...draft, ann };
@@ -96,8 +109,8 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
     const next = drawn(draft, tool, drag.from, to, defaultTarget);
     setDrag(null);
     if (!next) return;
-    const old = new Set([...idsOf(draft.ann), ...draft.redact.map((r) => r.id)]);
-    const created = [...idsOf(next.ann), ...next.redact.map((r) => r.id)].find((id) => !old.has(id));
+    const old = new Set(draftIds(draft));
+    const created = draftIds(next).find((id) => !old.has(id));
     onChange(next, created ?? null);
   };
 
@@ -130,6 +143,7 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
       <AnnotationOverlay
         annotations={shown.ann}
         redactions={shown.redact}
+        crops={shown.crop}
         selectedId={selectedId}
         onGrab={
           drawing
