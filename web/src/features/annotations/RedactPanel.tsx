@@ -38,9 +38,9 @@ export function RedactPanel({ slug, asset, src, rects, inGit, onDiscard, onAppli
       await redactImage(slug, asset, src, rects);
       onApplied();
     } catch {
-      setConfirming(false);
       setError(t("Não foi possível ocultar as áreas. A imagem não foi alterada."));
     } finally {
+      setConfirming(false);
       setBusy(false);
     }
   };
