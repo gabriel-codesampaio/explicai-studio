@@ -210,8 +210,6 @@ export const api = {
       method: "POST",
       body: image,
     }),
-
-  unusedAssets: (slug: string) => call<{ count: number }>(`${manualUrl(slug)}/assets/unused`),
   cleanUnusedAssets: (slug: string) =>
     call<{ moved: number; folder: string | null }>(`${manualUrl(slug)}/assets/clean`, { method: "POST" }),
 

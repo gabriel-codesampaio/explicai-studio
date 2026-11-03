@@ -95,6 +95,11 @@
   color-scheme: dark;
 }
 
+/* Largura da tela dividida (900 px): a barra lateral vira coluna. useSidebar.ts (COLUMN_MIN_REM) tem de bater, o teste trava os dois. */
+@theme {
+  --breakpoint-split: 56.25rem;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

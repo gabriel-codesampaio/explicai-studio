@@ -1,4 +1,6 @@
-import { readFile } from "node:fs/promises";
+import { open, readFile } from "node:fs/promises";
+
+const HEAD = 64 * 1024;
 
 export interface Size {
   w: number;
@@ -10,7 +12,24 @@ export interface Size {
  * A exportação precisa da proporção para desenhar setas sem entortar. Formato desconhecido: null.
  */
 export async function imageSize(file: string): Promise<Size | null> {
-  const b = await readFile(file);
+  const b = await head(file);
+  const size = parse(b);
+  // JPEG com EXIF grande: o marcador SOF pode estar além do começo. Lê o arquivo todo.
+  return size ?? (b.length === HEAD && b[0] === 0xff && b[1] === 0xd8 ? parse(await readFile(file)) : null);
+}
+
+async function head(file: string): Promise<Buffer> {
+  const fh = await open(file, "r");
+  try {
+    const buf = Buffer.alloc(HEAD);
+    const { bytesRead } = await fh.read(buf, 0, HEAD, 0);
+    return buf.subarray(0, bytesRead);
+  } finally {
+    await fh.close();
+  }
+}
+
+function parse(b: Buffer): Size | null {
   if (b.length > 24 && b.toString("ascii", 1, 4) === "PNG") return { w: b.readUInt32BE(16), h: b.readUInt32BE(20) };
   if (b.length >= 10 && b.toString("ascii", 0, 3) === "GIF") return { w: b.readUInt16LE(6), h: b.readUInt16LE(8) };
   if (b.length > 30 && b.toString("ascii", 0, 4) === "RIFF" && b.toString("ascii", 8, 12) === "WEBP") return webp(b);
