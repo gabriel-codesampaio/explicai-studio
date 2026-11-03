@@ -11,3 +11,8 @@ exemplos/
 .impeccable/hook.cache.json
 test-results/
 playwright-report/
+
+# segredos
+.env
+.env.*
+!.env.example

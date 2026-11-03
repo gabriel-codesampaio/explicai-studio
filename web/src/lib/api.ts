@@ -76,6 +76,8 @@ export interface Page {
   status: PageStatus;
   body: string;
   file: string;
+  /** Versão do arquivo no disco; volta no `If-Match` para o servidor detectar edição feita fora. */
+  version?: string;
 }
 
 export interface TrashItem {
@@ -104,6 +106,8 @@ export interface PagePatch {
   title?: string;
   body?: string;
   status?: PageStatus;
+  /** "keep" grava o título sem renomear o arquivo; "sync" renomeia se o nome não combina com o título. */
+  fileName?: "keep" | "sync";
 }
 
 /** Erro da API. `code` e `params` (quando o núcleo manda) deixam a interface traduzir a mensagem. */
@@ -157,7 +161,10 @@ export const api = {
   addPage: (slug: string, title: string, parentId: string | null) =>
     call<Page>(`${manualUrl(slug)}/pages`, send("POST", { title, parentId })),
   getPage: (slug: string, id: string) => call<Page>(pageUrl(slug, id)),
-  updatePage: (slug: string, id: string, patch: PagePatch) => call<Page>(pageUrl(slug, id), send("PUT", patch)),
+  updatePage: (slug: string, id: string, patch: PagePatch, version?: string) => {
+    const init = send("PUT", patch);
+    return call<Page>(pageUrl(slug, id), version ? { ...init, headers: { ...init.headers, "if-match": version } } : init);
+  },
   /** Move para a lixeira. O trashId desfaz a exclusão com `restorePage`. */
   removePage: (slug: string, id: string) => call<{ trashId: string }>(pageUrl(slug, id), { method: "DELETE" }),
   listTrash: (slug: string) => call<TrashItem[]>(`${manualUrl(slug)}/trash`),
@@ -219,6 +226,8 @@ const CODED: Record<string, (p: Record<string, string | number>) => string> = {
   "malformed-url": () => t("O endereço pedido tem um % malformado. Confira o endereço e tente de novo."),
   "annotations-invalid": (p) =>
     t("As marcações de {file} estão com erro de sintaxe. Corrija ou apague o arquivo.", { file: String(p.file) }),
+  "disk-conflict": () =>
+    t("Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão."),
   "no-browser": () =>
     t(
       "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.",

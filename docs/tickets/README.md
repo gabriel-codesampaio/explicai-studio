@@ -14,17 +14,23 @@ Feitos no lote 1: T-107, T-088, T-092. Ordem do resto: T-093, T-094 (P2); T-098,
 
 Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T-038, T-064, T-079, T-090, T-091, T-095, T-096, T-097, T-104, T-105, T-106.
 
+## Preparação da versão de produção (03/11/2026)
+
+Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-110, T-111, T-080. Pendente: T-112 (pausado pela pessoa). Bloqueadores (perda de trabalho, segurança, harden, pacote): T-093, T-098, T-103, T-108, T-109, T-110, T-100, T-101, T-080, T-038, T-112, T-111. T-094, T-102 e T-099 entram se couberem. Telas P3 (T-024, T-076, T-077, T-078, T-081, T-113) não bloqueiam: ficam para 0.2.x.
+
 ## Abertos
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-112](T-112-e2e-barra-da-selecao-instavel.md) | e2e "barra da seleção" falha às vezes | P2 | aberto | qa |
+| [T-113](T-113-foco-do-painel-aparencia-sem-fallback.md) | Painel Aparência: foco sem fallback | P3 | aberto | frontend |
+| [T-114](T-114-linha-de-status-mente-durante-conflito-de-disco.md) | Rodapé diz "Não foi possível salvar" durante conflito de disco | P3 | fechado | frontend |
+| [T-115](T-115-rodape-em-tela-estreita-esconde-o-caminho.md) | Rodapé em tela estreita esconde o caminho | P3 | aberto (espera) | design |
+| [T-120](T-120-sync-de-rename-corre-com-o-autosave.md) | `settleRenames` corre com o autosave e mostra conflito falso | P2 | fechado | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
-| [T-038](T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-090](T-090-contagem-de-imagens-sem-uso-so-sob-demanda.md) | Contagem de imagens sem uso só sob demanda | P2 | aberto | frontend |
 | [T-091](T-091-imagesize-le-so-o-cabecalho-do-arquivo.md) | `imageSize` lê só o cabeçalho do arquivo | P2 | aberto | frontend |
-| [T-093](T-093-exportar-em-pasta-temporaria-e-trocar-no-fim.md) | Exportar em pasta temporária e trocar no fim | P2 | aberto | frontend |
-| [T-094](T-094-renomear-arquivo-da-pagina-so-ao-parar-de-dig.md) | Renomear arquivo da página só ao parar de digitar o título | P2 | aberto | frontend |
 | [T-097](T-097-testes-de-concorrencia-usestudio-e-fluxo-de-i.md) | Testes de concorrência, `useStudio` e fluxo de imagem | P2 | aberto | qa |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
@@ -38,16 +44,10 @@ Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T
 | [T-077](T-077-botoes-de-marcacao-no-toque.md) | Botões da barra de marcação abaixo de 44 px e sem nome no toque | P3 | aberto | design |
 | [T-078](T-078-grupo-exportar-deslocado-em-375.md) | Grupo Versões / Rascunho / Exportar deslocado em 375 px | P3 | aberto | design |
 | [T-079](T-079-breakpoint-900-duplicado.md) | Breakpoint de 900 px duplicado em COLUMN_MIN_REM e Navigation.tsx | P3 | aberto | frontend |
-| [T-080](T-080-gitignore-sem-env.md) | Incluir .env no .gitignore | P3 | aberto | qa |
 | [T-081](T-081-duas-marcas-com-gaveta-aberta.md) | Duas marcas visíveis com a gaveta aberta abaixo de 900 px | P3 | aberto | frontend |
 | [T-095](T-095-serializar-o-markdown-so-no-flush-do-autosave.md) | Serializar o Markdown só no flush do autosave | P3 | aberto | frontend |
 | [T-096](T-096-readpagetree-le-so-o-frontmatter.md) | `readPageTree` lê só o frontmatter | P3 | aberto | frontend |
-| [T-098](T-098-descartar-resposta-antiga-ao-trocar-de-pagina.md) | Descartar resposta antiga ao trocar de página | P3 | aberto | frontend |
 | [T-099](T-099-posicao-da-imagem-colada-acompanha-edicao-dur.md) | Posição da imagem colada acompanha edição durante o envio | P3 | aberto | frontend |
-| [T-100](T-100-realpath-ao-servir-e-copiar-arquivos-do-manua.md) | `realpath` ao servir e copiar arquivos do manual | P3 | aberto | frontend |
-| [T-101](T-101-erros-de-arquivo-sem-caminho-absoluto-diretor.md) | Erros de arquivo sem caminho absoluto; diretório vira 404 | P3 | aberto | frontend |
-| [T-102](T-102-lixeira-pula-item-com-entry-json-quebrado.md) | Lixeira pula item com `entry.json` quebrado | P3 | aberto | frontend |
-| [T-103](T-103-addpage-grava-o-arquivo-antes-da-arvore.md) | `addPage` grava o arquivo antes da árvore | P3 | aberto | frontend |
 | [T-104](T-104-separar-css-de-html-ts-e-acoes-de-usestudio.md) | Separar CSS de `html.ts` e ações de `useStudio` | P3 | aberto | frontend |
 | [T-105](T-105-verificar-pdf-com-100-imagens-lazy-maxbuffer.md) | Verificar PDF com 100 imagens (`lazy`, `maxBuffer`) | P3 | aberto | qa |
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
@@ -56,6 +56,19 @@ Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-080](fechados/T-080-gitignore-sem-env.md) | Incluir .env no .gitignore | P3 | feito | 354eb5a |
+| [T-108](fechados/T-108-detectar-edicao-feita-fora-do-studio.md) | Detectar edição feita fora do Studio antes de sobrescrever | P1 | feito | f2a4e8b, e33ea45 |
+| [T-111](fechados/T-111-pacote-npm-pronto-para-publicar.md) | Pacote npm pronto para publicar | P1 | feito | 655ddfe, 6e15458, 366757e |
+| [T-109](fechados/T-109-marcacao-json-com-forma-errada.md) | Marcação com JSON válido de forma errada derruba a exportação | P2 | feito | 1004374 |
+| [T-110](fechados/T-110-findunusedassets-stat-paralelo-e-enoent.md) | findUnusedAssets: stat em paralelo e ENOENT tolerado | P2 | feito | e7623cb |
+| [T-038](fechados/T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | feito | 52102f6 |
+| [T-093](fechados/T-093-exportar-em-pasta-temporaria-e-trocar-no-fim.md) | Exportar em pasta temporária e trocar no fim | P2 | feito | a08b2bb |
+| [T-094](fechados/T-094-renomear-arquivo-da-pagina-so-ao-parar-de-dig.md) | Renomear arquivo da página só ao parar de digitar o título | P2 | feito | c825a9b, 8e0d79f |
+| [T-098](fechados/T-098-descartar-resposta-antiga-ao-trocar-de-pagina.md) | Descartar resposta antiga ao trocar de página | P3 | feito | c1c8e26 |
+| [T-100](fechados/T-100-realpath-ao-servir-e-copiar-arquivos-do-manua.md) | `realpath` ao servir e copiar arquivos do manual | P3 | feito | 03f0511 |
+| [T-101](fechados/T-101-erros-de-arquivo-sem-caminho-absoluto-diretor.md) | Erros de arquivo sem caminho absoluto; diretório vira 404 | P3 | feito | 61e1082 |
+| [T-102](fechados/T-102-lixeira-pula-item-com-entry-json-quebrado.md) | Lixeira pula item com `entry.json` quebrado | P3 | feito | 1ecc274 |
+| [T-103](fechados/T-103-addpage-grava-o-arquivo-antes-da-arvore.md) | `addPage` grava o arquivo antes da árvore | P3 | feito | b9496ba |
 | [T-107](fechados/T-107-seletor-de-tema-com-duas-opcoes-marcadas.md) | Seletor de tema mostra duas opções marcadas e não bate com o tema aplicado | P2 | feito | 0c31551, 07bbd4a |
 | [T-088](fechados/T-088-limpar-imagens-sem-uso-gravar-a-fila-antes-e-.md) | Limpar imagens sem uso: gravar a fila antes e poupar arquivo novo | P2 | feito | 3b5c332, 6f90a74, c90dce1 |
 | [T-092](fechados/T-092-marcacao-com-json-quebrado-vira-aviso-na-expo.md) | Marcação com JSON quebrado vira aviso na exportação | P2 | feito | 080b62a |

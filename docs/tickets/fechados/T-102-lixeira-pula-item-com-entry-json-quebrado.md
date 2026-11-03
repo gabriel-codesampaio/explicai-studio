@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: auditoria ponytail de 2026-11-02, achado 19 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
@@ -20,4 +20,4 @@ Ver a seção do achado na auditoria.
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 19 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit 1ecc274. `listTrash` envolve cada item em try/catch e pula o que falha (JSON quebrado ou forma errada). Restaurar item quebrado não mudou.

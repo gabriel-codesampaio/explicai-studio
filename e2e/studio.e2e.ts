@@ -31,7 +31,7 @@ test("primeiro uso: cria manual e página, escreve e o texto continua lá depois
   await page.keyboard.type("Clique em Novo cliente.");
 
   await expect(page.getByRole("status")).toContainText("Salvo às");
-  await expect(page.getByText("manual-do-primeiro-uso/pages/cadastrar-cliente.md")).toBeVisible();
+  await expect(page.getByText("manual-do-primeiro-uso/pages/cadastrar-cliente.md")).toBeVisible({ timeout: 10_000 }); // T-094: o arquivo só é renomeado 5 s depois do último título gravado
 
   await page.reload();
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Cadastrar cliente");

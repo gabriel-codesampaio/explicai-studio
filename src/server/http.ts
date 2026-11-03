@@ -3,6 +3,7 @@ import { stat } from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
+import { ExplicaiError } from "../core/errors.js";
 
 export class HttpError extends Error {
   constructor(
@@ -122,8 +123,22 @@ export async function readJson(req: IncomingMessage): Promise<Record<string, unk
 /** Status HTTP para um erro vindo do core: "não encontrado" e arquivo inexistente viram 404, o resto 400. */
 export function statusOf(err: unknown): number {
   if (err instanceof HttpError) return err.status;
+  if (err instanceof ExplicaiError && err.code === "disk-conflict") return 409;
   const missing =
     (err instanceof Error && /não encontrad/i.test(err.message)) ||
-    (typeof err === "object" && err !== null && (err as { code?: string }).code === "ENOENT");
+    ["ENOENT", "EISDIR"].includes((err as { code?: string } | null)?.code ?? "");
   return missing ? 404 : 400;
+}
+
+const FILE_ERRORS: Record<string, string> = {
+  ENOENT: "Arquivo não encontrado.",
+  EISDIR: "Arquivo não encontrado.",
+  EACCES: "Sem permissão para acessar o arquivo.",
+  EPERM: "Sem permissão para acessar o arquivo.",
+};
+
+/** Texto do erro para a resposta: erro de arquivo do Node traz o caminho absoluto, então vira frase fixa. */
+export function publicMessage(err: unknown): string {
+  const fixed = FILE_ERRORS[(err as { code?: string } | null)?.code ?? ""];
+  return fixed ?? (err instanceof Error ? err.message : String(err));
 }

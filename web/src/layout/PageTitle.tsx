@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { t } from "@/lib/i18n";
 
 interface Props {
@@ -15,14 +15,29 @@ interface Props {
 export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
-  const resize = () => {
+  const resize = useCallback(() => {
     const el = ref.current;
     if (!el) return;
     el.style.height = "auto";
     // scrollHeight não conta a borda de baixo (o traço de foco); com border-box ela precisa entrar na altura.
     el.style.height = `${el.scrollHeight + el.offsetHeight - el.clientHeight}px`;
-  };
-  useLayoutEffect(resize, []);
+  }, []);
+  useLayoutEffect(resize, [resize]);
+  // A fonte do título chega depois do primeiro desenho e a largura muda (barra lateral, janela): sem remedir, a última linha fica cortada.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    void document.fonts?.ready.then(resize);
+    if (typeof ResizeObserver === "undefined") return;
+    let width = el.offsetWidth;
+    const observer = new ResizeObserver(() => {
+      if (el.offsetWidth === width) return;
+      width = el.offsetWidth;
+      resize();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [resize]);
 
   return (
     <textarea

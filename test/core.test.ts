@@ -94,6 +94,29 @@ describe("páginas", () => {
     expect((await updatePage(dir, page.id, { title: "Visão Geral" })).file).toBe(page.file);
   });
 
+  it("com fileName keep grava o título no mesmo arquivo; com sync renomeia e acerta os links", async () => {
+    const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
+    const alvo = await addPage(dir, { title: "Cadastrar" });
+    const outra = await addPage(dir, { title: "Índice", body: "Veja [aqui](./cadastrar.md)." });
+
+    const parcial = await updatePage(dir, alvo.id, { title: "Cadastrar cliente" }, { fileName: "keep" });
+    expect(parcial.file).toBe(alvo.file);
+    expect(await readPage(dir, alvo.id)).toMatchObject({ title: "Cadastrar cliente", file: alvo.file });
+    expect((await readPage(dir, outra.id)).body).toBe("Veja [aqui](./cadastrar.md).");
+
+    const final = await updatePage(dir, alvo.id, { title: "Cadastrar cliente" }, { fileName: "sync" });
+    expect(final.file).toBe("pages/cadastrar-cliente.md");
+    expect((await readPage(dir, outra.id)).body).toBe("Veja [aqui](./cadastrar-cliente.md).");
+  });
+
+  it("com fileName sync não renomeia se o arquivo já combina com o título (inclusive com sufixo -2)", async () => {
+    const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
+    await addPage(dir, { title: "Passo" });
+    const segunda = await addPage(dir, { title: "Passo" });
+    expect(segunda.file).toBe("pages/passo-2.md");
+    expect((await updatePage(dir, segunda.id, { title: "Passo" }, { fileName: "sync" })).file).toBe(segunda.file);
+  });
+
   it("monta a árvore, move e remove com as subpáginas", async () => {
     const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
     const a = await addPage(dir, { title: "A" });
