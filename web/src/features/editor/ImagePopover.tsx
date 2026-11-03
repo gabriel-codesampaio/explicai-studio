@@ -20,6 +20,9 @@ function selectedImage(editor: Editor): { pos: number; alt: string; src: string 
  * Ao clicar numa imagem, um balão pede a descrição dela. A descrição vira o texto alternativo no
  * Markdown, lido por leitores de tela e pela IA que usa o manual.
  */
+/** Altura do balão com seletor de tamanho e botão (px), mais a folga do rodapé. */
+const BALAO_ALTURA = 330;
+
 export function ImagePopover({
   editor,
   slug,
@@ -36,7 +39,11 @@ export function ImagePopover({
 
   const rect = () => {
     const dom = image ? editor.view.nodeDOM(image.pos) : null;
-    return dom instanceof HTMLElement ? dom.getBoundingClientRect() : new DOMRect();
+    if (!(dom instanceof HTMLElement)) return new DOMRect();
+    const r = dom.getBoundingClientRect();
+    // Imagem grande não deixa espaço embaixo: o balão (seletor de tamanho incluso) se apoia na parte visível dela.
+    const bottom = Math.max(r.top + 1, Math.min(r.bottom, window.innerHeight - BALAO_ALTURA));
+    return new DOMRect(r.x, r.y, r.width, bottom - r.y);
   };
 
   return (
