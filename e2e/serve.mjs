@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 import { createStudioServer } from "../dist/server/index.js";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
+// Sem a carência de 1 min do servidor, as imagens soltas dos testes já contam como sem uso.
+process.env.EXPLICAI_ASSET_GRACE_MS = "0";
 const workspace = await mkdtemp(path.join(tmpdir(), "explicai-e2e-"));
 const server = createStudioServer({ workspace, webDir: path.join(root, "..", "dist", "web") });
 const port = Number(process.env.E2E_PORT ?? 4400);

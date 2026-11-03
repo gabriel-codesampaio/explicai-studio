@@ -1,4 +1,4 @@
-import { mkdir, mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readdir, readFile, rm, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -115,6 +115,7 @@ describe("logo do cliente", () => {
   it("a limpeza de imagens sem uso não leva o logo do tema", async () => {
     const logo = await setManualLogo(dir, "marca.png", PNG);
     await writeFile(path.join(dir, "assets", "solta.png"), PNG);
+    await utimes(path.join(dir, "assets", "solta.png"), new Date(0), new Date(0));
     expect(await findUnusedAssets(dir)).toEqual(["assets/solta.png"]);
     await cleanUnusedAssets(dir);
     expect(await readFile(path.join(dir, logo))).toEqual(Buffer.from(PNG));

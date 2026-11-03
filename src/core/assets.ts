@@ -1,4 +1,4 @@
-import { mkdir, readdir, rename, writeFile } from "node:fs/promises";
+import { mkdir, readdir, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
 import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
@@ -73,7 +73,12 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
   }
   const files = await readdir(assetsDir);
   const names = new Set(files);
+  // Arquivo recém-gravado pode estar numa página que ainda não chegou ao disco: poupa (EXPLICAI_ASSET_GRACE_MS só para o e2e).
+  const grace = Number(process.env.EXPLICAI_ASSET_GRACE_MS ?? 60_000);
+  const recent = new Set<string>();
+  for (const f of files) if (Date.now() - (await stat(path.join(assetsDir, f))).mtimeMs < grace) recent.add(f);
   return files
+    .filter((f) => !recent.has(f))
     .filter((f) => (f.endsWith(".json") ? !names.has(f.slice(0, -".json".length)) : !used.has(f)))
     .flatMap((f) => (!f.endsWith(".json") && names.has(`${f}.json`) ? [f, `${f}.json`] : [f]))
     .filter((f, i, all) => all.indexOf(f) === i)

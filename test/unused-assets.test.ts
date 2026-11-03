@@ -1,4 +1,4 @@
-import { mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, rm, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, expect, it } from "vitest";
@@ -27,6 +27,8 @@ afterEach(async () => {
 });
 
 const png = new Uint8Array([137, 80, 78, 71]);
+/** Envelhece o arquivo: a carência de 1 min do servidor poupa o que acabou de ser gravado. */
+const age = (file: string) => utimes(file, new Date(Date.now() - 120_000), new Date(Date.now() - 120_000));
 const marks = { version: 1, markers: [], highlights: [], arrows: [], hotspots: [] };
 
 it("imagem citada por página, versão ou lixeira fica; a sem uso e a marcação sem imagem vão para a lixeira", async () => {
@@ -44,6 +46,8 @@ it("imagem citada por página, versão ou lixeira fica; a sem uso e a marcação
   const c = await addPage(dir, { title: "C", body: `![](../${naLixeira})` });
   await removePage(dir, c.id);
 
+  for (const f of await readdir(path.join(dir, "assets"))) await age(path.join(dir, "assets", f));
+
   expect((await findUnusedAssets(dir)).sort()).toEqual([
     "assets/apagada.png.json",
     "assets/sem-uso.png",
@@ -59,4 +63,14 @@ it("imagem citada por página, versão ou lixeira fica; a sem uso e a marcação
     "sem-uso.png.json",
   ]);
   expect(await findUnusedAssets(dir)).toEqual([]);
+});
+
+it("imagem gravada há menos de 1 minuto fica, mesmo sem página citando; a antiga sem uso vai", async () => {
+  const nova = await saveAsset(dir, "nova.png", png);
+  const antiga = await saveAsset(dir, "antiga.png", png);
+  await age(path.join(dir, antiga));
+
+  expect(await findUnusedAssets(dir)).toEqual([antiga]);
+  expect((await cleanUnusedAssets(dir)).moved).toBe(1);
+  expect(await readdir(path.join(dir, "assets"))).toEqual([path.basename(nova)]);
 });
