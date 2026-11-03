@@ -82,7 +82,7 @@ const measure = (page: Page, url: string, r: Frac) =>
           const i = (y * bmp.width + x) * 4;
           if (x >= x0 + 2 && x < x1 - 2 && y >= y0 + 2 && y < y1 - 2) {
             insideCount++;
-            if (![31, 41, 55, 255].every((v, j) => now.data[i + j] === v)) insideBad++;
+            if (![21, 26, 51, 255].every((v, j) => now.data[i + j] === v)) insideBad++;
           } else if (x < x0 - 2 || x >= x1 + 2 || y < y0 - 2 || y >= y1 + 2) {
             if (![0, 1, 2, 3].every((j) => now.data[i + j] === before.data[i + j])) outsideChanged++;
           }

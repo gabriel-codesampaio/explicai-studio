@@ -9,8 +9,8 @@ import {
   type Rect,
 } from "./annotations";
 
-/** Cor única da tarja (cinza-escuro, opaca). Também é a cor do retângulo no rascunho. */
-export const REDACT_RGB = [31, 41, 55] as const;
+/** Cor única da tarja (nanquim da marca, opaca). Também é a cor do retângulo no rascunho. */
+export const REDACT_RGB = [21, 26, 51] as const;
 export const REDACT_CSS = `rgb(${REDACT_RGB.join(",")})`;
 
 interface Pixels {

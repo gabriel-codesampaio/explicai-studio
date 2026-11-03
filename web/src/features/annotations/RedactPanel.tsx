@@ -64,7 +64,7 @@ export function RedactPanel({ slug, asset, src, rects, inGit, onDiscard, onAppli
         </p>
       )}
       <div className="flex flex-wrap gap-2">
-        <Button size="sm" onClick={ask} disabled={rects.length === 0}>
+        <Button size="sm" variant="outline" onClick={ask} disabled={rects.length === 0}>
           {t("Aplicar ocultação")}
         </Button>
         <Button size="sm" variant="ghost" onClick={onDiscard} disabled={rects.length === 0}>
