@@ -14,10 +14,20 @@ Feitos no lote 1: T-107, T-088, T-092. Ordem do resto: T-093, T-094 (P2); T-098,
 
 Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T-038, T-064, T-079, T-090, T-091, T-095, T-096, T-097, T-104, T-105, T-106.
 
+## Preparação da versão de produção (03/11/2026)
+
+Bloqueadores (perda de trabalho, segurança, harden, pacote): T-093, T-098, T-103, T-108, T-109, T-110, T-100, T-101, T-080, T-038, T-112, T-111. T-094, T-102 e T-099 entram se couberem. Telas P3 (T-024, T-076, T-077, T-078, T-081, T-113) não bloqueiam: ficam para 0.2.x.
+
 ## Abertos
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-108](T-108-detectar-edicao-feita-fora-do-studio.md) | Detectar edição feita fora do Studio antes de sobrescrever | P1 | aberto | frontend |
+| [T-111](T-111-pacote-npm-pronto-para-publicar.md) | Pacote npm pronto para publicar | P1 | aberto | qa |
+| [T-109](T-109-marcacao-json-com-forma-errada.md) | Marcação com JSON válido de forma errada derruba a exportação | P2 | aberto | frontend |
+| [T-110](T-110-findunusedassets-stat-paralelo-e-enoent.md) | findUnusedAssets: stat em paralelo e ENOENT tolerado | P2 | aberto | frontend |
+| [T-112](T-112-e2e-barra-da-selecao-instavel.md) | e2e "barra da seleção" falha às vezes | P2 | aberto | qa |
+| [T-113](T-113-foco-do-painel-aparencia-sem-fallback.md) | Painel Aparência: foco sem fallback | P3 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-038](T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
