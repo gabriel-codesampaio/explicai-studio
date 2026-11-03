@@ -43,7 +43,7 @@ export function createStudioServer(opts: StudioOptions): Server {
       const method = req.method ?? "GET";
       const match = matchRoute(routes, method, segments);
       if (!match) throw new HttpError(segments[0] === "api" ? 405 : 404, "Rota não encontrada.");
-      await send(res, await match.route.handle({ req, url, params: match.params, rest: match.rest, opts }));
+      await send(res, await match.route.handle({ req, url, params: match.params, rest: match.rest, opts }), req);
     } catch (err) {
       const { code, params } = err instanceof ExplicaiError ? err : ({} as Partial<ExplicaiError>);
       const errorCode = code ?? (err instanceof HttpError ? err.code : undefined);

@@ -1,6 +1,8 @@
-import { readFile } from "node:fs/promises";
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
+import { pipeline } from "node:stream/promises";
 
 export class HttpError extends Error {
   constructor(
@@ -46,17 +48,28 @@ const MIME: Record<string, string> = {
   ".md": "text/markdown; charset=utf-8",
 };
 
-export async function send(res: ServerResponse, reply: Reply): Promise<void> {
+export async function send(res: ServerResponse, reply: Reply, req?: IncomingMessage): Promise<void> {
   if (reply.kind === "json") return sendJson(res, reply.status, reply.body);
-  const data = await readFile(reply.path);
+  const info = await stat(reply.path); // ENOENT vira 404 no chamador, antes de qualquer cabeçalho
+  if (!info.isFile()) throw new HttpError(404, "Arquivo não encontrado.");
   const ext = path.extname(reply.path).toLowerCase();
-  res.writeHead(200, {
-    "content-type": MIME[ext] ?? "application/octet-stream",
+  // ETag fraco por tamanho e mtime: barato, sem ler o arquivo.
+  const etag = `W/"${info.size.toString(16)}-${Math.floor(info.mtimeMs).toString(16)}"`;
+  const headers = {
+    etag,
     "cache-control": reply.cache,
     "x-content-type-options": "nosniff",
     ...(reply.untrusted && !RASTER.has(ext) ? { "content-security-policy": UNTRUSTED_CSP } : {}),
-  });
-  res.end(data);
+  };
+  // shortcut: só um valor em If-None-Match (o do próprio navegador), sem lista nem "*"; Range/HEAD não tratados.
+  if (req?.headers["if-none-match"] === etag) {
+    res.writeHead(304, headers);
+    res.end();
+    return;
+  }
+  res.writeHead(200, { "content-type": MIME[ext] ?? "application/octet-stream", "content-length": info.size, ...headers });
+  // Erro no meio do envio ou cliente que abortou: o pipeline destrói os dois lados; os cabeçalhos já saíram.
+  await pipeline(createReadStream(reply.path), res).catch(() => {});
 }
 
 export function sendJson(res: ServerResponse, status: number, body: unknown): void {
