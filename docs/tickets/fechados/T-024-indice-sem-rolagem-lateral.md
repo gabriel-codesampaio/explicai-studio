@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: fechado
 - Agente: design
 - Origem: Prints de referência do P1 (design, 2026-10-29)
 
@@ -10,7 +10,7 @@
 Com um título longo ("Gerar o relatório de contas pag…") o índice "Nesta página" ganha barra de rolagem horizontal. Print: `C:/Users/PC/explicai-prints/p1/antes/menu-barra-1440-claro.png`.
 
 ## Critérios de aceite
-- [ ] Título longo no índice quebra linha ou corta com reticências, sem barra de rolagem horizontal.
+- [x] Título longo no índice quebra linha ou corta com reticências, sem barra de rolagem horizontal.
 
 ## Onde
 `web/src/features/editor/PageOutline.tsx`.
@@ -19,4 +19,4 @@ Com um título longo ("Gerar o relatório de contas pag…") o índice "Nesta p�
 Print em 1440 px com título longo.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Branch `fix/t-024-indice-sem-rolagem`. PageOutline: coluna do grid `minmax(0,1fr)` para o `truncate` valer. Medido em 375 com título longo: popover scrollWidth 286 = clientWidth 286, sem barra; 1280: aside sem rolagem horizontal. Sem teste automático (CSS).

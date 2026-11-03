@@ -27,9 +27,12 @@ export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenC
         className="gap-4 p-4 sm:max-w-xs"
         aria-describedby={undefined}
         onOpenAutoFocus={(e) => {
-          // O foco cai na opção marcada, e não na primeira: só uma opção chama a atenção ao abrir.
+          // O foco cai na opção marcada (ou na primeira, se nenhuma estiver): só uma opção chama a atenção ao abrir.
           e.preventDefault();
-          group.current?.querySelector<HTMLElement>("[aria-pressed=true]")?.focus();
+          (
+            group.current?.querySelector<HTMLElement>("[aria-pressed=true]") ??
+            group.current?.querySelector<HTMLElement>("button")
+          )?.focus();
         }}
       >
         <DialogTitle className="font-display text-lg font-extrabold tracking-tight">{t("Aparência")}</DialogTitle>

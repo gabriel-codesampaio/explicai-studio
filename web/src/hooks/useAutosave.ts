@@ -71,6 +71,7 @@ export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
   /** Descarta o que estava para ser gravado nesta página (ex.: ela foi excluída). */
   const discard = useCallback((id: string) => {
     pending.current.delete(id);
+    if (pending.current.size === 0) setState("idle");
   }, []);
 
   useEffect(() => {

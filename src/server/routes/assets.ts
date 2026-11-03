@@ -1,8 +1,10 @@
 import {
   cleanUnusedAssets,
   findUnusedAssets,
+  insideGitRepo,
   readAnnotations,
-  resolveInside,
+  redactAsset,
+  resolveInsideReal,
   saveAsset,
   writeAnnotations,
 } from "../../core/index.js";
@@ -34,6 +36,21 @@ export const assetRoutes: Route[] = [
       json(await writeAnnotations(manualDir(ctx), ctx.url.searchParams.get("asset") ?? "", await readJson(ctx.req))),
   },
   {
+    // Troca o print pela versão com as tarjas já pintadas (o navegador desenha) e apaga o original.
+    method: "POST",
+    path: "/api/manuals/:slug/assets/redact",
+    handle: async (ctx) => {
+      const asset = ctx.url.searchParams.get("asset") ?? "";
+      await redactAsset(manualDir(ctx), asset, await readBody(ctx.req, MAX_UPLOAD));
+      return json({ path: asset });
+    },
+  },
+  {
+    method: "GET",
+    path: "/api/manuals/:slug/git",
+    handle: async (ctx) => json({ git: await insideGitRepo(manualDir(ctx)) }),
+  },
+  {
     // Imagens e marcações que nenhuma página, versão ou item da lixeira usa.
     method: "GET",
     path: "/api/manuals/:slug/assets/unused",
@@ -50,9 +67,9 @@ export const assetRoutes: Route[] = [
     method: "GET",
     path: "/files/:slug/*",
     // Só raster de assets/ (nome único, gravado uma vez) fica em cache; manual.json, logo e .md revalidam por ETag.
-    handle: (ctx) => {
+    handle: async (ctx) => {
       const cacheable = /^assets\/[^/]+\.(png|jpe?g|gif|webp)$/i.test(ctx.rest);
-      return file(resolveInside(manualDir(ctx), ctx.rest), cacheable ? "private, max-age=3600" : "no-cache", true);
+      return file(await resolveInsideReal(manualDir(ctx), ctx.rest), cacheable ? "private, max-age=3600" : "no-cache", true);
     },
   },
 ];

@@ -5,7 +5,7 @@ import { locale, t } from "@/lib/i18n";
 interface Props {
   /** Caminho do arquivo da página dentro do workspace, ex.: financeiro/pages/clientes.md */
   path: string;
-  state: SaveState;
+  state: SaveState | "conflict";
   savedAt: Date | null;
   onRetry: () => void;
 }
@@ -18,13 +18,17 @@ const time = (d: Date) => d.toLocaleTimeString(locale, { hour: "2-digit", minute
  */
 export function StatusBar({ path, state, savedAt, onRetry }: Props) {
   return (
-    <footer className="sticky bottom-0 z-10 flex min-h-(--rodape-h) items-center justify-between gap-4 border-t border-border bg-background/95 px-8 text-[13px] backdrop-blur-sm">
-      <span className="flex min-w-0 items-center gap-2 text-muted-foreground">
+    <footer className="sticky bottom-0 z-10 flex min-h-(--rodape-h) flex-wrap items-center justify-between gap-x-4 gap-y-0.5 border-t border-border bg-background/95 px-4 py-0.5 text-[13px] min-[31.25rem]:flex-nowrap min-[31.25rem]:px-8 min-[31.25rem]:py-0 backdrop-blur-sm">
+      <span className="flex min-w-0 basis-full items-center gap-2 text-muted-foreground min-[31.25rem]:basis-auto">
         <span className="truncate font-mono text-xs" title={path}>
           {path}
         </span>
       </span>
-      <span className="flex shrink-0 items-center gap-1.5" role="status" aria-live="polite">
+      <span
+        className="flex flex-wrap items-center gap-1.5 min-[31.25rem]:shrink-0 min-[31.25rem]:flex-nowrap"
+        role="status"
+        aria-live="polite"
+      >
         {state === "saving" && (
           <>
             <Loader2 className="size-3.5 animate-spin text-muted-foreground" aria-hidden /> {t("Salvando…")}
@@ -36,6 +40,12 @@ export function StatusBar({ path, state, savedAt, onRetry }: Props) {
           </>
         )}
         {state === "idle" && <span className="text-muted-foreground">{t("Tudo salvo no disco")}</span>}
+        {state === "conflict" && (
+          <>
+            <AlertCircle className="size-3.5 text-destructive" aria-hidden />
+            <span className="text-destructive">{t("Aguardando sua escolha")}</span>
+          </>
+        )}
         {state === "error" && (
           <>
             <AlertCircle className="size-3.5 text-destructive" aria-hidden />

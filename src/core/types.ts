@@ -62,6 +62,8 @@ export interface Page {
   /** Conteúdo em Markdown, sem o frontmatter. */
   body: string;
   file: string;
+  /** Impressão do arquivo no disco (mtime+tamanho). Muda quando alguém edita fora do Studio. */
+  version?: string;
 }
 
 /** Coordenadas normalizadas de 0 a 1, relativas à largura e à altura da imagem. */
@@ -102,9 +104,13 @@ export interface Hotspot extends Rect {
   target: HotspotTarget;
 }
 
+/** Tamanho de exibição da imagem: pequena, média ou larga. Sem o campo, a imagem aparece como sempre. */
+export type ImageDisplay = "s" | "m" | "full";
+
 /** Conteúdo do JSON que fica ao lado de cada imagem (`assets/foto.png.json`). */
 export interface Annotations {
   version: typeof FORMAT_VERSION;
+  display?: ImageDisplay;
   markers: Marker[];
   highlights: Highlight[];
   arrows: Arrow[];

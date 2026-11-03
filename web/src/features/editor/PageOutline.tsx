@@ -27,7 +27,7 @@ export function PageOutline({ editor, headings, onNavigate }: Props) {
   return (
     <nav aria-label={t("Nesta página")} className="text-[13px]">
       <p className="mb-2 rotulo">{t("Nesta página")}</p>
-      <ul className="grid gap-0.5 border-l border-border">
+      <ul className="grid grid-cols-[minmax(0,1fr)] gap-0.5 border-l border-border">
         {headings.map((h) => (
           <li key={h.pos}>
             <button

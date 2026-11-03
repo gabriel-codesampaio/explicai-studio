@@ -32,13 +32,22 @@ export interface Hotspot extends Rect {
   id: string;
   target: HotspotTarget;
 }
+export type ImageDisplay = "s" | "m" | "full";
 export interface Annotations {
   version: 1;
+  display?: ImageDisplay;
   markers: Marker[];
   highlights: Highlight[];
   arrows: Arrow[];
   hotspots: Hotspot[];
 }
+
+/** Largura máxima de cada tamanho, em % da coluna. Igual ao HTML exportado (`annotationCss.ts`). */
+export const DISPLAY_WIDTH: Record<ImageDisplay, string> = { s: "40%", m: "70%", full: "100%" };
+
+/** Marcadores de 24 px se sobrepõem numa imagem pequena: a partir de 4, o editor avisa. */
+export const SMALL_MARKER_WARNING = 4;
+export const warnsSmall = (ann: Annotations): boolean => ann.display === "s" && ann.markers.length >= SMALL_MARKER_WARNING;
 
 export type AnnotationKind = "marker" | "highlight" | "arrow" | "hotspot";
 
@@ -96,7 +105,8 @@ export function countAnnotations(ann: Annotations): number {
   return ann.markers.length + ann.highlights.length + ann.arrows.length + ann.hotspots.length;
 }
 
-export type Tool = "select" | AnnotationKind;
+/** "redact" não é marcação: os retângulos ficam num rascunho à parte e viram pixels ao aplicar. */
+export type Tool = "select" | AnnotationKind | "redact" | "crop";
 
 /**
  * Cria a forma desenhada entre `a` (onde o arraste começou) e `b` (onde terminou).

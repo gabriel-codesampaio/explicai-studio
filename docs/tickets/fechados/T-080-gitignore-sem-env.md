@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: qa
 - Origem: revisão de design e de código do lote 6 (2026-11-02)
 
@@ -19,4 +19,4 @@ O .gitignore não tem regra para .env nem .env.* (apontado pelo agente de segura
 Teste da área e medida por script no navegador.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito em 354eb5a: `.env`, `.env.*` ignorados (`!.env.example`).

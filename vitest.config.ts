@@ -4,6 +4,8 @@ export default defineConfig({
   // Testes de componente importam como o editor: "@/lib/api".
   resolve: { alias: { "@": `${import.meta.dirname}/web/src` } },
   test: {
+    // Limite fixo: a máquina da pessoa não pode ir a 100% de CPU.
+    maxWorkers: 2,
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts", "web/src/**/*.{ts,tsx}"],

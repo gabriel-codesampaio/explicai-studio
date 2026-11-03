@@ -20,7 +20,7 @@ const SHORTCUT = "Ctrl+\\";
 export function Navigation({ sidebar, onSearch }: Props) {
   return (
     <>
-      <div className="hidden h-full shrink-0 min-[56.25rem]:block">
+      <div className="hidden h-full shrink-0 split:block">
         {sidebar.collapsed ? (
           <div className="flex h-full w-12 flex-col items-center border-r border-border bg-card pt-4">
             <button
@@ -46,7 +46,7 @@ export function Navigation({ sidebar, onSearch }: Props) {
         <DialogContent
           showCloseButton={false}
           aria-describedby={undefined}
-          className="top-0 left-0 h-full w-[min(17.5rem,85vw)] max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 p-0 sm:max-w-none min-[56.25rem]:hidden data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
+          className="top-0 left-0 h-full w-[min(17.5rem,85vw)] max-w-none translate-x-0 translate-y-0 gap-0 rounded-none border-0 p-0 sm:max-w-none split:hidden data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left"
         >
           <DialogTitle className="sr-only">{t("Páginas do manual")}</DialogTitle>
           <Sidebar
@@ -64,9 +64,9 @@ export function Navigation({ sidebar, onSearch }: Props) {
 }
 
 /** Topo da área principal em tela estreita: abre a gaveta das páginas e mostra em qual manual você está. */
-export function MobileBar({ title, onOpen }: { title: string; onOpen: () => void }) {
+export function MobileBar({ title, onOpen, drawerOpen = false }: { title: string; onOpen: () => void; drawerOpen?: boolean }) {
   return (
-    <div className="flex h-12 shrink-0 items-center gap-2 border-b border-border bg-card px-3 min-[56.25rem]:hidden">
+    <div className="flex h-12 shrink-0 items-center gap-2 border-b border-border bg-card px-3 split:hidden">
       <button
         type="button"
         onClick={onOpen}
@@ -75,7 +75,10 @@ export function MobileBar({ title, onOpen }: { title: string; onOpen: () => void
       >
         <PanelLeftOpen className="size-4" aria-hidden /> {t("Páginas")}
       </button>
-      <Brand />
+      {/* Com a gaveta aberta a marca do Sidebar é a única exposta. */}
+      <div aria-hidden={drawerOpen || undefined} className="contents">
+        <Brand />
+      </div>
       <span className="truncate text-sm text-muted-foreground">{title}</span>
     </div>
   );

@@ -1,16 +1,20 @@
-import { ArrowUpRight, Hash, Highlighter, Link2, type LucideIcon, MousePointer2, Undo2 } from "lucide-react";
-import { useState } from "react";
+import { ArrowUpRight, Crop, EyeOff, Hash, Highlighter, Link2, type LucideIcon, MousePointer2, Undo2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
-import { type Annotations, type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
-import { errorMessage, type TreeItem } from "@/lib/api";
+import { type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
+import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { TOOL_KEYS, toolForKey } from "@/lib/toolShortcuts";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
-import { AnnotationCanvas } from "./AnnotationCanvas";
+import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
+import { CropPanel } from "./CropPanel";
+import { RedactPanel } from "./RedactPanel";
+import { ReducePanel } from "./ReducePanel";
 
 interface Props {
   slug: string;
@@ -32,20 +36,32 @@ const TOOLS: { tool: Tool; label: string; hint: string; Icon: LucideIcon }[] = [
   { tool: "highlight", label: t("Destaque"), hint: t("Arraste sobre o que merece atenção"), Icon: Highlighter },
   { tool: "arrow", label: t("Seta"), hint: t("Arraste do início até a ponta da seta"), Icon: ArrowUpRight },
   { tool: "hotspot", label: t("Área clicável"), hint: t("Arraste sobre a área que leva a outra página"), Icon: Link2 },
+  { tool: "redact", label: t("Ocultar"), hint: t("Arraste sobre o dado que deve sumir"), Icon: EyeOff },
+  { tool: "crop", label: t("Recortar"), hint: t("Arraste sobre a parte da imagem que deve ficar"), Icon: Crop },
 ];
 
 /** Janela de marcação de uma imagem. Trabalha num rascunho e só grava ao clicar em "Salvar marcações". */
 export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Props) {
   const saved = useAnnotations(slug, asset);
   // Enquanto nada foi mexido, o rascunho é o que está gravado.
-  const [edited, setEdited] = useState<Annotations | null>(null);
-  const draft = edited ?? saved;
+  const [edited, setEdited] = useState<Draft | null>(null);
+  const draft = edited ?? (saved ? { ann: saved, redact: [], crop: [] } : null);
   // Rascunhos anteriores, para o "Desfazer" (Ctrl+Z). Guarda os 50 últimos passos.
-  const [past, setPast] = useState<Annotations[]>([]);
-  const change = (next: Annotations) => {
+  const [past, setPast] = useState<Draft[]>([]);
+  const change = (next: Draft) => {
     if (draft) setPast([...past.slice(-49), draft]);
     setEdited(next);
   };
+  // Sair com áreas a ocultar ainda não aplicadas perderia a proteção em silêncio: pergunta antes.
+  const [leaving, setLeaving] = useState(false);
+  const requestClose = () => (draft?.redact.length ? setLeaving(true) : onClose());
+  const [inGit, setInGit] = useState(false);
+  useEffect(() => {
+    api
+      .inGitRepo(slug)
+      .then((r) => setInGit(r.git))
+      .catch(() => {});
+  }, [slug]);
   const undo = () => {
     const previous = past.at(-1);
     if (!previous) return;
@@ -67,8 +83,8 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
     setSaving(true);
     setError(null);
     try {
-      await saveAnnotations(slug, asset, draft);
-      onClose();
+      await saveAnnotations(slug, asset, draft.ann);
+      requestClose();
     } catch (err) {
       setError(errorMessage(err, t("Não foi possível salvar as marcações.")));
     } finally {
@@ -77,7 +93,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
   };
 
   return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
+    <Dialog open onOpenChange={(open) => !open && requestClose()}>
       <DialogContent
         className="grid max-h-[94vh] w-[min(96vw,80rem)] p-4 sm:p-6 max-w-none grid-rows-[auto_auto_minmax(0,1fr)_auto] gap-4 sm:max-w-none"
         onOpenAutoFocus={(e) => {
@@ -95,7 +111,11 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           }
           if ((e.key === "Delete" || e.key === "Backspace") && selectedId && draft && !target.closest("input, select")) {
             e.preventDefault();
-            change(removeAnnotation(draft, selectedId));
+            change({
+              ann: removeAnnotation(draft.ann, selectedId),
+              redact: draft.redact.filter((r) => r.id !== selectedId),
+              crop: draft.crop.filter((r) => r.id !== selectedId),
+            });
             setSelectedId(null);
           }
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !target.closest("input, select, textarea")) {
@@ -120,11 +140,14 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               title={`${label} (${TOOL_KEYS[id]})`}
               onClick={() => setTool(id)}
               className={cn(
-                "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-sm",
+                "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-sm [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11",
                 tool === id ? "border-primary bg-accent font-bold text-primary" : "border-border hover:bg-muted",
               )}
             >
               <Icon className="size-4" aria-hidden />
+              <span className="hidden sm:inline [@media(pointer:coarse)]:inline" aria-hidden>
+                {label}
+              </span>
               <kbd className="font-mono text-xs" aria-hidden>
                 {TOOL_KEYS[id]}
               </kbd>
@@ -138,7 +161,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               <AnnotationCanvas
                 src={src}
                 alt={alt}
-                annotations={draft}
+                draft={draft}
                 tool={tool}
                 selectedId={selectedId}
                 defaultTarget={defaultTarget}
@@ -149,13 +172,63 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 }}
               />
             </div>
-            <AnnotationList
-              annotations={draft}
-              pages={pages}
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-              onChange={change}
-            />
+            <div className="grid content-start gap-4">
+              {(tool === "redact" || draft.redact.length > 0) && (
+                <RedactPanel
+                  slug={slug}
+                  asset={asset}
+                  src={src}
+                  rects={draft.redact}
+                  inGit={inGit}
+                  onDiscard={() => {
+                    change({ ...draft, redact: [] });
+                    setSelectedId(null);
+                  }}
+                  onApplied={() => {
+                    // Já virou pixel: não há o que desfazer nem listar.
+                    setPast([]);
+                    setEdited({ ...draft, redact: [] });
+                    setSelectedId(null);
+                  }}
+                />
+              )}
+              {(tool === "crop" || draft.crop.length > 0) && (
+                <CropPanel
+                  slug={slug}
+                  asset={asset}
+                  src={src}
+                  annotations={draft.ann}
+                  crop={draft.crop}
+                  hasRedactions={draft.redact.length > 0}
+                  inGit={inGit}
+                  onDiscard={() => {
+                    change({ ...draft, crop: [] });
+                    setSelectedId(null);
+                  }}
+                  onApplied={(ann) => {
+                    // Já virou pixel e as marcações vão para o disco: não há o que desfazer.
+                    setPast([]);
+                    setEdited({ ann, redact: [], crop: [] });
+                    setSelectedId(null);
+                  }}
+                />
+              )}
+              <ReducePanel
+                slug={slug}
+                asset={asset}
+                src={src}
+                pending={draft.redact.length > 0 || draft.crop.length > 0}
+                inGit={inGit}
+                onApplied={() => setPast([])}
+              />
+              <AnnotationList
+                annotations={draft.ann}
+                pages={pages}
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+                onChange={(ann) => change({ ...draft, ann })}
+              />
+            </div>
           </div>
         ) : (
           <p className="text-muted-foreground">{t("Carregando as marcações…")}</p>
@@ -170,7 +243,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               {error}
             </p>
           )}
-          <Button variant="ghost" onClick={onClose}>
+          <Button variant="ghost" onClick={requestClose}>
             {t("Cancelar")}
           </Button>
           <Button onClick={() => void save()} disabled={!draft || saving}>
@@ -178,6 +251,21 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           </Button>
         </DialogFooter>
       </DialogContent>
+      {leaving && (
+        <ConfirmDialog
+          title={t("Sair sem ocultar?")}
+          confirmLabel={t("Sair e descartar")}
+          cancelLabel={t("Continuar editando")}
+          onConfirm={onClose}
+          onCancel={() => setLeaving(false)}
+        >
+          <p>
+            {t(
+              "As áreas a ocultar ainda não foram aplicadas. Se você sair, elas se perdem e o print continua com os dados à mostra.",
+            )}
+          </p>
+        </ConfirmDialog>
+      )}
     </Dialog>
   );
 }

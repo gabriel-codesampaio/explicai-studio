@@ -58,8 +58,8 @@ export function PageView({ manual, page }: Props) {
                 </Fragment>
               ))}
             </nav>
-            {/* ml-auto: o grupo fica à direita também abaixo de sm, quando o caminho ocupa a linha inteira. */}
-            <div className="ml-auto flex flex-wrap items-center justify-end gap-1">
+            {/* Abaixo de sm o caminho ocupa a linha inteira e o grupo desce alinhado à esquerda. */}
+            <div className="flex flex-wrap items-center gap-1 sm:ml-auto sm:justify-end">
               <VersionsPanel
                 slug={manual.slug}
                 pageId={page.id}

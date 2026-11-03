@@ -35,11 +35,15 @@ export async function listTrash(dir: string): Promise<TrashItem[]> {
   for (const trashId of await readdir(root)) {
     const entryFile = path.join(root, trashId, "entry.json");
     if (!(await exists(entryFile))) continue;
-    const entry = JSON.parse(await readText(entryFile)) as TrashEntry;
-    const pageFile = path.join(root, trashId, entry.node.file);
-    const data: Record<string, unknown> = (await exists(pageFile)) ? splitFrontmatter(await readText(pageFile)).data : {};
-    const title = typeof data.title === "string" ? data.title : "";
-    items.push({ trashId, pageId: entry.node.id, title, pages: flatten([entry.node]).length, deletedAt: entry.deletedAt });
+    try {
+      const entry = JSON.parse(await readText(entryFile)) as TrashEntry;
+      const pageFile = path.join(root, trashId, entry.node.file);
+      const data: Record<string, unknown> = (await exists(pageFile)) ? splitFrontmatter(await readText(pageFile)).data : {};
+      const title = typeof data.title === "string" ? data.title : "";
+      items.push({ trashId, pageId: entry.node.id, title, pages: flatten([entry.node]).length, deletedAt: entry.deletedAt });
+    } catch {
+      // entry.json quebrado ou de forma errada: pula o item em vez de esconder a lixeira toda
+    }
   }
   return items.sort((a, b) => b.deletedAt.localeCompare(a.deletedAt));
 }

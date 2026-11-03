@@ -109,7 +109,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
       </div>
       <SelectionMenu editor={editor} pickImage={pickImage} onEditLink={() => setLinkOpen(true)} />
       <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} pages={pages} />
-      <ImagePopover editor={editor} onAnnotate={(src, alt) => setAnnotating({ src, alt })} />
+      <ImagePopover editor={editor} slug={slug} onAnnotate={(src, alt) => setAnnotating({ src, alt })} />
       {annotating && assetPathFromSrc(annotating.src) && (
         <AnnotationEditor
           slug={slug}

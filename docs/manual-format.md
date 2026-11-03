@@ -125,6 +125,7 @@ No Studio cada tipo tem cor fixa e um ícone; a Nota usa a cor de destaque do ma
 ```json
 {
   "version": 1,
+  "display": "m",
   "markers":    [{ "id": "m1", "n": 1, "x": 0.82, "y": 0.12, "label": "Novo cliente" }],
   "highlights": [{ "id": "h1", "x": 0.10, "y": 0.20, "w": 0.50, "h": 0.08 }],
   "arrows":     [{ "id": "a1", "from": { "x": 0.1, "y": 0.1 }, "to": { "x": 0.2, "y": 0.2 } }],
@@ -132,6 +133,8 @@ No Studio cada tipo tem cor fixa e um ícone; a Nota usa a cor de destaque do ma
                    "target": { "type": "page", "pageId": "9a1b…" } }]
 }
 ```
+
+`display` é opcional e guarda o tamanho da imagem na página: `"s"` (Pequena, até 40% da coluna), `"m"` (Média, 70%) ou `"full"` (Larga, 100%). Sem o campo, a imagem aparece como sempre: tamanho natural, limitada à coluna. Nenhum tamanho amplia a imagem acima do natural. Vale para a imagem em todo lugar onde ela aparece, no editor, no HTML e no PDF; o Markdown da página e o Markdown exportado não mudam, e as coordenadas das marcações continuam as mesmas. Valor fora de `s`, `m` e `full` é ignorado. O arquivo pode existir só com `display` (listas vazias). Quem regrava o JSON (o Studio, o Agent) deve manter o campo.
 
 Destinos de área clicável: `page` (outra página), `anchor` (seção de uma página) e `url` (só `http`, `https` ou `mailto`).
 

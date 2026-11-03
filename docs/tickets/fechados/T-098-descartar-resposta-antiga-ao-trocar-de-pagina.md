@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: auditoria ponytail de 2026-11-02, achado 15 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
@@ -10,8 +10,8 @@
 Descartar resposta antiga ao trocar de página
 
 ## Critérios de aceite
-- [ ] Descartar resposta antiga ao trocar de página
-- [ ] Teste cobrindo o caso; `npm run check`.
+- [x] Descartar resposta antiga ao trocar de página
+- [x] Teste cobrindo o caso; `npm run check`.
 
 ## Onde
 Ver a seção do achado na auditoria.
@@ -20,4 +20,4 @@ Ver a seção do achado na auditoria.
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 15 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit c1c8e26. `showPage` (e `addPage`) usam um contador de abertura; resposta de página antiga é descartada e não troca a página nem o endereço. Teste: `web/test/useStudio.test.tsx`. Fora: `openManual` com página inexistente e `restorePage` não bumpam o contador.
