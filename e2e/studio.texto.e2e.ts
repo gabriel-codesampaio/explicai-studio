@@ -1,4 +1,5 @@
 import { type APIRequestContext, expect, type Page, test } from "@playwright/test";
+import { settleEditor } from "./editor-sync.js";
 
 // Código no texto e link no editor (T-083): barra, menu de seleção, atalhos, Markdown e exportação.
 async function open(page: Page, request: APIRequestContext, title: string, body = "") {
@@ -46,6 +47,7 @@ async function selectWord(page: Page, container: string) {
 async function typeAndSelect(page: Page, text: string) {
   await editor(page).click();
   await page.keyboard.type(text);
+  await settleEditor(page);
   await selectWord(page, text);
 }
 
@@ -91,6 +93,7 @@ test.describe("código no texto", () => {
     await expect(editor(page).locator("code")).toHaveText("alvo");
     // O cursor no fim do código continua nele: digitar estende, e Ctrl+E de novo sai.
     await page.keyboard.press("ArrowRight");
+    await settleEditor(page);
     await expect(codeBtn(page)).toHaveAttribute("aria-pressed", "true");
     await page.keyboard.press("Control+e");
     await expect(codeBtn(page)).toHaveAttribute("aria-pressed", "false");
@@ -204,6 +207,7 @@ test.describe("link", () => {
     await page.keyboard.press("Control+k");
     await field(page).fill("exemplo.com.br");
     await field(page).press("Enter");
+    await expect(editor(page)).toBeFocused();
     await page.keyboard.type("aqui");
     await expect(editor(page).locator("a")).toHaveText("aqui");
   });
@@ -211,6 +215,7 @@ test.describe("link", () => {
   test("edita e remove o link em que o cursor está", async ({ page, request }) => {
     await open(page, request, "Link edita", "veja [alvo](https://velho.com.br) fim\n");
     await editor(page).locator("a").click();
+    await settleEditor(page);
     await page.keyboard.press("Control+k");
     await expect(field(page)).toHaveValue("https://velho.com.br");
     await field(page).fill("novo.com.br");
@@ -220,6 +225,7 @@ test.describe("link", () => {
     await expect(editor(page).locator("a")).toHaveText("alvo");
 
     await editor(page).locator("a").click();
+    await settleEditor(page);
     await linkBtn(page).click();
     await dialog(page).getByRole("button", { name: "Remover link" }).click();
     await expect(editor(page).locator("a")).toHaveCount(0);

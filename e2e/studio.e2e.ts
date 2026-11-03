@@ -1,5 +1,6 @@
 import path from "node:path";
 import { type APIRequestContext, expect, type Locator, type Page, test } from "@playwright/test";
+import { settleEditor } from "./editor-sync.js";
 
 const IMAGE = path.join(import.meta.dirname, "fixtures", "tela.png");
 
@@ -192,6 +193,7 @@ test("barra da seleção: selecionar texto abre a barra, pinta de vermelho, põe
   await page.goto(`/#/${slug}`);
   await editor(page).click();
   await page.keyboard.type("Clique em Excluir");
+  await settleEditor(page);
   await page.keyboard.press("Shift+Control+ArrowLeft");
 
   const menu = page.getByRole("toolbar", { name: "Formatar seleção" });
@@ -220,6 +222,7 @@ test("cor do texto pela barra fixa, só com o teclado, e a dica mostra o nome", 
   const trigger = toolbar.getByRole("button", { name: "Cor do texto" });
   await trigger.hover();
   await expect(page.getByRole("tooltip")).toContainText("Cor do texto");
+  await settleEditor(page);
   await page.keyboard.press("Shift+Control+ArrowLeft");
   // O editor só guarda a seleção depois do selectionchange; a barra da seleção aparece quando ele guardou.
   // Sem esperar, Shift+Tab tira o foco antes e a cor cai num cursor sem seleção.
@@ -280,7 +283,9 @@ test("link: recusa endereço inválido e liga a outra página do manual", async 
   await page.goto(`/#/${slug}/${pages[0]?.id}`);
   await editor(page).click();
   await page.keyboard.type("veja aqui");
+  await settleEditor(page);
   await page.keyboard.press("Shift+Home");
+  await settleEditor(page);
   await page.keyboard.press("Control+k");
 
   const campo = page.getByLabel("Link para uma página ou endereço");
@@ -394,8 +399,13 @@ test.describe("interface em inglês", () => {
     await page.getByRole("menuitem", { name: "New manual" }).click();
     await page.getByLabel("Manual name").fill("Billing");
     await page.getByRole("button", { name: "Create manual" }).click();
-    const created = (await (await request.get("/api/manuals")).json()).find((m: { title: string }) => m.title === "Billing");
-    expect(created.language).toBe("en-US");
+    // O manual nasce no servidor depois do clique; no CI o GET vinha antes e não achava "Billing".
+    await expect
+      .poll(async () => {
+        const list = (await (await request.get("/api/manuals")).json()) as { title: string; language: string }[];
+        return list.find((m) => m.title === "Billing")?.language;
+      })
+      .toBe("en-US");
   });
 });
 
@@ -782,6 +792,7 @@ test("barra da seleção na primeira linha não cobre a barra fixa nem as dicas 
   await page.goto(`/#/${slug}`);
   await editor(page).click();
   await page.keyboard.type("Clique em Excluir");
+  await settleEditor(page);
   await page.keyboard.press("Shift+Home");
   const menu = page.getByRole("toolbar", { name: "Formatar seleção" });
   await expect(menu).toBeVisible();
@@ -939,7 +950,9 @@ for (const mode of ["light", "dark"] as const) {
     await page.goto(`/#/${slug}/${pages[0]?.id}`);
     await editor(page).click();
     await page.keyboard.type("veja aqui");
+    await settleEditor(page);
     await page.keyboard.press("Shift+Home");
+    await settleEditor(page);
     await page.keyboard.press("Control+k");
     expect(await borderContrast(page.getByLabel("Link para uma página ou endereço"))).toBeGreaterThanOrEqual(3);
     await page.keyboard.press("Escape");
