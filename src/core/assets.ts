@@ -29,10 +29,11 @@ export async function saveAsset(dir: string, fileName: string, data: Uint8Array)
 export async function readAnnotations(dir: string, assetPath: string): Promise<Annotations> {
   const file = annotationsFile(dir, assetPath);
   if (!(await exists(file))) return emptyAnnotations();
+  const raw = await readText(file);
   try {
-    return parseAnnotations(JSON.parse(await readText(file)));
-  } catch (err) {
-    if (!(err instanceof SyntaxError)) throw err;
+    return parseAnnotations(JSON.parse(raw));
+  } catch {
+    // JSON quebrado ou de forma errada: o mesmo aviso
     const name = relativePosix(dir, file);
     throw new ExplicaiError(
       "annotations-invalid",
