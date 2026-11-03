@@ -20,6 +20,7 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 - Interface: telas de erro em tela cheia (servidor fora com reconexão de espera crescente, rota inexistente, erro inesperado), erros do núcleo com código e parâmetros estáveis, traduzidos em português e inglês, menu Ajustes com Idioma e Aparência, e página HTML de erro do servidor alinhada à marca.
 - Layout: árvore em coluna estreita de 900 a 1023 px, marca na barra do topo, alvos de toque de 44 px no celular.
 - Testes e CI: GitHub Actions com lint, tipos, testes com cobertura e ponta a ponta; cobertura medida com `npm run test:cov`; testes novos para sistema de arquivos, segurança, UTF-8, exportação, editor e pacote npm.
+- Edição feita fora do Studio (MCP, outro editor): o servidor devolve a versão da página (`If-Match`, 409 `disk-conflict`) e o Studio avisa em vez de sobrescrever, com "Recarregar do disco" e "Manter a minha versão".
 - Pacote npm: CHANGELOG, descrição bilíngue, palavras-chave e README para quem chega pelo npm.
 
 ### Alterado
@@ -37,7 +38,7 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 - Exportação: gera em pasta temporária e troca só no fim; marcação com JSON quebrado ou de forma errada vira aviso e a imagem sai pura; aviso quando a página cita imagem que não existe; `%` solto em link ou imagem não derruba mais a exportação; lê `width` e `height` de SVG; sem pulo de nível de título; "Só páginas aprovadas" fica desabilitado quando nenhuma está aprovada.
 - Servidor: `%` malformado na URL responde 400 com código estável; corpo JSON que não é UTF-8 válido é recusado; diretório vira 404.
 - Editor: Enter depois de imagem, ordem de várias imagens coladas, Esc no balão da imagem devolve o foco, Ctrl+End leva ao fim da página, menu `/` não fica atrás da barra fixa nem deixa de rolar com a seta, negrito e link junto de código no texto, popover da imagem ancorado dentro da área útil.
-- Interface: contraste de 3:1 na borda de campo e na amostra de cor nos dois temas, seletor de tema com uma só opção marcada, título longo da árvore truncado, marca que não quebra em duas linhas.
+- Interface: título longo da página não corta ao carregar a fonte; erro ao trocar a fonte do manual aparece; contraste de 3:1 na borda de campo e na amostra de cor nos dois temas, seletor de tema com uma só opção marcada, título longo da árvore truncado, marca que não quebra em duas linhas.
 
 ### Segurança
 
@@ -52,6 +53,6 @@ Prevista para a 0.2.0. A 0.1.0 foi a primeira versão do Studio; este bloco reú
 
 ### English summary
 
-New since 0.1.0: bundled OFL fonts and font choice for exports, manual theme colors and client logo, alert blocks, text colors with names, a floating selection toolbar, a richer `/` menu, table row and column controls, annotation shortcuts, full-screen error pages, translated errors, GitHub Actions CI and a much larger test suite. Fixes cover autosave races, per-folder write queue, atomic exports, unused-image cleanup and many editor and accessibility details. Security: symlinks that leave the manual folder are refused, CSP on `/files/`, same-port `Origin` check. The npm package no longer ships source maps.
+New since 0.1.0: bundled OFL fonts and font choice for exports, manual theme colors and client logo, alert blocks, text colors with names, a floating selection toolbar, a richer `/` menu, table row and column controls, annotation shortcuts, full-screen error pages, translated errors, GitHub Actions CI and a much larger test suite. New: warning instead of overwrite when a page changed on disk outside the Studio. Fixes cover autosave races, per-folder write queue, atomic exports, unused-image cleanup and many editor and accessibility details. Security: symlinks that leave the manual folder are refused, CSP on `/files/`, same-port `Origin` check. The npm package no longer ships source maps.
 
 [Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.1.0...HEAD
