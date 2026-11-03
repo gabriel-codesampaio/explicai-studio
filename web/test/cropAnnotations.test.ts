@@ -37,7 +37,12 @@ describe("cropAnnotations", () => {
       { id: "h1", x: 0, y: 0, w: 0.5, h: 1 },
       { id: "h3", x: 0, y: 0, w: 0.5, h: 0.5 },
     ]);
-    expect(annotations.hotspots[0]).toMatchObject({ x: expect.closeTo(0.9), y: expect.closeTo(0.4), w: expect.closeTo(0.1), h: expect.closeTo(0.4) });
+    expect(annotations.hotspots[0]).toMatchObject({
+      x: expect.closeTo(0.9),
+      y: expect.closeTo(0.4),
+      w: expect.closeTo(0.1),
+      h: expect.closeTo(0.4),
+    });
     expect(removed).toMatchObject({ highlights: 1, hotspots: 0 });
   });
 
