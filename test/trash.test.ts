@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -89,5 +89,19 @@ describe("página sem título", () => {
     expect(page.file).toBe("pages/sem-titulo.md");
     expect((await updatePage(dir, page.id, { title: "Clientes" })).file).toBe("pages/clientes.md");
     expect((await updatePage(dir, page.id, { title: "  " })).title).toBe("");
+  });
+});
+
+describe("item da lixeira com entry.json quebrado", () => {
+  it.each([
+    ["JSON quebrado", "{ quebrado"],
+    ["forma errada", "{}"],
+  ])("%s: a listagem pula o item e mostra os outros", async (_, content) => {
+    const a = await addPage(dir, { title: "A", body: "x" });
+    await removePage(dir, a.id);
+    const ruim = path.join(dir, ".lixeira", "ruim");
+    await mkdir(ruim, { recursive: true });
+    await writeFile(path.join(ruim, "entry.json"), content);
+    expect((await listTrash(dir)).map((i) => i.title)).toEqual(["A"]);
   });
 });
