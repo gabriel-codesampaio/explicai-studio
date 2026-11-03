@@ -8,9 +8,10 @@ Histórico das sessões anteriores: `docs/passagem-2026-10-30.md` (a unificar nu
 
 ## Trabalho feito por engano ANTES da mudança de plano (nada enviado)
 O pedido de parar chegou depois destes passos. Estão em branches locais, sem push, sem suíte e2e completa e sem revisão de código:
-- `fix/t-082-t-089-seguranca-do-servidor` (0b27143, 69831a9): CSP em /files/ para o que não é imagem raster; Origin só igual a `http://${host}`; 415 sem application/json. check 427 testes, e2e imagem/logo/exportação 52 ok. MESCLADA na main LOCAL (a main local está à frente da origin); o `git reset --hard` para desfazer foi negado, então NÃO dê push na main sem decidir: ou aceita (rodar e2e completo, revisão, seguranca) ou `git revert -m 1` do merge.
+- `fix/t-082-t-089-seguranca-do-servidor` (0b27143, 69831a9): CSP em /files/ para o que não é imagem raster; Origin só igual a `http://${host}`; 415 sem application/json. check 427 testes, e2e imagem/logo/exportação 52 ok. MESCLADA na main LOCAL.
 - `fix/t-085-fila-por-pasta` (ca2f2b0, 51fa224): fila por pasta em `updateManual`; 10 `addPage` em paralelo deixam 10 nós. check 430.
 - `perf/t-086-imagens-cache-e-lazy` (7d7dfe7, faa488c, 00a830f): ETag/304, streaming, cache de imagens de assets/, `loading="lazy"`. check 429. e2e "imagem" teve flakes (copiar/colar na rodada 1, Backspace/desfazer na 2; passou na 3); não rodado na main para provar que são antigos.
+- As TRÊS branches estão mescladas na main LOCAL (merges 8232b9a, 0a82483, 717b36c), que está à frente da origin/main; nenhuma foi enviada. O `git reset --hard` para desfazer foi negado. NÃO dê push na main sem decidir: aceitar (e2e completo, revisão de código, seguranca) ou desfazer com `git revert -m 1` de cada merge.
 - Worktrees (com junção de `node_modules`; remover com `cmd //c rmdir` do Windows antes de `git worktree remove`): `<tmp>/equipe/t-082`, `t-085`, `t-086`.
 
 ## Próximo passo
