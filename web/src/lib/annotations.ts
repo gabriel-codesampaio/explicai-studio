@@ -32,8 +32,10 @@ export interface Hotspot extends Rect {
   id: string;
   target: HotspotTarget;
 }
+export type ImageDisplay = "s" | "m" | "full";
 export interface Annotations {
   version: 1;
+  display?: ImageDisplay;
   markers: Marker[];
   highlights: Highlight[];
   arrows: Arrow[];

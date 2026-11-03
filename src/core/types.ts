@@ -102,9 +102,13 @@ export interface Hotspot extends Rect {
   target: HotspotTarget;
 }
 
+/** Tamanho de exibição da imagem: pequena, média ou larga. Sem o campo, a imagem aparece como sempre. */
+export type ImageDisplay = "s" | "m" | "full";
+
 /** Conteúdo do JSON que fica ao lado de cada imagem (`assets/foto.png.json`). */
 export interface Annotations {
   version: typeof FORMAT_VERSION;
+  display?: ImageDisplay;
   markers: Marker[];
   highlights: Highlight[];
   arrows: Arrow[];
