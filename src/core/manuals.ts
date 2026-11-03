@@ -58,10 +58,28 @@ export async function writeManual(dir: string, meta: ManualMeta): Promise<void> 
   await atomicWrite(path.join(dir, META_FILE), `${JSON.stringify(meta, null, 2)}\n`);
 }
 
-/** Lê o manual, aplica a mudança e grava de volta. Concentra o ciclo ler-alterar-gravar da árvore. */
-export async function updateManual<T>(dir: string, change: (meta: ManualMeta) => T): Promise<T> {
-  const meta = await readManual(dir);
-  const result = change(meta);
-  await writeManual(dir, meta);
-  return result;
+const queues = new Map<string, Promise<unknown>>();
+
+/**
+ * Lê o manual, aplica a mudança e grava de volta. Concentra o ciclo ler-alterar-gravar da árvore.
+ * Chamadas da mesma pasta entram numa fila, senão duas leituras simultâneas se atropelam e a última
+ * gravação apaga a mudança da outra. `change` não pode chamar updateManual da mesma pasta (travaria).
+ */
+export function updateManual<T>(dir: string, change: (meta: ManualMeta) => T): Promise<T> {
+  const key = path.resolve(dir);
+  const run = (queues.get(key) ?? Promise.resolve())
+    .catch(() => {})
+    .then(async () => {
+      const meta = await readManual(dir);
+      const result = change(meta);
+      await writeManual(dir, meta);
+      return result;
+    });
+  queues.set(key, run);
+  // Fila vazia: tira a pasta do Map. Falha já chega a quem chamou por `run`.
+  const clean = () => {
+    if (queues.get(key) === run) queues.delete(key);
+  };
+  run.then(clean, clean);
+  return run;
 }
