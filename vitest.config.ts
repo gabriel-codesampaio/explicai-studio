@@ -1,6 +1,8 @@
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+  // Testes de componente importam como o editor: "@/lib/api".
+  resolve: { alias: { "@": `${import.meta.dirname}/web/src` } },
   test: {
     coverage: {
       provider: "v8",

@@ -11,10 +11,12 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onRestore: (trashId: string, pageId: string) => Promise<void>;
+  /** Grava a fila do autosave: a imagem recém-colada precisa estar numa página no disco antes da limpeza. */
+  flush: () => Promise<void>;
 }
 
 /** Painel "Lixeira" (aberto pelo menu "⋯" da barra lateral): lista o que foi excluído neste manual e restaura. */
-export function TrashPanel({ slug, open, onOpenChange, onRestore }: Props) {
+export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props) {
   const [items, setItems] = useState<TrashItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   /** Imagens e marcações que nenhuma página, versão ou item da lixeira usa. */
@@ -30,13 +32,15 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore }: Props) {
     );
   };
   const clean = () =>
-    api.cleanUnusedAssets(slug).then(
-      ({ moved, folder }) => {
-        setUnused(0);
-        toast(tn(moved, "{n} arquivo foi para {pasta}.", "{n} arquivos foram para {pasta}.", { pasta: folder ?? "" }));
-      },
-      (err: unknown) => setError(errorMessage(err)),
-    );
+    flush()
+      .then(() => api.cleanUnusedAssets(slug))
+      .then(
+        ({ moved, folder }) => {
+          setUnused(0);
+          toast(tn(moved, "{n} arquivo foi para {pasta}.", "{n} arquivos foram para {pasta}.", { pasta: folder ?? "" }));
+        },
+        (err: unknown) => setError(errorMessage(err)),
+      );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: recarrega só ao abrir
   useEffect(() => {

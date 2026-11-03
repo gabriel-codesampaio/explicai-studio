@@ -19,7 +19,7 @@ const MODE_LABELS: Record<Mode, string> = { light: "Claro", dark: "Escuro", syst
 
 /** Menu "Ajustes" do rodapé da barra lateral: Lixeira, Aparência, Idioma e Atalhos, cada um abrindo seu painel. */
 export function MoreMenu() {
-  const { manual, restorePage } = useStudioContext();
+  const { manual, restorePage, flush } = useStudioContext();
   const [panel, setPanel] = useState<Panel | null>(null);
   // Lido ao abrir o menu: o tema pode ter mudado no painel de Aparência.
   const [mode, setMode] = useState<Mode>(() => readAppearance().mode);
@@ -59,6 +59,7 @@ export function MoreMenu() {
       {manual && (
         <TrashPanel
           slug={manual.slug}
+          flush={flush}
           {...bind("trash")}
           onRestore={(trashId, pageId) => restorePage(manual.slug, trashId, pageId)}
         />
