@@ -604,7 +604,10 @@ async function pageWithHeadings(request: APIRequestContext, title: string) {
 test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
   test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
-  test("é o último item, encosta na direita, tem 44 px e segue Versões, Status, Índice no Tab", async ({ page, request }) => {
+  test("é o último item, fica à esquerda abaixo de sm, tem 44 px e segue Versões, Status, Índice no Tab", async ({
+    page,
+    request,
+  }) => {
     const slug = await pageWithHeadings(request, "Manual Exportar Celular");
     await page.goto(`/#/${slug}`);
     await expect(page.getByRole("button", { name: "Exportar manual" })).toBeVisible();
@@ -616,12 +619,12 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
       "Exportar manual",
     ]);
     const exportBtn = buttons[3];
-    // Sem espaço na linha, o Exportar desce para uma linha própria, ainda à direita; nunca fica no meio.
+    // Sem espaço na linha, o Exportar desce para uma linha própria; abaixo de sm o grupo fica à esquerda (T-078), nunca no meio.
     const others = buttons.slice(0, 3);
     expect(exportBtn?.top ?? 0).toBeGreaterThanOrEqual(Math.max(...others.map((b) => b.top)) - 1);
     if (exportBtn && Math.abs(exportBtn.top - (others[2]?.top ?? 0)) < 1)
       expect(exportBtn.left).toBeGreaterThan(others[2]?.left ?? 0);
-    expect(Math.abs((exportBtn?.right ?? 0) - rowRight)).toBeLessThan(1);
+    expect(exportBtn?.left ?? 0).toBeLessThan(rowRight / 2);
     // Alvo de toque: todos os itens do topo têm 44 px.
     for (const b of buttons) expect(b.height).toBeGreaterThanOrEqual(44);
     expect(scrollW).toBeLessThanOrEqual(innerW);
