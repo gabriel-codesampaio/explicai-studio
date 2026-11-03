@@ -294,6 +294,7 @@ export function useStudio() {
     creatingManual,
     setCreatingManual,
     revision,
+    flush,
     save: { state: autosave.state, savedAt: autosave.savedAt, retry: autosave.retry },
     openManual,
     selectPage,

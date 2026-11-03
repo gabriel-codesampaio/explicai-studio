@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, utimes, writeFile } from "node:fs/promises";
 import http from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
@@ -276,6 +276,7 @@ describe("API de imagens sem uso", () => {
     await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
     const png = new Uint8Array([137, 80, 78, 71]);
     await fetch(`${base}/api/manuals/m/assets?name=sobra.png`, { method: "POST", body: png });
+    await utimes(path.join(workspace, "m", "assets", "sobra.png"), new Date(0), new Date(0));
     expect(await (await fetch(`${base}/api/manuals/m/assets/unused`)).json()).toEqual({ count: 1 });
     const cleaned = await (await fetch(`${base}/api/manuals/m/assets/clean`, json("POST"))).json();
     expect(cleaned.moved).toBe(1);
