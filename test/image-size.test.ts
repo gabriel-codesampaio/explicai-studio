@@ -38,3 +38,34 @@ describe("tamanho de SVG", () => {
     expect(await svg("<svg>")).toBeNull();
   });
 });
+
+describe("leitura só do cabeçalho", () => {
+  const jpeg = (exifBytes: number, segments = 1) => {
+    const seg = Buffer.concat([Buffer.from([0xff, 0xe1, (exifBytes + 2) >> 8, (exifBytes + 2) & 0xff]), Buffer.alloc(exifBytes)]);
+    const app1 = Buffer.concat(Array(segments).fill(seg));
+    const sof = Buffer.from([0xff, 0xc0, 0, 17, 8, 0x01, 0xe0, 0x02, 0x80, 3, 1, 0x22, 0, 2, 0x11, 1, 3, 0x11, 1]);
+    return Buffer.concat([Buffer.from([0xff, 0xd8]), app1, sof]);
+  };
+
+  it("JPEG com marcador SOF logo no começo", async () => {
+    const file = path.join(dir, "a.jpg");
+    await writeFile(file, jpeg(100));
+    expect(await imageSize(file)).toEqual({ w: 640, h: 480 });
+  });
+
+  it("JPEG com EXIF maior que 64 KB: o SOF fica além do começo e ainda é achado", async () => {
+    const file = path.join(dir, "b.jpg");
+    await writeFile(file, jpeg(40000, 2));
+    expect(await imageSize(file)).toEqual({ w: 640, h: 480 });
+  });
+
+  it("PNG grande: só o começo basta", async () => {
+    const png = Buffer.alloc(200_000);
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(png);
+    png.writeUInt32BE(300, 16);
+    png.writeUInt32BE(200, 20);
+    const file = path.join(dir, "c.png");
+    await writeFile(file, png);
+    expect(await imageSize(file)).toEqual({ w: 300, h: 200 });
+  });
+});
