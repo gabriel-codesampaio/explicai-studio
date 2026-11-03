@@ -1,7 +1,15 @@
 import type { Tool } from "./annotations";
 
 /** Letra de cada ferramenta de marcação. Única fonte: a barra e a lista de Atalhos leem daqui. */
-export const TOOL_KEYS: Record<Tool, string> = { select: "V", marker: "M", highlight: "D", arrow: "S", hotspot: "A" };
+export const TOOL_KEYS: Record<Tool, string> = {
+  select: "V",
+  marker: "M",
+  highlight: "D",
+  arrow: "S",
+  hotspot: "A",
+  redact: "O",
+  crop: "R",
+};
 
 interface KeyLike {
   key: string;

@@ -202,6 +202,15 @@ export const api = {
   saveAnnotations: (slug: string, asset: string, annotations: Annotations) =>
     call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`, send("PUT", annotations)),
 
+  /** A pasta do manual está dentro de um repositório git? Aí o print original continua no histórico. */
+  inGitRepo: (slug: string) => call<{ git: boolean }>(`${manualUrl(slug)}/git`),
+  /** Troca o arquivo do print pela versão já tarjada (PNG, JPEG ou WebP do mesmo formato e tamanho) e apaga o original. */
+  redactAsset: (slug: string, asset: string, image: Blob) =>
+    call<{ path: string }>(`${manualUrl(slug)}/assets/redact?asset=${encodeURIComponent(asset)}`, {
+      method: "POST",
+      body: image,
+    }),
+
   unusedAssets: (slug: string) => call<{ count: number }>(`${manualUrl(slug)}/assets/unused`),
   cleanUnusedAssets: (slug: string) =>
     call<{ moved: number; folder: string | null }>(`${manualUrl(slug)}/assets/clean`, { method: "POST" }),

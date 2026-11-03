@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { assetPathFromSrc } from "@/lib/annotations";
 import { t } from "@/lib/i18n";
+import { ImageSizePicker } from "../annotations/ImageSizePicker";
 import { AnchoredPopover } from "./AnchoredPopover";
 
 /** Imagem selecionada (clique nela): posição no documento e descrição atual. */
@@ -19,7 +20,18 @@ function selectedImage(editor: Editor): { pos: number; alt: string; src: string 
  * Ao clicar numa imagem, um balão pede a descrição dela. A descrição vira o texto alternativo no
  * Markdown, lido por leitores de tela e pela IA que usa o manual.
  */
-export function ImagePopover({ editor, onAnnotate }: { editor: Editor; onAnnotate: (src: string, alt: string) => void }) {
+/** Altura do balão com seletor de tamanho e botão (px), mais a folga do rodapé. */
+const BALAO_ALTURA = 330;
+
+export function ImagePopover({
+  editor,
+  slug,
+  onAnnotate,
+}: {
+  editor: Editor;
+  slug: string;
+  onAnnotate: (src: string, alt: string) => void;
+}) {
   const image = useEditorState({ editor, selector: ({ editor: e }) => selectedImage(e) });
   const [dismissedAt, setDismissedAt] = useState<number | null>(null);
   const open = image !== null && dismissedAt !== image.pos;
@@ -27,7 +39,11 @@ export function ImagePopover({ editor, onAnnotate }: { editor: Editor; onAnnotat
 
   const rect = () => {
     const dom = image ? editor.view.nodeDOM(image.pos) : null;
-    return dom instanceof HTMLElement ? dom.getBoundingClientRect() : new DOMRect();
+    if (!(dom instanceof HTMLElement)) return new DOMRect();
+    const r = dom.getBoundingClientRect();
+    // Imagem grande não deixa espaço embaixo: o balão (seletor de tamanho incluso) se apoia na parte visível dela.
+    const bottom = Math.max(r.top + 1, Math.min(r.bottom, window.innerHeight - BALAO_ALTURA));
+    return new DOMRect(r.x, r.y, r.width, bottom - r.y);
   };
 
   return (
@@ -60,6 +76,7 @@ export function ImagePopover({ editor, onAnnotate }: { editor: Editor; onAnnotat
           <p className="text-xs text-muted-foreground">
             {t("Quem usa leitor de tela e a IA que lê o manual entendem a imagem por aqui.")}
           </p>
+          {assetPathFromSrc(image.src) && <ImageSizePicker slug={slug} src={image.src} />}
           {assetPathFromSrc(image.src) && (
             <Button
               type="button"

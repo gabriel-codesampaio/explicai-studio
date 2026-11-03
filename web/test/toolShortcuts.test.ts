@@ -5,12 +5,15 @@ import { toolForKey } from "../src/lib/toolShortcuts";
 const key = (k: string, extra: Partial<Parameters<typeof toolForKey>[0]> = {}) => ({ key: k, ...extra });
 
 describe("toolForKey", () => {
-  it("mapeia V, M, D, S e A para as ferramentas, sem diferenciar maiúscula", () => {
+  it("mapeia V, M, D, S, A e O para as ferramentas, sem diferenciar maiúscula", () => {
     expect(toolForKey(key("v"))).toBe("select");
     expect(toolForKey(key("M"))).toBe("marker");
     expect(toolForKey(key("d"))).toBe("highlight");
     expect(toolForKey(key("s"))).toBe("arrow");
     expect(toolForKey(key("a"))).toBe("hotspot");
+    expect(toolForKey(key("o"))).toBe("redact");
+    expect(toolForKey(key("O"))).toBe("redact");
+    expect(toolForKey(key("r"))).toBe("crop");
   });
 
   it("ignora outras teclas", () => {

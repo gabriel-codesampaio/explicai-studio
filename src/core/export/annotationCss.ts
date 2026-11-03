@@ -4,7 +4,8 @@
  */
 export const ANNOTATION_CSS = `
 .shot{display:block;margin:.6em 0}
-.frame{position:relative;display:block;max-width:100%;width:fit-content;isolation:isolate}
+.shot-s{--shot-w:40%}.shot-m{--shot-w:70%}.shot-full{--shot-w:100%}
+.frame{position:relative;display:block;max-width:var(--shot-w,100%);width:fit-content;isolation:isolate}
 .frame img{display:block;max-width:100%;height:auto;border:1px solid var(--linha);border-radius:8px}
 .hl{position:absolute;border:2px solid var(--marca);border-radius:3px}
 .hl::before{content:"";position:absolute;inset:0;background:var(--marca);mix-blend-mode:multiply}

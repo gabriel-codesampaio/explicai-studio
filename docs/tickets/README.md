@@ -1,3 +1,4 @@
+| [T-116](fechados/T-116-ferramenta-ocultar-dados-sensiveis.md) | Ferramenta Ocultar dados sensíveis nos prints | P1 | feito | 4889a1b |
 | [T-076](fechados/T-076-titulo-sem-tooltip-na-arvore.md) | Título truncado na árvore estreita sem tooltip | P3 | feito | 58cad86 |
 # Tickets
 
@@ -23,6 +24,9 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-118](fechados/T-118-recortar-imagem.md) | Recortar imagem | P2 | feito | 4cac12b |
+| [T-119](fechados/T-119-reduzir-resolucao-da-imagem.md) | Reduzir resolução e peso da imagem | P3 | feito | 82a1c53 |
+| [T-117](fechados/T-117-tamanho-de-exibicao-da-imagem.md) | Tamanho de exibição da imagem (Pequena, Média, Larga) | P2 | feito | 481ee61 |
 | [T-112](T-112-e2e-barra-da-selecao-instavel.md) | e2e "barra da seleção" falha às vezes | P2 | aberto | qa |
 | [T-113](T-113-foco-do-painel-aparencia-sem-fallback.md) | Painel Aparência: foco sem fallback | P3 | aberto | frontend |
 | [T-114](T-114-linha-de-status-mente-durante-conflito-de-disco.md) | Rodapé diz "Não foi possível salvar" durante conflito de disco | P3 | fechado | frontend |

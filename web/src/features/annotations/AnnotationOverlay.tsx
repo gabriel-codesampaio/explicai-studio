@@ -1,11 +1,16 @@
 import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { arrowShape } from "@/lib/annotationShapes";
-import type { Annotations, Handle, Point, Rect } from "@/lib/annotations";
+import type { Annotations, Handle, Highlight, Point, Rect } from "@/lib/annotations";
+import { REDACT_CSS } from "@/lib/redact";
 import { cn } from "@/lib/utils";
 
 interface Props {
   annotations: Annotations;
+  /** Áreas a ocultar do rascunho: tarja opaca com borda tracejada. Não são marcações. */
+  redactions?: Highlight[];
+  /** Retângulo do recorte: o que fica fora dele aparece escurecido. */
+  crops?: Highlight[];
   selectedId?: string | null;
   /**
    * No editor de marcações, apertar numa marcação (ou numa alça dela) começa a mover ou redimensionar.
@@ -34,7 +39,7 @@ function useSize() {
  * Camada sobre a imagem: destaques em marca-texto, áreas clicáveis tracejadas, setas e marcadores
  * numerados em cobalto. Coordenadas de 0 a 1 viram pixels pelo tamanho atual da imagem.
  */
-export function AnnotationOverlay({ annotations, selectedId, onGrab }: Props) {
+export function AnnotationOverlay({ annotations, redactions = [], crops = [], selectedId, onGrab }: Props) {
   const { ref, size } = useSize();
   const px = (p: Point) => ({ x: p.x * size.w, y: p.y * size.h });
   const interactive = Boolean(onGrab);
@@ -45,16 +50,16 @@ export function AnnotationOverlay({ annotations, selectedId, onGrab }: Props) {
       e.stopPropagation();
       onGrab(id, handle, e);
     };
-  const selectedRect: Rect | undefined = [...annotations.highlights, ...annotations.hotspots].find(
+  const selectedRect: Rect | undefined = [...annotations.highlights, ...annotations.hotspots, ...redactions, ...crops].find(
     (r) => "id" in r && r.id === selectedId,
   );
   const selectedArrow = annotations.arrows.find((a) => a.id === selectedId);
-  // Alça quadrada branca: arrastar muda o tamanho (canto) ou a ponta da seta.
+  // Alça quadrada branca (12 px) dentro de alvo de 24 px: arrastar muda o tamanho (canto) ou a ponta da seta.
   const handle = (key: Handle, p: Point, cursor: string) => (
     <span
       key={key}
       onPointerDown={selectedId ? pick(selectedId, key) : undefined}
-      className="absolute z-10 size-3 -translate-x-1/2 -translate-y-1/2 rounded-sm border-2 border-primary bg-white"
+      className="absolute z-10 grid size-6 -translate-x-1/2 -translate-y-1/2 place-items-center before:size-3 before:rounded-sm before:border-2 before:border-primary before:bg-white before:content-['']"
       style={{ left: `${p.x * 100}%`, top: `${p.y * 100}%`, cursor }}
     />
   );
@@ -63,6 +68,44 @@ export function AnnotationOverlay({ annotations, selectedId, onGrab }: Props) {
 
   return (
     <span ref={ref} className={cn("absolute inset-0 block", !interactive && "pointer-events-none")} aria-hidden>
+      {crops.map((r) => {
+        const [x0, y0, x1, y1] = [r.x * 100, r.y * 100, (r.x + r.w) * 100, (r.y + r.h) * 100];
+        return (
+          <span key={r.id} className="absolute inset-0 block">
+            <span
+              className="absolute inset-0 bg-black/55"
+              style={{
+                clipPath: `polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${x0}% ${y0}%, ${x0}% ${y1}%, ${x1}% ${y1}%, ${x1}% ${y0}%, ${x0}% ${y0}%)`,
+              }}
+            />
+            <span
+              onPointerDown={pick(r.id)}
+              data-crop
+              className={cn("absolute block border-2 border-dashed border-white", ring(r.id), interactive && "cursor-move")}
+              style={{ left: `${x0}%`, top: `${y0}%`, width: `${r.w * 100}%`, height: `${r.h * 100}%` }}
+            />
+          </span>
+        );
+      })}
+      {redactions.map((r) => (
+        <span
+          key={r.id}
+          onPointerDown={pick(r.id)}
+          data-redaction
+          className={cn(
+            "absolute block rounded-[3px] border border-dashed border-white/70",
+            ring(r.id),
+            interactive && "cursor-move",
+          )}
+          style={{
+            left: `${r.x * 100}%`,
+            top: `${r.y * 100}%`,
+            width: `${r.w * 100}%`,
+            height: `${r.h * 100}%`,
+            background: REDACT_CSS,
+          }}
+        />
+      ))}
       {annotations.highlights.map((h) => (
         <span
           key={h.id}
