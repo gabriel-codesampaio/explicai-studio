@@ -20,4 +20,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test e2e/studio.imagem.e2e.ts -g "Backspace|teclado|Selecion" --repeat-each=10 --reporter=line
       - run: npm run test:e2e
