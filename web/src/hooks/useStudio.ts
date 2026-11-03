@@ -57,8 +57,14 @@ export function useStudio() {
     }
   }, []);
 
+  /** Número da última abertura de página: resposta de uma abertura antiga não pode sobrescrever a atual. */
+  const openSeq = useRef(0);
+
   const showPage = useCallback(async (slug: string, pageId: string | null) => {
-    setPage(pageId ? await api.getPage(slug, pageId) : null);
+    const seq = ++openSeq.current;
+    const next = pageId ? await api.getPage(slug, pageId) : null;
+    if (seq !== openSeq.current) return;
+    setPage(next);
     setNotFound(null);
     writeLocation({ slug, pageId });
   }, []);
@@ -162,6 +168,7 @@ export function useStudio() {
       if (!manual) return;
       await flush();
       const created = await api.addPage(manual.slug, "", parentId);
+      openSeq.current++;
       await refreshManual(manual.slug);
       setPage(created);
       setNotFound(null);
