@@ -52,7 +52,7 @@ function cleanWebp(b: Buffer): Buffer {
 
 /**
  * Troca o arquivo de `assets/` pela versão com as tarjas já queimadas (o navegador desenha e envia).
- * Valida o formato e o tamanho em pixels, grava num temporário e renomeia por cima do caminho de sempre,
+ * Valida o formato e que a imagem abre, grava num temporário e renomeia por cima do caminho de sempre,
  * então Markdown e marcações seguem valendo. O original não vai para a lixeira: some, junto com
  * qualquer cópia idêntica dele na pasta de imagens sem uso.
  */
@@ -63,13 +63,13 @@ export async function redactAsset(dir: string, assetPath: string, data: Uint8Arr
   if (!(await exists(target)))
     throw new ExplicaiError("redact-missing", `A imagem ${assetPath} não existe.`, { asset: assetPath });
   const original = await readFile(target);
-  const before = await imageSize(target);
   const clean = { png: cleanPng, jpeg: cleanJpeg, webp: cleanWebp }[format](Buffer.from(data));
   const tmp = `${target}.${randomUUID()}.tmp`;
   try {
     await writeFile(tmp, clean);
     const after = await imageSize(tmp);
-    if (!before || after?.w !== before.w || after.h !== before.h) throw invalid("o tamanho em pixels mudou");
+    // tamanho livre: recortar e reduzir resolução (T-118, T-119) reusam esta troca
+    if (!after) throw invalid("a imagem não pôde ser lida");
     await rename(tmp, target);
   } finally {
     await rm(tmp, { force: true });

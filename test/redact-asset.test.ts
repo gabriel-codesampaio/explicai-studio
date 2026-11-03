@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { deflateSync, inflateSync } from "node:zlib";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { imageSize } from "../src/core/export/imageSize.js";
 import {
   addPage,
   createManual,
@@ -126,16 +127,17 @@ describe("redactAsset", () => {
     expect(await readAnnotations(dir, asset)).toEqual(marks);
   });
 
-  it("recusa tamanho diferente, formato trocado e SVG, sem mexer no original", async () => {
+  it("aceita imagem de outro tamanho; recusa formato trocado e SVG, sem mexer no original", async () => {
     const asset = await saveAsset(dir, "tela.png", encodePng(pattern()));
     const file = path.join(dir, asset);
     const before = await readFile(file);
-    await expect(redactAsset(dir, asset, encodePng(new Uint8Array(4 * 4 * 4), 4, 4))).rejects.toThrow(/tamanho/);
     await expect(redactAsset(dir, asset, Buffer.from([0xff, 0xd8, 0xff, 0xd9]))).rejects.toThrow(/PNG/);
     const svg = await saveAsset(dir, "a.svg", Buffer.from('<svg width="1" height="1"></svg>'));
     await expect(redactAsset(dir, svg, encodePng(pattern()))).rejects.toThrow(/PNG, JPEG ou WebP/);
     expect(await readFile(file)).toEqual(before);
     expect((await readdir(path.join(dir, "assets"))).filter((f) => f.endsWith(".tmp"))).toEqual([]);
+    await redactAsset(dir, asset, encodePng(new Uint8Array(4 * 4 * 4), 4, 4));
+    expect(await imageSize(file)).toMatchObject({ w: 4, h: 4 });
   });
 
   it("recusa caminho fora de assets/", async () => {
