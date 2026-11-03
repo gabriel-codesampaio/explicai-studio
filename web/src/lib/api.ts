@@ -202,7 +202,6 @@ export const api = {
   saveAnnotations: (slug: string, asset: string, annotations: Annotations) =>
     call<Annotations>(`${manualUrl(slug)}/annotations?asset=${encodeURIComponent(asset)}`, send("PUT", annotations)),
 
-  unusedAssets: (slug: string) => call<{ count: number }>(`${manualUrl(slug)}/assets/unused`),
   cleanUnusedAssets: (slug: string) =>
     call<{ moved: number; folder: string | null }>(`${manualUrl(slug)}/assets/clean`, { method: "POST" }),
 

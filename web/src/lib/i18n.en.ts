@@ -3,14 +3,13 @@
  * Texto novo sem entrada aqui aparece em português: o teste i18n.test.ts acusa.
  */
 export const EN: Record<string, string> = {
+  "Nenhuma imagem sem uso.": "No unused images.",
+  "Imagens que nenhuma página usa, contando versões e lixeira, vão para a lixeira.":
+    "Images that no page uses, counting versions and trash, go to the trash.",
   '"{nome}" e {n} subpágina foram para a lixeira.': '"{nome}" and {n} subpage went to the trash.',
   '"{nome}" e {n} subpáginas foram para a lixeira.': '"{nome}" and {n} subpages went to the trash.',
   '"{nome}" foi para a lixeira.': '"{nome}" went to the trash.',
-  "{n} arquivo de imagem que nenhuma página usa, contando versões e lixeira.":
-    "{n} image file that no page uses, counting versions and trash.",
   "{n} arquivo foi para {pasta}.": "{n} file went to {pasta}.",
-  "{n} arquivos de imagem que nenhuma página usa, contando versões e lixeira.":
-    "{n} image files that no page uses, counting versions and trash.",
   "{n} arquivos foram para {pasta}.": "{n} files went to {pasta}.",
   "As marcações de {file} estão com erro de sintaxe. Corrija ou apague o arquivo.":
     "The markup in {file} has a syntax error. Fix or delete the file.",
