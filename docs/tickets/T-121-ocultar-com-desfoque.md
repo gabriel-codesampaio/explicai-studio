@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: concluído
 - Agente: frontend (+ design, qa)
 - Origem: pedido da pessoa em 2026-11-03, ao testar o T-116 ("adicione uma personalização pra desfocar"). Reabre só o ponto do discovery que tinha descartado o borrão; as outras decisões do T-116 continuam.
 
@@ -26,4 +26,4 @@ A tarja sólida do T-116 fica pesada no print. A pessoa quer a opção de desfoc
 Vitest `--maxWorkers=2`; Playwright `--workers=2` só em `studio.ocultar`. Design a 1280 em tema claro.
 
 ## Registro
-<!-- preenchido ao fechar -->
+Desfoque = pixelado (bloco max(12 px, 1/4 da altura)) + borrado, queimado nos pixels. Estilo lembrado em localStorage (explicai:ocultar-estilo). Prévia por backdrop-filter (aproximada). Extras no mesmo PR: rótulo "Editar imagem"; legenda com 3+ sem descrição vira selo "1–8", centralizada.
