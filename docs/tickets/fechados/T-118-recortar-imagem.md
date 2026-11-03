@@ -30,3 +30,5 @@
 
 ## Registro
 Commit 4cac12b. Remapeamento puro em web/src/lib/cropAnnotations.ts (4 testes); CropPanel lista o que some com pixels inteiros; reaproveita o endpoint do T-116. Revisado e design conferido (1280 e 375 claro). e2e recortar+ocultar+imagem 47/47, vitest web 204. Limites: o retângulo só se ajusta com Selecionar (V) e com mouse; sair com recorte não aplicado descarta sem perguntar; se a gravação do JSON falhar depois da imagem, a tela pede salvar de novo.
+
+Decisão da pessoa (2026-11-03): alças só via Selecionar (V) aceitas por ora (opção A).
