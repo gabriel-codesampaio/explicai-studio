@@ -109,6 +109,35 @@ describe("servidor local: arquivos de /files/ e corpo JSON", () => {
     expect((await fetch(`${base()}/`)).headers.get("content-security-policy")).toBeNull();
   });
 
+  it("arquivos de /files/ saem com ETag, 304 em If-None-Match e cache só nas imagens de assets/", async () => {
+    await mk();
+    await up("b.png", "x");
+    await up("a.svg", "<svg xmlns='http://www.w3.org/2000/svg'/>");
+    const png = await fetch(`${base()}/files/m/assets/b.png`);
+    const etag = png.headers.get("etag");
+    expect(etag).toBeTruthy();
+    expect(await png.text()).toBe("x");
+    expect(png.headers.get("cache-control")).toBe("private, max-age=3600");
+    expect(png.headers.get("x-content-type-options")).toBe("nosniff");
+    const again = await fetch(`${base()}/files/m/assets/b.png`, { headers: { "if-none-match": etag as string } });
+    expect(again.status).toBe(304);
+    expect(await again.text()).toBe("");
+    expect((await fetch(`${base()}/files/m/assets/b.png`, { headers: { "if-none-match": '"outro"' } })).status).toBe(200);
+    // SVG e manual.json continuam revalidando e com CSP; 304 também leva CSP.
+    const svg = await fetch(`${base()}/files/m/assets/a.svg`);
+    expect(svg.headers.get("cache-control")).toBe("no-cache");
+    expect(svg.headers.get("content-security-policy")).toBe(CSP);
+    const mj = await fetch(`${base()}/files/m/manual.json`);
+    expect(mj.headers.get("cache-control")).toBe("no-cache");
+    expect(mj.headers.get("etag")).toBeTruthy();
+    const mj304 = await fetch(`${base()}/files/m/manual.json`, {
+      headers: { "if-none-match": mj.headers.get("etag") as string },
+    });
+    expect(mj304.status).toBe(304);
+    expect(mj304.headers.get("content-security-policy")).toBe(CSP);
+    expect((await fetch(`${base()}/files/m/assets/nao-existe.png`)).status).toBe(404);
+  });
+
   it("recusa corpo com content-type que não é JSON (text/plain não faz preflight) com 415", async () => {
     for (const type of ["text/plain", "application/x-www-form-urlencoded"]) {
       const res = await fetch(`${base()}/api/manuals`, {

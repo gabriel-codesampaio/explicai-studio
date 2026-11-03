@@ -49,6 +49,10 @@ export const assetRoutes: Route[] = [
     // Imagens do manual, usadas pelo editor: /files/<manual>/assets/<arquivo>
     method: "GET",
     path: "/files/:slug/*",
-    handle: (ctx) => file(resolveInside(manualDir(ctx), ctx.rest), "no-cache", true),
+    // Só raster de assets/ (nome único, gravado uma vez) fica em cache; manual.json, logo e .md revalidam por ETag.
+    handle: (ctx) => {
+      const cacheable = /^assets\/[^/]+\.(png|jpe?g|gif|webp)$/i.test(ctx.rest);
+      return file(resolveInside(manualDir(ctx), ctx.rest), cacheable ? "private, max-age=3600" : "no-cache", true);
+    },
   },
 ];
