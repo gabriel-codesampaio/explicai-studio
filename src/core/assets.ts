@@ -85,7 +85,8 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
   const files = await readdir(assetsDir);
   const names = new Set(files);
   // Arquivo recém-gravado pode estar numa página que ainda não chegou ao disco: poupa (EXPLICAI_ASSET_GRACE_MS só para o e2e).
-  const grace = Number(process.env.EXPLICAI_ASSET_GRACE_MS ?? 60_000);
+  const envGrace = Number(process.env.EXPLICAI_ASSET_GRACE_MS ?? 60_000);
+  const grace = Number.isFinite(envGrace) && envGrace >= 0 ? envGrace : 60_000;
   const recent = new Set<string>();
   for (const f of files) if (Date.now() - (await stat(path.join(assetsDir, f))).mtimeMs < grace) recent.add(f);
   return files
