@@ -49,7 +49,8 @@ export const pageRoutes: Route[] = [
         ...(text === undefined ? {} : { body: text }),
         ...(status === undefined ? {} : { status }),
       };
-      return json(await updatePage(manualDir(ctx), ctx.params.id ?? "", patch));
+      const fileName = body.fileName === "keep" || body.fileName === "sync" ? body.fileName : undefined;
+      return json(await updatePage(manualDir(ctx), ctx.params.id ?? "", patch, { fileName }));
     },
   },
   {

@@ -19,6 +19,9 @@ import { findItem, flattenItems, renameItem } from "../lib/tree";
 import { useAutosave } from "./useAutosave";
 import { useReconnect } from "./useReconnect";
 
+/** Tempo sem gravar o título até o arquivo da página mudar de nome. */
+const RENAME_IDLE_MS = 5000;
+
 /** Estado do Studio (manuais, manual aberto, página aberta) e as ações sobre ele. */
 export function useStudio() {
   const [manuals, setManuals] = useState<ManualSummary[] | null>(null);
@@ -36,15 +39,45 @@ export function useStudio() {
   /** Muda quando o texto da página aberta é trocado por fora do editor (restaurar versão), para recriar o editor. */
   const [revision, setRevision] = useState(0);
 
+  /** Títulos já gravados cujo arquivo ainda tem o nome antigo: renomeia ao sair da página ou 5 s depois. */
+  const renameDue = useRef(new Map<string, { slug: string; title: string }>());
+  const renameTimer = useRef<number | undefined>(undefined);
+  const settleRenames = useCallback(async () => {
+    window.clearTimeout(renameTimer.current);
+    for (const [id, { slug, title }] of [...renameDue.current]) {
+      renameDue.current.delete(id);
+      try {
+        const saved = await api.updatePage(slug, id, { title, fileName: "sync" });
+        setPage((p) => (p && p.id === saved.id ? { ...p, file: saved.file } : p));
+      } catch (err) {
+        renameDue.current.set(id, { slug, title }); // tenta de novo no próximo flush
+        if (isOffline(err)) setServerDown(true);
+      }
+    }
+  }, []);
+
   const autosave = useAutosave(async (job) => {
-    const saved = await api.updatePage(job.slug, job.id, job.patch).catch((err: unknown) => {
+    // Título em digitação fica no mesmo arquivo; o arquivo muda de nome em settleRenames.
+    const patch = job.patch.title === undefined ? job.patch : { ...job.patch, fileName: "keep" as const };
+    const saved = await api.updatePage(job.slug, job.id, patch).catch((err: unknown) => {
       if (isOffline(err)) setServerDown(true);
       throw err;
     });
-    // O arquivo muda de nome com o título; a linha de status mostra o caminho atual.
+    if (patch.fileName) {
+      renameDue.current.set(job.id, { slug: job.slug, title: saved.title });
+      window.clearTimeout(renameTimer.current);
+      renameTimer.current = window.setTimeout(() => void settleRenames(), RENAME_IDLE_MS);
+    }
+    // A linha de status mostra o caminho atual do arquivo.
     setPage((p) => (p && p.id === saved.id ? { ...p, file: saved.file } : p));
   });
-  const { flush } = autosave;
+  const autosaveFlush = autosave.flush;
+  /** Grava a fila e, se tudo foi gravado, renomeia os arquivos cujo título mudou. */
+  const flush = useCallback(async () => {
+    const ok = await autosaveFlush();
+    if (ok) await settleRenames();
+    return ok;
+  }, [autosaveFlush, settleRenames]);
 
   /** Roda a ação e mostra o erro num aviso, em vez de deixar a promessa sem tratamento. */
   const run = useCallback(async (action: () => Promise<void>) => {
@@ -189,6 +222,7 @@ export function useStudio() {
       if (!manual) return;
       const slug = manual.slug;
       autosave.discard(item.id);
+      renameDue.current.delete(item.id);
       const { trashId } = await api.removePage(slug, item.id);
       const detail = await refreshManual(slug);
       if (page && !findItem(detail.pages, page.id)) await showPage(slug, detail.pages[0]?.id ?? null);

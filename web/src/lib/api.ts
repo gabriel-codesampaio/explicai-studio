@@ -104,6 +104,8 @@ export interface PagePatch {
   title?: string;
   body?: string;
   status?: PageStatus;
+  /** "keep" grava o título sem renomear o arquivo; "sync" renomeia se o nome não combina com o título. */
+  fileName?: "keep" | "sync";
 }
 
 /** Erro da API. `code` e `params` (quando o núcleo manda) deixam a interface traduzir a mensagem. */

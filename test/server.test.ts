@@ -158,6 +158,17 @@ describe("API do Studio", () => {
     expect((await (await fetch(`${base}/api/manuals/m/pages/${outra.id}`)).json()).body).toBe("Veja [aqui](./cadastro.md).");
   });
 
+  it("fileName keep na API grava o título sem renomear o arquivo; sync renomeia", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
+    const page = await (await fetch(`${base}/api/manuals/m/pages`, json("POST", { title: "Antes" }))).json();
+    const url = `${base}/api/manuals/m/pages/${page.id}`;
+
+    const keep = await (await fetch(url, json("PUT", { title: "Depois", fileName: "keep" }))).json();
+    expect(keep.file).toBe(page.file);
+    const sync = await (await fetch(url, json("PUT", { title: "Depois", fileName: "sync" }))).json();
+    expect(sync.file).toBe("pages/depois.md");
+  });
+
   it("responde com mensagem clara para JSON inválido, corpo errado e rota que não existe", async () => {
     const quebrado = await fetch(`${base}/api/manuals`, {
       method: "POST",
