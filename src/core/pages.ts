@@ -103,7 +103,7 @@ export async function updatePage(
   dir: string,
   id: string,
   patch: { title?: string; body?: string; status?: PageStatus },
-  opts: { fileName?: "keep" | "sync" } = {},
+  opts: { fileName?: "keep" | "sync" | undefined } = {},
 ): Promise<Page> {
   const page = await readPage(dir, id);
   if (patch.status !== undefined && !PAGE_STATUSES.includes(patch.status)) {
