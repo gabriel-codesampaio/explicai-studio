@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useStudioContext } from "@/hooks/StudioContext";
-import type { ManualTheme, ThemePatch } from "@/lib/api";
+import { errorMessage, type ManualTheme, type ThemePatch } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { ColorField } from "./ColorField";
 import { FontPicker } from "./FontPicker";
@@ -33,7 +33,7 @@ export function ThemeFields({ theme }: { theme: ManualTheme }) {
   const [open, setOpen] = useState(false);
   const fonts = useFontPreview(open);
   const save = (patch: ThemePatch) => studio.setManualTheme(patch);
-  const saveFont = (patch: ThemePatch) => void save(patch).catch(() => undefined);
+  const saveFont = (patch: ThemePatch) => void save(patch).catch((err: unknown) => studio.reportError(errorMessage(err)));
 
   return (
     <details className="group" onToggle={(e) => setOpen(e.currentTarget.open)}>
