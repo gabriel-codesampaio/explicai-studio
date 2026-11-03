@@ -3,6 +3,34 @@
  * Texto novo sem entrada aqui aparece em português: o teste i18n.test.ts acusa.
  */
 export const EN: Record<string, string> = {
+  Ocultar: "Hide",
+  "Ocultar dados": "Hide sensitive data",
+  "Ferramenta Ocultar": "Hide tool",
+  "Arraste sobre o dado que deve sumir": "Drag over the data that must disappear",
+  "Arraste sobre o dado que deve sumir.": "Drag over the data that must disappear.",
+  "{n} área a ocultar": "{n} area to hide",
+  "{n} áreas a ocultar": "{n} areas to hide",
+  "Aplicar ocultação": "Apply hiding",
+  Descartar: "Discard",
+  "Ocultando…": "Hiding…",
+  "Ocultar e apagar o original": "Hide and delete the original",
+  "Ocultar as áreas marcadas?": "Hide the marked areas?",
+  "Isto troca o print por uma versão com as áreas cobertas. O original será apagado e não dá para voltar.":
+    "This replaces the screenshot with a version that has the areas covered. The original will be deleted and this cannot be undone.",
+  "Esta pasta está no git: o print original continua no histórico depois de ocultar.":
+    "This folder is in git: the original screenshot stays in the history after hiding.",
+  "Esta pasta está no git: o original continua no histórico, e limpar o histórico é com você.":
+    "This folder is in git: the original stays in the history, and cleaning the history is up to you.",
+  "Exportações anteriores ainda têm o original. Exporte de novo e apague os arquivos antigos.":
+    "Earlier exports still contain the original. Export again and delete the old files.",
+  "Não dá para ocultar dados em SVG ou GIF. Use um print em PNG, JPEG ou WebP.":
+    "Hiding data does not work on SVG or GIF. Use a PNG, JPEG or WebP screenshot.",
+  "Não foi possível ocultar as áreas. A imagem não foi alterada.": "Could not hide the areas. The image was not changed.",
+  "Sair sem ocultar?": "Leave without hiding?",
+  "Sair e descartar": "Leave and discard",
+  "Continuar editando": "Keep editing",
+  "As áreas a ocultar ainda não foram aplicadas. Se você sair, elas se perdem e o print continua com os dados à mostra.":
+    "The areas to hide have not been applied yet. If you leave, they are lost and the screenshot still shows the data.",
   '"{nome}" e {n} subpágina foram para a lixeira.': '"{nome}" and {n} subpage went to the trash.',
   '"{nome}" e {n} subpáginas foram para a lixeira.': '"{nome}" and {n} subpages went to the trash.',
   '"{nome}" foi para a lixeira.': '"{nome}" went to the trash.',

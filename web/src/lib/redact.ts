@@ -1,4 +1,13 @@
-import type { Rect } from "./annotations";
+import {
+  type Annotations,
+  addShape,
+  emptyAnnotations,
+  type Handle,
+  type Highlight,
+  moveAnnotation,
+  type Point,
+  type Rect,
+} from "./annotations";
 
 /** Cor única da tarja (cinza-escuro, opaca). Também é a cor do retângulo no rascunho. */
 export const REDACT_RGB = [31, 41, 55] as const;
@@ -28,4 +37,18 @@ export function paintRedactions<T extends Pixels>(img: T, rects: Rect[]): T {
     }
   }
   return img;
+}
+
+/**
+ * Retângulos a ocultar ficam à parte das marcações (só na memória do editor, nunca no JSON).
+ * Reaproveitam a geometria dos destaques: criar, mover e redimensionar são as mesmas contas.
+ */
+const asAnnotations = (highlights: Highlight[]): Annotations => ({ ...emptyAnnotations(), highlights });
+
+export function addRedaction(list: Highlight[], a: Point, b: Point): Highlight[] | null {
+  return addShape(asAnnotations(list), "highlight", a, b, { type: "url", href: "" })?.highlights ?? null;
+}
+
+export function moveRedaction(list: Highlight[], id: string, handle: Handle, dx: number, dy: number): Highlight[] {
+  return moveAnnotation(asAnnotations(list), id, handle, dx, dy).highlights;
 }
