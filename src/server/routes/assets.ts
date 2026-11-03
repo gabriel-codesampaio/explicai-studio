@@ -1,7 +1,9 @@
 import {
   cleanUnusedAssets,
   findUnusedAssets,
+  insideGitRepo,
   readAnnotations,
+  redactAsset,
   resolveInside,
   saveAsset,
   writeAnnotations,
@@ -32,6 +34,21 @@ export const assetRoutes: Route[] = [
     path: "/api/manuals/:slug/annotations",
     handle: async (ctx) =>
       json(await writeAnnotations(manualDir(ctx), ctx.url.searchParams.get("asset") ?? "", await readJson(ctx.req))),
+  },
+  {
+    // Troca o print pela versão com as tarjas já pintadas (o navegador desenha) e apaga o original.
+    method: "POST",
+    path: "/api/manuals/:slug/assets/redact",
+    handle: async (ctx) => {
+      const asset = ctx.url.searchParams.get("asset") ?? "";
+      await redactAsset(manualDir(ctx), asset, await readBody(ctx.req, MAX_UPLOAD));
+      return json({ path: asset });
+    },
+  },
+  {
+    method: "GET",
+    path: "/api/manuals/:slug/git",
+    handle: async (ctx) => json({ git: await insideGitRepo(manualDir(ctx)) }),
   },
   {
     // Imagens e marcações que nenhuma página, versão ou item da lixeira usa.
