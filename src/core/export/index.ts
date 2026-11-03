@@ -2,7 +2,7 @@ import { copyFile, mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { saveAsset } from "../assets.js";
 import { ExplicaiError } from "../errors.js";
-import { atomicWrite, relativePosix, resolveInside } from "../fs.js";
+import { atomicWrite, relativePosix, resolveInside, resolveInsideReal } from "../fs.js";
 import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
 import type { ManualTheme } from "../types.js";
@@ -116,7 +116,7 @@ async function freshDir(dir: string): Promise<string> {
 /** Copia só as imagens usadas, mantendo `assets/` para os caminhos do HTML e do Markdown valerem. */
 async function copyImages(dir: string, images: Map<string, ImageInfo>, out: string): Promise<void> {
   await mkdir(path.join(out, "assets"), { recursive: true });
-  for (const asset of images.keys()) await copyFile(resolveInside(dir, asset), path.join(out, asset));
+  for (const asset of images.keys()) await copyFile(await resolveInsideReal(dir, asset), path.join(out, asset));
 }
 
 /** Copia o logo do tema. Sumiu do disco: avisa e o manual sai sem ele. */
@@ -124,7 +124,7 @@ async function copyLogo(dir: string, out: string, theme: ManualTheme | undefined
   if (!theme?.logo) return null;
   try {
     const logo = checkLogoPath(theme.logo);
-    await copyFile(resolveInside(dir, logo), path.join(out, logo));
+    await copyFile(await resolveInsideReal(dir, logo), path.join(out, logo));
     return logo;
   } catch (err) {
     const missing = (err as NodeJS.ErrnoException).code === "ENOENT";

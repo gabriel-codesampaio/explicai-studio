@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { readFile, rename, stat, writeFile } from "node:fs/promises";
+import { readFile, realpath, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 /** Grava num arquivo temporário e renomeia, para um travamento no meio não deixar o arquivo pela metade. */
@@ -19,6 +19,14 @@ export function resolveInside(dir: string, relative: string): string {
   const root = path.resolve(dir);
   const abs = path.resolve(root, relative);
   if (abs !== root && !abs.startsWith(root + path.sep)) throw new Error(`Caminho fora do manual: ${relative}`);
+  return abs;
+}
+
+/** Como `resolveInside`, mas segue links simbólicos: um link dentro do manual que aponta para fora é recusado. O arquivo precisa existir. */
+export async function resolveInsideReal(dir: string, relative: string): Promise<string> {
+  const abs = resolveInside(dir, relative);
+  const [real, root] = await Promise.all([realpath(abs), realpath(path.resolve(dir))]);
+  if (real !== root && !real.startsWith(root + path.sep)) throw new Error(`Caminho fora do manual: ${relative}`);
   return abs;
 }
 
