@@ -76,7 +76,9 @@ function Shell() {
       <div className="flex h-full">
         {!firstRun && <Navigation sidebar={sidebar} onSearch={() => setSearchOpen(true)} />}
         <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
-          {!firstRun && <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} />}
+          {!firstRun && (
+            <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} drawerOpen={sidebar.drawerOpen} />
+          )}
           {studio.serverDown && <ConnectionBanner checking={studio.reconnect.checking} onRetry={studio.reconnect.retryNow} />}
           {studio.diskConflict && (
             <DiskConflictBanner onReload={() => studio.resolveConflict("reload")} onKeep={() => studio.resolveConflict("keep")} />
