@@ -1,10 +1,10 @@
-# T-082: Servir SVG de assets/ com CSP restritiva
+# T-082: CSP e sandbox nas respostas de /files/ (SVG na origem do Studio)
 
-- Prioridade: P3
+- Prioridade: P1
 - Tamanho: P
 - Status: aberto
 - Agente: frontend
-- Origem: revisão de segurança do lote 7 (2026-11-02)
+- Origem: revisão de segurança do lote 7 e auditoria ponytail, achado 1 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 O servidor serve /files/... como image/svg+xml sem Content-Security-Policy; abrir a URL do SVG direto executaria um <script> dentro dele na origem do Studio.
