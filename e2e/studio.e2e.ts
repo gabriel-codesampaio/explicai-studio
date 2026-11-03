@@ -1133,12 +1133,12 @@ for (const theme of ["light", "dark"] as const) {
         const lumin = ([r = 0, g = 0, b = 0]: number[]) => 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
         const shadow = getComputedStyle(el).boxShadow;
         const color = /(rgba?\([^)]*\)|oklch\([^)]*\)|lab\([^)]*\)|color\([^)]*\)|#[0-9a-f]+)/i;
-        // O anel (ring-2) é a sombra com 2px de espalhamento; a outra é a sombra leve do botão.
+        // Marcada = anel (sombra com 2px de espalhamento, Idioma) ou fundo preenchido (Aparência).
         const ring =
           shadow
             .split(/,(?![^(]*\))/)
             .find((x) => /\s2px(\s|$)/.test(x))
-            ?.match(color)?.[0] ?? "#000";
+            ?.match(color)?.[0] ?? getComputedStyle(el).backgroundColor;
         const track = rgb(getComputedStyle(el.parentElement as HTMLElement).backgroundColor);
         const [hi = 0, lo = 0] = [lumin(rgb(ring)), lumin(track)].sort((x, y) => y - x);
         return (hi + 0.05) / (lo + 0.05);
