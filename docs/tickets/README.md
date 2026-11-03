@@ -10,7 +10,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-082](T-082-svg-servido-sem-csp.md) | CSP e sandbox nas respostas de /files/ (SVG na origem do Studio) | P1 | aberto | frontend |
 | [T-085](T-085-fila-por-pasta-em-updatemanual-perda-de-mudan.md) | Fila por pasta em `updateManual` (perda de mudança na árvore) | P1 | aberto | frontend |
 | [T-086](T-086-imagens-com-etag-304-streaming-e-loading-lazy.md) | Imagens com ETag/304, streaming e `loading="lazy"` | P1 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
@@ -18,7 +17,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-087](T-087-autosave-um-put-por-vez-por-pagina.md) | Autosave: um `PUT` por vez por página | P2 | aberto | frontend |
 | [T-088](T-088-limpar-imagens-sem-uso-gravar-a-fila-antes-e-.md) | Limpar imagens sem uso: gravar a fila antes e poupar arquivo novo | P2 | aberto | frontend |
-| [T-089](T-089-aceitar-origin-so-da-mesma-porta-do-host.md) | Aceitar Origin só da mesma porta do Host | P2 | aberto | frontend |
 | [T-090](T-090-contagem-de-imagens-sem-uso-so-sob-demanda.md) | Contagem de imagens sem uso só sob demanda | P2 | aberto | frontend |
 | [T-091](T-091-imagesize-le-so-o-cabecalho-do-arquivo.md) | `imageSize` lê só o cabeçalho do arquivo | P2 | aberto | frontend |
 | [T-092](T-092-marcacao-com-json-quebrado-vira-aviso-na-expo.md) | Marcação com JSON quebrado vira aviso na exportação | P2 | aberto | frontend |
@@ -54,6 +52,8 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 ## Fechados
 
 | ID | Título | Prioridade | Status | Commit |
+| [T-089](fechados/T-089-aceitar-origin-so-da-mesma-porta-do-host.md) | Aceitar Origin só da mesma porta do Host | P2 | feito | 0b27143 |
+| [T-082](fechados/T-082-svg-servido-sem-csp.md) | CSP e sandbox nas respostas de /files/ (SVG na origem do Studio) | P1 | feito | 0b27143 |
 |----|--------|------------|--------|--------|
 | [T-084](fechados/T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | feito | 5f34c1c |
 | [T-083](fechados/T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | feito | 6676df0 |

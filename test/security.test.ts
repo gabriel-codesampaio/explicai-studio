@@ -44,11 +44,23 @@ describe("assertLocalRequest", () => {
     }
   });
 
-  it("aceita Origin local e a ausência de Origin (curl, MCP)", () => {
-    for (const origin of ["http://localhost:5173", "http://127.0.0.1:4321", "http://[::1]:4321", "http://localhost"]) {
-      expect(codeOf({ host: "localhost:4321", origin }), origin).toBe("ok");
+  it("aceita Origin igual ao Host (mesma porta) e a ausência de Origin (curl, MCP)", () => {
+    for (const [host, origin] of [
+      ["localhost:4321", "http://localhost:4321"],
+      ["127.0.0.1:4321", "http://127.0.0.1:4321"],
+      ["[::1]:4321", "http://[::1]:4321"],
+      ["localhost:5173", "http://localhost:5173"], // proxy do Vite mantém Host e Origin
+      ["localhost", "http://localhost"],
+    ] as const) {
+      expect(codeOf({ host, origin }), origin).toBe("ok");
     }
     expect(codeOf({ host: "localhost:4321" })).toBe("ok");
+  });
+
+  it("recusa Origin local de outra porta ou de outro nome local", () => {
+    for (const origin of ["http://localhost:3000", "http://localhost:5173", "http://localhost", "http://127.0.0.1:4321"]) {
+      expect(codeOf({ host: "localhost:4321", origin }), origin).toBe("forbidden-origin");
+    }
   });
 
   it("recusa Origin null, de outro site e com nome parecido com localhost", () => {

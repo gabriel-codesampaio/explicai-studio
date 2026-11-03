@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: revisão de segurança do lote 7 e auditoria ponytail, achado 1 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
@@ -19,4 +19,4 @@ src/server/http.ts (send)
 Teste do servidor conferindo o cabeçalho; SVG ainda carrega no editor e no export.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit 0b27143. Teste vermelho: test/server-security.test.ts (CSP em /files/ para SVG e não raster; PNG e app sem CSP). E2E de imagem, logo e exportação (52 casos) passam, o SVG segue por <img>. Doc: manual-format.md não precisou mudar.
