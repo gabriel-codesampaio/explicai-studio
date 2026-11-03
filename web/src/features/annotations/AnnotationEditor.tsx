@@ -120,11 +120,14 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               title={`${label} (${TOOL_KEYS[id]})`}
               onClick={() => setTool(id)}
               className={cn(
-                "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-sm",
+                "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-sm [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11",
                 tool === id ? "border-primary bg-accent font-bold text-primary" : "border-border hover:bg-muted",
               )}
             >
               <Icon className="size-4" aria-hidden />
+              <span className="hidden sm:inline [@media(pointer:coarse)]:inline" aria-hidden>
+                {label}
+              </span>
               <kbd className="font-mono text-xs" aria-hidden>
                 {TOOL_KEYS[id]}
               </kbd>
