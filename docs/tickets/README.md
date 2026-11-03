@@ -49,6 +49,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 ## Fechados
 
 | ID | Título | Prioridade | Status | Commit |
+| [T-087](fechados/T-087-autosave-um-put-por-vez-por-pagina.md) | Autosave: um `PUT` por vez por página | P2 | feito | 84c43e9 |
 | [T-089](fechados/T-089-aceitar-origin-so-da-mesma-porta-do-host.md) | Aceitar Origin só da mesma porta do Host | P2 | feito | 0b27143 |
 | [T-086](fechados/T-086-imagens-com-etag-304-streaming-e-loading-lazy.md) | Imagens com ETag/304, streaming e `loading="lazy"` | P1 | feito | 7d7dfe7 |
 | [T-082](fechados/T-082-svg-servido-sem-csp.md) | CSP e sandbox nas respostas de /files/ (SVG na origem do Studio) | P1 | feito | 0b27143 |
