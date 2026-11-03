@@ -121,6 +121,18 @@ describe("API do Studio", () => {
     expect((await fetch(`${base}/api/manuals/m/annotations?asset=../../segredo.png`)).status).toBe(400);
   });
 
+  it("GET de marcação com JSON quebrado devolve 400 com o nome do arquivo", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
+    await fetch(`${base}/api/manuals/m/assets?name=tela.png`, { method: "POST", body: new Uint8Array([1]) });
+    await writeFile(path.join(workspace, "m", "assets", "tela.png.json"), "{ quebrado");
+    const res = await fetch(`${base}/api/manuals/m/annotations?asset=assets/tela.png`);
+    expect(res.status).toBe(400);
+    expect(await res.json()).toMatchObject({
+      code: "annotations-invalid",
+      error: expect.stringContaining("assets/tela.png.json"),
+    });
+  });
+
   it("move página e recusa mover para dentro dela mesma", async () => {
     await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
     const a = await (await fetch(`${base}/api/manuals/m/pages`, json("POST", { title: "A" }))).json();

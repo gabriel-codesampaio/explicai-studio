@@ -47,8 +47,9 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
     );
   }
   const missing: string[] = [];
-  const images = await loadImages(dir, collected.pages, missing);
-  const warnings = [...collected.warnings, ...missing.map((asset) => `Imagem não encontrada: ${asset}`)];
+  const broken: string[] = [];
+  const images = await loadImages(dir, collected.pages, missing, broken);
+  const warnings = [...collected.warnings, ...missing.map((asset) => `Imagem não encontrada: ${asset}`), ...broken];
   const root = resolveInside(dir, EXPORT_DIR);
   const result = (file: string): ExportResult => ({
     format,

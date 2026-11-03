@@ -217,6 +217,8 @@ const CODED: Record<string, (p: Record<string, string | number>) => string> = {
   "forbidden-origin": forbidden,
   "invalid-utf8": () => t("O Studio recebeu um texto que não está em UTF-8. Salve o conteúdo em UTF-8 e envie de novo."),
   "malformed-url": () => t("O endereço pedido tem um % malformado. Confira o endereço e tente de novo."),
+  "annotations-invalid": (p) =>
+    t("As marcações de {file} estão com erro de sintaxe. Corrija ou apague o arquivo.", { file: String(p.file) }),
   "no-browser": () =>
     t(
       "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.",

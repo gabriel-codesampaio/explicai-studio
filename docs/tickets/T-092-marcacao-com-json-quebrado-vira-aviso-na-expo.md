@@ -20,4 +20,4 @@
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 9 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+readAnnotations lança ExplicaiError `annotations-invalid` (nome do arquivo em `params.file`); loadImages (refs.ts) captura por imagem, exporta sem marcações e põe o aviso em `warnings`; GET de anotações dá 400 com o código, traduzido em web/src/lib/api.ts + i18n.en.ts. Testes em test/image-assets.test.ts e test/server.test.ts. Fora: redesenho de marcação, cleanUnusedAssets (T-088).
