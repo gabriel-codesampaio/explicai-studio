@@ -462,6 +462,36 @@ test.describe("marcações", () => {
   });
 });
 
+test.describe("tamanho da imagem", () => {
+  test("escolher Média grava display no JSON, encolhe a imagem no editor e sai no HTML", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Tamanho");
+    await page.goto(`/#/${slug}/${id}`);
+    await expect(images(page)).toHaveCount(1);
+    await images(page).first().click();
+    const media = page.getByRole("button", { name: "Média" });
+    await expect(media).toHaveAttribute("aria-pressed", "false"); // sem escolha = comportamento atual
+    await media.click();
+    await expect(media).toHaveAttribute("aria-pressed", "true");
+
+    const saved = await (await request.get(`/api/manuals/${slug}/annotations?asset=assets/tela.png`)).json();
+    expect(saved).toMatchObject({ version: 1, display: "m" });
+    const fraction = await images(page)
+      .first()
+      .evaluate((img) => {
+        const box = img.parentElement as HTMLElement;
+        return box.getBoundingClientRect().width / (box.parentElement as HTMLElement).getBoundingClientRect().width;
+      });
+    expect(fraction).toBeLessThanOrEqual(0.7 + 0.01);
+
+    await page.reload();
+    await images(page).first().click();
+    await expect(page.getByRole("button", { name: "Média" })).toHaveAttribute("aria-pressed", "true");
+
+    const html = await exportApi(request, slug, "html");
+    expect(await (await request.get(html.url)).text()).toContain('class="shot shot-m"');
+  });
+});
+
 const unused = async (request: APIRequestContext, slug: string) =>
   (await (await request.get(`/api/manuals/${slug}/assets/unused`)).json()).count as number;
 const fileStatus = async (request: APIRequestContext, slug: string, asset: string) =>
@@ -656,7 +686,7 @@ for (const width of [375, 1280]) {
   }
 }
 
-test("teclado: o balão da descrição abre ao selecionar a imagem, o Tab chega em Marcar imagem e o Esc devolve o foco ao editor", async ({
+test("teclado: o balão da descrição abre ao selecionar a imagem, o Tab passa pelos tamanhos e chega em Marcar imagem e o Esc devolve o foco ao editor", async ({
   page,
   request,
 }) => {
@@ -665,6 +695,8 @@ test("teclado: o balão da descrição abre ao selecionar a imagem, o Tab chega 
   const alt = await openImage(page);
   await expect(alt).toBeFocused();
   await page.keyboard.press("Tab");
+  await expect(page.getByRole("button", { name: "Pequena" })).toBeFocused();
+  for (let i = 0; i < 3; i++) await page.keyboard.press("Tab"); // Média, Larga, Marcar imagem
   await expect(page.getByRole("button", { name: "Marcar imagem" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(alt).toBeHidden();
