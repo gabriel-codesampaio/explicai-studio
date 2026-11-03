@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: fechado
 - Agente: frontend
 - Origem: preparação da versão de produção (2026-11-03)
 
@@ -10,8 +10,8 @@
 Se nenhum botão do seletor estiver marcado ao abrir o painel Aparência, o foco não vai para lugar nenhum.
 
 ## Critérios de aceite
-- [ ] Foco cai no primeiro botão quando não há marcado.
-- [ ] Teste cobrindo o caso; `npm run check`.
+- [x] Foco cai no primeiro botão quando não há marcado.
+- [x] Teste cobrindo o caso; `npm run check`.
 
 ## Onde
 web/src (painel Aparência)
@@ -20,4 +20,4 @@ web/src (painel Aparência)
 Teste da área primeiro (vermelho, depois verde); `npm run check`.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Branch `fix/t-113-foco-aparencia`. AppearancePanel: fallback `?? primeiro button` no foco ao abrir. Teste novo (readAppearance mockado sem modo válido). Medido: appearancePanel.test 7/7.
