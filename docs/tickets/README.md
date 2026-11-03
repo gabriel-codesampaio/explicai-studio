@@ -42,6 +42,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-083](fechados/T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | feito | 6676df0 |
 | [T-023](fechados/T-023-marcacao-no-celular.md) | Deixar a legenda editável no diálogo de marcação em 375 px | P2 | feito | f8be5dd |
 | [T-027](fechados/T-027-tokens-do-escuro.md) | Alinhar as cores do tema escuro ao brand book | P2 | feito | 45d97df |
 | [T-032](fechados/T-032-logo-do-cliente.md) | Logo do cliente na capa do manual exportado | P2 | feito | 6798aef..77723fd |
@@ -105,5 +106,4 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-080](T-080-gitignore-sem-env.md) | Incluir .env no .gitignore | P3 | aberto | qa |
 | [T-081](T-081-duas-marcas-com-gaveta-aberta.md) | Duas marcas visíveis com a gaveta aberta abaixo de 900 px | P3 | aberto | frontend |
 | [T-082](T-082-svg-servido-sem-csp.md) | Servir SVG de assets/ com CSP restritiva | P3 | aberto | frontend |
-| [T-083](T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | aberto | frontend |
 | [T-084](T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | aberto | design |
