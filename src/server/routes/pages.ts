@@ -50,7 +50,8 @@ export const pageRoutes: Route[] = [
         ...(status === undefined ? {} : { status }),
       };
       const fileName = body.fileName === "keep" || body.fileName === "sync" ? body.fileName : undefined;
-      return json(await updatePage(manualDir(ctx), ctx.params.id ?? "", patch, { fileName }));
+      const ifMatch = ctx.req.headers["if-match"];
+      return json(await updatePage(manualDir(ctx), ctx.params.id ?? "", patch, { fileName, ifMatch }));
     },
   },
   {

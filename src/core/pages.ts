@@ -1,9 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { rm } from "node:fs/promises";
+import { rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
-import { PAGES_DIR, readManual, updateManual } from "./manuals.js";
+import { ExplicaiError } from "./errors.js";
+import { inQueue, PAGES_DIR, readManual, updateManual } from "./manuals.js";
 import { slugify } from "./text.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
 import { PAGE_STATUSES, type Page, type PageNode, type PageStatus } from "./types.js";
@@ -24,6 +25,7 @@ export async function addPage(
 
   // Arquivo primeiro: se gravar falhar, a árvore não aponta para o que não existe. Se a árvore falhar, desfaz o arquivo.
   await writePageFile(dir, page);
+  page.version = await fileVersion(dir, page.file);
   try {
     await updateManual(dir, (meta) => {
       const siblings = childrenOf(meta.pages, opts.parentId);
@@ -38,7 +40,22 @@ export async function addPage(
 
 export async function readPage(dir: string, id: string): Promise<Page> {
   const { node } = findNode((await readManual(dir)).pages, id);
-  return { id, ...(await readPageFile(dir, node.file)), file: node.file };
+  return { id, ...(await readPageFile(dir, node.file)), file: node.file, version: await fileVersion(dir, node.file) };
+}
+
+/** Versão do arquivo: mtime + tamanho. Basta para saber se alguém mexeu nele desde a última leitura. */
+async function fileVersion(dir: string, file: string): Promise<string> {
+  const s = await stat(resolveInside(dir, file));
+  return `${s.mtimeMs}-${s.size}`;
+}
+
+/** Dentro da fila da pasta: recusa a gravação se o arquivo mudou no disco depois de `expected`. */
+async function assertVersion(dir: string, file: string, expected: string): Promise<void> {
+  if ((await fileVersion(dir, file)) === expected) return;
+  throw new ExplicaiError(
+    "disk-conflict",
+    "Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão.",
+  );
 }
 
 export interface PageTreeNode {
@@ -109,7 +126,7 @@ export async function updatePage(
   dir: string,
   id: string,
   patch: { title?: string; body?: string; status?: PageStatus },
-  opts: { fileName?: "keep" | "sync" | undefined } = {},
+  opts: { fileName?: "keep" | "sync" | undefined; ifMatch?: string | undefined } = {},
 ): Promise<Page> {
   const page = await readPage(dir, id);
   if (patch.status !== undefined && !PAGE_STATUSES.includes(patch.status)) {
@@ -125,11 +142,20 @@ export async function updatePage(
   const sameName =
     opts.fileName === "keep" ||
     (opts.fileName === "sync" ? fileMatchesTitle(page.file, next.title) : slugify(next.title) === slugify(page.title));
+  const { ifMatch } = opts;
   if (sameName) {
-    await writePageFile(dir, next);
-    return next;
+    if (ifMatch === undefined) await writePageFile(dir, next);
+    else {
+      await inQueue(dir, async () => {
+        await assertVersion(dir, page.file, ifMatch);
+        await writePageFile(dir, next);
+      });
+    }
+    return { ...next, version: await fileVersion(dir, next.file) };
   }
 
+  // shortcut: com renomeio, a checagem e a gravação não são atômicas (janela de milissegundos); upgrade se aparecer na prática.
+  if (ifMatch !== undefined) await inQueue(dir, () => assertVersion(dir, page.file, ifMatch));
   next.file = await newPageFile(dir, next.title);
   await writePageFile(dir, next);
   const others = await updateManual(dir, (meta) => {
@@ -143,7 +169,7 @@ export async function updatePage(
     page.file,
     next.file,
   );
-  return next;
+  return { ...next, version: await fileVersion(dir, next.file) };
 }
 
 /** O arquivo já tem o nome do título: `titulo.md` ou `titulo-2.md` (sufixo que `uniquePath` põe). */

@@ -3,6 +3,7 @@ import { stat } from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
+import { ExplicaiError } from "../core/errors.js";
 
 export class HttpError extends Error {
   constructor(
@@ -122,6 +123,7 @@ export async function readJson(req: IncomingMessage): Promise<Record<string, unk
 /** Status HTTP para um erro vindo do core: "não encontrado" e arquivo inexistente viram 404, o resto 400. */
 export function statusOf(err: unknown): number {
   if (err instanceof HttpError) return err.status;
+  if (err instanceof ExplicaiError && err.code === "disk-conflict") return 409;
   const missing =
     (err instanceof Error && /não encontrad/i.test(err.message)) ||
     ["ENOENT", "EISDIR"].includes((err as { code?: string } | null)?.code ?? "");
