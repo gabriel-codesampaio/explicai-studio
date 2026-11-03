@@ -10,7 +10,6 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-085](T-085-fila-por-pasta-em-updatemanual-perda-de-mudan.md) | Fila por pasta em `updateManual` (perda de mudança na árvore) | P1 | aberto | frontend |
 | [T-086](T-086-imagens-com-etag-304-streaming-e-loading-lazy.md) | Imagens com ETag/304, streaming e `loading="lazy"` | P1 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-038](T-038-harden-antes-do-npm.md) | Rodar o harden do impeccable antes da versão pública no npm | P2 | aberto | design |
@@ -55,6 +54,7 @@ Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 | [T-089](fechados/T-089-aceitar-origin-so-da-mesma-porta-do-host.md) | Aceitar Origin só da mesma porta do Host | P2 | feito | 0b27143 |
 | [T-082](fechados/T-082-svg-servido-sem-csp.md) | CSP e sandbox nas respostas de /files/ (SVG na origem do Studio) | P1 | feito | 0b27143 |
 |----|--------|------------|--------|--------|
+| [T-085](fechados/T-085-fila-por-pasta-em-updatemanual-perda-de-mudan.md) | Fila por pasta em `updateManual` (perda de mudança na árvore) | P1 | feito | ca2f2b0 |
 | [T-084](fechados/T-084-icones-linha-e-coluna.md) | Ícones de adicionar linha e coluna da tabela | P3 | feito | 5f34c1c |
 | [T-083](fechados/T-083-codigo-inline-e-link-no-editor.md) | Botão de código inline e fluxo de link: investigar e corrigir | P2 | feito | 6676df0 |
 | [T-075](fechados/T-075-menu-barra-atras-da-barra-fixa.md) | Menu "/" aparece atrás da barra fixa | P1 | feito | bd8dfca |
