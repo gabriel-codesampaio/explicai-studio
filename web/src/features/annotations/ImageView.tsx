@@ -1,6 +1,6 @@
 import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react";
 import { useAnnotations } from "@/lib/annotationStore";
-import { assetPathFromSrc } from "@/lib/annotations";
+import { assetPathFromSrc, DISPLAY_WIDTH } from "@/lib/annotations";
 import { AnnotationLegend } from "./AnnotationLegend";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 
@@ -17,7 +17,10 @@ export function ImageView({ node, extension, selected }: NodeViewProps) {
 
   return (
     <NodeViewWrapper as="span" className="my-2 block" data-drag-handle>
-      <span className="relative isolate inline-block max-w-full align-top">
+      <span
+        className="relative isolate inline-block max-w-full align-top"
+        style={annotations?.display ? { maxWidth: DISPLAY_WIDTH[annotations.display] } : undefined}
+      >
         <img src={src} alt={alt} draggable={false} className={selected ? "ProseMirror-selectednode" : undefined} />
         {annotations && <AnnotationOverlay annotations={annotations} />}
       </span>

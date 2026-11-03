@@ -203,6 +203,13 @@ export const EN: Record<string, string> = {
   Marcador: "Marker",
   "Marcando imagens": "Marking up images",
   "Marcar imagem": "Mark up image",
+  "Tamanho da imagem": "Image size",
+  "Não foi possível salvar o tamanho.": "Could not save the size.",
+  Pequena: "Small",
+  Média: "Medium",
+  Larga: "Wide",
+  "Com {n} marcadores, a imagem pequena pode amontoá-los. Experimente Média.":
+    "With {n} markers, a small image may crowd them. Try Medium.",
   "Markdown para IA": "Markdown for AI",
   "Mostrar as páginas ({atalho})": "Show pages ({atalho})",
   "Mostrar ou esconder as páginas": "Show or hide pages",

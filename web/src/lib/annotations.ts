@@ -42,6 +42,13 @@ export interface Annotations {
   hotspots: Hotspot[];
 }
 
+/** Largura máxima de cada tamanho, em % da coluna. Igual ao HTML exportado (`annotationCss.ts`). */
+export const DISPLAY_WIDTH: Record<ImageDisplay, string> = { s: "40%", m: "70%", full: "100%" };
+
+/** Marcadores de 24 px se sobrepõem numa imagem pequena: a partir de 4, o editor avisa. */
+export const SMALL_MARKER_WARNING = 4;
+export const warnsSmall = (ann: Annotations): boolean => ann.display === "s" && ann.markers.length >= SMALL_MARKER_WARNING;
+
 export type AnnotationKind = "marker" | "highlight" | "arrow" | "hotspot";
 
 export const emptyAnnotations = (): Annotations => ({ version: 1, markers: [], highlights: [], arrows: [], hotspots: [] });
