@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import * as theme from "../src/lib/theme";
 import { AppearancePanel } from "../src/features/settings/AppearancePanel";
 
 const KEY = "explicai:aparencia";
@@ -35,5 +36,12 @@ describe("AppearancePanel: foco", () => {
     localStorage.setItem(KEY, JSON.stringify({ mode: "dark" }));
     render(<AppearancePanel open onOpenChange={() => {}} />);
     await vi.waitFor(() => expect(document.activeElement?.textContent?.trim()).toBe("Escuro"));
+  });
+
+  it("sem opção marcada, o foco cai na primeira", async () => {
+    vi.spyOn(theme, "readAppearance").mockReturnValue({ mode: "nenhum" } as never);
+    render(<AppearancePanel open onOpenChange={() => {}} />);
+    await vi.waitFor(() => expect(document.activeElement?.textContent?.trim()).toBe("Claro"));
+    vi.restoreAllMocks();
   });
 });
