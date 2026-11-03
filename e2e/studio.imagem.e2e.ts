@@ -202,7 +202,7 @@ const selectImageByKeyboard = async (page: Page) => {
     )
     .toBe(true);
 };
-const markDialog = (page: Page) => page.getByRole("dialog", { name: "Marcar imagem" });
+const markDialog = (page: Page) => page.getByRole("dialog", { name: "Editar imagem" });
 const annotations = (request: APIRequestContext, slug: string) =>
   request.get(`/api/manuals/${slug}/annotations?asset=assets/tela.png`).then((r) => r.json());
 
@@ -319,7 +319,7 @@ test.describe("marcações", () => {
     const { slug, id } = await withImage(request, "Imagem Atalhos");
     await page.goto(`/#/${slug}/${id}`);
     await openImage(page);
-    await page.getByRole("button", { name: "Marcar imagem" }).click();
+    await page.getByRole("button", { name: "Editar imagem" }).click();
     const dialog = markDialog(page);
     const tool = (name: string) => dialog.getByRole("button", { name, exact: true });
 
@@ -351,7 +351,7 @@ test.describe("marcações", () => {
       const { slug, id } = await withImage(request, "Imagem Celular");
       await page.goto(`/#/${slug}/${id}`);
       await openImage(page);
-      await page.getByRole("button", { name: "Marcar imagem" }).click();
+      await page.getByRole("button", { name: "Editar imagem" }).click();
       const dialog = markDialog(page);
       const box = await dialog.getByRole("img").boundingBox();
       if (!box) throw new Error("sem caixa");
@@ -382,7 +382,7 @@ test.describe("marcações", () => {
     const { slug, id } = await withImage(request, "Imagem Marcas");
     await page.goto(`/#/${slug}/${id}`);
     await openImage(page);
-    await page.getByRole("button", { name: "Marcar imagem" }).click();
+    await page.getByRole("button", { name: "Editar imagem" }).click();
     const dialog = markDialog(page);
     const box = await dialog.getByRole("img").boundingBox();
     if (!box) throw new Error("sem caixa");
@@ -434,7 +434,7 @@ test.describe("marcações", () => {
     const { slug, id } = await withImage(request, "Imagem Cancelar");
     await page.goto(`/#/${slug}/${id}`);
     await openImage(page);
-    await page.getByRole("button", { name: "Marcar imagem" }).click();
+    await page.getByRole("button", { name: "Editar imagem" }).click();
     await markDialog(page)
       .getByRole("img")
       .click({ position: { x: 40, y: 40 } });
@@ -686,7 +686,7 @@ for (const width of [375, 1280]) {
   }
 }
 
-test("teclado: o balão da descrição abre ao selecionar a imagem, o Tab passa pelos tamanhos e chega em Marcar imagem e o Esc devolve o foco ao editor", async ({
+test("teclado: o balão da descrição abre ao selecionar a imagem, o Tab passa pelos tamanhos e chega em Editar imagem e o Esc devolve o foco ao editor", async ({
   page,
   request,
 }) => {
@@ -696,8 +696,8 @@ test("teclado: o balão da descrição abre ao selecionar a imagem, o Tab passa 
   await expect(alt).toBeFocused();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Pequena" })).toBeFocused();
-  for (let i = 0; i < 3; i++) await page.keyboard.press("Tab"); // Média, Larga, Marcar imagem
-  await expect(page.getByRole("button", { name: "Marcar imagem" })).toBeFocused();
+  for (let i = 0; i < 3; i++) await page.keyboard.press("Tab"); // Média, Larga, Editar imagem
+  await expect(page.getByRole("button", { name: "Editar imagem" })).toBeFocused();
   await page.keyboard.press("Escape");
   await expect(alt).toBeHidden();
   await expect(editor(page)).toBeFocused();

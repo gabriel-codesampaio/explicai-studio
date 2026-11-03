@@ -18,8 +18,8 @@ export const ANNOTATION_CSS = `
 .mk{position:absolute;transform:translate(-50%,-50%);width:32px;height:32px;border:2px dashed var(--anotacao);border-radius:50%;box-shadow:0 0 0 2px #fff,inset 0 0 0 2px #fff}
 .mk::before{content:attr(data-n);position:absolute;left:-12px;top:-12px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--anotacao);color:var(--sobre-anotacao);font:600 11px var(--mono);box-shadow:0 0 0 2px #fff}
 .legend{display:grid;gap:2px;margin-top:12px;font-size:15px;line-height:1.4}
-.legend .row{display:flex;align-items:baseline;gap:4px}
-.legend .n{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;background:var(--anotacao);color:var(--sobre-anotacao);font:600 11px var(--mono)}
+.legend .row{display:flex;align-items:center;gap:4px}
+.legend .n{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 4px;border-radius:50%;background:var(--anotacao);color:var(--sobre-anotacao);font:600 11px var(--mono)}
 .legend .n+span{margin-left:2px}
 .legend .none{color:var(--grafite);font-style:italic}
 `;

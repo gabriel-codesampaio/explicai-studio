@@ -52,11 +52,17 @@ describe("linhas da legenda", () => {
 
   it("ordena por número e junta os sem descrição em sequência numa linha", () => {
     expect(legendRows(markers)).toEqual([
-      { numbers: [1], label: "Botão" },
-      { numbers: [2, 3], label: "" },
-      { numbers: [4], label: "Campo" },
-      { numbers: [5], label: "" },
+      { numbers: [1], badges: ["1"], label: "Botão" },
+      { numbers: [2, 3], badges: ["2", "3"], label: "" },
+      { numbers: [4], badges: ["4"], label: "Campo" },
+      { numbers: [5], badges: ["5"], label: "" },
     ]);
+  });
+
+  it("3 ou mais sem descrição seguidos viram um selo com intervalo", () => {
+    const eight = Array.from({ length: 8 }, (_, i) => ({ n: i + 1 }));
+    expect(legendRows(eight)).toEqual([{ numbers: [1, 2, 3, 4, 5, 6, 7, 8], badges: ["1–8"], label: "" }]);
+    expect(rowsWeb(eight)).toEqual(legendRows(eight));
   });
 
   it("o editor e o export montam a mesma legenda", () => {

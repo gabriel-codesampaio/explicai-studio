@@ -37,6 +37,8 @@ export function arrowShape(from: Pt, to: Pt, thickness: number): ArrowShape {
 
 export interface LegendRow {
   numbers: number[];
+  /** Selos a mostrar: um por número, ou um só intervalo ("1–8") para 3 ou mais sem descrição. */
+  badges: string[];
   /** Vazio quando o marcador não tem descrição. */
   label: string;
 }
@@ -48,7 +50,11 @@ export function legendRows(markers: { n: number; label?: string }[]): LegendRow[
     const label = (m.label ?? "").trim();
     const last = rows.at(-1);
     if (!label && last && !last.label) last.numbers.push(m.n);
-    else rows.push({ numbers: [m.n], label });
+    else rows.push({ numbers: [m.n], badges: [], label });
+  }
+  for (const r of rows) {
+    const [first, last] = [r.numbers[0], r.numbers.at(-1)];
+    r.badges = !r.label && r.numbers.length >= 3 ? [`${first}–${last}`] : r.numbers.map(String);
   }
   return rows;
 }

@@ -1,6 +1,6 @@
 import type { Rect } from "./annotations";
 import { api } from "./api";
-import { paintRedactions } from "./redact";
+import { paintRedactions, type RedactStyle } from "./redact";
 
 const TYPES: Record<string, string> = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp" };
 
@@ -19,7 +19,13 @@ export const loadImage = (src: string) =>
  * Pinta as tarjas nos pixels da imagem no navegador e manda o arquivo novo ao servidor, que troca
  * o original. O canvas recodifica só os pixels: sai sem EXIF e sem bytes sobrando depois do fim do arquivo.
  */
-export async function redactImage(slug: string, asset: string, src: string, rects: Rect[]): Promise<void> {
+export async function redactImage(
+  slug: string,
+  asset: string,
+  src: string,
+  rects: Rect[],
+  style: RedactStyle = "bar",
+): Promise<void> {
   const type = redactableType(asset);
   if (!type) throw new Error("type");
   const img = await loadImage(src);
@@ -29,7 +35,7 @@ export async function redactImage(slug: string, asset: string, src: string, rect
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("canvas");
   ctx.drawImage(img, 0, 0);
-  ctx.putImageData(paintRedactions(ctx.getImageData(0, 0, canvas.width, canvas.height), rects), 0, 0);
+  ctx.putImageData(paintRedactions(ctx.getImageData(0, 0, canvas.width, canvas.height), rects, style), 0, 0);
   await uploadCanvas(slug, asset, src, canvas, type);
 }
 

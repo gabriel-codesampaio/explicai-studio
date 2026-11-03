@@ -10,7 +10,7 @@ import {
   type Point,
   type Tool,
 } from "@/lib/annotations";
-import { addRedaction, moveRedaction } from "@/lib/redact";
+import { addRedaction, moveRedaction, type RedactStyle } from "@/lib/redact";
 import { cn } from "@/lib/utils";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 
@@ -30,6 +30,7 @@ interface Props {
   selectedId: string | null;
   /** Destino inicial de uma área clicável nova (a pessoa ajusta na lista ao lado). */
   defaultTarget: HotspotTarget;
+  redactStyle: RedactStyle;
   onChange: (next: Draft, createdId: string | null) => void;
   onSelect: (id: string | null) => void;
 }
@@ -73,7 +74,7 @@ function drawn(draft: Draft, tool: Exclude<Tool, "select">, a: Point, b: Point, 
  * Com "Selecionar", arrastar uma marcação move, e as alças redimensionam. A mudança só é gravada
  * no rascunho ao soltar, então cada arraste é um passo do "Desfazer".
  */
-export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTarget, onChange, onSelect }: Props) {
+export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTarget, redactStyle, onChange, onSelect }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<{ from: Point; to: Point } | null>(null);
   const [grab, setGrab] = useState<{ id: string; handle: Handle; from: Point; to: Point } | null>(null);
@@ -143,6 +144,7 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
       <AnnotationOverlay
         annotations={shown.ann}
         redactions={shown.redact}
+        redactStyle={redactStyle}
         crops={shown.crop}
         selectedId={selectedId}
         onGrab={

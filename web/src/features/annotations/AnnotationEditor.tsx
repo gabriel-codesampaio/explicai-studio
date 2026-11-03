@@ -7,6 +7,7 @@ import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
 import { type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
+import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
 import { TOOL_KEYS, toolForKey } from "@/lib/toolShortcuts";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
@@ -56,6 +57,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
   const [leaving, setLeaving] = useState(false);
   const requestClose = () => (draft?.redact.length ? setLeaving(true) : onClose());
   const [inGit, setInGit] = useState(false);
+  const [redactStyle, setRedactStyle] = useState(readRedactStyle);
   useEffect(() => {
     api
       .inGitRepo(slug)
@@ -125,7 +127,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
         }}
       >
         <DialogHeader>
-          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Marcar imagem")}</DialogTitle>
+          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Editar imagem")}</DialogTitle>
           <DialogDescription>{current?.hint}</DialogDescription>
         </DialogHeader>
 
@@ -165,6 +167,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 tool={tool}
                 selectedId={selectedId}
                 defaultTarget={defaultTarget}
+                redactStyle={redactStyle}
                 onSelect={setSelectedId}
                 onChange={(next, created) => {
                   change(next);
@@ -180,6 +183,11 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                   src={src}
                   rects={draft.redact}
                   inGit={inGit}
+                  style={redactStyle}
+                  onStyle={(s) => {
+                    saveRedactStyle(s);
+                    setRedactStyle(s);
+                  }}
                   onDiscard={() => {
                     change({ ...draft, redact: [] });
                     setSelectedId(null);
