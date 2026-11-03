@@ -115,8 +115,19 @@ async function buildThenSwap(final: string, build: (tmp: string) => Promise<void
   await mkdir(tmp, { recursive: true });
   try {
     await build(tmp);
-    await rm(final, { recursive: true, force: true });
-    await rename(tmp, final);
+    // Antigo vai para o lado, não para o lixo: se o rename falhar (EBUSY no Windows), ele volta.
+    const old = `${tmp}.old`;
+    const hadOld = await rename(final, old).then(
+      () => true,
+      () => false,
+    );
+    try {
+      await rename(tmp, final);
+    } catch (err) {
+      if (hadOld) await rename(old, final).catch(() => undefined);
+      throw err;
+    }
+    if (hadOld) await rm(old, { recursive: true, force: true });
   } catch (err) {
     await rm(tmp, { recursive: true, force: true });
     throw err;
