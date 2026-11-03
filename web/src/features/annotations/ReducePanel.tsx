@@ -29,6 +29,7 @@ export function ReducePanel({ slug, asset, src, pending, inGit, onApplied }: Pro
   const [error, setError] = useState<string | null>(null);
   const type = redactableType(asset);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `rev` força reler tamanho e peso depois de reduzir (a src não muda).
   useEffect(() => {
     if (!type) return;
     let live = true;
