@@ -1,4 +1,5 @@
 import type { AnyExtension, JSONContent, MarkdownRendererHelpers, RenderContext } from "@tiptap/core";
+import Code from "@tiptap/extension-code";
 import Image from "@tiptap/extension-image";
 import { ListItem } from "@tiptap/extension-list";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -46,12 +47,19 @@ const ImageSafeParagraph = Paragraph.extend({
 });
 
 /**
+ * O código do Tiptap exclui as outras marcas (`excludes: "_"`): ligar o código apagava o negrito e o link
+ * recusava texto em código, embora o Markdown `**`x`**` e `[`x`](url)` abram com as duas marcas.
+ */
+const InlineCode = Code.extend({ excludes: "" });
+
+/**
  * Extensões que definem o que o editor aceita e como vira Markdown. Usadas pelo editor e pelos testes.
  * O editor troca a imagem pela versão com marcações (`image`); os testes usam a comum, sem React.
  */
 export function contentExtensions(image: AnyExtension = Image, callout: AnyExtension = Callout) {
   return [
-    StarterKit.configure({ link: { openOnClick: false, autolink: true }, listItem: false, paragraph: false }),
+    StarterKit.configure({ code: false, link: { openOnClick: false, autolink: true }, listItem: false, paragraph: false }),
+    InlineCode,
     ImageSafeParagraph,
     StepListItem,
     // No Markdown a imagem é inline (`![alt](src)` dentro de um parágrafo). Como bloco, ela se perdia
