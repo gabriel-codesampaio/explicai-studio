@@ -24,4 +24,4 @@ Causa (medida no CI, sonda com 12 repetições): o ProseMirror só lê a seleç�
 
 Correção só nos testes: `e2e/editor-sync.ts` (`settleEditor` espera o ProseMirror igualar a seleção do DOM) depois de digitar, clicar e mover a seleção; espera o foco do editor após o diálogo; poll na lista de manuais.
 
-Prova: antes, 15 falhas em 120 execuções dos mesmos testes no CI; depois, 120 de 120 e a suíte completa (142) verde em 2 jobs seguidos, duas vezes.
+Prova: antes, 23 falhas em 50 execuções dos mesmos testes no CI; depois, 120 de 120 e a suíte completa (142) verde em 2 jobs, em 3 rodadas seguidas. O teste da imagem pelo teclado (studio.imagem.e2e.ts:266) tinha a mesma corrida e recebeu a mesma espera. O PDF de 30 s (studio.imagem.e2e.ts:559) não repetiu em 10 execuções; sem causa própria medida, provável efeito de CPU disputada.
