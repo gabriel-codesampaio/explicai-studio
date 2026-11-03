@@ -2,16 +2,16 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: qa
 - Origem: preparação da versão de produção (2026-11-03)
 
 ## Problema
-O teste em e2e/studio.e2e.ts:187 falha às vezes na suíte completa. Suíte instável não serve de porta para a versão.
+O e2e falha no CI quase toda vez (seleção e teclado: studio.e2e.ts:187 e :779, studio.texto.e2e.ts:87, :200 e :211; inglês em studio.e2e.ts:386). Local passa. Suíte instável não serve de porta para a versão.
 
 ## Critérios de aceite
-- [ ] Causa medida (skill diagnosticar), corrigida no teste ou no código; 10 repetições seguidas verdes, também em paralelo.
-- [ ] Teste cobrindo o caso; `npm run check`.
+- [x] Causa medida (skill diagnosticar), corrigida no teste ou no código; 10 repetições seguidas verdes, também em paralelo.
+- [x] Teste cobrindo o caso; `npm run check`.
 
 ## Onde
 e2e/studio.e2e.ts:187
@@ -20,4 +20,8 @@ e2e/studio.e2e.ts:187
 Teste da área primeiro (vermelho, depois verde); `npm run check`.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Causa (medida no CI, sonda com 12 repetições): o ProseMirror só lê a seleção do navegador no selectionchange, depois do evento de teclado. Com a CPU disputada do runner, um Shift+Home logo após digitar era desfeito por uma transação ainda com o cursor antigo (DOM voltava de [17,0] para [17,17]), e Ctrl+E, Ctrl+K e a barra da seleção agiam na seleção velha. Em "sem seleção: o link", o Enter do diálogo devolve o foco depois, e o "a" digitado antes se perdia. Em "interface em inglês", o GET da lista corria antes do POST do manual novo.
+
+Correção só nos testes: `e2e/editor-sync.ts` (`settleEditor` espera o ProseMirror igualar a seleção do DOM) depois de digitar, clicar e mover a seleção; espera o foco do editor após o diálogo; poll na lista de manuais.
+
+Prova: antes, 15 falhas em 120 execuções dos mesmos testes no CI; depois, 120 de 120 e a suíte completa (142) verde em 2 jobs seguidos, duas vezes.
