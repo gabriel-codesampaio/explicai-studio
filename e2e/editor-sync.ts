@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 
 type Pm = HTMLElement & {
   editor?: {
-    state: { selection: { anchor: number; head: number } };
+    state: { selection: { anchor: number; head: number; node?: unknown } };
     view: { posAtDOM(node: Node, offset: number): number };
   };
 };
@@ -18,6 +18,7 @@ export async function settleEditor(page: Page) {
     const ed = (document.querySelector(".ProseMirror") as Pm | null)?.editor;
     const dom = getSelection();
     if (!ed || !dom?.anchorNode || !dom.focusNode) return true;
+    if (ed.state.selection.node) return true; // imagem selecionada: o navegador não tem seleção de texto equivalente
     try {
       return (
         ed.view.posAtDOM(dom.anchorNode, dom.anchorOffset) === ed.state.selection.anchor &&
