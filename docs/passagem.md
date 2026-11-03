@@ -4,7 +4,7 @@ Branch `release/0.2.0` (worktree `<tmp>/equipe/release`), sem push, sem tag, sem
 
 - Feitos: T-038, T-080, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-110, T-111. Branches `fix/t-*` e `chore/t-111-*` saíram de release e já foram mescladas nela.
 - Pendente: T-112 (e2e "barra da seleção" instável; pausado pela pessoa; branch `fix/t-112-e2e-barra-selecao` sem commits, worktree `<tmp>/equipe/t-112` com playwright.config.ts modificado e não commitado: descartar).
-- Abertos novos: T-114 (rodapé mente durante conflito), T-115 (espera), T-116 (409 falso quando o `sync` de rename corre com o autosave; revisão achou), T-113 (foco do Aparência).
+- Abertos novos: T-114 (rodapé mente durante conflito), T-115 (espera), T-120 (409 falso quando o `sync` de rename corre com o autosave; revisão achou), T-113 (foco do Aparência).
 - Não bloqueiam (0.2.x): telas P3 T-024, T-076, T-077, T-078, T-081; T-099.
 - Matriz de design (375/1280, claro/escuro, pt/en) do fecho NÃO rodada; tema claro da faixa de conflito não conferido.
 - Worktrees: remover com `cmd //c rmdir <wt>

@@ -26,7 +26,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-113](T-113-foco-do-painel-aparencia-sem-fallback.md) | Painel Aparência: foco sem fallback | P3 | aberto | frontend |
 | [T-114](T-114-linha-de-status-mente-durante-conflito-de-disco.md) | Rodapé diz "Não foi possível salvar" durante conflito de disco | P3 | aberto | frontend |
 | [T-115](T-115-rodape-em-tela-estreita-esconde-o-caminho.md) | Rodapé em tela estreita esconde o caminho | P3 | aberto (espera) | design |
-| [T-116](T-116-sync-de-rename-corre-com-o-autosave.md) | `settleRenames` corre com o autosave e mostra conflito falso | P2 | aberto | frontend |
+| [T-120](T-120-sync-de-rename-corre-com-o-autosave.md) | `settleRenames` corre com o autosave e mostra conflito falso | P2 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-090](T-090-contagem-de-imagens-sem-uso-so-sob-demanda.md) | Contagem de imagens sem uso só sob demanda | P2 | aberto | frontend |

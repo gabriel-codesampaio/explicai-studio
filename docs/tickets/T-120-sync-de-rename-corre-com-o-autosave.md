@@ -1,4 +1,4 @@
-# T-116: `settleRenames` corre com o autosave e mostra conflito falso
+# T-120: `settleRenames` corre com o autosave e mostra conflito falso
 
 - Prioridade: P2
 - Tamanho: P
