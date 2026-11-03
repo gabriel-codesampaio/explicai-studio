@@ -61,8 +61,8 @@ async function openEditor(page: Page, slug: string, id: string) {
   await page.goto(`/#/${slug}/${id}`);
   await page.reload();
   await page.getByRole("textbox", { name: "Conteúdo da página" }).locator(".node-image img").first().click();
-  await page.getByRole("button", { name: "Marcar imagem" }).click();
-  return page.getByRole("dialog", { name: "Marcar imagem" });
+  await page.getByRole("button", { name: "Editar imagem" }).click();
+  return page.getByRole("dialog", { name: "Editar imagem" });
 }
 
 const pngSize = (file: Buffer): [number, number] => [file.readUInt32BE(16), file.readUInt32BE(20)];

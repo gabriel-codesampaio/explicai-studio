@@ -87,7 +87,7 @@ export function ImagePopover({
                 onAnnotate(image.src, image.alt);
               }}
             >
-              <PenLine /> {t("Marcar imagem")}
+              <PenLine /> {t("Editar imagem")}
             </Button>
           )}
         </div>

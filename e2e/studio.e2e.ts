@@ -104,9 +104,9 @@ test("imagem: envia, descreve, marca e a legenda aparece na página", async ({ p
   await img.click();
   const descricao = page.getByRole("textbox", { name: "Descrição da imagem" });
   await descricao.fill("Tela de clientes");
-  await page.getByRole("button", { name: "Marcar imagem" }).click();
+  await page.getByRole("button", { name: "Editar imagem" }).click();
 
-  const dialog = page.getByRole("dialog", { name: "Marcar imagem" });
+  const dialog = page.getByRole("dialog", { name: "Editar imagem" });
   await dialog.getByRole("img").click({ position: { x: 60, y: 60 } });
   await dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" }).fill("Botão Novo cliente");
   await dialog.getByRole("button", { name: "Salvar marcações" }).click();
@@ -140,7 +140,7 @@ for (const [width, height] of [
     await editor(page).getByRole("img", { name: "Tela" }).click();
     const popover = page.getByRole("dialog", { name: "Descrição da imagem" });
     await expect(popover).toBeVisible();
-    const marcar = popover.getByRole("button", { name: "Marcar imagem" });
+    const marcar = popover.getByRole("button", { name: "Editar imagem" });
     await expect(marcar).toBeVisible();
     // Sem espaço, o balão encolhe e rola por dentro: o botão tem de ser alcançável.
     await marcar.scrollIntoViewIfNeeded();
@@ -352,9 +352,9 @@ test("marcação: arrasta o destaque com Selecionar e Desfazer volta ao lugar", 
   await page.locator('input[type="file"]').setInputFiles(IMAGE);
   const img = editor(page).getByRole("img", { name: "tela" });
   await img.click();
-  await page.getByRole("button", { name: "Marcar imagem" }).click();
+  await page.getByRole("button", { name: "Editar imagem" }).click();
 
-  const dialog = page.getByRole("dialog", { name: "Marcar imagem" });
+  const dialog = page.getByRole("dialog", { name: "Editar imagem" });
   const box = await dialog.getByRole("img").boundingBox();
   if (!box) throw new Error("imagem sem tamanho");
   const at = (fx: number, fy: number) => [box.x + box.width * fx, box.y + box.height * fy] as const;
@@ -949,8 +949,8 @@ for (const mode of ["light", "dark"] as const) {
 
     await page.locator('input[type="file"]').setInputFiles(IMAGE);
     await editor(page).getByRole("img", { name: "tela" }).click();
-    await page.getByRole("button", { name: "Marcar imagem" }).click();
-    const dialog = page.getByRole("dialog", { name: "Marcar imagem" });
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    const dialog = page.getByRole("dialog", { name: "Editar imagem" });
     const box = await dialog.getByRole("img").boundingBox();
     if (!box) throw new Error("imagem sem tamanho");
     await dialog.getByRole("button", { name: "Área clicável" }).click();

@@ -127,7 +127,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
         }}
       >
         <DialogHeader>
-          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Marcar imagem")}</DialogTitle>
+          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Editar imagem")}</DialogTitle>
           <DialogDescription>{current?.hint}</DialogDescription>
         </DialogHeader>
 

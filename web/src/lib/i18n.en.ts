@@ -248,7 +248,7 @@ export const EN: Record<string, string> = {
   "Manuais nesta pasta": "Manuals in this folder",
   Marcador: "Marker",
   "Marcando imagens": "Marking up images",
-  "Marcar imagem": "Mark up image",
+  "Editar imagem": "Edit image",
   "Tamanho da imagem": "Image size",
   "Não foi possível salvar o tamanho.": "Could not save the size.",
   Pequena: "Small",

@@ -29,8 +29,8 @@ function manualDir(slug: string): string {
 async function openEditor(page: Page, slug: string, id: string) {
   await page.goto(`/#/${slug}/${id}`);
   await page.getByRole("textbox", { name: "Conteúdo da página" }).locator(".node-image img").first().click();
-  await page.getByRole("button", { name: "Marcar imagem" }).click();
-  return page.getByRole("dialog", { name: "Marcar imagem" });
+  await page.getByRole("button", { name: "Editar imagem" }).click();
+  return page.getByRole("dialog", { name: "Editar imagem" });
 }
 
 /** Arrasta sobre a imagem do editor, em frações dela. Devolve a caixa da imagem. */
