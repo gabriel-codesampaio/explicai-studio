@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import AxeBuilder from "@axe-core/playwright";
 import { type APIRequestContext, expect, type Page, test } from "@playwright/test";
+import { settleEditor } from "./editor-sync.js";
 
 // QA da imagem do editor (T-064): entrada, edição, marcações, persistência, exportação, tela e robustez.
 const PNG = readFileSync(path.join(import.meta.dirname, "fixtures", "tela.png"));
@@ -188,8 +189,11 @@ const openImage = async (page: Page) => {
 const selectImageByKeyboard = async (page: Page) => {
   await expect(images(page)).toHaveCount(1); // com o conteúdo já no editor, a seleção não é desfeita por um carregamento tardio
   await editor(page).getByText("Antes.").click();
+  await settleEditor(page);
   await page.keyboard.press("End");
+  await settleEditor(page);
   await page.keyboard.press("ArrowRight");
+  await settleEditor(page);
   await page.keyboard.press("Shift+ArrowRight");
   // O ProseMirror só copia a imagem depois de processar a seleção; copiar antes copiava um parágrafo vazio.
   await expect
