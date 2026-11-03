@@ -89,7 +89,10 @@ describe("useStudio: título da página", () => {
 describe("useStudio: conflito com o disco", () => {
   const conflito = () => new ApiError("x", "disk-conflict", {}, 409);
   const lastToast = () =>
-    vi.mocked(toast.warning).mock.lastCall?.[1] as { action: { onClick: () => void }; cancel: { onClick: () => void } };
+    vi.mocked(toast.warning).mock.lastCall?.[1] as unknown as {
+      action: { onClick: () => void };
+      cancel: { onClick: () => void };
+    };
 
   beforeEach(() => {
     vi.mocked(toast.warning).mockClear();

@@ -142,3 +142,24 @@ test("404 abre em página inteira com a marca e cabe em 375 px sem rolagem later
   await expect(page.getByRole("img", { name: "Explicaí Studio" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test("edição feita fora do Studio: o autosave não sobrescreve e o aviso deixa recarregar", async ({ page, request }) => {
+  const { slug, pages } = await setup(request, "Manual Conflito", ["Pagina"]);
+  const id = pages[0]?.id ?? "";
+  await page.goto(`/#/${slug}/${id}`);
+  await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Pagina");
+
+  // Outra ferramenta (o MCP, um editor) grava a página sem If-Match.
+  await request.put(`/api/manuals/${slug}/pages/${id}`, { data: { body: "Texto escrito por fora, no disco." } });
+
+  await page.locator(".ProseMirror").click();
+  await page.keyboard.type("Meu texto");
+  await expect(page.getByText("Esta página foi alterada fora do Studio")).toBeVisible();
+  const disco = await (await request.get(`/api/manuals/${slug}/pages/${id}`)).json();
+  expect(disco.body).toContain("escrito por fora");
+  expect(disco.body).not.toContain("Meu texto");
+
+  await page.getByRole("button", { name: "Recarregar do disco" }).click();
+  await expect(page.locator(".ProseMirror")).toContainText("Texto escrito por fora");
+  await expect(page.locator(".ProseMirror")).not.toContainText("Meu texto");
+});
