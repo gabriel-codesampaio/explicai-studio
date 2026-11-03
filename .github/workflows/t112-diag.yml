@@ -17,4 +17,5 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npx playwright test e2e/studio.texto.e2e.ts e2e/studio.e2e.ts -g "Ctrl\+E|sem seleção: o link|edita e remove|barra da seleção" --repeat-each=10 --reporter=line
+      - run: |
+          npx playwright test e2e/studio.texto.e2e.ts e2e/studio.e2e.ts -g "Ctrl\+E|sem seleção: o link|edita e remove|barra da seleção" --repeat-each=10 --reporter=line
