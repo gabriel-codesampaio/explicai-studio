@@ -96,11 +96,14 @@ async function readPageFile(dir: string, file: string): Promise<{ title: string;
 /**
  * Quando o título muda, o arquivo é renomeado para acompanhar, para a pasta continuar legível
  * para pessoas e IAs. O id no frontmatter não muda, e é ele que as áreas clicáveis usam.
+ * `fileName`: "keep" grava o título no mesmo arquivo (digitação em andamento); "sync" renomeia
+ * se o nome do arquivo não combina com o título (ao parar de digitar ou sair da página).
  */
 export async function updatePage(
   dir: string,
   id: string,
   patch: { title?: string; body?: string; status?: PageStatus },
+  opts: { fileName?: "keep" | "sync" } = {},
 ): Promise<Page> {
   const page = await readPage(dir, id);
   if (patch.status !== undefined && !PAGE_STATUSES.includes(patch.status)) {
@@ -113,7 +116,10 @@ export async function updatePage(
     ...(patch.body === undefined ? {} : { body: patch.body }),
   };
 
-  if (slugify(next.title) === slugify(page.title)) {
+  const sameName =
+    opts.fileName === "keep" ||
+    (opts.fileName === "sync" ? fileMatchesTitle(page.file, next.title) : slugify(next.title) === slugify(page.title));
+  if (sameName) {
     await writePageFile(dir, next);
     return next;
   }
@@ -132,6 +138,13 @@ export async function updatePage(
     next.file,
   );
   return next;
+}
+
+/** O arquivo já tem o nome do título: `titulo.md` ou `titulo-2.md` (sufixo que `uniquePath` põe). */
+function fileMatchesTitle(file: string, title: string): boolean {
+  const base = path.posix.basename(file, ".md");
+  const want = slugify(title);
+  return base === want || (base.startsWith(`${want}-`) && /^\d+$/.test(base.slice(want.length + 1)));
 }
 
 /** Links entre páginas são `./arquivo.md`. Quando um arquivo muda de nome, as outras páginas acompanham. */
