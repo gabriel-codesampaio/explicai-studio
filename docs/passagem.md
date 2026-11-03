@@ -1,25 +1,27 @@
 # Passagem (03/11/2026)
 
-Histórico das sessões anteriores: `docs/passagem-2026-10-30.md` (a unificar num arquivo só, ver Próximo passo).
+Histórico anterior: `docs/passagem-2026-10-30.md` (juntar neste arquivo no próximo lote).
 
 ## Estado
-- Na origin/main (141ad99): lotes 6 e 7 e T-083 (código no texto aceita negrito e link) e T-084 (ícones de linha e coluna). Check 423 testes, e2e completo 131/131. Contraste do ícone de linha no escuro: o valor medido (88,95,121) é o grafite do tema CLARO (#575e78) pego no meio da troca de tema; o escuro usa #9ca3bd sobre #0e1120 (cerca de 7,5:1, coberto por `web/test/tokensContrast.test.ts`). Sem correção.
-- Tickets: índice em `docs/tickets/README.md`. Abertos novos: T-076 a T-081, T-087 a T-106 (auditoria ponytail, `docs/discovery/2026-11-02-auditoria-ponytail.md`, não mexer até a pessoa decidir se fica no repo público).
+- Na main (enviada): lotes 6 e 7, T-083, T-084, T-082+T-089 (CSP em /files/, Origin, 415), T-085 (fila por pasta em `updateManual`), T-086 (ETag/304, streaming, cache de imagens, lazy) e T-087 (autosave um PUT por vez).
+- Verificação final na main: `npm run check` 433 testes; e2e completo 131/131 (E2E_PORT=4490); `studio.imagem.e2e.ts` x8 com 4 workers = 312/312, sem flake. Revisão de código dos três tickets: sem bloqueio. seguranca: sem achado.
+- Flake de imagem visto no T-086 (copiar/colar, Backspace/desfazer): não reproduz na main; sem sinal de regressão do T-086, segue como o T-074 antigo (carga em paralelo). Reabrir T-074 só se voltar.
+- Tickets: índice em `docs/tickets/README.md`. Abertos: T-076 a T-081, T-088 a T-107 (auditoria ponytail em `docs/discovery/2026-11-02-auditoria-ponytail.md`, já está na origin).
 
-## Trabalho feito por engano ANTES da mudança de plano (nada enviado)
-O pedido de parar chegou depois destes passos. Estão em branches locais, sem push, sem suíte e2e completa e sem revisão de código:
-- `fix/t-082-t-089-seguranca-do-servidor` (0b27143, 69831a9): CSP em /files/ para o que não é imagem raster; Origin só igual a `http://${host}`; 415 sem application/json. check 427 testes, e2e imagem/logo/exportação 52 ok. MESCLADA na main LOCAL.
-- `fix/t-085-fila-por-pasta` (ca2f2b0, 51fa224): fila por pasta em `updateManual`; 10 `addPage` em paralelo deixam 10 nós. check 430.
-- `perf/t-086-imagens-cache-e-lazy` (7d7dfe7, faa488c, 00a830f): ETag/304, streaming, cache de imagens de assets/, `loading="lazy"`. check 429. e2e "imagem" teve flakes (copiar/colar na rodada 1, Backspace/desfazer na 2; passou na 3); não rodado na main para provar que são antigos.
-- As TRÊS branches estão mescladas na main LOCAL (merges 8232b9a, 0a82483, 717b36c), que está à frente da origin/main; nenhuma foi enviada. O `git reset --hard` para desfazer foi negado. NÃO dê push na main sem decidir: aceitar (e2e completo, revisão de código, seguranca) ou desfazer com `git revert -m 1` de cada merge.
-- Worktrees (com junção de `node_modules`; remover com `cmd //c rmdir` do Windows antes de `git worktree remove`): `<tmp>/equipe/t-082`, `t-085`, `t-086`.
+## Worktrees
+- Removidas: t-082, t-085, t-086.
+- `<tmp>/equipe/t-087` ficou: tinha mudança sem commit em `web/test/useAutosave.test.ts` (hoje o status aparece limpo; conferir antes de remover). Outras ativas de outra sessão: landing, t-088, t-092, t-107.
+- Remover worktree: `cmd //c rmdir` na junção `node_modules` antes de `git worktree remove`.
 
-## Próximo passo
-1. Decidir o destino dos 3 itens acima.
-2. Triagem da fila: P1/P2 de dados e segurança antes da landing; hipóteses de desempenho da auditoria viram 1 ticket de medição; P3 de manutenção vão para backlog.
-3. Migrar o índice: fechados em `docs/tickets/fechados/README.md`; passagem num arquivo só.
-4. T-037 e T-038 parados. Landing page só depois.
+## Próximo lote
+1. Triagem da fila: P1/P2 de dados e segurança antes da landing; hipóteses de desempenho da auditoria viram 1 ticket de medição; P3 de manutenção vão para backlog.
+2. Migrar o índice: fechados em `docs/tickets/fechados/README.md`.
+3. Juntar `docs/passagem-2026-10-30.md` aqui e apagar o antigo.
+4. T-037 e T-038 parados. Landing só depois.
 
-## Achados
-- Flaky do e2e (T-074 reabrir com diagnosticar): copiar/colar imagem; seleção no `studio.texto.e2e.ts` (1 em 5 rodadas); Backspace/desfazer da imagem.
+## Achados da revisão (sem ticket ainda)
+- `src/server/routes/assets.ts:55`: cache de 1h sem revalidação; `cleanUnusedAssets` pode liberar o nome e o navegador mostra a imagem antiga. Trocar por `no-cache` (ETag já barra o download).
+- `src/core/manuals.ts:61`: fila só no processo; MCP e Studio em processos separados ainda correm. Anotar `shortcut:`.
+- Faltam testes: `/files/` apontando para diretório (404), `If-None-Match` com lista, falha de leitura depois do `writeHead`.
 - Chunk JS do build passa de 1 MB.
+- Não mexer: `docs/discovery/landing-page.md`, `marcacao-de-imagem.md`, `mcp.md` (sem commit, outra sessão).
