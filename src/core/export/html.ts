@@ -173,7 +173,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     .join("");
   const legend = legendRows(a.markers)
     .map((r) => {
-      const nums = r.numbers.map((n) => `<span class="n">${n}</span>`).join("");
+      const nums = r.badges.map((n) => `<span class="n">${n}</span>`).join("");
       const text = r.label ? esc(r.label) : `<span class="none">${L.noDescription}</span>`;
       return `<span class="row" role="listitem">${nums}<span>${text}</span></span>`;
     })
