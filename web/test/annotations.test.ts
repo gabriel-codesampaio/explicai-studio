@@ -9,6 +9,7 @@ import {
   moveAnnotation,
   rectFrom,
   removeAnnotation,
+  warnsSmall,
 } from "../src/lib/annotations";
 
 describe("marcações de imagem", () => {
@@ -97,4 +98,23 @@ describe("mover e redimensionar marcações", () => {
 
 it("assetPathFromSrc não lança com % malformado", () => {
   expect(assetPathFromSrc("/files/m/assets/100%.png")).toBe("assets/100%.png");
+});
+
+describe("tamanho de exibição", () => {
+  const withMarkers = (n: number, display?: "s" | "m" | "full"): Annotations => {
+    let ann: Annotations = { ...emptyAnnotations(), ...(display ? { display } : {}) };
+    for (let i = 0; i < n; i++) ann = addMarker(ann, { x: 0.1 * (i + 1), y: 0.5 });
+    return ann;
+  };
+
+  it("avisa só com Pequena e 4 ou mais marcadores", () => {
+    expect(warnsSmall(withMarkers(4, "s"))).toBe(true);
+    expect(warnsSmall(withMarkers(3, "s"))).toBe(false);
+    expect(warnsSmall(withMarkers(6, "m"))).toBe(false);
+    expect(warnsSmall(withMarkers(6))).toBe(false);
+  });
+
+  it("mexer nas marcações preserva o display", () => {
+    expect(addMarker(withMarkers(1, "m"), { x: 0.5, y: 0.5 }).display).toBe("m");
+  });
 });

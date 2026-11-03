@@ -49,14 +49,17 @@ export async function writeAnnotations(dir: string, assetPath: string, input: un
   return annotations;
 }
 
-/** `assets/foto.png` → `assets/foto.png.json`. Só imagens dentro de assets/ têm anotações. */
-function annotationsFile(dir: string, assetPath: string): string {
+/** Caminho absoluto de uma imagem que está direto em assets/; qualquer outro lugar é recusado. */
+export function assetFile(dir: string, assetPath: string): string {
   const abs = resolveInside(dir, assetPath);
   if (path.dirname(abs) !== path.join(path.resolve(dir), ASSETS_DIR)) {
     throw new Error("Anotações só existem para imagens em assets/.");
   }
-  return `${abs}.json`;
+  return abs;
 }
+
+/** `assets/foto.png` → `assets/foto.png.json`. Só imagens dentro de assets/ têm anotações. */
+const annotationsFile = (dir: string, assetPath: string): string => `${assetFile(dir, assetPath)}.json`;
 
 /** Pastas cujos Markdown podem citar imagens: páginas, versões guardadas e lixeira. */
 const MENTION_DIRS = ["pages", ".versoes", ".lixeira"];

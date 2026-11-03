@@ -22,6 +22,8 @@ export function parseAnnotations(input: unknown): Annotations {
 
   return {
     version: FORMAT_VERSION,
+    // Valor desconhecido é ignorado (imagem aparece como sempre), não derruba o arquivo.
+    ...(obj.display === "s" || obj.display === "m" || obj.display === "full" ? { display: obj.display } : {}),
     markers: list(obj.markers, "markers").map((m, i) => {
       const r = record(m, `markers[${i}]`);
       const n = r.n;
