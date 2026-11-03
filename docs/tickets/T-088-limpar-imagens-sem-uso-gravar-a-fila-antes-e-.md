@@ -20,4 +20,9 @@ uma imagem colada há menos de 600 ms, ou presa numa fila de autosave que falhou
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 5 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito na branch fix/t-088-limpar-imagens-sem-uso:
+- `findUnusedAssets` poupa arquivo com menos de 1 min (mtime); `EXPLICAI_ASSET_GRACE_MS` zera a carência só no e2e (`e2e/serve.mjs`).
+- `TrashPanel` recebe `flush` (exposto por `useStudio`) e o chama antes de `cleanUnusedAssets`.
+- Testes: `test/unused-assets.test.ts` (novo poupado, antigo movido), `web/test/trashPanel.test.tsx` (ordem flush -> limpar). Alias `@` no `vitest.config.ts`.
+- Fora: se o flush falhar (autosave em erro), a limpeza segue; só a carência de 1 min protege. Contagem do painel agora também ignora arquivos novos.
+- Commits: ver `git log` da branch.
