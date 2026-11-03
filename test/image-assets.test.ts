@@ -104,3 +104,42 @@ describe("marcação com JSON quebrado", () => {
     });
   });
 });
+
+describe("exportação com tamanho de exibição", () => {
+  const page = async (display?: string) => {
+    const asset = await saveAsset(dir, "tela.png", bytes);
+    await writeAnnotations(dir, asset, {
+      version: 1,
+      ...(display ? { display } : {}),
+      markers: [{ id: "m1", n: 1, x: 0.5, y: 0.5, label: "Botão Novo" }],
+    });
+    await addPage(dir, { title: "P", body: `![Tela](../${asset})` });
+  };
+  const html = async () => readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+
+  it.each([
+    ["s", "40%"],
+    ["m", "70%"],
+    ["full", "100%"],
+  ])("display %s vira a classe shot-%s com largura máxima de %s, sem ampliar o natural", async (display, pct) => {
+    await page(display);
+    const out = await html();
+    expect(out).toContain(`<span class="shot shot-${display}">`);
+    expect(out).toContain(`.shot-${display}{--shot-w:${pct}}`);
+    expect(out).toMatch(/\.frame\{[^}]*max-width:var\(--shot-w,100%\)/); // max-width, nunca width: não amplia
+  });
+
+  it("sem display o HTML da imagem é o de sempre", async () => {
+    await page();
+    expect(await html()).toContain('<span class="shot"><span class="frame"');
+  });
+
+  it("o Markdown exportado não muda com display", async () => {
+    await page();
+    const md = async () => readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
+    const sem = await md();
+    const ann = await readAnnotations(dir, "assets/tela.png");
+    await writeAnnotations(dir, "assets/tela.png", { ...ann, display: "s" });
+    expect(await md()).toBe(sem);
+  });
+});

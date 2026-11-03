@@ -19,17 +19,11 @@ interface Props {
 export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props) {
   const [items, setItems] = useState<TrashItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  /** Imagens e marcações que nenhuma página, versão ou item da lixeira usa. */
-  const [unused, setUnused] = useState(0);
 
   const load = () => {
     setItems(null);
     setError(null);
     api.listTrash(slug).then(setItems, (err: unknown) => setError(errorMessage(err)));
-    api.unusedAssets(slug).then(
-      ({ count }) => setUnused(count),
-      () => setUnused(0),
-    );
   };
   const clean = () =>
     flush()
@@ -40,8 +34,11 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props
       })
       .then(
         ({ moved, folder }) => {
-          setUnused(0);
-          toast(tn(moved, "{n} arquivo foi para {pasta}.", "{n} arquivos foram para {pasta}.", { pasta: folder ?? "" }));
+          toast(
+            moved === 0
+              ? t("Nenhuma imagem sem uso.")
+              : tn(moved, "{n} arquivo foi para {pasta}.", "{n} arquivos foram para {pasta}.", { pasta: folder ?? "" }),
+          );
         },
         (err: unknown) => setError(errorMessage(err)),
       );
@@ -80,24 +77,16 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props
             ))}
           </ul>
         )}
-        {unused > 0 && (
-          <div className="mx-2 mt-2 grid gap-1 rounded-md border border-border p-2 text-sm">
-            <p>
-              {tn(
-                unused,
-                "{n} arquivo de imagem que nenhuma página usa, contando versões e lixeira.",
-                "{n} arquivos de imagem que nenhuma página usa, contando versões e lixeira.",
-              )}
-            </p>
-            <button
-              type="button"
-              onClick={() => void clean()}
-              className="flex w-fit items-center gap-1 rounded-md px-2 py-1 font-bold text-primary hover:bg-accent"
-            >
-              <ImageOff className="size-3.5" aria-hidden /> {t("Mover para a lixeira")}
-            </button>
-          </div>
-        )}
+        <div className="mx-2 mt-2 grid gap-1 rounded-md border border-border p-2 text-sm">
+          <p>{t("Imagens que nenhuma página usa, contando versões e lixeira, vão para a lixeira.")}</p>
+          <button
+            type="button"
+            onClick={() => void clean()}
+            className="flex w-fit items-center gap-1 rounded-md px-2 py-1 font-bold text-primary hover:bg-accent"
+          >
+            <ImageOff className="size-3.5" aria-hidden /> {t("Mover para a lixeira")}
+          </button>
+        </div>
         <p className="px-2 pt-2 text-xs text-muted-foreground">
           {t("As páginas excluídas ficam na pasta .lixeira do manual até você restaurar ou apagar.")}
         </p>

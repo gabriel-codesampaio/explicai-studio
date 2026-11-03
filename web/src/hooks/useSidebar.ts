@@ -1,7 +1,7 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
 const KEY = "explicai:barra-lateral";
-/** A partir desta largura (900 px, tela dividida) a barra lateral é uma coluna; abaixo, uma gaveta. Navigation.tsx usa a mesma largura nas classes `min-[56.25rem]:`. */
+/** A partir desta largura (900 px, tela dividida) a barra lateral é uma coluna; abaixo, uma gaveta. Navigation.tsx usa a variante `split:` (`--breakpoint-split` em tokens.css), que tem de valer o mesmo. */
 export const COLUMN_MIN_REM = 56.25;
 const WIDE = `(min-width: ${COLUMN_MIN_REM}rem)`;
 

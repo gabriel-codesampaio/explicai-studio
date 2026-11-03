@@ -1,4 +1,6 @@
 // @vitest-environment happy-dom
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { act, cleanup, renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { COLUMN_MIN_REM, useSidebar } from "../src/hooks/useSidebar";
@@ -17,6 +19,11 @@ afterEach(() => {
 describe("useSidebar", () => {
   it("a coluna começa em 900 px (tela dividida), não em 1024", () => {
     expect(COLUMN_MIN_REM * 16).toBe(900);
+  });
+
+  it("o breakpoint split do tema vale o mesmo que o hook", () => {
+    const css = readFileSync(path.resolve(__dirname, "../src/styles/tokens.css"), "utf8");
+    expect(/--breakpoint-split:\s*([\d.]+)rem/.exec(css)?.[1]).toBe(String(COLUMN_MIN_REM));
   });
 
   it.each([900, 960, 1023, 1440])("em %i px o atalho recolhe a coluna e não abre a gaveta", (px) => {

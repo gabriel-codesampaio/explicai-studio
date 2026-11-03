@@ -9,6 +9,7 @@ export default defineConfig({
   testMatch: "**/*.e2e.ts",
   fullyParallel: false,
   workers: 1,
+  globalTeardown: "./e2e/teardown.mjs",
   reporter: [["list"]],
   use: {
     baseURL: `http://localhost:${port}`,
