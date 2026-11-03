@@ -22,11 +22,17 @@ export async function addPage(
     file: await newPageFile(dir, title),
   };
 
-  await updateManual(dir, (meta) => {
-    const siblings = childrenOf(meta.pages, opts.parentId);
-    siblings.splice(clampIndex(opts.index, siblings.length), 0, { id: page.id, file: page.file, children: [] });
-  });
+  // Arquivo primeiro: se gravar falhar, a árvore não aponta para o que não existe. Se a árvore falhar, desfaz o arquivo.
   await writePageFile(dir, page);
+  try {
+    await updateManual(dir, (meta) => {
+      const siblings = childrenOf(meta.pages, opts.parentId);
+      siblings.splice(clampIndex(opts.index, siblings.length), 0, { id: page.id, file: page.file, children: [] });
+    });
+  } catch (err) {
+    await rm(resolveInside(dir, page.file), { force: true });
+    throw err;
+  }
   return page;
 }
 
