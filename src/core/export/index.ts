@@ -1,4 +1,5 @@
-import { copyFile, mkdir, rm } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
+import { copyFile, mkdir, rename, rm } from "node:fs/promises";
 import path from "node:path";
 import { saveAsset } from "../assets.js";
 import { ExplicaiError } from "../errors.js";
@@ -59,19 +60,20 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   });
 
   if (format === "markdown") {
-    const out = await freshDir(path.join(root, "markdown"));
-    await copyImages(dir, images, out);
-    const file = path.join(out, "manual.md");
-    await atomicWrite(file, renderMarkdown(collected, images));
-    return result(file);
+    const out = await buildThenSwap(path.join(root, "markdown"), async (tmp) => {
+      await copyImages(dir, images, tmp);
+      await atomicWrite(path.join(tmp, "manual.md"), renderMarkdown(collected, images));
+    });
+    return result(path.join(out, "manual.md"));
   }
 
-  const out = await freshDir(path.join(root, "html"));
-  await copyImages(dir, images, out);
-  await copyFonts(out, collected.meta.theme);
-  const logo = await copyLogo(dir, out, collected.meta.theme, warnings);
+  const out = await buildThenSwap(path.join(root, "html"), async (tmp) => {
+    await copyImages(dir, images, tmp);
+    await copyFonts(tmp, collected.meta.theme);
+    const logo = await copyLogo(dir, tmp, collected.meta.theme, warnings);
+    await atomicWrite(path.join(tmp, "index.html"), renderHtml(collected, images, logo));
+  });
   const html = path.join(out, "index.html");
-  await atomicWrite(html, renderHtml(collected, images, logo));
   if (format === "html") return result(html);
 
   const pdf = path.join(root, `${slugify(collected.meta.title) || "manual"}.pdf`);
@@ -107,10 +109,19 @@ export async function setManualLogo(dir: string, fileName: string, data: Uint8Ar
   return logo;
 }
 
-async function freshDir(dir: string): Promise<string> {
-  await rm(dir, { recursive: true, force: true });
-  await mkdir(dir, { recursive: true });
-  return dir;
+/** Gera em pasta temporária ao lado e só no fim troca pela `final`: se algo falhar, a exportação anterior fica intacta. */
+async function buildThenSwap(final: string, build: (tmp: string) => Promise<void>): Promise<string> {
+  const tmp = path.join(path.dirname(final), `.${path.basename(final)}-${randomUUID()}`);
+  await mkdir(tmp, { recursive: true });
+  try {
+    await build(tmp);
+    await rm(final, { recursive: true, force: true });
+    await rename(tmp, final);
+  } catch (err) {
+    await rm(tmp, { recursive: true, force: true });
+    throw err;
+  }
+  return final;
 }
 
 /** Copia só as imagens usadas, mantendo `assets/` para os caminhos do HTML e do Markdown valerem. */
