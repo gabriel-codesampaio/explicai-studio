@@ -1,0 +1,20 @@
+name: T-112 diag
+on:
+  push:
+    branches: [fix/t-112-e2e-ci]
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    env:
+      E2E_PORT: "4400"
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test e2e/studio.texto.e2e.ts e2e/studio.e2e.ts -g "Ctrl\+E|sem seleção: o link|edita e remove|barra da seleção" --repeat-each=10 --reporter=line
