@@ -44,7 +44,7 @@ export function AnnotationCanvas({ src, alt, annotations, tool, selectedId, defa
   // Prévia do que está sendo desenhado ou movido, usando a mesma camada da imagem final.
   const preview = grab
     ? moveAnnotation(annotations, grab.id, grab.handle, grab.to.x - grab.from.x, grab.to.y - grab.from.y)
-    : drag && tool !== "select" && tool !== "marker"
+    : drag && tool !== "select" && tool !== "marker" && tool !== "redact"
       ? addShape(annotations, tool, drag.from, drag.to, defaultTarget)
       : null;
 
@@ -68,7 +68,7 @@ export function AnnotationCanvas({ src, alt, annotations, tool, selectedId, defa
       }
       return;
     }
-    if (!drag || tool === "select") return;
+    if (!drag || tool === "select" || tool === "redact") return;
     const next = addShape(annotations, tool, drag.from, to, defaultTarget);
     setDrag(null);
     if (!next) return;
