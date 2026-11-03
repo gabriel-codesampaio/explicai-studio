@@ -12,6 +12,8 @@ export const EN: Record<string, string> = {
   "{n} arquivos de imagem que nenhuma página usa, contando versões e lixeira.":
     "{n} image files that no page uses, counting versions and trash.",
   "{n} arquivos foram para {pasta}.": "{n} files went to {pasta}.",
+  "As marcações de {file} estão com erro de sintaxe. Corrija ou apague o arquivo.":
+    "The markup in {file} has a syntax error. Fix or delete the file.",
   "Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.":
     "No page is approved or published. Approve a page or export them all.",
   "A cor de {label} tem contraste {ratio}:1 com o branco; o mínimo é {min}:1. Escolha uma cor mais escura.":

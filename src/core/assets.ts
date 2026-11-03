@@ -1,6 +1,7 @@
 import { mkdir, readdir, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
+import { ExplicaiError } from "./errors.js";
 import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { ASSETS_DIR, readManual } from "./manuals.js";
 import { decodeUri, slugify } from "./text.js";
@@ -28,7 +29,17 @@ export async function saveAsset(dir: string, fileName: string, data: Uint8Array)
 export async function readAnnotations(dir: string, assetPath: string): Promise<Annotations> {
   const file = annotationsFile(dir, assetPath);
   if (!(await exists(file))) return emptyAnnotations();
-  return parseAnnotations(JSON.parse(await readText(file)));
+  try {
+    return parseAnnotations(JSON.parse(await readText(file)));
+  } catch (err) {
+    if (!(err instanceof SyntaxError)) throw err;
+    const name = relativePosix(dir, file);
+    throw new ExplicaiError(
+      "annotations-invalid",
+      `As marcações de ${name} estão com erro de sintaxe. Corrija ou apague o arquivo.`,
+      { file: name },
+    );
+  }
 }
 
 export async function writeAnnotations(dir: string, assetPath: string, input: unknown): Promise<Annotations> {

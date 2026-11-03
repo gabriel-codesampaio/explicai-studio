@@ -1,8 +1,8 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { addPage, createManual, exportManual, saveAsset, writeAnnotations } from "../src/core/index.js";
+import { addPage, createManual, exportManual, readAnnotations, saveAsset, writeAnnotations } from "../src/core/index.js";
 
 let workspace: string;
 let dir: string;
@@ -71,5 +71,24 @@ describe("exportação com imagem", () => {
     await addPage(dir, { title: "P", body: "![Sumiu](../assets/sumiu.png)" });
     const result = await exportManual(dir, format);
     expect(result.warnings.join("\n")).toContain("assets/sumiu.png");
+  });
+});
+
+describe("marcação com JSON quebrado", () => {
+  it("a exportação segue sem marcações e avisa com o nome do arquivo", async () => {
+    const asset = await saveAsset(dir, "tela.png", bytes);
+    await writeFile(path.join(dir, `${asset}.json`), "{ quebrado");
+    await addPage(dir, { title: "A", body: `![](../${asset})` });
+    const result = await exportManual(dir, "html");
+    expect(result.warnings.some((w) => w.includes(`${asset}.json`))).toBe(true);
+  });
+
+  it("readAnnotations nomeia o arquivo e leva um código estável", async () => {
+    const asset = await saveAsset(dir, "tela.png", bytes);
+    await writeFile(path.join(dir, `${asset}.json`), "{ quebrado");
+    await expect(readAnnotations(dir, asset)).rejects.toMatchObject({
+      code: "annotations-invalid",
+      params: { file: `${asset}.json` },
+    });
   });
 });
