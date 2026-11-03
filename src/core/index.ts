@@ -13,7 +13,7 @@ export {
   setManualLogo,
   setManualTheme,
 } from "./export/index.js";
-export { resolveInside } from "./fs.js";
+export { resolveInside, resolveInsideReal } from "./fs.js";
 export { createManual, listManuals, readManual } from "./manuals.js";
 export { addPage, movePage, type PageTreeNode, readPage, readPageTree, updatePage } from "./pages.js";
 export { insideGitRepo, redactAsset } from "./redact.js";

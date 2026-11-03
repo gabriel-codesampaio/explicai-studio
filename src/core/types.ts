@@ -62,6 +62,8 @@ export interface Page {
   /** Conteúdo em Markdown, sem o frontmatter. */
   body: string;
   file: string;
+  /** Impressão do arquivo no disco (mtime+tamanho). Muda quando alguém edita fora do Studio. */
+  version?: string;
 }
 
 /** Coordenadas normalizadas de 0 a 1, relativas à largura e à altura da imagem. */

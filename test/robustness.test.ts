@@ -1,4 +1,4 @@
-import { mkdtemp, rm, unlink, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, rm, unlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -51,5 +51,21 @@ describe("pasta do manual mexida fora do Studio", () => {
     const page = await addPage(dir, { title: "Antes" });
     await writeFile(path.join(dir, page.file), "# Escrito à mão\n\nSem cabeçalho.");
     expect(await readPage(dir, page.id)).toMatchObject({ title: "", body: "# Escrito à mão\n\nSem cabeçalho." });
+  });
+
+  it("addPage que não consegue gravar o arquivo não deixa a página na árvore", async () => {
+    const m = await createManual(workspace, { title: "Sem pasta", language: "pt-BR" });
+    await rm(path.join(m.dir, "pages"), { recursive: true, force: true });
+    await writeFile(path.join(m.dir, "pages"), "não é pasta");
+
+    await expect(addPage(m.dir, { title: "Nova" })).rejects.toThrow();
+    expect((await readManual(m.dir)).pages).toEqual([]);
+  });
+
+  it("addPage que não consegue gravar a árvore não deixa arquivo órfão", async () => {
+    const m = await createManual(workspace, { title: "Pai ruim", language: "pt-BR" });
+
+    await expect(addPage(m.dir, { title: "Nova", parentId: "nao-existe" })).rejects.toThrow();
+    expect(await readdir(path.join(m.dir, "pages"))).toEqual([]);
   });
 });

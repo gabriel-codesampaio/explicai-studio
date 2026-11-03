@@ -266,6 +266,7 @@ export const EN: Record<string, string> = {
   "Não foi possível exportar o manual.": "Could not export the manual.",
   "Não foi possível salvar as marcações.": "Could not save the markups.",
   "Não foi possível salvar. O texto continua na tela.": "Could not save. Your text is still on screen.",
+  "Aguardando sua escolha": "Waiting for your choice",
   Negrito: "Bold",
   "Nenhum bloco com esse nome.": "No block with that name.",
   "Nenhuma página ainda.": "No pages yet.",
@@ -340,6 +341,13 @@ export const EN: Record<string, string> = {
   Tabela: "Table",
   Tema: "Theme",
   "Tentar de novo": "Try again",
+  "Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão.":
+    "This page was changed outside Studio after you opened it. Reload it from disk or keep your version.",
+  "Esta página mudou fora do Studio.": "This page changed outside Studio.",
+  "Manter a minha versão grava o seu texto por cima do arquivo. Recarregar do disco descarta o que você escreveu aqui.":
+    "Keep my version writes your text over the file. Reload from disk discards what you wrote here.",
+  "Recarregar do disco": "Reload from disk",
+  "Manter a minha versão": "Keep my version",
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",
   "Tipo de bloco: {tipo}": "Block type: {tipo}",

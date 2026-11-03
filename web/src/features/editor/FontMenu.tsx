@@ -3,6 +3,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useFontPreview } from "@/features/export/useFontPreview";
 import { useStudioContext } from "@/hooks/StudioContext";
+import { errorMessage } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { previewFamily } from "@/lib/manualFont";
 
@@ -17,7 +18,9 @@ export function FontMenu() {
   const current = fonts.find((f) => f.id === currentId);
   if (!current) return null;
   const pick = (id: string) =>
-    void studio.setManualTheme({ fonts: { text: id === DEFAULT_TEXT ? null : id } }).catch(() => undefined);
+    void studio
+      .setManualTheme({ fonts: { text: id === DEFAULT_TEXT ? null : id } })
+      .catch((err: unknown) => studio.reportError(errorMessage(err)));
 
   return (
     <DropdownMenu>

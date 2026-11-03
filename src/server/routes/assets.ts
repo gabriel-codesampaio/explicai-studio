@@ -4,7 +4,7 @@ import {
   insideGitRepo,
   readAnnotations,
   redactAsset,
-  resolveInside,
+  resolveInsideReal,
   saveAsset,
   writeAnnotations,
 } from "../../core/index.js";
@@ -67,9 +67,9 @@ export const assetRoutes: Route[] = [
     method: "GET",
     path: "/files/:slug/*",
     // Só raster de assets/ (nome único, gravado uma vez) fica em cache; manual.json, logo e .md revalidam por ETag.
-    handle: (ctx) => {
+    handle: async (ctx) => {
       const cacheable = /^assets\/[^/]+\.(png|jpe?g|gif|webp)$/i.test(ctx.rest);
-      return file(resolveInside(manualDir(ctx), ctx.rest), cacheable ? "private, max-age=3600" : "no-cache", true);
+      return file(await resolveInsideReal(manualDir(ctx), ctx.rest), cacheable ? "private, max-age=3600" : "no-cache", true);
     },
   },
 ];

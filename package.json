@@ -1,7 +1,7 @@
 {
   "name": "explicai",
   "version": "0.1.0",
-  "description": "Open source manual builder: paste screenshots, mark them up and export to HTML, PDF and Markdown. Construtor de manuais open source: do print ao manual pronto.",
+  "description": "Open source manual builder: paste screenshots, mark them up and export to HTML, PDF and Markdown. Construtor de manuais open source: do print ao manual pronto em HTML, PDF e Markdown.",
   "license": "MIT",
   "author": "Gabriel Sampaio",
   "homepage": "https://github.com/gabriel-codesampaio/explicai-studio",
@@ -24,7 +24,9 @@
   },
   "files": [
     "dist",
-    "fonts"
+    "!dist/**/*.map",
+    "fonts",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.build.json && vite build --config web/vite.config.ts",
@@ -103,11 +105,22 @@
   },
   "keywords": [
     "manual",
+    "manual-builder",
+    "user-manual",
     "documentation",
-    "markdown",
-    "editor",
+    "documentacao",
+    "manual-do-usuario",
+    "tutorial",
     "screenshots",
+    "prints",
+    "markdown",
+    "html",
     "pdf",
-    "explicai"
+    "editor",
+    "cli",
+    "npx",
+    "explicai",
+    "explicai-studio",
+    "open-source"
   ]
 }

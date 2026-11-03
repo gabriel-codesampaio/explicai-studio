@@ -66,15 +66,18 @@ const queues = new Map<string, Promise<unknown>>();
  * gravação apaga a mudança da outra. `change` não pode chamar updateManual da mesma pasta (travaria).
  */
 export function updateManual<T>(dir: string, change: (meta: ManualMeta) => T): Promise<T> {
+  return inQueue(dir, async () => {
+    const meta = await readManual(dir);
+    const result = change(meta);
+    await writeManual(dir, meta);
+    return result;
+  });
+}
+
+/** Roda `task` na fila da pasta (a mesma do updateManual). `task` não pode entrar na fila da mesma pasta de novo. */
+export function inQueue<T>(dir: string, task: () => Promise<T>): Promise<T> {
   const key = path.resolve(dir);
-  const run = (queues.get(key) ?? Promise.resolve())
-    .catch(() => {})
-    .then(async () => {
-      const meta = await readManual(dir);
-      const result = change(meta);
-      await writeManual(dir, meta);
-      return result;
-    });
+  const run = (queues.get(key) ?? Promise.resolve()).catch(() => {}).then(task);
   queues.set(key, run);
   // Fila vazia: tira a pasta do Map. Falha já chega a quem chamou por `run`.
   const clean = () => {

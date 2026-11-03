@@ -83,6 +83,18 @@ describe("marcação com JSON quebrado", () => {
     expect(result.warnings.some((w) => w.includes(`${asset}.json`))).toBe(true);
   });
 
+  it.each([
+    ["não é objeto", "[]"],
+    ["marcador sem coordenadas", '{"version":1,"markers":[{"id":"a","n":1}]}'],
+  ])("JSON de forma errada (%s) vira o mesmo aviso e a exportação segue", async (_, content) => {
+    const asset = await saveAsset(dir, "tela.png", bytes);
+    await writeFile(path.join(dir, `${asset}.json`), content);
+    await addPage(dir, { title: "A", body: `![](../${asset})` });
+    const result = await exportManual(dir, "html");
+    expect(result.warnings.some((w) => w.includes(`${asset}.json`))).toBe(true);
+    await expect(readAnnotations(dir, asset)).rejects.toMatchObject({ code: "annotations-invalid" });
+  });
+
   it("readAnnotations nomeia o arquivo e leva um código estável", async () => {
     const asset = await saveAsset(dir, "tela.png", bytes);
     await writeFile(path.join(dir, `${asset}.json`), "{ quebrado");

@@ -5,7 +5,7 @@ import { locale, t } from "@/lib/i18n";
 interface Props {
   /** Caminho do arquivo da página dentro do workspace, ex.: financeiro/pages/clientes.md */
   path: string;
-  state: SaveState;
+  state: SaveState | "conflict";
   savedAt: Date | null;
   onRetry: () => void;
 }
@@ -36,6 +36,12 @@ export function StatusBar({ path, state, savedAt, onRetry }: Props) {
           </>
         )}
         {state === "idle" && <span className="text-muted-foreground">{t("Tudo salvo no disco")}</span>}
+        {state === "conflict" && (
+          <>
+            <AlertCircle className="size-3.5 text-destructive" aria-hidden />
+            <span className="text-destructive">{t("Aguardando sua escolha")}</span>
+          </>
+        )}
         {state === "error" && (
           <>
             <AlertCircle className="size-3.5 text-destructive" aria-hidden />

@@ -29,10 +29,11 @@ export async function saveAsset(dir: string, fileName: string, data: Uint8Array)
 export async function readAnnotations(dir: string, assetPath: string): Promise<Annotations> {
   const file = annotationsFile(dir, assetPath);
   if (!(await exists(file))) return emptyAnnotations();
+  const raw = await readText(file);
   try {
-    return parseAnnotations(JSON.parse(await readText(file)));
-  } catch (err) {
-    if (!(err instanceof SyntaxError)) throw err;
+    return parseAnnotations(JSON.parse(raw));
+  } catch {
+    // JSON quebrado ou de forma errada: o mesmo aviso
     const name = relativePosix(dir, file);
     throw new ExplicaiError(
       "annotations-invalid",
@@ -85,13 +86,21 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
       }
     }
   }
-  const files = await readdir(assetsDir);
-  const names = new Set(files);
+  const listed = await readdir(assetsDir);
+  const names = new Set(listed);
   // Arquivo recém-gravado pode estar numa página que ainda não chegou ao disco: poupa (EXPLICAI_ASSET_GRACE_MS só para o e2e).
   const envGrace = Number(process.env.EXPLICAI_ASSET_GRACE_MS ?? 60_000);
   const grace = Number.isFinite(envGrace) && envGrace >= 0 ? envGrace : 60_000;
-  const recent = new Set<string>();
-  for (const f of files) if (Date.now() - (await stat(path.join(assetsDir, f))).mtimeMs < grace) recent.add(f);
+  const stats = await Promise.all(
+    listed.map((f) =>
+      stat(path.join(assetsDir, f)).catch((err) => {
+        if ((err as { code?: string }).code !== "ENOENT") throw err;
+        return null; // sumiu desde a listagem
+      }),
+    ),
+  );
+  const files = listed.filter((_, i) => stats[i]);
+  const recent = new Set(listed.filter((_, i) => stats[i] && Date.now() - stats[i].mtimeMs < grace));
   return files
     .filter((f) => !recent.has(f))
     .filter((f) => (f.endsWith(".json") ? !names.has(f.slice(0, -".json".length)) : !used.has(f)))

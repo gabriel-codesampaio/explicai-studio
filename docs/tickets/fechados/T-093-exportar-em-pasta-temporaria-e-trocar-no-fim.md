@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: auditoria ponytail de 2026-11-02, achado 10 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
 
@@ -20,4 +20,4 @@ se algo falha no meio (item 9, imagem apagada entre o `exists` e o `copyFile`, `
 Teste da área primeiro (vermelho, depois verde); `npm run check`. Detalhes, cenário e correção na seção 10 da auditoria.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit a08b2bb. `exportManual` gera em `exportacao/.html-<uuid>/` (ou `.markdown-<uuid>/`) e só no fim faz `rm` do antigo + `rename`; erro remove a temporária. Teste: `test/export-atomic.test.ts`. Fora: exportações simultâneas ainda podem se alternar na troca (última vence), sem corromper.
