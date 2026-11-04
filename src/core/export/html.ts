@@ -274,10 +274,10 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .page-body th,.page-body td{border:1px solid var(--linha);padding:6px 10px;text-align:left;vertical-align:top}
 .page-body th{background:var(--papel)}
 .page-body ul{padding-left:1.4em}
-.page-body>ol,.page-body li>ol{list-style:none;counter-reset:passo;padding-left:2.25em}
-.page-body>ol>li,.page-body li>ol>li{counter-increment:passo;position:relative}
+.page-body>ol,.page-body li>ol{list-style:none;padding-left:2.25em}
+.page-body>ol>li,.page-body li>ol>li{position:relative}
 .page-body>ol>li+li,.page-body li>ol>li+li{margin-top:.6em}
-.page-body>ol>li::before,.page-body li>ol>li::before{content:counter(passo);position:absolute;left:-2.25em;top:.12em;display:grid;place-items:center;width:1.55em;height:1.55em;border-radius:50%;background:var(--accent);color:#fff;font:700 .82em var(--mono)}
+.page-body>ol>li::before,.page-body li>ol>li::before{content:counter(list-item);position:absolute;left:-2.25em;top:.12em;display:grid;place-items:center;width:1.55em;height:1.55em;border-radius:50%;background:var(--accent);color:#fff;font:700 .82em var(--mono)}
 .page-body li>blockquote{margin:.6em 0 0;padding:0;border:0;color:var(--tinta)}
 .page-body li>blockquote>p{display:inline;background:linear-gradient(transparent 50%,var(--marca-faixa) 50%)}
 .page-body li>blockquote>p>strong:first-child{font:700 .78em var(--mono);letter-spacing:.04em;text-transform:uppercase}

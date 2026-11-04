@@ -85,6 +85,14 @@ describe("leitura do HTML exportado", () => {
     expect(md).not.toContain("<blockquote>");
   });
 
+  it("passo depois de imagem continua a contagem: <ol start> e número pelo contador nativo", async () => {
+    await addPage(dir, { title: "Passos", body: "1. Abra.\n\n![A](../x.png)\n\n2. Clique.\n3. Salve." });
+    const out = await html();
+    expect(out).toContain('<ol start="2">');
+    expect(out).toContain("content:counter(list-item)");
+    expect(out).not.toContain("counter-reset:passo");
+  });
+
   it("print largo leva link para o original; print estreito, não", async () => {
     const wide = await saveAsset(dir, "larga.png", png(2560, 400));
     const small = await saveAsset(dir, "pequena.png", png(300, 200));
