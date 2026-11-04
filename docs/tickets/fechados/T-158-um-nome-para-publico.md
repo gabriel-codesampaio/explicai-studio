@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A8 (avaliado no commit 60a0e3d)
 
@@ -12,10 +12,10 @@ Achado A8. O público tem quatro nomes: Ver como, Público da página, Quem vê 
 Decidido (pessoa, 2026-11-04): "Público" em toda parte: "Ver como público" (barra), "Público da página" (popover), "Público do export" (exportação), "Públicos do manual" (gestão, T-187). "Perfil" sai da interface, inclusive dos textos de ajuda.
 
 ## Critérios de aceite
-- [ ] A equipe escolhe um termo único e registra a escolha no Registro.
-- [ ] O termo aparece igual na barra lateral, no menu da página e no diálogo de exportação.
-- [ ] Os textos novos têm chave de i18n em pt e en.
-- [ ] Nenhum dos outros três termos sobra na interface (grep).
+- [x] A equipe escolhe um termo único e registra a escolha no Registro.
+- [x] O termo aparece igual na barra lateral, no menu da página e no diálogo de exportação.
+- [x] Os textos novos têm chave de i18n em pt e en.
+- [x] Nenhum dos outros três termos sobra na interface (grep).
 
 ## Onde
 - web/src/layout/Sidebar.tsx
@@ -26,4 +26,5 @@ Decidido (pessoa, 2026-11-04): "Público" em toda parte: "Ver como público" (ba
 Grep pelos quatro termos em web/src e nos arquivos de i18n. Conferir as três telas em pt e en.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Termo: "Público". Textos: Ver como público, Público da página, Público do export, Novo público; en: Audience. Texto de ajuda sem "perfil". Grep nos textos de web/src sem sobra (comentários de código e nomes internos `profile` do export ficam).
+
