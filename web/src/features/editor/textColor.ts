@@ -1,4 +1,5 @@
 import { Mark } from "@tiptap/core";
+import { matchSpan } from "./spanMark";
 
 /**
  * Paleta fixa da cor do texto. No disco fica só o nome; a cor de cada tema está em styles/tokens.css,
@@ -57,9 +58,9 @@ export const TextColor = Mark.create({
     level: "inline",
     start: (src: string) => src.indexOf("<span data-color="),
     tokenize(src, _tokens, h) {
-      const m = /^<span data-color="([a-z]+)">([\s\S]*?)<\/span>/.exec(src);
-      if (!m || !isTextColor(m[1] ?? null)) return undefined;
-      return { type: "textColor", raw: m[0], color: m[1], tokens: h.inlineTokens(m[2] ?? "") };
+      const m = matchSpan(src, "color");
+      if (!m || !isTextColor(m.value)) return undefined;
+      return { type: "textColor", raw: m.raw, color: m.value, tokens: h.inlineTokens(m.inner) };
     },
   },
 

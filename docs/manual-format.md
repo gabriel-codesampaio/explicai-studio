@@ -138,6 +138,10 @@ Um link para outra página do manual é um link Markdown relativo ao arquivo: `[
 
 Um trecho colorido fica como `<span data-color="red">texto</span>`, com o nome de uma cor da paleta: `gray`, `red`, `orange`, `green`, `blue` ou `purple`. Dentro do `span` vale Markdown comum (`**negrito**`). Nome fora da paleta é ignorado pelo editor. No HTML e no PDF cada nome vira uma cor com contraste AA no branco; qualquer outro HTML continua saindo como texto. O Markdown exportado leva só o texto, sem o `span`.
 
+## Fonte do trecho
+
+Um trecho com fonte própria fica como `<span data-font="lora">texto</span>`, com o nome de uma fonte da lista da tabela de `theme` acima (`atkinson-hyperlegible-next`, `inter`, `source-sans-3`, `source-serif-4`, `lora`, `archivo`, `montserrat` ou `playfair-display`). Dentro do `span` vale Markdown comum (`**negrito**`), e ele pode ficar dentro de um `span` de cor ou conter um. Nome fora da lista é ignorado pelo editor e vira texto no HTML. Vale só para o trecho; a fonte do manual inteiro continua em `theme.fonts`. No HTML e no PDF o trecho sai na fonte escolhida e o export leva os arquivos dela (com a licença OFL) além das fontes do tema. O Markdown exportado leva só o texto, sem o `span`. Atalho no Studio: Ctrl+Shift+F abre o menu de fonte da barra da seleção; "Fonte padrão" e "limpar formatação" tiram a marca. Não muda o `FORMAT_VERSION`.
+
 ## Marca-texto
 
 Um trecho marcado fica como `==texto==`, na mesma linha, com o `==` colado no texto (nem espaço nem `=` logo depois de abrir ou antes de fechar). Dentro vale Markdown comum (`**negrito**`, `*itálico*`, link). `a == b`, `x===y` e o que está em código ficam como texto. Outros leitores de Markdown mostram os sinais `==` no texto. No HTML e no PDF vira `<mark>` com o amarelo do realce do manual (contraste do texto com ele de pelo menos 4,5:1) e a cor sai na impressão. O Markdown exportado mantém `==texto==`. Atalho no Studio: Ctrl+Shift+H. Não muda o `FORMAT_VERSION`.

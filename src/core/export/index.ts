@@ -9,7 +9,7 @@ import { slugify } from "../text.js";
 import type { ManualTheme } from "../types.js";
 import { type CollectOptions, collectPages } from "./collect.js";
 import { type CoverPatch, mergeCover } from "./cover.js";
-import { FONTS_DIR, fontFiles } from "./fonts.js";
+import { FONTS_DIR, type FontSpec, fontFiles, inlineFonts } from "./fonts.js";
 import { type FooterPatch, mergeFooter } from "./footer.js";
 import { renderHtml } from "./html.js";
 import { checkLogoFile, checkLogoPath, LOGO_EXT, LOGO_MAX_BYTES, logoSizeError, logoTypeError } from "./logo.js";
@@ -86,7 +86,7 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
 
   const out = await buildThenSwap(path.join(root, `html${profile}`), async (tmp) => {
     await copyImages(dir, images, tmp);
-    await copyFonts(tmp, collected.meta.theme);
+    await copyFonts(tmp, collected.meta.theme, inlineFonts(collected.pages.map((p) => p.body)));
     const logo = await copyLogo(dir, tmp, collected.meta.theme, warnings);
     await atomicWrite(path.join(tmp, "index.html"), renderHtml(collected, images, logo));
   });
@@ -193,9 +193,9 @@ async function copyLogo(dir: string, out: string, theme: ManualTheme | undefined
 }
 
 /** Só as fontes que o tema usa vão com o HTML (e a licença OFL de cada uma), para o manual abrir igual sem internet. */
-async function copyFonts(out: string, theme: ManualTheme | undefined): Promise<void> {
+async function copyFonts(out: string, theme: ManualTheme | undefined, inline: FontSpec[]): Promise<void> {
   await mkdir(path.join(out, "fonts"), { recursive: true });
-  for (const font of usedFonts(theme)) {
+  for (const font of usedFonts(theme, inline)) {
     for (const name of [...fontFiles(font).map((f) => f.file), `OFL-${font.id}.txt`]) {
       await copyFile(new URL(name, FONTS_DIR), path.join(out, "fonts", name));
     }

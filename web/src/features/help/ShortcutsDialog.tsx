@@ -13,6 +13,7 @@ const GROUPS: { title: string; keys: [string, string][] }[] = [
       ["Ctrl+I", "Itálico"],
       ["Ctrl+E", "Código no texto"],
       ["Ctrl+K", "Link para outra página ou endereço"],
+      ["Ctrl+Shift+F", "Fonte do trecho selecionado"],
       ["Ctrl+Z", "Desfazer"],
       ["Ctrl+Shift+Z", "Refazer"],
       ["Ctrl+Y", "Refazer"],
