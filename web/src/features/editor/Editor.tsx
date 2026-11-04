@@ -1,7 +1,7 @@
 import { Extension } from "@tiptap/core";
 import FileHandler from "@tiptap/extension-file-handler";
 import { EditorContent, type Editor as TiptapEditor, useEditor } from "@tiptap/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnnotationEditor } from "@/features/annotations/AnnotationEditor";
 import { AnnotatedImage } from "@/features/annotations/annotatedImage";
 import { useFontPreview } from "@/features/export/useFontPreview";
@@ -41,7 +41,19 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
   const fileInput = useRef<HTMLInputElement>(null);
   const contentBox = useRef<HTMLDivElement>(null);
   const pickImage = () => fileInput.current?.click();
-  const manualTheme = useStudioContext().manual?.theme;
+  const studio = useStudioContext();
+  const manualTheme = studio.manual?.theme;
+  const language = studio.manual?.language;
+  const attributes = useMemo(
+    () => ({
+      "aria-label": t("Conteúdo da página"),
+      "aria-multiline": "true",
+      role: "textbox",
+      spellcheck: "true",
+      ...(language ? { lang: language } : {}),
+    }),
+    [language],
+  );
   const fonts = useFontPreview(true);
   const [linkOpen, setLinkOpen] = useState(false);
   const [annotating, setAnnotating] = useState<{ src: string; alt: string } | null>(null);
@@ -77,9 +89,14 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
     content: toEditorMarkdown(slug, initialMarkdown),
     contentType: "markdown",
     shouldRerenderOnTransaction: false,
-    editorProps: { attributes: { "aria-label": t("Conteúdo da página"), "aria-multiline": "true", role: "textbox" } },
+    editorProps: { attributes },
     onUpdate: ({ editor: ed }) => latest.current.onChange(toDiskMarkdown(ed.getMarkdown())),
   });
+
+  // Trocar o idioma do manual troca o corretor sem recriar o editor.
+  useEffect(() => {
+    editor?.setOptions({ editorProps: { attributes } });
+  }, [editor, attributes]);
 
   useEffect(() => {
     if (editor) onReady?.(editor);

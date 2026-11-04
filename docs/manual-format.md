@@ -44,7 +44,8 @@ Todos os campos são opcionais e valem só para o HTML e o PDF; o Markdown expor
   "highlight": "#ffe066",
   "headings": { "cover": "#000000", "page": "#000000", "h1": "#7a3fc4", "h2": "#000000", "h3": "#000000" },
   "fonts": { "text": "lora", "headings": "playfair-display" },
-  "logo": "assets/logo-cliente.png"
+  "logo": "assets/logo-cliente.png",
+  "hideColophon": true
 }
 ```
 
@@ -55,6 +56,7 @@ Todos os campos são opcionais e valem só para o HTML e o PDF; o Markdown expor
 | `highlight` | Marca-texto: linha da capa, "Resultado:" e destaque das imagens | `#ffd43b` |
 | `fonts` | Fonte do texto (`text`) e dos títulos (`headings`), pelo nome da lista abaixo | Atkinson Hyperlegible Next e Archivo |
 | `logo` | Logo do cliente, no topo do sumário e na capa do HTML e do PDF | sem logo |
+| `hideColophon` | `true` exporta sem o rodapé "Manual feito com o Explicaí Studio" (HTML e PDF). Só aceita `true`; para voltar ao padrão, apague o campo | rodapé aparece |
 | `headings` | Cor do título da capa (`cover`), do título da página (`page`) e dos títulos de nível 1 a 3 do editor (`h1`, `h2`, `h3`) | `#000000` |
 
 Fontes empacotadas (todas OFL, copiadas do `@fontsource`; o texto só aceita as que têm itálico):

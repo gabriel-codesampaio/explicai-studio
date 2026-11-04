@@ -43,6 +43,8 @@ export interface ManualTheme {
   fonts?: { text?: string; headings?: string };
   /** Logo do cliente na capa e no topo do sumário: `assets/<arquivo>`, PNG, JPG ou SVG de até 1 MB. */
   logo?: string;
+  /** `true` exporta sem o rodapé "Manual feito com o Explicaí Studio". Sem o campo, o rodapé aparece. */
+  hideColophon?: true;
 }
 
 export interface Manual {

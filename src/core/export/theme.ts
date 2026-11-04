@@ -37,6 +37,8 @@ export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string 
   fonts?: Partial<Record<"text" | "headings", string | null>> | null;
   /** Caminho do logo em `assets/`; `null` tira o logo. */
   logo?: string | null;
+  /** `true` tira o rodapé do Explicaí do export; `null` volta a mostrá-lo. */
+  hideColophon?: true | null;
 };
 
 const num = (n: number) => n.toFixed(1).replace(".", ",");
@@ -111,6 +113,11 @@ export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch):
   }
   if (patch.logo === null) delete next.logo;
   else if (patch.logo !== undefined) next.logo = checkLogoPath(patch.logo);
+  if (patch.hideColophon === null) delete next.hideColophon;
+  else if (patch.hideColophon !== undefined) {
+    if (patch.hideColophon !== true) throw new Error("hideColophon aceita true ou null.");
+    next.hideColophon = true;
+  }
   // O realce é fundo: o texto por cima precisa continuar legível.
   if (next.highlight) {
     const c = contrast(overWhite(next.highlight, HIGHLIGHT_ALPHA), next.text ?? DEFAULT_TEXT);

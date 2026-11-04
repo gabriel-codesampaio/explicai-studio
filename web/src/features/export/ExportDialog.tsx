@@ -26,7 +26,7 @@ const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] 
 ];
 
 /** Botão "Exportar manual" do topo da página: escolhe o formato e a cor, exporta e mostra onde ficou. */
-export function ExportDialog() {
+export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const studio = useStudioContext();
   const [format, setFormat] = useState<ExportFormat>("html");
   const [onlyApproved, setOnlyApproved] = useState(false);
@@ -52,9 +52,12 @@ export function ExportDialog() {
 
   return (
     <Dialog
-      onOpenChange={(open) => {
+      open={open}
+      onOpenChange={(next) => {
         // Fechar no meio da exportação esconderia o resultado; o botão e o Esc esperam o fim.
-        if (!open || busy) return;
+        if (!next && busy) return;
+        onOpenChange?.(next);
+        if (next) return;
         setResult(null);
         setError(null);
       }}
@@ -131,6 +134,25 @@ export function ExportDialog() {
           <>
             <LogoField slug={studio.manual.slug} logo={studio.manual.theme.logo} disabled={busy} />
             <ThemeFields theme={studio.manual.theme} />
+            <label className="flex items-start gap-2.5 text-sm">
+              <input
+                type="checkbox"
+                checked={studio.manual.theme.hideColophon === true}
+                disabled={busy}
+                onChange={(e) =>
+                  void studio
+                    .setManualTheme({ hideColophon: e.target.checked ? true : null })
+                    .catch((err: unknown) => studio.reportError(errorMessage(err)))
+                }
+                className="mt-0.5 size-4 accent-[var(--primary)]"
+              />
+              <span className="grid leading-tight">
+                <span className="font-bold">{t("Sem o rodapé do Explicaí")}</span>
+                <span className="text-xs text-muted-foreground">
+                  {t('Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.')}
+                </span>
+              </span>
+            </label>
           </>
         )}
 

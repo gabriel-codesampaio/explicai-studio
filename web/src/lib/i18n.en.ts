@@ -340,7 +340,21 @@ export const EN: Record<string, string> = {
   "Agora está escuro, como no seu sistema.": "Dark right now, following your system.",
   "Agora está claro, como no seu sistema.": "Light right now, following your system.",
   "Site (HTML)": "Website (HTML)",
+  "Corretor ortográfico": "Spell checker",
+  "O corretor é o do navegador e segue o idioma do manual. Para ensinar uma palavra, clique nela com o botão direito, sublinhada em vermelho, e escolha Adicionar ao dicionário.":
+    "The spell checker is the browser's and follows the manual language. To teach it a word, right-click the red-underlined word and choose Add to dictionary.",
+  "Abrir a exportação": "Open export",
+  "Comece pelo primeiro print": "Start with the first screenshot",
+  "Cole um print com Ctrl+V.": "Paste a screenshot with Ctrl+V.",
+  "Clique no print, escolha Editar imagem e numere o que a pessoa precisa clicar.":
+    "Click the screenshot, choose Edit image and number what the person needs to click.",
+  "Escreva ao lado de cada número o que ele mostra.": "Next to each number, write what it shows.",
+  "Com o manual pronto, exporte em HTML ou PDF.": "With the manual ready, export it as HTML or PDF.",
+  "Use o botão Exportar manual, no topo da página.": "Use the Export manual button at the top of the page.",
   "Só páginas aprovadas": "Approved pages only",
+  "Sem o rodapé do Explicaí": "Without the Explicaí footer",
+  'Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.':
+    'Removes the "Manual made with Explicaí Studio" line from the HTML and PDF.',
   "Status da página: {status}": "Page status: {status}",
   Subseção: "Subsection",
   Tabela: "Table",

@@ -12,7 +12,7 @@ Decisão da pessoa (03/11/2026): bug (comportamento errado, perda de dado, falha
 
 Feitos no lote 1: T-107, T-088, T-092. Ordem do resto: T-093, T-094 (P2); T-098, T-099, T-100, T-101, T-102, T-103, T-024, T-076, T-077, T-078, T-081, T-080 (P3).
 
-Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T-038, T-064, T-079, T-090, T-091, T-104, T-105, T-106.
+Em espera (sugestão): T-021, T-031, T-035, T-037, T-038, T-064, T-079, T-090, T-091, T-104, T-105, T-106.
 
 ## Preparação da versão de produção (03/11/2026)
 
@@ -28,12 +28,8 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-124](T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | aberto | design |
-| [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
-| [T-033](T-033-exportar-sem-rodape.md) | Exportar o manual sem o rodapé do Explicaí | P3 | aberto | frontend |
 | [T-035](T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | aberto | frontend |
-| [T-036](T-036-corretor-do-navegador.md) | Deixar o corretor do navegador explícito no editor e explicar na ajuda | P3 | aberto | frontend |
 | [T-104](T-104-separar-css-de-html-ts-e-acoes-de-usestudio.md) | Separar CSS de `html.ts` e ações de `useStudio` | P3 | aberto | frontend |
 | [T-105](T-105-verificar-pdf-com-100-imagens-lazy-maxbuffer.md) | Verificar PDF com 100 imagens (`lazy`, `maxBuffer`) | P3 | aberto | qa |
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
@@ -42,6 +38,10 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-020](fechados/T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | feito | `a8f670b` |
+| [T-033](fechados/T-033-exportar-sem-rodape.md) | Exportar o manual sem o rodapé do Explicaí | P3 | feito | `e59a29e` |
+| [T-036](fechados/T-036-corretor-do-navegador.md) | Deixar o corretor do navegador explícito no editor e explicar na ajuda | P3 | feito | `9f84f65` |
+| [T-018](fechados/T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | feito | `f7cf737` |
 | [T-121](fechados/T-121-ocultar-com-desfoque.md) | Ocultar com desfoque, além da tarja | P2 | feito | — |
 | [T-116](fechados/T-116-ferramenta-ocultar-dados-sensiveis.md) | Ferramenta Ocultar dados sensíveis nos prints | P1 | feito | `4889a1b` |
 | [T-076](fechados/T-076-titulo-sem-tooltip-na-arvore.md) | Título truncado na árvore estreita sem tooltip | P3 | feito | `58cad86` |
