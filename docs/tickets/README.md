@@ -1,5 +1,3 @@
-| [T-116](fechados/T-116-ferramenta-ocultar-dados-sensiveis.md) | Ferramenta Ocultar dados sensíveis nos prints | P1 | feito | 4889a1b |
-| [T-076](fechados/T-076-titulo-sem-tooltip-na-arvore.md) | Título truncado na árvore estreita sem tooltip | P3 | feito | 58cad86 |
 # Tickets
 
 Fila de trabalho do Studio. Formato e ciclo de vida: skill `tickets` do plugin [explicai-workflow](https://github.com/gabriel-codesampaio/explicai-workflow).
@@ -24,31 +22,15 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-118](fechados/T-118-recortar-imagem.md) | Recortar imagem | P2 | feito | 4cac12b |
-| [T-119](fechados/T-119-reduzir-resolucao-da-imagem.md) | Reduzir resolução e peso da imagem | P3 | feito | 82a1c53 |
-| [T-117](fechados/T-117-tamanho-de-exibicao-da-imagem.md) | Tamanho de exibição da imagem (Pequena, Média, Larga) | P2 | feito | 481ee61 |
-| [T-112](T-112-e2e-barra-da-selecao-instavel.md) | e2e "barra da seleção" falha às vezes | P2 | aberto | qa |
-| [T-113](T-113-foco-do-painel-aparencia-sem-fallback.md) | Painel Aparência: foco sem fallback | P3 | aberto | frontend |
-| [T-114](T-114-linha-de-status-mente-durante-conflito-de-disco.md) | Rodapé diz "Não foi possível salvar" durante conflito de disco | P3 | fechado | frontend |
-| [T-115](T-115-rodape-em-tela-estreita-esconde-o-caminho.md) | Rodapé em tela estreita esconde o caminho | P3 | aberto (espera) | design |
-| [T-120](T-120-sync-de-rename-corre-com-o-autosave.md) | `settleRenames` corre com o autosave e mostra conflito falso | P2 | fechado | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-090](T-090-contagem-de-imagens-sem-uso-so-sob-demanda.md) | Contagem de imagens sem uso só sob demanda | P2 | aberto | frontend |
-| [T-091](T-091-imagesize-le-so-o-cabecalho-do-arquivo.md) | `imageSize` lê só o cabeçalho do arquivo | P2 | aberto | frontend |
 | [T-097](T-097-testes-de-concorrencia-usestudio-e-fluxo-de-i.md) | Testes de concorrência, `useStudio` e fluxo de imagem | P2 | aberto | qa |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
-| [T-021](T-021-serve-limpa-temporarios.md) | Apagar as pastas temporárias que o e2e/serve.mjs cria | P3 | aberto | qa |
-| [T-024](T-024-indice-sem-rolagem-lateral.md) | Tirar a rolagem horizontal de "Nesta página" com título longo | P3 | aberto | design |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
 | [T-033](T-033-exportar-sem-rodape.md) | Exportar o manual sem o rodapé do Explicaí | P3 | aberto | frontend |
 | [T-035](T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | aberto | frontend |
 | [T-036](T-036-corretor-do-navegador.md) | Deixar o corretor do navegador explícito no editor e explicar na ajuda | P3 | aberto | frontend |
-| [T-077](T-077-botoes-de-marcacao-no-toque.md) | Botões da barra de marcação abaixo de 44 px e sem nome no toque | P3 | aberto | design |
-| [T-078](T-078-grupo-exportar-deslocado-em-375.md) | Grupo Versões / Rascunho / Exportar deslocado em 375 px | P3 | aberto | design |
-| [T-079](T-079-breakpoint-900-duplicado.md) | Breakpoint de 900 px duplicado em COLUMN_MIN_REM e Navigation.tsx | P3 | aberto | frontend |
-| [T-081](T-081-duas-marcas-com-gaveta-aberta.md) | Duas marcas visíveis com a gaveta aberta abaixo de 900 px | P3 | aberto | frontend |
 | [T-095](T-095-serializar-o-markdown-so-no-flush-do-autosave.md) | Serializar o Markdown só no flush do autosave | P3 | aberto | frontend |
 | [T-096](T-096-readpagetree-le-so-o-frontmatter.md) | `readPageTree` lê só o frontmatter | P3 | aberto | frontend |
 | [T-099](T-099-posicao-da-imagem-colada-acompanha-edicao-dur.md) | Posição da imagem colada acompanha edição durante o envio | P3 | aberto | frontend |
@@ -60,6 +42,25 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-121](fechados/T-121-ocultar-com-desfoque.md) | Ocultar com desfoque, além da tarja | P2 | feito | — |
+| [T-116](fechados/T-116-ferramenta-ocultar-dados-sensiveis.md) | Ferramenta Ocultar dados sensíveis nos prints | P1 | feito | `4889a1b` |
+| [T-076](fechados/T-076-titulo-sem-tooltip-na-arvore.md) | Título truncado na árvore estreita sem tooltip | P3 | feito | `58cad86` |
+| [T-118](fechados/T-118-recortar-imagem.md) | Recortar imagem | P2 | feito | `4cac12b` |
+| [T-119](fechados/T-119-reduzir-resolucao-da-imagem.md) | Reduzir resolução e peso da imagem | P3 | feito | `82a1c53` |
+| [T-117](fechados/T-117-tamanho-de-exibicao-da-imagem.md) | Tamanho de exibição da imagem (Pequena, Média, Larga) | P2 | feito | `481ee61` |
+| [T-112](fechados/T-112-e2e-barra-da-selecao-instavel.md) | e2e "barra da seleção" falha às vezes | P2 | feito | — |
+| [T-113](fechados/T-113-foco-do-painel-aparencia-sem-fallback.md) | Painel Aparência: foco sem fallback | P3 | feito | — |
+| [T-114](fechados/T-114-linha-de-status-mente-durante-conflito-de-disco.md) | Rodapé diz "Não foi possível salvar" durante conflito de disco | P3 | feito | — |
+| [T-115](fechados/T-115-rodape-em-tela-estreita-esconde-o-caminho.md) | Rodapé em tela estreita esconde o caminho | P3 | feito | — |
+| [T-120](fechados/T-120-sync-de-rename-corre-com-o-autosave.md) | `settleRenames` corre com o autosave e mostra conflito falso | P2 | feito | — |
+| [T-090](fechados/T-090-contagem-de-imagens-sem-uso-so-sob-demanda.md) | Contagem de imagens sem uso só sob demanda | P2 | feito | — |
+| [T-091](fechados/T-091-imagesize-le-so-o-cabecalho-do-arquivo.md) | `imageSize` lê só o cabeçalho do arquivo | P2 | feito | — |
+| [T-021](fechados/T-021-serve-limpa-temporarios.md) | Apagar as pastas temporárias que o e2e/serve.mjs cria | P3 | feito | — |
+| [T-024](fechados/T-024-indice-sem-rolagem-lateral.md) | Tirar a rolagem horizontal de "Nesta página" com título longo | P3 | feito | — |
+| [T-077](fechados/T-077-botoes-de-marcacao-no-toque.md) | Botões da barra de marcação abaixo de 44 px e sem nome no toque | P3 | feito | — |
+| [T-078](fechados/T-078-grupo-exportar-deslocado-em-375.md) | Grupo Versões / Rascunho / Exportar deslocado em 375 px | P3 | feito | — |
+| [T-079](fechados/T-079-breakpoint-900-duplicado.md) | Breakpoint de 900 px duplicado em COLUMN_MIN_REM e Navigation.tsx | P3 | feito | — |
+| [T-081](fechados/T-081-duas-marcas-com-gaveta-aberta.md) | Duas marcas visíveis com a gaveta aberta abaixo de 900 px | P3 | feito | — |
 | [T-080](fechados/T-080-gitignore-sem-env.md) | Incluir .env no .gitignore | P3 | feito | 354eb5a |
 | [T-108](fechados/T-108-detectar-edicao-feita-fora-do-studio.md) | Detectar edição feita fora do Studio antes de sobrescrever | P1 | feito | f2a4e8b, e33ea45 |
 | [T-111](fechados/T-111-pacote-npm-pronto-para-publicar.md) | Pacote npm pronto para publicar | P1 | feito | 655ddfe, 6e15458, 366757e |
