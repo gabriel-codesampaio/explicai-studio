@@ -6,17 +6,7 @@ Prioridade: **P0** atinge quem lê o resultado final; **P1** é o pedido princip
 
 Ticket fechado (feito ou descartado) vai para `fechados/` com `git mv`.
 
-## Lote de bugs
-
-Decisão da pessoa (03/11/2026): bug (comportamento errado, perda de dado, falha de segurança, erro visível) é corrigido agora, em lotes de 2 a 3 tickets, por prioridade. Sugestão (melhoria, acabamento, refatoração, medição, doc) fica aberta, em espera.
-
-Feitos no lote 1: T-107, T-088, T-092. Ordem do resto: T-093, T-094 (P2); T-098, T-099, T-100, T-101, T-102, T-103, T-024, T-076, T-077, T-078, T-081, T-080 (P3).
-
-Em espera (sugestão): T-021, T-031, T-037, T-038, T-064, T-079, T-090, T-091, T-104, T-105, T-106.
-
-## Preparação da versão de produção (03/11/2026)
-
-Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-110, T-111, T-080. Pendente: T-112 (pausado pela pessoa). Bloqueadores (perda de trabalho, segurança, harden, pacote): T-093, T-098, T-103, T-108, T-109, T-110, T-100, T-101, T-080, T-038, T-112, T-111. T-094, T-102 e T-099 entram se couberem. Telas P3 (T-024, T-076, T-077, T-078, T-081, T-113) não bloqueiam: ficam para 0.2.x.
+Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é corrigido agora, por prioridade. Sugestão (melhoria, acabamento, refatoração) espera até a pessoa pedir.
 
 ## Abertos
 
@@ -35,12 +25,13 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-137](T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | aberto | qa |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
+| [T-149](T-149-sobras-da-revisao-de-desempenho.md) | Fila entre processos e tamanho do bundle | P3 | aberto | frontend |
+| [T-150](T-150-manual-do-app-de-terceiro-com-banco-local.md) | Prova do MCP em app de terceiro, com banco local | P3 | aberto | supervisor |
 | [T-130](T-130-menores-do-t-123.md) | Menores deixados pelo T-123 | P3 | aberto | frontend |
 | [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
 | [T-138](T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | aberto | frontend |
-| [T-125](T-125-manual-de-app-real-pelo-mcp.md) | Manual de um app real feito com o MCP | P1 | aberto | supervisor |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
@@ -52,6 +43,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-125](fechados/T-125-manual-de-app-real-pelo-mcp.md) | Manual de um app real feito com o MCP | P1 | feito | codelab #2, #3, #4 |
 | [T-133](fechados/T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | feito | #30 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
