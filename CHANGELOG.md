@@ -29,6 +29,8 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Corrigido
 
+- Editor: a legenda da imagem fica afastada do print e sem recuo; o estilo das listas do texto anulava esse espaço.
+
 - Exportar HTML e PDF: o passo depois de um print segue a numeração, em vez de voltar ao 1.
 - Exportar HTML: imagens com `width` e `height`, para a página não pular enquanto carrega.
 

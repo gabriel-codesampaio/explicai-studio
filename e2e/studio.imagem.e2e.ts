@@ -460,7 +460,11 @@ test.describe("marcações", () => {
       },
     });
     await page.goto(`/#/${slug}/${id}`);
-    await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
+    const legenda = page.getByRole("list", { name: "Legenda da imagem" });
+    await expect(legenda).toContainText("Menu Clientes");
+    // O CSS das listas do editor não pode anular o respiro da legenda.
+    await expect(legenda).toHaveCSS("margin-top", "16px");
+    await expect(legenda).toHaveCSS("padding-left", "0px");
     await page.reload();
     await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
   });
