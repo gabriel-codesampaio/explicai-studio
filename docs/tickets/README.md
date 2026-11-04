@@ -12,6 +12,14 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-190](T-190-borda-do-destaque-e-nenhuma-borda.md) | Borda do destaque visível e opção "nenhuma borda" | P1 | aberto | frontend |
+| [T-191](T-191-setas-sem-defeito.md) | Setas sem defeito | P1 | aberto | frontend |
+| [T-192](T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | aberto | frontend |
+| [T-193](T-193-estilo-por-marcador-formato.md) | Estilo por marcador, formato e export | P1 | aberto | frontend |
+| [T-194](T-194-painel-estilo-do-item.md) | Painel Estilo do item selecionado | P1 | aberto | design |
+| [T-195](T-195-destaque-com-cor-e-preenchimento.md) | Destaque com cor, preenchimento e borda | P2 | aberto | frontend |
+| [T-196](T-196-barra-da-marcacao-e-dicas.md) | Barra de ferramentas e dicas | P2 | aberto | frontend |
+| [T-197](T-197-mcp-estilo-por-item.md) | MCP `annotate_image` e `get_manual` com `style` por item | P2 | aberto | supervisor |
 | [T-185](T-185-sidebar-respiro-e-ver-como.md) | Sidebar: mais respiro no cabeçalho e "Ver como" acima da busca | P2 | aberto | frontend |
 | [T-186](T-186-publicos-criar-renomear-remover.md) | Públicos: criar, renomear e remover (core e API) | P2 | aberto | frontend |
 | [T-187](T-187-dialogo-publicos-do-manual.md) | Diálogo "Públicos do manual" nos Ajustes | P2 | aberto | frontend |
