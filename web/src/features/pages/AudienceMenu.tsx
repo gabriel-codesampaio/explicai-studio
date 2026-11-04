@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverDescription, PopoverTrigger } from "@/c
 import { AudiencesDialog } from "@/features/settings/AudiencesDialog";
 import { t } from "@/lib/i18n";
 
-/** Quem vê a página no manual exportado. Sem nenhum perfil marcado, todos veem. */
+/** Quem vê a página no manual exportado. Sem nenhum público marcado, todos veem. */
 export function AudienceMenu({
   audience,
   known,
@@ -55,7 +55,7 @@ export function AudienceMenu({
         </PopoverTrigger>
         <PopoverContent align="end" collisionPadding={8} aria-label={t("Público da página")} className="w-72 gap-3">
           <fieldset className="grid gap-1">
-            <legend className="mb-1 rotulo">{t("Quem vê esta página")}</legend>
+            <legend className="mb-1 rotulo">{t("Público da página")}</legend>
             {options.map((name) => (
               <label
                 key={name}
@@ -76,7 +76,7 @@ export function AudienceMenu({
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               maxLength={40}
-              aria-label={t("Novo perfil")}
+              aria-label={t("Novo público")}
               placeholder={t("Ex.: admin")}
               className="min-w-0 flex-1 rounded-md border border-input bg-background px-2 py-1.5 text-sm [@media(pointer:coarse)]:min-h-11"
             />
@@ -90,7 +90,7 @@ export function AudienceMenu({
           </form>
           <PopoverDescription className="text-xs">
             {t(
-              "Sem nenhum perfil marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.",
+              "Sem nenhum público marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.",
             )}
           </PopoverDescription>
           <button

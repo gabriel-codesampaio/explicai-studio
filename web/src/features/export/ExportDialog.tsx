@@ -149,7 +149,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
 
           {audiences.length > 0 && (
             <label htmlFor="para-quem" className="grid gap-1.5 text-sm">
-              <span className="font-bold">{t("Para quem exportar")}</span>
+              <span className="font-bold">{t("Público do export")}</span>
               <Select value={audienceOn || TODOS} onValueChange={(v) => setAudience(v === TODOS ? "" : v)} disabled={busy}>
                 <SelectTrigger id="para-quem">
                   <SelectValue />
@@ -165,7 +165,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
               </Select>
               <span className="text-xs text-muted-foreground">
                 {t(
-                  "Só entram as páginas desse perfil e as sem restrição. Links para as outras viram texto. Não é controle de acesso.",
+                  "Só entram as páginas desse público e as sem restrição. Links para as outras viram texto. Não é controle de acesso.",
                 )}
               </span>
             </label>
