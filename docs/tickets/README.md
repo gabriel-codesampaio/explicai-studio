@@ -13,7 +13,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
-| [T-146](T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | aberto | frontend |
 | [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
@@ -46,6 +45,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-143](fechados/T-143-renomear-o-manual.md) | Renomear o manual | P2 | feito | #37 |
 | [T-144](fechados/T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | feito | #38 |
 | [T-145](fechados/T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | feito | #39 |
+| [T-146](fechados/T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | feito | #40 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |

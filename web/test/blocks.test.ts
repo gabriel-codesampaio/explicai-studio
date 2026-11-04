@@ -39,7 +39,7 @@ describe("blocos de alerta", () => {
 describe("grupos do menu /", () => {
   it("separam estrutura, passo a passo, alertas e mídia, nessa ordem", () => {
     expect(groupBlocks(searchBlocks("")).map((g) => [g.id, g.items.map((b) => b.id)])).toEqual([
-      ["estrutura", ["paragraph", "h1", "h2", "h3", "bullets", "quote", "code"]],
+      ["estrutura", ["paragraph", "h1", "h2", "h3", "bullets", "quote", "code", "divider"]],
       ["passos", ["steps", "result"]],
       ["alertas", ["callout-tip", "callout-warning", "callout-caution", "callout-note"]],
       ["midia", ["image", "table"]],
