@@ -8,7 +8,7 @@ Quem monta manuais com a IA (dev ou software house) quer que o texto de todas as
 ## O que já existe
 - **`explicai-mcp` está vazio.** Tem `README.md` com só o título, `LICENSE` e um commit inicial. Não há prompts, ferramentas nem código de geração. Tudo aqui é desenho, não mudança.
 - **Quem escreve o texto é a IA do cliente, não o MCP.** O MCP só expõe ferramentas (criar página, inserir imagem...). O tom, na prática, é uma instrução que chega ao modelo: parâmetro da ferramenta, prompt do MCP ou campo salvo que a IA lê. Nenhum código nosso "gera" frase.
-- **Spec e produto já prometem o parâmetro:** `docs/spec-v1.md:46` e `PRODUCT.md:46`.
+- **Spec e produto já prometem o parâmetro:** `docs/discovery/archives/spec-v1.md:46` e `PRODUCT.md:46`.
 - **`manual.json` não tem campo de voz.** `ManualMeta` tem `title`, `language`, `theme?` e `pages` (`src/core/types.ts:15-23`). `readManual` devolve o JSON como veio, então campo opcional novo não pede `FORMAT_VERSION` 2 (`src/core/manuals.ts:42-54`).
 - **Armadilha conhecida:** `setManualTheme` apaga `theme` inteiro quando falta `accent` (`src/core/export/index.ts:71-77`). Um campo de voz deve ficar fora de `theme` e ter função própria.
 - **Studio não tem IA.** Tem `AppearancePanel` e `ShortcutsDialog` no rodapé da barra lateral (`web/src/layout/Sidebar.tsx:106-109`) e sem tela de configuração do manual. "No app" só pode significar ver e trocar o tom salvo.

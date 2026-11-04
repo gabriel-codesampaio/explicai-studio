@@ -1,6 +1,6 @@
 # Discovery: landing page do Explicaí (2026-11-03)
 
-Complementa [2026-10-30-landing-page.md](2026-10-30-landing-page.md), que já decidiu hospedagem, endereço e conteúdo da opção A. Este documento acrescenta o que faltava: público, promessa, referências de fora, ordem das seções, idioma e um corte mínimo.
+Complementa [2026-10-30-landing-page.md](archives/2026-10-30-landing-page.md), que já decidiu hospedagem, endereço e conteúdo da opção A. Este documento acrescenta o que faltava: público, promessa, referências de fora, ordem das seções, idioma e um corte mínimo.
 
 ## Problema
 

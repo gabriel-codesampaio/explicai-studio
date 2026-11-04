@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: [Crítica do manual do piloto](../discovery/2026-11-04-critique-manual-piloto.md) (2026-11-04)
+- Origem: [Crítica do manual do piloto](../../discovery/archives/2026-11-04-critique-manual-piloto.md) (2026-11-04)
 
 ## Problema
 O template do export atrapalha quem lê, principalmente no celular: o estilo de "Resultado:" nunca aparece, um print de 2560 px fica ilegível em 335 px, e numa página de 9142 px não há como navegar.

@@ -35,6 +35,7 @@ O Explicaí Studio abre no navegador, e os manuais ficam na pasta `manuais` (sem
 - Guardar versões de cada página e escolher qual vai para o manual final.
 - Marcar cada página como rascunho, em revisão, aprovada ou publicada.
 - Escolher cores, fontes e logo do manual exportado.
+- Separar o manual por público, como aluno e administrador, e exportar uma versão para cada um.
 
 ### Exportar
 
@@ -97,6 +98,7 @@ Explicaí Studio opens in your browser, and the manuals live in the `manuals` fo
 - Write one page per screen or task, organized as a tree.
 - Paste screenshots and mark them up with numbered markers, highlights, arrows and clickable areas.
 - Keep versions of each page and pick the one that goes into the final manual.
+- Split the manual by audience and export one version for each.
 - Export to HTML (offline, with images and fonts next to it), PDF (printed by your Chrome, Edge or Chromium; set `EXPLICAI_BROWSER` if it lives somewhere unusual) or a single Markdown file.
 
 ### Folder format

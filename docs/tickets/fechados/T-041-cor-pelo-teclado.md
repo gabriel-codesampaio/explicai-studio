@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: pendências do [T-039](fechados/T-039-barra-na-selecao.md).
+- Origem: pendências do [T-039](T-039-barra-na-selecao.md).
 
 ## Problema
 1. As cores da barra flutuante só mostram o nome no `title` nativo, e o botão "A" não tem dica.
