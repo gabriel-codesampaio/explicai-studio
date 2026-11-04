@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { rm, stat } from "node:fs/promises";
 import path from "node:path";
+import { parseAudience } from "./audience.js";
 import { ExplicaiError } from "./errors.js";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
@@ -101,7 +102,14 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
 async function readPageFile(
   dir: string,
   file: string,
-): Promise<{ title: string; status: PageStatus; body: string; rev: string }> {
+): Promise<{
+  title: string;
+  status: PageStatus;
+  body: string;
+  rev: string;
+  audience?: string[];
+  extra?: Record<string, unknown>;
+}> {
   let text: string;
   try {
     text = await readText(resolveInside(dir, file));
@@ -115,7 +123,15 @@ async function readPageFile(
     const { data, body } = splitFrontmatter(text);
     const status = PAGE_STATUSES.includes(data.status as PageStatus) ? (data.status as PageStatus) : "rascunho";
     const rev = createHash("sha256").update(text).digest("hex").slice(0, 16);
-    return { title: typeof data.title === "string" ? data.title : "", status, body, rev };
+    const { id: _id, title, status: _s, audience, ...extra } = data;
+    return {
+      title: typeof title === "string" ? title : "",
+      status,
+      body,
+      rev,
+      ...(parseAudience(audience) ? { audience: parseAudience(audience) } : {}),
+      ...(Object.keys(extra).length ? { extra } : {}),
+    };
   } catch (err) {
     const detail = err instanceof Error ? err.message.split("\n")[0] : String(err);
     throw new Error(`O cabeçalho (frontmatter) de ${file} tem um erro: ${detail}`);
@@ -131,7 +147,7 @@ async function readPageFile(
 export async function updatePage(
   dir: string,
   id: string,
-  patch: { title?: string; body?: string; status?: PageStatus },
+  patch: { title?: string; body?: string; status?: PageStatus; audience?: string[] | null },
   opts: {
     fileName?: "keep" | "sync" | undefined;
     ifMatch?: string | undefined;
@@ -150,6 +166,11 @@ export async function updatePage(
     ...(patch.title === undefined ? {} : { title: patch.title.trim() }),
     ...(patch.body === undefined ? {} : { body: patch.body }),
   };
+  if (patch.audience !== undefined) {
+    const audience = parseAudience(patch.audience);
+    if (audience) next.audience = audience;
+    else delete next.audience;
+  }
 
   const sameName =
     opts.fileName === "keep" ||
@@ -236,5 +257,8 @@ async function newPageFile(dir: string, title: string): Promise<string> {
 async function writePageFile(dir: string, page: Page): Promise<void> {
   // Rascunho é o padrão e não vai para o arquivo: página escrita à mão continua igual.
   const status = page.status === "rascunho" ? {} : { status: page.status };
-  await atomicWrite(resolveInside(dir, page.file), joinFrontmatter({ id: page.id, title: page.title, ...status }, page.body));
+  const audience = page.audience?.length ? { audience: page.audience } : {};
+  // Campos que o Studio não conhece voltam como vieram; os conhecidos vêm por último e vencem.
+  const data = { ...page.extra, id: page.id, title: page.title, ...status, ...audience };
+  await atomicWrite(resolveInside(dir, page.file), joinFrontmatter(data, page.body));
 }

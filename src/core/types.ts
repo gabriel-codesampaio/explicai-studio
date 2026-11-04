@@ -19,6 +19,8 @@ export interface ManualMeta {
   language: string;
   /** Aparência do manual exportado. Sem ela, vale a cor da marca. */
   theme?: ManualTheme;
+  /** Perfis do manual (`admin`, `cliente`…). Sem a lista, todo mundo vê tudo. Não é controle de acesso. */
+  audiences?: string[];
   pages: PageNode[];
 }
 
@@ -68,6 +70,10 @@ export interface Page {
   version?: string;
   /** Hash do arquivo inteiro na leitura. Quem edita por programa (MCP) devolve o `rev` para provar que leu a versão atual. */
   rev?: string;
+  /** Perfis que veem a página (`audience` no frontmatter). Sem o campo, vale para todos. */
+  audience?: string[];
+  /** Campos do frontmatter que o Studio não conhece (`sources:` etc.): voltam intactos ao salvar. */
+  extra?: Record<string, unknown>;
 }
 
 /** Coordenadas normalizadas de 0 a 1, relativas à largura e à altura da imagem. */
