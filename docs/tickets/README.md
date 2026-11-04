@@ -50,7 +50,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
 | [T-133](fechados/T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | feito | #30 |
-| [T-140](fechados/T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | feito | #33 |
+| [T-140](fechados/T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | feito | #34 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
