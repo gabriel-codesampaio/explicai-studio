@@ -119,6 +119,14 @@
   color: var(--grafite);
   font-style: italic;
 }
+/* Marca-texto (==texto==): mesmo amarelo do HTML exportado (`.page-body mark`). */
+.tiptap mark {
+  background: var(--marca-faixa);
+  color: inherit;
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
 /* Citação dentro do passo é o "Resultado:": rótulo pequeno e o texto em marca-texto, sem caixa. */
 .tiptap li > blockquote {
   margin-top: 0.5em;

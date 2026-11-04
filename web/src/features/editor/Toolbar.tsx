@@ -1,5 +1,5 @@
 import { type Editor, useEditorState } from "@tiptap/react";
-import { BetweenHorizontalEnd, BetweenVerticalEnd, Bold, Code, ImageIcon, Italic, Link2, Table } from "lucide-react";
+import { BetweenHorizontalEnd, BetweenVerticalEnd, Bold, Code, Highlighter, ImageIcon, Italic, Link2, Table } from "lucide-react";
 import { useRef } from "react";
 import { useRovingFocus } from "@/hooks/useRovingFocus";
 import { useScrollEdges } from "@/hooks/useScrollEdges";
@@ -40,6 +40,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
       italic: e.isActive("italic"),
       code: e.isActive("code"),
       link: e.isActive("link"),
+      highlight: e.isActive("highlight"),
       inTable: e.isActive("table"),
     }),
   });
@@ -77,6 +78,13 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
           onClick={() => chain().toggleCode().run()}
         />
         <Btn icon={Link2} label={t("Link")} shortcut="Ctrl+K" active={s.link} onClick={onEditLink} />
+        <Btn
+          icon={Highlighter}
+          label={t("Marca-texto")}
+          shortcut="Ctrl+Shift+H"
+          active={s.highlight}
+          onClick={() => chain().toggleHighlight().run()}
+        />
         <TextColorMenu editor={editor} roving />
         <Divider />
         {s.inTable ? (

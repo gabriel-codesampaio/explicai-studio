@@ -133,6 +133,43 @@ describe("Markdown do editor: cor do texto", () => {
   });
 });
 
+describe("Markdown do editor: marca-texto", () => {
+  it("guarda como ==texto== e volta igual", () => {
+    const md = "Veja ==este trecho== agora.";
+    expect(expectStable(md)).toBe(md);
+    const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+    expect(editor.getHTML()).toContain("<mark>este trecho</mark>");
+    editor.destroy();
+  });
+
+  it("negrito, itálico, link e cor dentro ou em volta não se perdem", () => {
+    for (const md of [
+      "==a **b** c==",
+      "==a *b* c==",
+      "==veja [o site](https://exemplo.com) agora==",
+      "**==negrito marcado==**",
+      "==x==",
+      '==<span data-color="red">vermelho</span>==',
+    ]) {
+      const out = expectStable(md);
+      expect(out).toContain("==");
+      const editor = new Editor({ extensions: contentExtensions(), content: out, contentType: "markdown" });
+      expect(editor.getHTML()).toContain("<mark>");
+      expect(editor.getText()).not.toContain("=");
+      editor.destroy();
+    }
+  });
+
+  it("== solto, em código ou sem texto colado não vira marca", () => {
+    for (const md of ["a == b", "x===y", "a ==b", "a == b == c", "====", "use `a ==b== c` no código", "```\nx ==y== z\n```"]) {
+      const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
+      expect(editor.getHTML(), md).not.toContain("<mark>");
+      editor.destroy();
+      expect(expectStable(md)).toContain(md.replace(/^```\n|\n```$/g, ""));
+    }
+  });
+});
+
 describe("Alerta (blocos GFM)", () => {
   it.each([
     ["TIP", "tip"],

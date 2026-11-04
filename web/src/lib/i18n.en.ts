@@ -438,6 +438,7 @@ export const EN: Record<string, string> = {
   "Cor de realce": "Highlight color",
   "Cor de destaque": "Accent color",
   "Cor do texto": "Text color",
+  "Marca-texto": "Highlighter",
   "Cor padrão": "Default color",
   "Formatar seleção": "Format selection",
   Azul: "Blue",

@@ -269,6 +269,40 @@ describe("exportação: cor do texto", () => {
   });
 });
 
+describe("exportação: marca-texto", () => {
+  const body = "Veja ==o **ponto** [aqui](https://exemplo.com)==, a == b, x===y e `==código==`.";
+
+  it("HTML: ==x== vira <mark> com o amarelo da marca; == solto e código ficam como texto", async () => {
+    await addPage(dir, { title: "Marca", body });
+    const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    expect(html).toContain('<mark>o <strong>ponto</strong> <a href="https://exemplo.com"');
+    expect(html).toContain("a == b, x===y");
+    expect(html).toContain("<code>==código==</code>");
+    expect(html).toContain(".page-body mark{background:var(--marca-faixa)");
+    expect(html).toContain("print-color-adjust:exact");
+  });
+
+  it("HTML: <mark> colado no texto continua escapado", async () => {
+    await addPage(dir, { title: "Marca", body: '<mark onclick="x">oi</mark>' });
+    const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    expect(html).toContain("&lt;mark onclick=");
+  });
+
+  it("Markdown: mantém ==texto==", async () => {
+    await addPage(dir, { title: "Marca", body });
+    const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
+    expect(md).toContain("==o **ponto**");
+  });
+
+  it("o texto mantém 4,5:1 sobre o amarelo da marca (cor padrão do realce)", () => {
+    const bg = overWhite("#ffd43b", 0.55);
+    expect(contrast("#151a33", bg)).toBeGreaterThanOrEqual(4.5);
+    // Laranja e verde da paleta ficam abaixo de 4,5 sobre o amarelo: dentro do <mark> usam um tom mais escuro.
+    expect(contrast("#a34400", bg)).toBeGreaterThanOrEqual(4.5);
+    expect(contrast("#137034", bg)).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
 describe("alertas no HTML", () => {
   const body = [
     "> [!TIP]",
