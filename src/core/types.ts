@@ -64,6 +64,8 @@ export interface Page {
   file: string;
   /** Impressão do arquivo no disco (mtime+tamanho). Muda quando alguém edita fora do Studio. */
   version?: string;
+  /** Hash do arquivo inteiro na leitura. Quem edita por programa (MCP) devolve o `rev` para provar que leu a versão atual. */
+  rev?: string;
 }
 
 /** Coordenadas normalizadas de 0 a 1, relativas à largura e à altura da imagem. */
