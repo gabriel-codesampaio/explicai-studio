@@ -161,15 +161,7 @@ describe("Markdown do editor: marca-texto", () => {
   });
 
   it("== solto, em código ou sem texto colado não vira marca", () => {
-    for (const md of [
-      "a == b",
-      "x===y",
-      "a ==b",
-      "a == b == c",
-      "====",
-      "use `a ==b== c` no código",
-      "```\nx ==y== z\n```",
-    ]) {
+    for (const md of ["a == b", "x===y", "a ==b", "a == b == c", "====", "use `a ==b== c` no código", "```\nx ==y== z\n```"]) {
       const editor = new Editor({ extensions: contentExtensions(), content: md, contentType: "markdown" });
       expect(editor.getHTML(), md).not.toContain("<mark>");
       editor.destroy();

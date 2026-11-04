@@ -8,6 +8,7 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Adicionado
 
+- Marca-texto no editor (botão nas duas barras e Ctrl+Shift+H), salvo como `==texto==`. No HTML e no PDF vira `<mark>` amarelo; o Markdown exportado mantém `==texto==`.
 - Renomear o manual pelo seletor do Studio (`PUT /api/manuals/:slug`): muda só o `title` em `manual.json`; pasta, endereço e ids ficam iguais.
 - Público: `audience` na página e `audiences` no manual; exportar HTML, PDF e Markdown por perfil, sem texto, imagem nem sumário das páginas de fora. Link para página de fora vira texto, com aviso. Público não é controle de acesso.
 - Salvar uma página preserva os campos do frontmatter que o Studio não conhece (`sources:` etc.).
