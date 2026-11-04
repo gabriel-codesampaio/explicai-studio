@@ -71,7 +71,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
 | [T-164](T-164-criar-manual-sem-motivo.md) | Explicar por que o botão Criar manual está desabilitado | P3 | aberto | frontend |
 | [T-165](T-165-barra-da-selecao-cobre-linha.md) | Barra da seleção não cobrir a linha seguinte | P3 | aberto | design |
-| [T-166](T-166-status-com-generos-misturados.md) | Padronizar o gênero e o vocabulário dos status | P3 | aberto | frontend |
 | [T-167](T-167-refazer-na-lista-de-atalhos.md) | Listar o Refazer na lista de atalhos | P3 | aberto | frontend |
 | [T-169](T-169-primeiro-uso-sem-marca.md) | Pôr a marca na tela de primeiro uso, como nas telas de erro | P3 | aberto | design |
 | [T-170](T-170-arvore-aceita-busca-por-digitacao.md) | Deixar a árvore de páginas aceitar busca por digitação | P3 | aberto | frontend |
