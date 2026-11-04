@@ -12,7 +12,7 @@ it("os botões dizem que a versão vale para a página", async () => {
   ]);
   const noop = async () => {};
   render(<VersionsPanel slug="m" pageId="p" onSave={noop} onRestore={noop} onPublish={noop} pinned={false} />);
-  fireEvent.click(screen.getByRole("button", { name: "Versões da página" }));
+  fireEvent.click(screen.getByRole("button", { name: "Versões" }));
 
   expect(await screen.findByRole("button", { name: "Guardar versão da página" })).toBeTruthy();
   expect(screen.getByRole("button", { name: "Restaurar na página" })).toBeTruthy();

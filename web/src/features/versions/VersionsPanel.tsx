@@ -94,7 +94,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           type="button"
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
-          {t("Versões da página")}
+          {t("Versões")}
           {pinned && (
             <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">{t("Versão do manual")}</span>
           )}
@@ -144,7 +144,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
             <ul ref={list} className="grid gap-1">
               {items.map((v) => (
                 <li key={v.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md px-2 py-2 hover:bg-muted">
-                  <span className="grid min-w-0 flex-1 leading-tight">
+                  <span className="grid min-w-32 flex-1 basis-40 leading-tight">
                     <span className="flex items-center gap-2 text-sm">
                       <span className="truncate">{noteLabel(v.note)}</span>
                       {v.published && (
