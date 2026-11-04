@@ -35,9 +35,9 @@ export function DiskConflictBanner({ diff, onReload, onKeep }: Props) {
           )}
         </p>
         {diff && (
-          <dl className="grid basis-full gap-1 text-xs">
+          <div className="grid basis-full gap-1 text-xs">
             <p className="text-muted-foreground">{tn(diff.lines, "{n} linha difere.", "{n} linhas diferem.")}</p>
-            <div className="grid gap-2 sm:grid-cols-2">
+            <dl className="grid gap-2 sm:grid-cols-2">
               <div className="min-w-0">
                 <dt className="rotulo">{t("No disco")}</dt>
                 <dd className="max-h-20 overflow-y-auto whitespace-pre-wrap break-words font-mono">{excerpt(diff.disk)}</dd>
@@ -46,8 +46,8 @@ export function DiskConflictBanner({ diff, onReload, onKeep }: Props) {
                 <dt className="rotulo">{t("O seu texto")}</dt>
                 <dd className="max-h-20 overflow-y-auto whitespace-pre-wrap break-words font-mono">{excerpt(diff.mine)}</dd>
               </div>
-            </div>
-          </dl>
+            </dl>
+          </div>
         )}
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={onKeep} className={BUTTON}>
