@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { ExplicaiError } from "./errors.js";
@@ -26,6 +26,7 @@ export async function addPage(
   // Arquivo primeiro: se gravar falhar, a árvore não aponta para o que não existe. Se a árvore falhar, desfaz o arquivo.
   await writePageFile(dir, page);
   page.version = await fileVersion(dir, page.file);
+  page.rev = (await readPageFile(dir, page.file)).rev;
   try {
     await updateManual(dir, (meta) => {
       const siblings = childrenOf(meta.pages, opts.parentId);
@@ -40,7 +41,8 @@ export async function addPage(
 
 export async function readPage(dir: string, id: string): Promise<Page> {
   const { node } = findNode((await readManual(dir)).pages, id);
-  return { id, ...(await readPageFile(dir, node.file)), file: node.file, version: await fileVersion(dir, node.file) };
+  const { rev, ...rest } = await readPageFile(dir, node.file);
+  return { id, ...rest, file: node.file, version: await fileVersion(dir, node.file), rev };
 }
 
 /** Versão do arquivo: mtime + tamanho. Basta para saber se alguém mexeu nele desde a última leitura. */
@@ -96,7 +98,10 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
 }
 
 /** Lê título e corpo de um arquivo de página, com mensagem clara quando ele foi apagado ou estragado. */
-async function readPageFile(dir: string, file: string): Promise<{ title: string; status: PageStatus; body: string }> {
+async function readPageFile(
+  dir: string,
+  file: string,
+): Promise<{ title: string; status: PageStatus; body: string; rev: string }> {
   let text: string;
   try {
     text = await readText(resolveInside(dir, file));
@@ -109,7 +114,8 @@ async function readPageFile(dir: string, file: string): Promise<{ title: string;
   try {
     const { data, body } = splitFrontmatter(text);
     const status = PAGE_STATUSES.includes(data.status as PageStatus) ? (data.status as PageStatus) : "rascunho";
-    return { title: typeof data.title === "string" ? data.title : "", status, body };
+    const rev = createHash("sha256").update(text).digest("hex").slice(0, 16);
+    return { title: typeof data.title === "string" ? data.title : "", status, body, rev };
   } catch (err) {
     const detail = err instanceof Error ? err.message.split("\n")[0] : String(err);
     throw new Error(`O cabeçalho (frontmatter) de ${file} tem um erro: ${detail}`);
@@ -126,9 +132,16 @@ export async function updatePage(
   dir: string,
   id: string,
   patch: { title?: string; body?: string; status?: PageStatus },
-  opts: { fileName?: "keep" | "sync" | undefined; ifMatch?: string | undefined } = {},
+  opts: { fileName?: "keep" | "sync" | undefined; ifMatch?: string | undefined; ifRev?: string | undefined } = {},
 ): Promise<Page> {
   const page = await readPage(dir, id);
+  // shortcut: a checagem do rev e a gravação não são atômicas (milissegundos); upgrade se aparecer na prática.
+  if (opts.ifRev !== undefined && opts.ifRev !== page.rev) {
+    throw new ExplicaiError(
+      "rev-conflict",
+      "A página mudou desde a última leitura. Leia a página de novo (read_page) e refaça a edição com o rev novo.",
+    );
+  }
   if (patch.status !== undefined && !PAGE_STATUSES.includes(patch.status)) {
     throw new Error(`Status inválido: ${patch.status}. Use ${PAGE_STATUSES.join(", ")}.`);
   }
@@ -151,7 +164,7 @@ export async function updatePage(
         await writePageFile(dir, next);
       });
     }
-    return { ...next, version: await fileVersion(dir, next.file) };
+    return { ...next, version: await fileVersion(dir, next.file), rev: (await readPageFile(dir, next.file)).rev };
   }
 
   // shortcut: com renomeio, a checagem e a gravação não são atômicas (janela de milissegundos); upgrade se aparecer na prática.
@@ -169,7 +182,7 @@ export async function updatePage(
     page.file,
     next.file,
   );
-  return { ...next, version: await fileVersion(dir, next.file) };
+  return { ...next, version: await fileVersion(dir, next.file), rev: (await readPageFile(dir, next.file)).rev };
 }
 
 /** O arquivo já tem o nome do título: `titulo.md` ou `titulo-2.md` (sufixo que `uniquePath` põe). */
