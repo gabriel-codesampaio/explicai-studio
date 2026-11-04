@@ -33,6 +33,9 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
   const approved = flattenItems(studio.manual?.pages ?? []).filter((p) => ["aprovado", "publicado"].includes(p.status)).length;
   // Sem página aprovada a opção fica desligada, mesmo que tenha sido marcada antes.
   const onlyApprovedOn = onlyApproved && approved > 0;
+  const audiences = studio.manual?.audiences ?? [];
+  const [audience, setAudience] = useState("");
+  const audienceOn = audiences.includes(audience) ? audience : "";
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ExportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,7 +45,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
     setError(null);
     setResult(null);
     try {
-      setResult(await studio.exportManual(format, onlyApprovedOn));
+      setResult(await studio.exportManual(format, onlyApprovedOn, audienceOn || undefined));
     } catch (err) {
       setError(errorMessage(err, t("Não foi possível exportar o manual.")));
     } finally {
@@ -129,6 +132,30 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
             </span>
           </span>
         </label>
+
+        {audiences.length > 0 && (
+          <label className="grid gap-1.5 text-sm">
+            <span className="font-bold">{t("Para quem exportar")}</span>
+            <select
+              value={audienceOn}
+              disabled={busy}
+              onChange={(e) => setAudience(e.target.value)}
+              className="rounded-md border border-input bg-background px-2 py-2 [@media(pointer:coarse)]:min-h-11"
+            >
+              <option value="">{t("Todos (o manual inteiro)")}</option>
+              {audiences.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs text-muted-foreground">
+              {t(
+                "Só entram as páginas desse perfil e as sem restrição. Links para as outras viram texto. Não é controle de acesso.",
+              )}
+            </span>
+          </label>
+        )}
 
         {format !== "markdown" && studio.manual && (
           <>

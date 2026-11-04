@@ -16,6 +16,14 @@ export function findItem(items: TreeItem[], id: string): TreeItem | null {
   return null;
 }
 
+/** O que o perfil vê na árvore: página sem `audience` ou que o cita; filha de página escondida some junto. */
+export function visibleFor(items: TreeItem[], profile: string | null): TreeItem[] {
+  if (!profile) return items;
+  return items
+    .filter((i) => !i.audience || i.audience.includes(profile))
+    .map((i) => ({ ...i, children: visibleFor(i.children, profile) }));
+}
+
 export function locate(items: TreeItem[], id: string, parentId: string | null = null): Location | null {
   for (const item of items) {
     if (item.id === id) return { parentId, siblings: items };

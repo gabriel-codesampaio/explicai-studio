@@ -1,4 +1,5 @@
 import { PanelLeftClose, Plus, Search } from "lucide-react";
+import { useState } from "react";
 import { Brand } from "@/components/Brand";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import type { PageAction } from "@/features/pages/PageActions";
@@ -6,7 +7,7 @@ import { PageTree } from "@/features/pages/PageTree";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
-import { shiftTarget } from "@/lib/tree";
+import { shiftTarget, visibleFor } from "@/lib/tree";
 import { MoreMenu } from "./MoreMenu";
 
 interface Props {
@@ -20,6 +21,9 @@ interface Props {
 export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   const studio = useStudioContext();
   const { manuals, manual, page } = studio;
+  // "Ver como": a árvore mostra só o que o perfil vê no export. Não muda nada no disco.
+  const [viewAs, setViewAs] = useState("");
+  const profile = manual?.audiences.includes(viewAs) ? viewAs : null;
   const current = manuals?.find((m) => m.slug === manual?.slug) ?? null;
 
   const act = (item: TreeItem, action: PageAction) => {
@@ -79,11 +83,28 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
             </button>
           </div>
+          {manual.audiences.length > 0 && (
+            <label className="flex items-center gap-2 px-2 text-[13px] text-muted-foreground">
+              {t("Ver como")}
+              <select
+                value={profile ?? ""}
+                onChange={(e) => setViewAs(e.target.value)}
+                className="min-w-0 flex-1 rounded-md border border-input bg-background px-1.5 py-1 text-foreground"
+              >
+                <option value="">{t("Todos")}</option>
+                {manual.audiences.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           {manual.pages.length === 0 ? (
             <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
           ) : (
             <PageTree
-              pages={manual.pages}
+              pages={visibleFor(manual.pages, profile)}
               selectedId={page?.id ?? null}
               onSelect={(id) => {
                 onNavigate?.();

@@ -20,6 +20,8 @@ export interface TreeItem {
   problem?: string;
   /** A página tem uma Versão do manual: o manual final usa essa versão guardada. */
   published?: string;
+  /** Perfis que veem a página; sem o campo, todos. */
+  audience?: string[];
   children: TreeItem[];
 }
 
@@ -57,6 +59,8 @@ export interface FontInfo {
 export interface ManualDetail extends ManualSummary {
   /** Cores do manual exportado; campo ausente = a da marca. */
   theme: ManualTheme;
+  /** Perfis conhecidos do manual (`admin`, `cliente`…). */
+  audiences: string[];
   pages: TreeItem[];
 }
 
@@ -78,6 +82,7 @@ export interface Page {
   status: PageStatus;
   body: string;
   file: string;
+  audience?: string[];
   /** Versão do arquivo no disco; volta no `If-Match` para o servidor detectar edição feita fora. */
   version?: string;
 }
@@ -108,6 +113,8 @@ export interface PagePatch {
   title?: string;
   body?: string;
   status?: PageStatus;
+  /** Lista vazia tira a restrição: a página volta a valer para todos. */
+  audience?: string[];
   /** "keep" grava o título sem renomear o arquivo; "sync" renomeia se o nome não combina com o título. */
   fileName?: "keep" | "sync";
 }
@@ -188,8 +195,8 @@ export const api = {
     call<{ ok: true }>(`${pageUrl(slug, id)}/published`, send("PUT", { versionId })),
 
   listFonts: () => call<FontInfo[]>("/api/fonts"),
-  exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean) =>
-    call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved })),
+  exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean, audience?: string) =>
+    call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved, ...(audience ? { audience } : {}) })),
   setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),
 
   /** Envia o logo (PNG, JPG ou SVG, até 1 MB); o servidor guarda em assets/ e põe no tema. */

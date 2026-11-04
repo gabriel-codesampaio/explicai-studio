@@ -5,6 +5,7 @@ import { Editor } from "@/features/editor/Editor";
 import { useHeadings } from "@/features/editor/headings";
 import { PageOutline, PageOutlineButton } from "@/features/editor/PageOutline";
 import { ExportDialog } from "@/features/export/ExportDialog";
+import { AudienceMenu } from "@/features/pages/AudienceMenu";
 import { FirstStepHint } from "@/features/pages/FirstStepHint";
 import { StatusMenu } from "@/features/pages/StatusMenu";
 import { PinnedNotice } from "@/features/versions/PinnedNotice";
@@ -70,6 +71,11 @@ export function PageView({ manual, page }: Props) {
                 onSave={studio.saveVersion}
                 onRestore={studio.restoreVersion}
                 onPublish={studio.publishVersion}
+              />
+              <AudienceMenu
+                audience={page.audience ?? []}
+                known={manual.audiences}
+                onChange={(a) => void studio.setPageAudience(a)}
               />
               <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
               {editor && headings.length > 0 && <PageOutlineButton editor={editor} headings={headings} />}

@@ -307,11 +307,32 @@ export function useStudio() {
     });
 
   /** Grava o que ainda está na fila e exporta. O diálogo mostra o resultado ou o erro. */
-  const exportManual = async (format: ExportFormat, onlyApproved: boolean) => {
+  const exportManual = async (format: ExportFormat, onlyApproved: boolean, audience?: string) => {
     if (!manual) throw new Error(t("Abra um manual para exportar."));
     await flush();
-    return api.exportManual(manual.slug, format, onlyApproved);
+    return api.exportManual(manual.slug, format, onlyApproved, audience);
   };
+
+  /** Perfis da página aberta. Lista vazia = todos. Grava na hora e atualiza a árvore e a lista de perfis do manual. */
+  const setPageAudience = (audience: string[]) =>
+    run(async () => {
+      if (!manual || !page) return;
+      await flush();
+      let saved: Page;
+      try {
+        saved = await api.updatePage(manual.slug, page.id, { audience }, versions.current.get(page.id));
+      } catch (err) {
+        if (isConflict(err)) autosave.queue(manual.slug, page.id, { audience });
+        throw err;
+      }
+      remember(saved);
+      setPage((p) => {
+        if (!p || p.id !== saved.id) return p;
+        const { audience: _old, ...rest } = p;
+        return saved.audience ? { ...rest, audience: saved.audience } : rest;
+      });
+      await refreshManual(manual.slug);
+    });
 
   /** Etapa da página aberta no fluxo de aprovação. Grava na hora e atualiza a etiqueta na árvore. */
   const setPageStatus = (status: PageStatus) =>
@@ -425,6 +446,7 @@ export function useStudio() {
     setManualTheme,
     uploadManualLogo,
     setPageStatus,
+    setPageAudience,
     createManual,
     editPage,
     reportError: (message: string) => toast.error(message),
