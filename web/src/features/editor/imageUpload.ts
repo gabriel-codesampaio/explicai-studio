@@ -1,3 +1,4 @@
+import type { Transaction } from "@tiptap/pm/state";
 import type { Editor } from "@tiptap/react";
 import { t } from "@/lib/i18n";
 import { api, errorMessage } from "../../lib/api";
@@ -14,18 +15,34 @@ export async function insertImages(
   onError: (message: string) => void,
 ): Promise<void> {
   let at = pos;
-  for (const file of files) {
-    try {
-      const { path } = await api.uploadAsset(slug, file);
-      const alt = file.name.replace(/\.[^.]+$/, "");
-      editor
-        .chain()
-        .focus()
-        .insertContentAt(at, { type: "image", attrs: { src: assetUrl(slug, path), alt } })
-        .run();
-      at += 1; // a próxima entra depois desta; na mesma posição a ordem sairia invertida
-    } catch (err) {
-      onError(errorMessage(err, t("Não foi possível enviar a imagem.")));
+  // O texto pode mudar durante o envio: a posição acompanha cada transação.
+  const follow = ({ transaction }: { transaction: Transaction }) => {
+    at = transaction.mapping.map(at);
+  };
+  editor.on("transaction", follow);
+  try {
+    await send();
+  } finally {
+    editor.off("transaction", follow);
+  }
+
+  async function send() {
+    for (const file of files) {
+      try {
+        const { path } = await api.uploadAsset(slug, file);
+        const alt = file.name.replace(/\.[^.]+$/, "");
+        // O mapa empurra `at` para depois da imagem inserida: a próxima entra atrás dela.
+        editor
+          .chain()
+          .focus()
+          .insertContentAt(Math.min(at, editor.state.doc.content.size), {
+            type: "image",
+            attrs: { src: assetUrl(slug, path), alt },
+          })
+          .run();
+      } catch (err) {
+        onError(errorMessage(err, t("Não foi possível enviar a imagem.")));
+      }
     }
   }
 }
