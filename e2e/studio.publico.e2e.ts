@@ -52,3 +52,36 @@ test("público: marca a página, vê como o perfil e exporta só o que ele vê",
   expect(text).not.toContain("secreto");
   expect(text).not.toContain("Financeiro");
 });
+
+// T-135: dois cliques seguidos, com a primeira gravação atrasada, não perdem nenhuma escolha.
+test("público: duas trocas seguidas gravam na ordem e o menu mostra o que ficou", async ({ page, request }) => {
+  const manual = await (await request.post("/api/manuals", { data: { title: "Manual Cliques" } })).json();
+  const post = (data: object) => request.post(`/api/manuals/${manual.slug}/pages`, { data });
+  await post({ title: "Fonte A", body: "a", audience: ["a"] });
+  await post({ title: "Fonte B", body: "b", audience: ["b"] });
+  await post({ title: "Alvo", body: "alvo" });
+  let first = true;
+  await page.route(/\/pages\/[^/]+$/, async (route) => {
+    if (route.request().method() === "PUT" && first && route.request().postData()?.includes("audience")) {
+      first = false;
+      await new Promise((r) => setTimeout(r, 800)); // a primeira resposta chega depois da segunda escolha
+    }
+    await route.continue();
+  });
+  await page.goto(`/#/${manual.slug}`);
+  await page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: "Alvo", exact: true }).click();
+  await page.getByRole("button", { name: /Público da página: Todos/ }).click();
+  await page.getByRole("checkbox", { name: "a", exact: true }).check();
+  await page.getByRole("checkbox", { name: "b", exact: true }).check();
+  await expect(page.getByRole("checkbox", { name: "a", exact: true })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "b", exact: true })).toBeChecked();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "Público da página: a, b" })).toBeVisible({ timeout: 10_000 });
+  const list = await (await request.get(`/api/manuals/${manual.slug}`)).json();
+  const alvo = list.pages.find((p: { title: string }) => p.title === "Alvo");
+  await expect
+    .poll(async () => (await (await request.get(`/api/manuals/${manual.slug}/pages/${alvo.id}`)).json()).audience, {
+      timeout: 10_000,
+    })
+    .toEqual(["a", "b"]);
+});
