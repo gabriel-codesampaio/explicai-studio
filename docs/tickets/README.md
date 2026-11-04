@@ -39,7 +39,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
-| [T-124](fechados/T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | feito | #24, explicai-mcp #6 |
+| [T-124](fechados/T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | feito | #25, explicai-mcp #6 |
 | [T-123](fechados/T-123-mcp-fase-2-sugere-e-automatiza.md) | MCP fase 2, sugerir e automatizar | P1 | feito | #23, explicai-mcp #5 |
 | [T-122](fechados/T-122-mcp-fase-1-funciona.md) | MCP fase 1, o agente cria e exporta um manual | P1 | feito | #18, #21 |
 | [T-126](fechados/T-126-piloto-do-mcp-no-codelab.md) | Piloto do MCP no CodeLab | P1 | feito | explicai-mcp #4 |
