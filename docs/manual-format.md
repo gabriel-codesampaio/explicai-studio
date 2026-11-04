@@ -173,7 +173,7 @@ Uma página pode ficar sem título enquanto é escrita. O arquivo vira `sem-titu
 
 ## Versões
 
-"Guardar versão" copia a página para `.versoes/<id da página>/<data>.md`. A cópia tem o mesmo formato de uma página, com `savedAt` e `note` (o nome que a pessoa deu, pode ser vazio) no frontmatter:
+"Guardar versão da página" copia a página para `.versoes/<id da página>/<data>.md`. A cópia tem o mesmo formato de uma página, com `savedAt` e `note` (o nome que a pessoa deu, pode ser vazio) no frontmatter:
 
 ```markdown
 ---

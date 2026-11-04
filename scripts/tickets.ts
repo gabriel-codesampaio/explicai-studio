@@ -8,7 +8,7 @@ const root = join(import.meta.dirname, "..", "docs", "tickets");
 const closed = process.argv.includes("fechados");
 const dir = closed ? join(root, "fechados") : root;
 
-const field = (text: string, name: string) => text.match(new RegExp(`^- ${name}: (.+)$`, "m"))?.[1].trim() ?? "?";
+const field = (text: string, name: string) => text.match(new RegExp(`^- ${name}: (.+)$`, "m"))?.[1]?.trim() ?? "?";
 
 const rows = readdirSync(dir)
   .filter((f) => /^T-\d+.*\.md$/.test(f))
