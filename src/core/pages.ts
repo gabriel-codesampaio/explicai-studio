@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { rm, stat } from "node:fs/promises";
 import path from "node:path";
-import { parseAudience, registerAudiences } from "./audience.js";
+import { isValidAudience, parseAudience, registerAudiences } from "./audience.js";
 import { ExplicaiError } from "./errors.js";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
@@ -129,6 +129,7 @@ async function readPageFile(
     const status = PAGE_STATUSES.includes(data.status as PageStatus) ? (data.status as PageStatus) : "rascunho";
     const rev = createHash("sha256").update(text).digest("hex").slice(0, 16);
     const { id: _id, title, status: _s, audience, ...extra } = data;
+    if (!isValidAudience(audience)) throw new Error("audience deve ser um texto ou uma lista de textos, como [admin, operador].");
     const aud = parseAudience(audience);
     return {
       title: typeof title === "string" ? title : "",

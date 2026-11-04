@@ -15,8 +15,41 @@ export interface ImageInfo {
   annotations: Annotations;
 }
 
-/** Link `[texto](./arquivo.md)`, para trocar por só o texto quando a página não vai para este público. */
-export const LINK_TO_FILE = /(?<!!)\[([^\]]*)\]\((?:\.\/)?([^/)#\s]+\.md)(?:#[^)\s]*)?\)/g;
+const INLINE_LINK = /(?<!!)\[((?:[^[\]]|\[[^\]]*\])*)\]\(\s*<?([^)\s>]*)>?(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)/g;
+const REF_LINK = /(?<!!)\[((?:[^[\]]|\[[^\]]*\])*)\]\[([^\]]*)\]/g;
+const REF_DEF = /^ {0,3}\[([^\]]+)\]: *<?([^\s>]+)>?.*$/gm;
+
+/** Nome do arquivo `.md` de um destino de link (`../pages/H.md#x` -> `h.md`), em minúsculas; outro destino: null. */
+function mdName(dest: string): string | null {
+  const last = dest.split(/[?#]/)[0]?.split(/[/\\]/).pop() ?? "";
+  const name = decodeUri(last).toLowerCase();
+  return name.endsWith(".md") ? name : null;
+}
+
+/**
+ * Troca por só o texto todo link (em linha, com título, entre `<>`, com pasta, por referência) que aponta para
+ * uma página que o público não vê. `files`: nomes de arquivo em minúsculas. `dropped`: os arquivos citados.
+ */
+export function stripHiddenLinks(body: string, files: Set<string>): { text: string; dropped: string[] } {
+  const dropped: string[] = [];
+  const hit = (dest: string) => {
+    const name = mdName(dest);
+    if (!name || !files.has(name)) return false;
+    dropped.push(name);
+    return true;
+  };
+  const labels = new Set<string>();
+  let text = body.replace(REF_DEF, (all, label: string, dest: string) => {
+    if (!hit(dest)) return all;
+    labels.add(label.trim().toLowerCase());
+    return "";
+  });
+  text = text.replace(INLINE_LINK, (all, t: string, dest: string) => (hit(dest) ? t : all));
+  if (labels.size)
+    text = text.replace(REF_LINK, (all, t: string, ref: string) => (labels.has((ref || t).trim().toLowerCase()) ? t : all));
+  return { text, dropped };
+}
+
 const IMAGE = /!\[[^\]]*\]\(([^)\s]+)/g;
 
 /** `../assets/tela.png` (como está na página) → `assets/tela.png`. Imagem de fora do manual: null. */
@@ -86,13 +119,12 @@ export function hiddenLinkWarnings(
   images: Map<string, ImageInfo>,
 ): string[] {
   if (!hidden.length) return [];
-  const files = new Set(hidden.map((h) => h.fileName));
+  const files = new Set(hidden.map((h) => h.fileName.toLowerCase()));
   const ids = new Set(hidden.map((h) => h.id));
   const out: string[] = [];
   for (const page of pages) {
-    for (const [, , file] of page.body.matchAll(LINK_TO_FILE)) {
-      if (file && files.has(decodeUri(file)))
-        out.push(`Página "${page.title}": o link para ${file} virou texto (página fora deste público).`);
+    for (const file of stripHiddenLinks(page.body, files).dropped) {
+      out.push(`Página "${page.title}": o link para ${file} virou texto (página fora deste público).`);
     }
   }
   for (const { asset, annotations } of images.values()) {

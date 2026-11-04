@@ -1,4 +1,5 @@
 import { seesPage } from "../audience.js";
+import { ExplicaiError } from "../errors.js";
 import { readManual } from "../manuals.js";
 import { readPage } from "../pages.js";
 import type { ManualMeta, PageNode, PageStatus } from "../types.js";
@@ -45,6 +46,9 @@ export async function collectPages(dir: string, opts: CollectOptions = {}): Prom
   const warnings: string[] = [];
   const hidden: Collected["hidden"] = [];
   const profile = opts.audience?.trim() || undefined;
+  if (opts.audience !== undefined && !profile) {
+    throw new ExplicaiError("invalid-audience", "O público precisa ser um texto não vazio.");
+  }
   if (profile && !meta.audiences?.includes(profile)) {
     warnings.push(`Nenhuma página cita o público "${profile}": saíram só as páginas sem restrição.`);
   }
@@ -74,6 +78,8 @@ export async function collectPages(dir: string, opts: CollectOptions = {}): Prom
         }
       } catch (err) {
         warnings.push(`${node.file}: ${err instanceof Error ? err.message : String(err)}`);
+        // Restrição desconhecida: com um perfil escolhido, a página ilegível e as filhas ficam de fora.
+        if (profile) visible = false;
       }
       const fileName = node.file.split("/").pop() ?? node.file;
       if (!visible) hidden.push({ id: node.id, fileName });

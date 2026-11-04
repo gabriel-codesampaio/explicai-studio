@@ -14,6 +14,16 @@ export function parseAudience(value: unknown): string[] | undefined {
   return clean.length ? clean : undefined;
 }
 
+/** `audience` válido: texto ou lista de textos. Outro tipo é erro de quem escreveu o arquivo, não "todos". */
+export function isValidAudience(value: unknown): boolean {
+  return (
+    value === undefined ||
+    value === null ||
+    typeof value === "string" ||
+    (Array.isArray(value) && value.every((v) => typeof v === "string"))
+  );
+}
+
 /** Põe os perfis da página na lista do manual (`audiences`), para o Studio e o MCP oferecerem os que já existem. */
 export function registerAudiences(dir: string, audience: string[] | undefined): Promise<void> {
   if (!audience?.length) return Promise.resolve();

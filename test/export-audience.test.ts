@@ -1,4 +1,4 @@
-import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
@@ -139,5 +139,57 @@ describe("export por público", () => {
   it("a lista de perfis do manual acompanha o que as páginas citam", async () => {
     await seed();
     expect((await readManual(dir)).audiences).toEqual(["admin", "cliente"]);
+  });
+
+  it("Markdown: nenhuma forma de link para página filtrada deixa o nome do arquivo", async () => {
+    const aberta = await addPage(dir, { title: "Aberta", body: "x" });
+    const oculta = await addPage(dir, { title: "Oculta", audience: ["admin"], body: "s" });
+    const f = oculta.file.split("/").pop() ?? "";
+    await updatePage(dir, aberta.id, {
+      body: [
+        `[a](./${f} "titulo")`,
+        `[b](<./${f}>)`,
+        `[c](../pages/${f.toUpperCase()}#x)`,
+        `[![img](../assets/nada.png)](./${f})`,
+        "[d][1] e [e][]",
+        "",
+        `[1]: ./${f}`,
+        `[e]: ${f} "t"`,
+      ].join("\n"),
+    });
+    const r = await exportManual(dir, "markdown", { audience: "cliente" });
+    const text = await readFile(path.join(dir, r.file), "utf8");
+    expect(text.toLowerCase()).not.toContain(f.toLowerCase());
+    expect(text).toContain("d e e");
+    expect(r.warnings.join("\n")).toContain(f);
+  });
+
+  it("público em branco é recusado; página ilegível some com as filhas; audience inválido no arquivo vira erro", async () => {
+    const mae = await addPage(dir, { title: "Mae", audience: ["admin"], body: "m" });
+    await addPage(dir, { title: "Filha", parentId: mae.id, body: "filha-secreta" });
+    await expect(exportManual(dir, "markdown", { audience: "  " })).rejects.toMatchObject({ code: "invalid-audience" });
+    await writeFile(
+      path.join(dir, mae.file),
+      `---
+id: ${mae.id}
+title: Mae
+audience: 5
+---
+
+m
+`,
+    );
+    const r = await exportManual(dir, "markdown", { audience: "cliente" });
+    const text = await readFile(path.join(dir, r.file), "utf8");
+    expect(text).not.toContain("filha-secreta");
+    expect(r.warnings.join("\n")).toMatch(/audience deve ser/);
+    expect(r.warnings.join("\n")).toMatch(/não vê nenhuma página/);
+  });
+
+  it("PDF de um perfil leva o perfil no nome e no resultado", async () => {
+    await seed();
+    const r = await exportManual(dir, "pdf", { audience: "cliente" });
+    expect(r.file).toMatch(/-cliente.pdf$/);
+    expect(r.audience).toBe("cliente");
   });
 });

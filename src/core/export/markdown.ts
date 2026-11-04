@@ -2,7 +2,7 @@ import { decodeUri, slugify } from "../text.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
-import { assetFromSrc, type ImageInfo, LINK_TO_FILE } from "./refs.js";
+import { assetFromSrc, type ImageInfo, stripHiddenLinks } from "./refs.js";
 import { TEXT_COLORS } from "./textColors.js";
 
 const IMAGE_LINE = /!\[([^\]]*)\]\(([^)\s]+)\)/g;
@@ -17,7 +17,7 @@ const PAGE_LINK = /\]\((?:\.\/)?([^/)#\s]+\.md)(#[^)\s]*)?\)/g;
  */
 export function renderMarkdown(collected: Collected, images: Map<string, ImageInfo>): string {
   const { meta, pages, hidden } = collected;
-  const hiddenFiles = new Set(hidden.map((h) => h.fileName));
+  const hiddenFiles = new Set(hidden.map((h) => h.fileName.toLowerCase()));
   const hiddenIds = new Set(hidden.map((h) => h.id));
   const L = labelsFor(meta.language);
   const anchor = (p: ExportPage) => slugify(`${p.number} ${p.title}`);
@@ -25,9 +25,8 @@ export function renderMarkdown(collected: Collected, images: Map<string, ImageIn
 
   const sections = pages.map((page) => {
     const level = Math.min(page.depth + 2, 6);
-    const body = shiftHeadings(page.body, level)
+    const body = shiftHeadings(hiddenFiles.size ? stripHiddenLinks(page.body, hiddenFiles).text : page.body, level)
       .replace(COLOR_SPAN, (all, name: string, text: string) => (Object.hasOwn(TEXT_COLORS, name) ? text : all))
-      .replace(LINK_TO_FILE, (all, text: string, file: string) => (hiddenFiles.has(decodeUri(file)) ? text : all))
       .replace(PAGE_LINK, (all, file: string, hash: string | undefined) => {
         const target = pages.find((p) => p.fileName === decodeUri(file));
         return target ? `](#${hash ? hash.slice(1) : anchor(target)})` : all;

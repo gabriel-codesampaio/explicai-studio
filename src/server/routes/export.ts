@@ -8,7 +8,7 @@ import {
 } from "../../core/index.js";
 import { HttpError, json, readBody, readJson } from "../http.js";
 import type { Route } from "../router.js";
-import { manualDir, optionalString } from "../workspace.js";
+import { manualDir, optionalProfile, optionalString } from "../workspace.js";
 
 export const exportRoutes: Route[] = [
   {
@@ -23,7 +23,7 @@ export const exportRoutes: Route[] = [
       }
       const result = await exportManual(manualDir(ctx), format, {
         onlyApproved: body.onlyApproved === true,
-        audience: optionalString(body.audience),
+        audience: optionalProfile(body.audience),
       });
       return json({ ...result, url: `/files/${encodeURIComponent(ctx.params.slug ?? "")}/${result.file}` });
     },

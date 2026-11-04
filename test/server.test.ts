@@ -265,6 +265,10 @@ describe("API de público", () => {
     const text = await (await fetch(`${base}${out.url}`)).text();
     expect(text).toContain("so admin");
     expect(text).not.toContain("para todos");
+    for (const bad of ["  ", 5, ["admin"]]) {
+      const res = await fetch(`${base}/api/manuals/m/export`, json("POST", { format: "markdown", audience: bad }));
+      expect(res.status).toBe(400);
+    }
   });
 });
 

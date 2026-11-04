@@ -89,7 +89,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               <select
                 value={profile ?? ""}
                 onChange={(e) => setViewAs(e.target.value)}
-                className="min-w-0 flex-1 rounded-md border border-input bg-background px-1.5 py-1 text-foreground"
+                className="min-w-0 flex-1 rounded-md border border-input bg-background px-1.5 py-1 text-foreground [@media(pointer:coarse)]:min-h-11"
               >
                 <option value="">{t("Todos")}</option>
                 {manual.audiences.map((a) => (
