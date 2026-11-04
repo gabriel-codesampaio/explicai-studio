@@ -11,6 +11,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       theme="system"
+      toastOptions={{ classNames: { actionButton: "min-h-6! min-w-6!" } }}
       className="toaster group"
       icons={{
         success: <CircleCheckIcon className="size-4" />,

@@ -68,3 +68,15 @@ export const fontFaceCss = (f: FontSpec): string =>
 /** Valor de `font-family`: a fonte e, se não carregar, uma parecida do sistema. */
 export const fontStack = (f: FontSpec): string =>
   `"${f.family}",${f.kind === "serif" ? 'Georgia,"Times New Roman",serif' : '"Segoe UI",system-ui,sans-serif'}`;
+
+/** `<span data-font="lora">`, só com id da lista. Devolve a fonte ou undefined. */
+export const fontSpanOpen = (html: string): FontSpec | undefined => {
+  const id = /^<span data-font="([a-z0-9-]+)">$/.exec(html)?.[1];
+  return id ? fontById(id) : undefined;
+};
+
+/** Fontes de trecho (`<span data-font>`) usadas nos textos das páginas, para o export levar os arquivos delas. */
+export function inlineFonts(bodies: string[]): FontSpec[] {
+  const ids = new Set(bodies.flatMap((b) => [...b.matchAll(/<span data-font="([a-z0-9-]+)">/g)].map((m) => m[1])));
+  return FONTS.filter((f) => ids.has(f.id));
+}

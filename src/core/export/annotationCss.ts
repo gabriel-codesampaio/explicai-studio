@@ -32,12 +32,14 @@ export const ANNOTATION_STYLE_CSS = `
 .mk .disc{left:calc(var(--disco,24px)/-2);top:calc(var(--disco,24px)/-2);width:var(--disco,24px);height:var(--disco,24px)}
 .mk .disc::before{font-size:var(--disco-fonte,13px)}
 .hot{background:var(--preenchimento,var(--anotacao-fundo))}
+.hl{border-color:var(--hl-borda,var(--marca))}
+.hl::before{background:var(--hl-fundo,var(--marca));mix-blend-mode:var(--hl-mistura,multiply);print-color-adjust:exact;-webkit-print-color-adjust:exact}
 `;
 
 /** Só entra quando alguma imagem tem `style.border`; as variáveis vêm do `.shot` (styleVars). */
 export const ANNOTATION_BORDER_CSS = `
 .hl,.hot{border-width:var(--borda,calc(2px*var(--marca-espessura,1)))}
-.hl{border-color:var(--borda-destaque,var(--marca))}
+.hl{border-color:var(--hl-borda,var(--borda-destaque,var(--marca)))}
 .mk .disc{box-shadow:0 0 0 var(--borda,2px) #fff}
 .mk .tail polygon{stroke-width:calc(var(--borda,1px)*2)}
 `;

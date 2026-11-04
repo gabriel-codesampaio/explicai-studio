@@ -89,6 +89,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
               <button
                 type="button"
                 data-page-id={item.id}
+                data-page-title={item.title}
                 tabIndex={item.id === tabStop ? 0 : -1}
                 aria-current={selected ? "page" : undefined}
                 onClick={() => onSelect(item.id)}

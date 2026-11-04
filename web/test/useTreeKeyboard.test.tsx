@@ -11,7 +11,7 @@ function Tree({ version = 0, onShift = vi.fn(), onOpenMenu = vi.fn() }) {
     <ul ref={root} onKeyDown={onKeyDown}>
       {["a", "b", "c"].map((id) => (
         <li key={id}>
-          <button type="button" data-page-id={id}>
+          <button type="button" data-page-id={id} data-page-title={{ a: "Alfa", b: "Beta", c: "Beleza" }[id]}>
             {id}
           </button>
         </li>
@@ -81,5 +81,26 @@ describe("useTreeKeyboard", () => {
     key("a", { key: "ArrowRight" });
     fireEvent.keyDown(container.querySelector("ul") as HTMLElement, { key: "ArrowDown" });
     expect(onShift).not.toHaveBeenCalled();
+  });
+
+  it("digitar a inicial foca a página e não deixa o evento seguir", () => {
+    render(<Tree />);
+    screen.getByText("a").focus();
+    expect(key("a", { key: "b" })).toBe(false);
+    expect(document.activeElement).toBe(screen.getByText("b"));
+    // A mesma letra de novo anda para a próxima com a inicial.
+    key("b", { key: "b" });
+    expect(document.activeElement).toBe(screen.getByText("c"));
+  });
+
+  it("letras seguidas refinam a busca e Ctrl+letra é ignorado", () => {
+    render(<Tree />);
+    screen.getByText("a").focus();
+    key("a", { key: "b" });
+    key("b", { key: "e" });
+    key("b", { key: "l" });
+    expect(document.activeElement).toBe(screen.getByText("c"));
+    key("c", { key: "a", ctrlKey: true });
+    expect(document.activeElement).toBe(screen.getByText("c"));
   });
 });

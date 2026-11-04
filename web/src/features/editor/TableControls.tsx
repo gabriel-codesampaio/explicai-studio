@@ -98,7 +98,7 @@ export function TableControls({ editor, host }: Props) {
         COLUMN_ACTIONS,
         { left: centerX - 14, top: box.top - 12 },
         <GripHorizontal className="size-4" aria-hidden />,
-        "h-5 w-7",
+        "h-6 w-7",
       )}
       {menu(
         t("Opções da linha"),

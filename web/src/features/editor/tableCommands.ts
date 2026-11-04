@@ -45,3 +45,20 @@ export const DELETE_TABLE: TableAction = {
   run: (e, p) => onCell(e, p).deleteTable().run(),
   danger: true,
 };
+
+/** Tabela 3 × 3 nova: o cabeçalho já sai com texto ("Coluna 1"…), sem célula `th` vazia (WCAG 1.3.1). */
+export function insertNewTable(editor: Editor): boolean {
+  const cell = (type: string, text?: string) => ({
+    type,
+    content: [{ type: "paragraph", ...(text ? { content: [{ type: "text", text }] } : {}) }],
+  });
+  const row = (type: string, text?: (i: number) => string) => ({
+    type: "tableRow",
+    content: [0, 1, 2].map((i) => cell(type, text?.(i))),
+  });
+  const table = {
+    type: "table",
+    content: [row("tableHeader", (i) => `${t("Coluna")} ${i + 1}`), row("tableCell"), row("tableCell")],
+  };
+  return editor.chain().focus().insertContent(table).run();
+}

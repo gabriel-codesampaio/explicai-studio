@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FontInfo } from "../src/lib/api";
-import { manualFontStyle } from "../src/lib/manualFont";
+import { manualFontStyle, previewFamily } from "../src/lib/manualFont";
 
 const font = (id: string, family: string, kind: "sans" | "serif", italic: boolean): FontInfo => ({
   id,
@@ -31,5 +31,12 @@ describe("fonte do manual no editor", () => {
 
   it("ignora fonte desconhecida e fonte sem itálico no texto", () => {
     expect(manualFontStyle(FONTS, { fonts: { text: "montserrat", headings: "nada" } })).toEqual({});
+  });
+});
+
+describe("previewFamily", () => {
+  it("devolve o nome entre aspas, como o CSS do servidor cita a família", () => {
+    expect(previewFamily("Lora")).toBe('"Explicaí prévia Lora"');
+    expect('font-family:"Lora"'.replaceAll('"Lora"', previewFamily("Lora"))).toBe('font-family:"Explicaí prévia Lora"');
   });
 });

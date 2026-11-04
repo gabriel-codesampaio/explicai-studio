@@ -98,6 +98,50 @@ describe("Markdown do editor: imagem solta entre textos", () => {
   });
 });
 
+describe("Markdown do editor: fonte do trecho", () => {
+  it("guarda a fonte como span com data-font e volta igual", () => {
+    const md = 'Veja <span data-font="lora">isto</span> aqui.';
+    expect(expectStable(md)).toBe(md);
+  });
+
+  it("fonte junto com negrito e com cor não se perde", () => {
+    for (const md of [
+      '**<span data-font="inter">Salvar</span>**',
+      '<span data-font="lora">tudo **certo** aqui</span>',
+      '<span data-font="lora"><span data-color="red">vermelho</span></span>',
+      '<span data-color="red"><span data-font="lora">vermelho</span></span>',
+    ]) {
+      const out = expectStable(md);
+      expect(out).toContain('data-font="');
+      expect(out).not.toContain("&lt;");
+      const editor = new Editor({ extensions: contentExtensions(), content: out, contentType: "markdown" });
+      expect(editor.getText()).not.toContain("<span");
+      editor.destroy();
+    }
+  });
+
+  it("fonte fora da lista é ignorada ao ler", () => {
+    const editor = new Editor({
+      extensions: contentExtensions(),
+      content: '<span data-font="comic-sans">oi</span>',
+      contentType: "markdown",
+    });
+    expect(editor.getMarkdown()).not.toContain('data-font="comic-sans"');
+    editor.destroy();
+  });
+
+  it("limpar formatação tira a fonte", () => {
+    const editor = new Editor({
+      extensions: contentExtensions(),
+      content: 'Veja <span data-font="lora">isto</span>.',
+      contentType: "markdown",
+    });
+    editor.chain().selectAll().unsetAllMarks().run();
+    expect(editor.getMarkdown()).toBe("Veja isto.");
+    editor.destroy();
+  });
+});
+
 describe("Markdown do editor: cor do texto", () => {
   it("guarda a cor como span com data-color e volta igual", () => {
     const md = 'Clique em <span data-color="red">Excluir</span> com cuidado.';

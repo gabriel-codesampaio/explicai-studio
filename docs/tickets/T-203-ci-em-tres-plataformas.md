@@ -1,4 +1,4 @@
-# T-203: CI em Windows, macOS e Linux e nos Node do engines
+# T-203: CI em Windows, macOS e Linux, no Node 22
 
 - Prioridade: P2
 - Tamanho: P
@@ -9,6 +9,8 @@
 
 ## Problema
 Matriz de plataforma e Node no CI (Windows, macOS, Linux; Node LTS do `engines`). Hipótese: o desenvolvimento é só em Windows.
+
+Decidido (pessoa, 2026-11-04): um Node só no CI, o 22, com `engines` em `>=22.12`.
 
 ## Critérios de aceite
 - [ ] O que a lacuna 7 descreve, feito e verificado conforme a discovery (seções "O que 1.0 promete" e "Critérios de pronto").

@@ -7,7 +7,7 @@ Formato em disco: `docs/manual-format.md`. Estado do trabalho: `docs/passagem.md
 ## Stack
 
 - TypeScript 7 em modo estrito, ESM (`"type": "module"`, imports com `.js`)
-- Node 20.12 ou mais novo
+- Node 22.12 ou mais novo
 - Testes com Vitest (happy-dom nos testes do editor)
 - Editor: React 19 + Vite + Tiptap 3 com `@tiptap/markdown`
 - Servidor local: `node:http` puro, sem framework

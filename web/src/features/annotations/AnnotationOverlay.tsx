@@ -53,7 +53,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
   );
   // Contorno do destaque e da área: a borda escolhida, ou os 2 px de sempre vezes a espessura (igual ao .hl/.hot do export).
   const border = { borderWidth: "var(--borda, calc(2px * var(--marca-espessura, 1)))" };
-  const hlBorder = { ...border, borderColor: "var(--borda-destaque, var(--marca))" };
+  const hlBorder = { ...border, borderColor: "var(--hl-borda, var(--borda-destaque, var(--marca)))" };
   const interactive = Boolean(onGrab);
   const pick =
     (id: string, handle: Handle = "move") =>
@@ -131,7 +131,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
           key={h.id}
           onPointerDown={pick(h.id)}
           className={cn(
-            "absolute block rounded-[3px] border-2 border-marca before:absolute before:inset-0 before:bg-marca before:mix-blend-multiply before:content-['']",
+            "absolute block rounded-[3px] border-2 border-marca before:absolute before:inset-0 before:bg-[var(--hl-fundo,var(--marca))] before:[mix-blend-mode:var(--hl-mistura,multiply)] before:content-['']",
             ring(h.id),
             interactive && "cursor-move",
           )}
@@ -141,7 +141,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
             width: `${h.w * 100}%`,
             height: `${h.h * 100}%`,
             ...hlBorder,
-            ...styleVars(h.style, true),
+            ...styleVars(resolveItemStyle(h.style, annotations.style), true, "highlight"),
           }}
         />
       ))}

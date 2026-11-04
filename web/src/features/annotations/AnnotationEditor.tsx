@@ -1,10 +1,19 @@
 import { ArrowUpRight, Crop, EyeOff, Hash, Highlighter, Link2, type LucideIcon, MousePointer2, Undo2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Kbd } from "@/components/ui/kbd";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
-import { draftChanged, type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
+import {
+  draftChanged,
+  findItem,
+  type HotspotTarget,
+  nudge,
+  removeAnnotation,
+  type Tool,
+  updateItemStyle,
+} from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
@@ -15,6 +24,7 @@ import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
 import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
+import { ItemStylePanel } from "./ItemStylePanel";
 import { Pending } from "./Pending";
 import { RedactPanel } from "./RedactPanel";
 import { ReducePanel } from "./ReducePanel";
@@ -80,6 +90,12 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
 
   const firstPage = flattenItems(pages)[0];
   const defaultTarget: HotspotTarget = firstPage ? { type: "page", pageId: firstPage.id } : { type: "url", href: "https://" };
+  const selectedItem = draft && selectedId ? findItem(draft.ann, selectedId) : null;
+  const itemName = selectedItem
+    ? selectedItem.n
+      ? `${t("Marcador")} ${selectedItem.n}`
+      : { arrow: t("Seta"), highlight: t("Destaque"), hotspot: t("Área clicável"), marker: t("Marcador") }[selectedItem.kind]
+    : "";
   const current = TOOLS.find((t) => t.tool === tool) ?? TOOLS[0];
 
   const save = async () => {
@@ -106,6 +122,13 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           // O foco abre na ferramenta ativa, para não haver dois botões destacados ao mesmo tempo.
           e.preventDefault();
           (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[aria-pressed="true"]')?.focus();
+        }}
+        onEscapeKeyDown={(e) => {
+          // Esc no painel Estilo ou numa legenda devolve o foco ao canvas em vez de fechar a janela.
+          const target = e.target as HTMLElement | null;
+          if (!target?.closest("[data-style-panel], [data-legend-input]")) return;
+          e.preventDefault();
+          document.querySelector<HTMLElement>("[data-annotation-canvas]")?.focus();
         }}
         onKeyDown={(e) => {
           const target = e.target as HTMLElement;
@@ -139,31 +162,41 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
       >
         <DialogHeader>
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Editar imagem")}</DialogTitle>
-          <DialogDescription>{current?.hint}</DialogDescription>
+          <DialogDescription className="sr-only">{current?.hint}</DialogDescription>
         </DialogHeader>
 
-        <div role="toolbar" aria-label={t("Ferramentas de marcação")} className="flex flex-wrap gap-1">
-          {TOOLS.map(({ tool: id, label, Icon }) => (
-            <button
-              key={id}
-              type="button"
-              aria-pressed={tool === id}
-              aria-keyshortcuts={TOOL_KEYS[id]}
-              title={`${label} (${TOOL_KEYS[id]})`}
-              onClick={() => setTool(id)}
-              className={cn(
-                "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-sm [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11",
-                tool === id ? "border-primary bg-accent font-bold text-primary" : "border-border hover:bg-muted",
-              )}
-            >
-              <Icon className="size-4" aria-hidden />
-              {/* O nome vem deste texto; a letra é só dica, anunciada por aria-keyshortcuts (WCAG 2.5.3). */}
-              <span className="sr-only sm:not-sr-only [@media(pointer:coarse)]:not-sr-only">{label}</span>
-              <kbd className="font-mono text-xs" aria-hidden>
-                {TOOL_KEYS[id]}
-              </kbd>
-            </button>
-          ))}
+        <div className="grid gap-1.5">
+          <div role="toolbar" aria-label={t("Ferramentas de marcação")} className="flex flex-wrap items-center gap-1">
+            {TOOLS.map(({ tool: id, label, Icon }) => (
+              <Fragment key={id}>
+                {id === "redact" && (
+                  <span className="mx-1 flex items-center gap-2 self-stretch border-l border-border pl-2">
+                    <span className="rotulo">{t("Altera a imagem")}</span>
+                  </span>
+                )}
+                <button
+                  type="button"
+                  aria-pressed={tool === id}
+                  aria-keyshortcuts={TOOL_KEYS[id]}
+                  title={`${label} (${TOOL_KEYS[id]})`}
+                  onClick={() => setTool(id)}
+                  className={cn(
+                    "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-sm [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11",
+                    tool === id ? "border-primary bg-accent font-bold text-primary" : "border-border hover:bg-muted",
+                  )}
+                >
+                  <Icon className="size-4" aria-hidden />
+                  {/* O nome vem deste texto; a letra é só dica, anunciada por aria-keyshortcuts (WCAG 2.5.3). */}
+                  <span className="sr-only sm:not-sr-only [@media(pointer:coarse)]:not-sr-only">{label}</span>
+                  <Kbd>{TOOL_KEYS[id]}</Kbd>
+                </button>
+              </Fragment>
+            ))}
+          </div>
+          {/* Mesma dica do DialogDescription (lida por leitor de tela); aqui é a versão visível, junto da barra. */}
+          <p aria-hidden className="text-sm text-muted-foreground">
+            {current?.hint}
+          </p>
         </div>
 
         {draft ? (
@@ -184,7 +217,24 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 }}
               />
             </div>
-            <div className="grid content-start gap-4">
+            <div className="grid min-w-0 grid-cols-1 content-start gap-4">
+              <div className="order-last md:order-first">
+                {selectedItem ? (
+                  <ItemStylePanel
+                    kind={selectedItem.kind}
+                    name={itemName}
+                    style={selectedItem.style}
+                    imageStyle={draft.ann.style}
+                    onChange={(style) => change({ ...draft, ann: updateItemStyle(draft.ann, selectedId ?? "", style) })}
+                    onDelete={() => {
+                      change({ ...draft, ann: removeAnnotation(draft.ann, selectedId ?? "") });
+                      setSelectedId(null);
+                    }}
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground">{t("Clique numa marcação para dar um estilo só a ela.")}</p>
+                )}
+              </div>
               {(tool === "redact" || draft.redact.length > 0) && (
                 <Pending
                   open={tool === "redact"}
@@ -258,14 +308,22 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 selectedId={selectedId}
                 onSelect={setSelectedId}
                 onChange={(ann) => change({ ...draft, ann })}
+                onOpenStyle={() => setTimeout(() => document.querySelector<HTMLElement>("[data-style-panel]")?.focus())}
               />
-              <AppearancePanel
-                style={draft.ann.style}
-                onChange={(style) => {
-                  const { style: _old, ...rest } = draft.ann;
-                  change({ ...draft, ann: style ? { ...rest, style } : rest });
-                }}
-              />
+              <details className="rounded-md border border-border p-3">
+                <summary className="cursor-pointer rounded-md text-sm font-bold focus-visible:ring-[3px] focus-visible:ring-ring/50">
+                  {t("Padrão da imagem")}
+                </summary>
+                <div className="mt-3">
+                  <AppearancePanel
+                    style={draft.ann.style}
+                    onChange={(style) => {
+                      const { style: _old, ...rest } = draft.ann;
+                      change({ ...draft, ann: style ? { ...rest, style } : rest });
+                    }}
+                  />
+                </div>
+              </details>
             </div>
           </div>
         ) : (

@@ -1,10 +1,7 @@
-import { useState } from "react";
 import { useStudioContext } from "@/hooks/StudioContext";
-import { errorMessage, type ManualTheme, type ThemePatch } from "@/lib/api";
+import type { ManualTheme, ThemePatch } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { ColorField } from "./ColorField";
-import { FontPicker } from "./FontPicker";
-import { useFontPreview } from "./useFontPreview";
 
 /** Atalhos de cor de destaque. A primeira é a da marca. */
 const ACCENTS = [
@@ -16,9 +13,6 @@ const ACCENTS = [
 
 const DEFAULTS = { text: "#151a33", accent: ACCENTS[0].swatch, highlight: "#ffd43b", heading: "#000000" };
 
-/** As fontes da marca, usadas quando o manual não escolhe outra. */
-const DEFAULT_FONTS = { text: "atkinson-hyperlegible-next", headings: "archivo" };
-
 const HEADINGS = [
   { slot: "cover", label: t("Título da capa") },
   { slot: "page", label: t("Título da página") },
@@ -27,18 +21,17 @@ const HEADINGS = [
   { slot: "h3", label: t("Título 3") },
 ] as const;
 
-/** Cores do manual exportado (o Studio fica sempre no cobalto). Cada campo salva sozinho. */
+/** Cores do manual (o Studio fica sempre no cobalto). Cada campo salva sozinho. */
 export function ThemeFields({ theme }: { theme: ManualTheme }) {
   const studio = useStudioContext();
-  const [open, setOpen] = useState(false);
-  const fonts = useFontPreview(open);
   const save = (patch: ThemePatch) => studio.setManualTheme(patch);
-  const saveFont = (patch: ThemePatch) => void save(patch).catch((err: unknown) => studio.reportError(errorMessage(err)));
 
   return (
-    <details className="group" onToggle={(e) => setOpen(e.currentTarget.open)}>
-      <summary className="cursor-pointer rotulo hover:text-foreground">{t("Cores do manual")}</summary>
-      <div className="mt-3 grid gap-2.5">
+    <section className="grid gap-3" aria-labelledby="aparencia-cores">
+      <h3 id="aparencia-cores" className="rotulo">
+        {t("Cores do manual")}
+      </h3>
+      <div className="grid gap-2.5">
         <ColorField
           label={t("Cor do texto")}
           value={theme.text}
@@ -86,28 +79,10 @@ export function ThemeFields({ theme }: { theme: ManualTheme }) {
             />
           ))}
         </div>
-        {fonts.length > 0 && (
-          <div className="mt-1 grid gap-3">
-            <FontPicker
-              label={t("Fonte do texto")}
-              fonts={fonts.filter((f) => f.italic)}
-              value={theme.fonts?.text}
-              fallback={DEFAULT_FONTS.text}
-              onChange={(id) => saveFont({ fonts: { text: id } })}
-            />
-            <FontPicker
-              label={t("Fonte dos títulos")}
-              fonts={fonts}
-              value={theme.fonts?.headings}
-              fallback={DEFAULT_FONTS.headings}
-              onChange={(id) => saveFont({ fonts: { headings: id } })}
-            />
-          </div>
-        )}
         <p className="text-xs text-muted-foreground">
           {t("Texto, títulos e destaque precisam de contraste de 4,5:1 com o branco para a leitura ficar nítida.")}
         </p>
       </div>
-    </details>
+    </section>
   );
 }
