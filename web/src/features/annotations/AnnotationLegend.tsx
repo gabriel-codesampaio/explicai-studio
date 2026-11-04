@@ -9,7 +9,7 @@ export function AnnotationLegend({ markers, style }: { markers: Marker[]; style?
   if (rows.length === 0) return null;
   return (
     <ol
-      className="mt-4 grid gap-1.5 text-[15px] leading-[1.4]"
+      className="annotation-legend mt-4 grid gap-1.5 text-[15px] leading-[1.4]"
       style={styleVars(style, true)}
       aria-label={t("Legenda da imagem")}
     >
