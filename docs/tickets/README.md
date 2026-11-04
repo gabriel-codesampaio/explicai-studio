@@ -16,7 +16,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
 | [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
-| [T-146](T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | aberto | frontend |
 | [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
@@ -32,7 +31,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-138](T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-145](T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | aberto | frontend |
 | [T-154](T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | aberto | frontend |
 | [T-155](T-155-botao-remover-imagem.md) | Adicionar botão Remover imagem no painel da imagem | P2 | aberto | frontend |
 | [T-156](T-156-foco-da-marcacao-na-legenda.md) | Levar o foco à legenda depois de marcar, sem quebrar os atalhos | P2 | aberto | frontend |
