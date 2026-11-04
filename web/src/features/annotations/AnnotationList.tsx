@@ -60,9 +60,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
             .map((m) => (
               <Fragment key={m.id}>
                 <div className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
-                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-anotacao font-mono text-xs font-semibold text-sobre-anotacao">
-                    {m.n}
-                  </span>
+                  <span className="num-chip shrink-0 bg-anotacao text-sobre-anotacao">{m.n}</span>
                   <Input
                     aria-label={t("O que o marcador {n} mostra", { n: m.n })}
                     value={m.label ?? ""}

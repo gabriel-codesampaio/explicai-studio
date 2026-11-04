@@ -215,7 +215,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
                 onPointerDown={pick(m.id)}
                 className={cn(
                   // O after amplia o alvo de clique para 24 px mesmo no disco pequeno (20 px).
-                  "absolute grid place-items-center rounded-full bg-anotacao font-mono leading-none font-semibold text-sobre-anotacao before:content-[attr(data-n)] after:absolute after:-inset-0.5 after:content-['']",
+                  "absolute grid place-items-center rounded-full bg-anotacao font-mono leading-none font-semibold text-sobre-anotacao before:content-[attr(data-n)] before:[text-box:trim-both_cap_alphabetic] after:absolute after:-inset-0.5 after:content-['']",
                   ring(m.id),
                   interactive && "cursor-move",
                 )}
@@ -223,9 +223,9 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
                   width: "var(--disco, 24px)",
                   height: "var(--disco, 24px)",
                   margin: "calc(var(--disco, 24px) / -2) 0 0 calc(var(--disco, 24px) / -2)",
+                  transform: `translate(${disc.x}px, ${disc.y}px)`,
                   fontSize: "var(--disco-fonte, 13px)",
                   boxShadow: "0 0 0 var(--borda, 2px) #fff",
-                  transform: `translate(${disc.x}px, ${disc.y}px)`,
                 }}
                 // O número vem do CSS: dentro do editor, um texto aqui entraria no conteúdo lido pelo leitor de tela.
                 data-n={m.n}

@@ -75,6 +75,29 @@
 }
 
 /*
+ * Chip com número (legenda da imagem e lista do editor), igual ao .legend .n do export. O número é centrado
+ * pela altura das maiúsculas onde `text-box` existe; fora disso, grid com line-height 1. --d é o diâmetro.
+ */
+@utility num-chip {
+  --d: 24px;
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  min-width: var(--d);
+  height: var(--d);
+  padding-inline: 4px;
+  border-radius: 999px;
+  font: 600 13px / 1 var(--fonte-mono);
+  @supports (text-box: trim-both cap alphabetic) {
+    display: inline-block;
+    height: auto;
+    padding-block: calc((var(--d) - 1cap) / 2);
+    text-align: center;
+    text-box: trim-both cap alphabetic;
+  }
+}
+
+/*
  * Rótulo de seção do brand book (.rot): mono, maiúsculo e espaçado.
  * O maiúsculo é só CSS: o texto no DOM fica em caixa normal para o leitor de tela.
  */
