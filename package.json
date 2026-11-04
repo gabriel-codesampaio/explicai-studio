@@ -42,7 +42,8 @@
     "check": "npm run lint && npm run typecheck && npm test",
     "test:e2e": "npm run build && playwright test",
     "prepublishOnly": "npm run check && npm run build",
-    "fonts:sync": "tsx scripts/sync-fonts.ts"
+    "fonts:sync": "tsx scripts/sync-fonts.ts",
+    "tickets": "tsx scripts/tickets.ts"
   },
   "dependencies": {
     "marked": "^17.0.6",

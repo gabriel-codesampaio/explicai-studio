@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A9 (avaliado no commit 60a0e3d)
 
@@ -22,4 +22,4 @@ Achado A9. "Versão do manual" parece valer para o manual inteiro, mas vale para
 Abrir o painel em pt e en e ler os três botões sem contexto. Teste de componente do painel.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito: descrição, botões Guardar, Restaurar e Usar no manual dizem que valem para a página (pt e en). Botão Versões mantém o nome curto. e2e de versões e renomear passam.

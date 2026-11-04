@@ -20,19 +20,23 @@ export interface Marker extends Point {
   id: string;
   n: number;
   label?: string;
+  style?: AnnotationStyle;
 }
 export interface Highlight extends Rect {
   id: string;
+  style?: AnnotationStyle;
 }
 export interface Arrow {
   id: string;
   from: Point;
   to: Point;
+  style?: AnnotationStyle;
 }
 export type HotspotTarget = { type: "page"; pageId: string } | { type: "url"; href: string };
 export interface Hotspot extends Rect {
   id: string;
   target: HotspotTarget;
+  style?: AnnotationStyle;
 }
 export type ImageDisplay = "s" | "m" | "full";
 export interface Annotations {

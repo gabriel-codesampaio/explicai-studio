@@ -320,7 +320,7 @@ test("versões: guarda, edita, restaura e o texto anterior vira versão", async 
   const dialog = page.getByRole("dialog", { name: "Versões desta página" });
   await dialog.getByLabel("Nome da versão (opcional)").fill("Aprovada");
   await dialog.getByRole("button", { name: "Guardar versão" }).click();
-  await dialog.getByRole("button", { name: "Usar no manual" }).click();
+  await dialog.getByRole("button", { name: "Usar na página do manual" }).click();
   await expect(dialog.getByText("Versão do manual", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByText("O manual final usa a Versão do manual desta página.", { exact: false })).toBeVisible();
