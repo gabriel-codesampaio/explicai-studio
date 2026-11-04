@@ -24,7 +24,7 @@ describe("updateItemStyle", () => {
 });
 
 const panel = (kind: "marker" | "highlight" | "hotspot", style: object | undefined, onChange = vi.fn(), imageStyle?: object) => (
-  <ItemStylePanel kind={kind} name="Item" style={style} imageStyle={imageStyle} onChange={onChange} />
+  <ItemStylePanel kind={kind} name="Item" style={style} imageStyle={imageStyle} onChange={onChange} onDelete={() => {}} />
 );
 
 describe("ItemStylePanel", () => {
@@ -42,11 +42,15 @@ describe("ItemStylePanel", () => {
     expect(onChange).toHaveBeenLastCalledWith(undefined);
   });
 
-  it("destaque só tem borda", () => {
-    render(panel("highlight", undefined));
+  it("destaque tem paleta de marca-texto, preenchimento e borda; sem preenchimento trava Nenhuma", () => {
+    const onChange = vi.fn();
+    const { rerender } = render(panel("highlight", undefined, onChange));
     expect(screen.queryByRole("button", { name: "Vermelho" })).toBeNull();
-    expect(screen.queryByText("Preenchimento")).toBeNull();
-    expect(screen.getByRole("button", { name: "Grossa" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Rosa" }));
+    expect(onChange).toHaveBeenLastCalledWith({ color: "pink" });
+    expect(screen.getByRole("button", { name: "Cheio" }).getAttribute("aria-pressed")).toBe("false");
+    rerender(panel("highlight", { fill: "none" }, onChange));
+    expect((screen.getByRole("button", { name: "Nenhuma" }) as HTMLButtonElement).disabled).toBe(true);
   });
 
   it("área sem preenchimento não aceita borda Nenhuma", () => {

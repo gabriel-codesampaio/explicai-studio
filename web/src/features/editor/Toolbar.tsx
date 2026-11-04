@@ -9,6 +9,7 @@ import { BlockTypeMenu } from "./BlockTypeMenu";
 import { TableToolbarMenu } from "./TableToolbarMenu";
 import { TextColorMenu } from "./TextColorMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
+import { insertNewTable } from "./tableCommands";
 
 interface Props {
   editor: Editor;
@@ -92,11 +93,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
             <TableToolbarMenu editor={editor} />
           </>
         ) : (
-          <Btn
-            icon={Table}
-            label={t("Tabela")}
-            onClick={() => chain().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
-          />
+          <Btn icon={Table} label={t("Tabela")} onClick={() => insertNewTable(editor)} />
         )}
       </div>
       <Fade show={edges.start} side="left" />

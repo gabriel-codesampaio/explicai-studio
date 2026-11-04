@@ -2,27 +2,51 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { useStudioContext } from "@/hooks/StudioContext";
 import { errorMessage } from "@/lib/api";
 import { t } from "@/lib/i18n";
+import { CoverFooterFields } from "./CoverFooterFields";
 import { FontFields } from "./FontFields";
 import { LogoField } from "./LogoField";
 import { ThemeFields } from "./ThemeFields";
 import { ThemeSample } from "./ThemeSample";
 
 /** Diálogo "Aparência do manual" (Ajustes): cores, fontes, logo e rodapé do HTML e do PDF. Cada campo salva sozinho. */
-export function ManualAppearanceDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+export function ManualAppearanceDialog({
+  open,
+  onOpenChange,
+  section,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Seção em que o diálogo abre: o foco vai ao primeiro campo dela. */
+  section?: "cover";
+}) {
   const studio = useStudioContext();
   const manual = studio.manual;
   if (!manual) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl">
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        // Sair do campo salva o que foi digitado; fechar com Esc remove o campo sem blur.
+        if (!next && document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        onOpenChange(next);
+      }}
+    >
+      <DialogContent
+        className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl"
+        onOpenAutoFocus={(e) => {
+          const first = section === "cover" ? document.querySelector<HTMLElement>("#aparencia-capa input") : null;
+          if (!first) return;
+          e.preventDefault();
+          first.focus();
+        }}
+      >
         <div className="px-6 pt-6 pr-12 pb-4">
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Aparência do manual")}</DialogTitle>
           <DialogDescription>
             {t("Vale para o HTML, o PDF e o texto do editor. O tema do Studio fica à parte.")}
           </DialogDescription>
         </div>
-        {/* Seções em sequência: capa e rodapé editáveis (T-147) entram aqui como mais uma <section>. */}
         <div className="grid min-h-0 flex-1 content-start gap-6 overflow-y-auto px-6 pb-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           {/* Em telas largas a amostra fica na 2ª coluna; abaixo disso, depois das seções (sem sticky). */}
           <div className="grid content-start gap-6 lg:col-start-1 lg:row-start-1">
@@ -34,9 +58,10 @@ export function ManualAppearanceDialog({ open, onOpenChange }: { open: boolean; 
               </h3>
               <LogoField slug={manual.slug} logo={manual.theme.logo} />
             </section>
+            <CoverFooterFields />
             <section className="grid gap-3" aria-labelledby="aparencia-rodape">
               <h3 id="aparencia-rodape" className="rotulo">
-                {t("Rodapé")}
+                {t("Rodapé do Explicaí")}
               </h3>
               <label className="flex items-start gap-2.5 text-sm">
                 <input

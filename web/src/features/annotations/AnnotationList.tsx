@@ -14,6 +14,8 @@ interface Props {
   selectedId: string | null;
   onSelect: (id: string) => void;
   onChange: (next: Annotations) => void;
+  /** Enter num item leva o foco ao painel Estilo. */
+  onOpenStyle?: () => void;
 }
 
 const row = (selected: boolean) =>
@@ -33,7 +35,7 @@ function RemoveButton({ label, onClick }: { label: string; onClick: () => void }
 }
 
 /** Lista ao lado da imagem: nome de cada marcador (vira a legenda) e destino de cada área clicável. */
-export function AnnotationList({ annotations, pages, selectedId, onSelect, onChange }: Props) {
+export function AnnotationList({ annotations, pages, selectedId, onSelect, onChange, onOpenStyle }: Props) {
   const allPages = flattenItems(pages);
   const remove = (id: string) => onChange(removeAnnotation(annotations, id));
   const setTarget = (id: string, target: HotspotTarget) => onChange(updateHotspot(annotations, id, target));
@@ -68,6 +70,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
                   value={m.label ?? ""}
                   placeholder={t("O que este marcador mostra?")}
                   onFocus={() => onSelect(m.id)}
+                  onKeyDown={(e) => e.key === "Enter" && onOpenStyle?.()}
                   onChange={(e) => onChange(updateMarker(annotations, m.id, e.target.value))}
                   className="h-8"
                 />
@@ -127,7 +130,15 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
             ...annotations.arrows.map((a, i) => ({ id: a.id, label: t("Seta {n}", { n: i + 1 }), Icon: ArrowUpRight })),
           ].map(({ id, label, Icon }) => (
             <div key={id} className={row(id === selectedId)}>
-              <button type="button" onClick={() => onSelect(id)} className="flex flex-1 items-center gap-2 text-left text-sm">
+              <button
+                type="button"
+                onClick={(e) => {
+                  onSelect(id);
+                  // detail 0 = ativado pelo teclado (Enter); clique de mouse não rouba o foco.
+                  if (e.detail === 0) onOpenStyle?.();
+                }}
+                className="flex flex-1 items-center gap-2 text-left text-sm"
+              >
                 <Icon className="size-4 text-primary" aria-hidden /> {label}
               </button>
               <RemoveButton label={t("Excluir {nome}", { nome: label.toLowerCase() })} onClick={() => remove(id)} />

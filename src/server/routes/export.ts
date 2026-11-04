@@ -4,6 +4,8 @@ import {
   exportManual,
   logoSizeError,
   readManual,
+  setManualCover,
+  setManualFooter,
   setManualLogo,
   setManualTheme,
   themeCss,
@@ -45,6 +47,24 @@ export const exportRoutes: Route[] = [
     method: "GET",
     path: "/api/manuals/:slug/theme/css",
     handle: async (ctx) => json({ css: themeCss((await readManual(manualDir(ctx))).theme, ".amostra-manual") }),
+  },
+  {
+    // Muda só os campos enviados: { subtitle?, author?, version?, date? } (até 120 caracteres; null apaga). Texto longo: 400 e nada é gravado.
+    method: "PUT",
+    path: "/api/manuals/:slug/cover",
+    handle: async (ctx) => {
+      await setManualCover(manualDir(ctx), await readJson(ctx.req));
+      return json({ ok: true });
+    },
+  },
+  {
+    // { text? (até 100 caracteres), pageNumbers? (boolean) }; null apaga o campo.
+    method: "PUT",
+    path: "/api/manuals/:slug/footer",
+    handle: async (ctx) => {
+      await setManualFooter(manualDir(ctx), await readJson(ctx.req));
+      return json({ ok: true });
+    },
   },
   {
     // Corpo = o arquivo do logo (PNG, JPG ou SVG, até 1 MB), nome em ?name=. Guarda em assets/ e põe no tema.

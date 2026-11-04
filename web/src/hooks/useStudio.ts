@@ -3,8 +3,10 @@ import { toast } from "sonner";
 import {
   ApiError,
   api,
+  type CoverPatch,
   type ExportFormat,
   errorMessage,
+  type FooterPatch,
   isOffline,
   type ManualDetail,
   type ManualSummary,
@@ -441,6 +443,18 @@ export function useStudio() {
     await refreshManual(manual.slug);
   };
 
+  /** Capa e rodapé do manual exportado. Lançam com o motivo se o core recusar o texto. */
+  const setManualCover = async (patch: CoverPatch) => {
+    if (!manual) return;
+    await api.setCover(manual.slug, patch);
+    await refreshManual(manual.slug);
+  };
+  const setManualFooter = async (patch: FooterPatch) => {
+    if (!manual) return;
+    await api.setFooter(manual.slug, patch);
+    await refreshManual(manual.slug);
+  };
+
   /** Envia o logo do manual exportado. Lança com o motivo se o core recusar o arquivo. */
   const uploadManualLogo = async (file: File) => {
     if (!manual) return;
@@ -536,6 +550,8 @@ export function useStudio() {
     publishVersion,
     exportManual,
     setManualTheme,
+    setManualCover,
+    setManualFooter,
     uploadManualLogo,
     setPageStatus,
     setPageAudience,

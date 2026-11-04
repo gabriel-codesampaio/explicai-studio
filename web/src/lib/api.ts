@@ -46,6 +46,20 @@ export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string 
   hideColophon?: true | null;
 };
 
+/** Texto da capa e do rodapé do manual exportado (limites: 120 e 100 caracteres, conferidos no core). */
+export interface ManualCover {
+  subtitle?: string;
+  author?: string;
+  version?: string;
+  date?: string;
+}
+export interface ManualFooter {
+  text?: string;
+  pageNumbers?: true;
+}
+export type CoverPatch = Partial<Record<keyof ManualCover, string | null>>;
+export type FooterPatch = { text?: string | null; pageNumbers?: boolean | null };
+
 /** Fonte empacotada para o manual exportado. */
 export interface FontInfo {
   id: string;
@@ -59,6 +73,8 @@ export interface FontInfo {
 export interface ManualDetail extends ManualSummary {
   /** Cores do manual exportado; campo ausente = a da marca. */
   theme: ManualTheme;
+  cover: ManualCover;
+  footer: ManualFooter;
   /** Perfis conhecidos do manual (`admin`, `cliente`…). */
   audiences: string[];
   pages: TreeItem[];
@@ -212,6 +228,8 @@ export const api = {
   /** Variáveis do tema (o `themeCss` do export) no escopo `.amostra-manual`. */
   themeCss: (slug: string) => call<{ css: string }>(`${manualUrl(slug)}/theme/css`),
   setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),
+  setCover: (slug: string, patch: CoverPatch) => call<{ ok: true }>(`${manualUrl(slug)}/cover`, send("PUT", patch)),
+  setFooter: (slug: string, patch: FooterPatch) => call<{ ok: true }>(`${manualUrl(slug)}/footer`, send("PUT", patch)),
 
   /** Envia o logo (PNG, JPG ou SVG, até 1 MB); o servidor guarda em assets/ e põe no tema. */
   uploadLogo: (slug: string, file: File) =>
