@@ -1,5 +1,6 @@
 import { type Editor, useEditorState } from "@tiptap/react";
 import { Check } from "lucide-react";
+import { useRef, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { t } from "@/lib/i18n";
@@ -14,17 +15,20 @@ export function TextColorMenu({ editor, roving }: { editor: Editor; roving?: boo
     editor,
     selector: ({ editor: e }) => (e.getAttributes("textColor").color as TextColorName | undefined) ?? null,
   });
+  const trigger = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false); // re-renderiza ao abrir: o contêiner só existe com a barra montada
   const paint = (name: TextColorName | null) =>
     (name ? editor.chain().focus().setTextColor(name) : editor.chain().focus().unsetTextColor()).run();
   const swatch = (name: TextColorName | null) => ({ color: name ? `var(--cor-${name})` : undefined });
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
+              ref={trigger}
               data-roving={roving ? "" : undefined}
               tabIndex={roving ? -1 : undefined}
               aria-label={t("Cor do texto")}
@@ -42,7 +46,12 @@ export function TextColorMenu({ editor, roving }: { editor: Editor; roving?: boo
         </TooltipTrigger>
         <TooltipContent>{t("Cor do texto")}</TooltipContent>
       </Tooltip>
-      <DropdownMenuContent align="start" className="w-44" onCloseAutoFocus={(e) => e.preventDefault()}>
+      <DropdownMenuContent
+        align="start"
+        className="w-44"
+        container={roving ? undefined : trigger.current?.closest<HTMLElement>("[role=toolbar]")}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
         {[null, ...TEXT_COLORS].map((name) => (
           <DropdownMenuItem key={name ?? "default"} aria-current={color === name} onSelect={() => paint(name)}>
             <span aria-hidden className="w-4 text-center font-display font-bold" style={swatch(name)}>
