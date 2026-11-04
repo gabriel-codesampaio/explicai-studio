@@ -94,7 +94,7 @@ test("públicos: lista com contagem, cria, recusa repetido, renomeia, remove com
   await expect(row("cliente")).toHaveCount(0);
 
   // A página aberta (Solo) foi relida: o botão do popover mostra "Todos".
-  await page.keyboard.press("Escape");
+  await dialog.getByRole("button", { name: "Fechar" }).click();
   await expect(page.getByRole("button", { name: "Público da página: Todos" })).toBeVisible();
 });
 

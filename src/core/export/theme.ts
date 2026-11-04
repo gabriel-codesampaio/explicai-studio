@@ -134,32 +134,38 @@ export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch):
   return next;
 }
 
-/** Variáveis CSS do tema, só as que mudam. Vazio quando o manual usa as cores da marca. */
-export function themeCss(theme: ManualTheme | undefined): string {
+/** Variáveis CSS do tema, só as que mudam. Vazio quando o manual usa as cores da marca. `scope` troca o `:root` (amostra do Studio). */
+export function themeCss(theme: ManualTheme | undefined, scope = ":root"): string {
   if (!theme) return "";
+  // manual.json pode vir de fora: valor que não é cor nunca entra no <style> do export.
+  const ok = (c?: string): c is string => typeof c === "string" && HEX.test(c);
   const v: string[] = [];
-  if (theme.accent)
+  if (ok(theme.accent))
     v.push(`--accent:${theme.accent}`, `--anotacao:${theme.accent}`, `--anotacao-fundo:${withAlpha(theme.accent, 0.08)}`);
-  if (theme.text) v.push(`--tinta:${theme.text}`, `--grafite:${muted(theme.text)}`);
-  if (theme.highlight) {
+  if (ok(theme.text)) v.push(`--tinta:${theme.text}`, `--grafite:${muted(theme.text)}`);
+  if (ok(theme.highlight)) {
     v.push(
       `--marca:${theme.highlight}`,
       `--marca-faixa:${withAlpha(theme.highlight, HIGHLIGHT_ALPHA)}`,
       `--marca-halo:${withAlpha(theme.highlight, 0.3)}`,
     );
   }
-  for (const slot of HEADING_SLOTS) if (theme.headings?.[slot]) v.push(`--t-${slot}:${theme.headings[slot]}`);
+  for (const slot of HEADING_SLOTS) {
+    const color = theme.headings?.[slot];
+    if (ok(color)) v.push(`--t-${slot}:${color}`);
+  }
   const fonts = themeFonts(theme);
   if (theme.fonts?.text) v.push(`--texto:${fontStack(fonts.text)}`);
   if (theme.fonts?.headings) v.push(`--display:${fontStack(fonts.headings)}`);
-  return v.length ? `:root{${v.join(";")}}` : "";
+  return v.length ? `${scope}{${v.join(";")}}` : "";
 }
 
 /** As fontes que vão no export: texto, títulos (sem repetir) e a de código. */
-export function usedFonts(theme: ManualTheme | undefined): FontSpec[] {
+export function usedFonts(theme: ManualTheme | undefined, inline: FontSpec[] = []): FontSpec[] {
   const { text, headings } = themeFonts(theme);
-  return [...new Set([text, headings, MONO])];
+  return [...new Set([text, headings, MONO, ...inline])];
 }
 
 /** `@font-face` das fontes usadas, no mesmo formato do export. */
-export const fontFacesCss = (theme: ManualTheme | undefined): string => usedFonts(theme).map(fontFaceCss).join("\n");
+export const fontFacesCss = (theme: ManualTheme | undefined, inline: FontSpec[] = []): string =>
+  usedFonts(theme, inline).map(fontFaceCss).join("\n");

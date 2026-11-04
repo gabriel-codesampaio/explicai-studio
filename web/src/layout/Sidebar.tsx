@@ -44,92 +44,95 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   };
 
   return (
-    <aside className="flex h-full flex-col gap-5 overflow-y-auto border-r border-border bg-card px-3 pt-4">
-      <div className="flex items-center justify-between gap-2">
-        <Brand />
-        <button
-          type="button"
-          onClick={onCollapse}
-          aria-label={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
-          title={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
-          className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-        >
-          <PanelLeftClose className="size-4" aria-hidden />
-        </button>
-      </div>
-
-      {manuals && manuals.length > 0 && (
-        <ManualSwitcher
-          manuals={manuals}
-          current={current}
-          onOpen={(slug) => void studio.openManual(slug)}
-          onCreate={() => studio.setCreatingManual(true)}
-          onRename={() => setRenaming(true)}
-        />
-      )}
-      {renaming && current && (
-        <RenameManualDialog title={current.title} onRename={studio.renameManual} onClose={() => setRenaming(false)} />
-      )}
-
-      {manual && (
-        <nav aria-label={t("Páginas do manual")} className="grid grid-cols-1 gap-1">
-          {manual.audiences.length > 0 && (
-            <div className="mb-2 flex flex-col gap-1 px-2">
-              <label htmlFor="ver-como" className="rotulo text-muted-foreground">
-                {t("Ver como público")}
-              </label>
-              <Select value={profile || TODOS} onValueChange={(v) => setViewAs(v === TODOS ? "" : v)}>
-                <SelectTrigger id="ver-como" className="w-full px-1.5 py-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={TODOS}>{t("Todos")}</SelectItem>
-                  {manual.audiences.map((a) => (
-                    <SelectItem key={a} value={a}>
-                      {a}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+    <aside aria-label={t("Barra lateral")} className="flex h-full flex-col border-r border-border bg-card">
+      {/* Só o miolo rola: a barra de rolagem não passa pelo rodapé. */}
+      <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-3 py-4 [scrollbar-gutter:stable]">
+        <div className="flex items-center justify-between gap-2">
+          <Brand />
           <button
             type="button"
-            onClick={onSearch}
-            className="mb-3 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+            onClick={onCollapse}
+            aria-label={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
+            title={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
+            className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
           >
-            <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
-            <Kbd className="ml-auto">Ctrl+P</Kbd>
+            <PanelLeftClose className="size-4" aria-hidden />
           </button>
-          <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
-            <span className="rotulo">{t("Páginas")}</span>
+        </div>
+
+        {manuals && manuals.length > 0 && (
+          <ManualSwitcher
+            manuals={manuals}
+            current={current}
+            onOpen={(slug) => void studio.openManual(slug)}
+            onCreate={() => studio.setCreatingManual(true)}
+            onRename={() => setRenaming(true)}
+          />
+        )}
+        {renaming && current && (
+          <RenameManualDialog title={current.title} onRename={studio.renameManual} onClose={() => setRenaming(false)} />
+        )}
+
+        {manual && (
+          <nav aria-label={t("Páginas do manual")} className="grid grid-cols-1 gap-1">
+            {manual.audiences.length > 0 && (
+              <div className="mb-2 flex flex-col gap-1 px-2">
+                <label htmlFor="ver-como" className="rotulo text-muted-foreground">
+                  {t("Ver como público")}
+                </label>
+                <Select value={profile || TODOS} onValueChange={(v) => setViewAs(v === TODOS ? "" : v)}>
+                  <SelectTrigger id="ver-como" className="w-full px-1.5 py-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={TODOS}>{t("Todos")}</SelectItem>
+                    {manual.audiences.map((a) => (
+                      <SelectItem key={a} value={a}>
+                        {a}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <button
               type="button"
-              onClick={() => {
-                onNavigate?.();
-                void studio.addPage(null);
-              }}
-              className="flex items-center gap-1 rounded-md px-1.5 py-1 font-bold text-primary hover:bg-accent"
+              onClick={onSearch}
+              className="mb-3 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
             >
-              <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
+              <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
+              <Kbd className="ml-auto">Ctrl+P</Kbd>
             </button>
-          </div>
-          {manual.pages.length === 0 ? (
-            <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
-          ) : (
-            <PageTree
-              pages={visibleFor(manual.pages, profile)}
-              selectedId={page?.id ?? null}
-              onSelect={(id) => {
-                onNavigate?.();
-                void studio.selectPage(id);
-              }}
-              onAction={act}
-              onMove={(id, parentId, index) => void studio.movePage(id, parentId, index)}
-            />
-          )}
-        </nav>
-      )}
+            <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
+              <span className="rotulo">{t("Páginas")}</span>
+              <button
+                type="button"
+                onClick={() => {
+                  onNavigate?.();
+                  void studio.addPage(null);
+                }}
+                className="flex items-center gap-1 rounded-md px-1.5 py-1 font-bold text-primary hover:bg-accent"
+              >
+                <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
+              </button>
+            </div>
+            {manual.pages.length === 0 ? (
+              <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
+            ) : (
+              <PageTree
+                pages={visibleFor(manual.pages, profile)}
+                selectedId={page?.id ?? null}
+                onSelect={(id) => {
+                  onNavigate?.();
+                  void studio.selectPage(id);
+                }}
+                onAction={act}
+                onMove={(id, parentId, index) => void studio.movePage(id, parentId, index)}
+              />
+            )}
+          </nav>
+        )}
+      </div>
 
       <MoreMenu />
     </aside>

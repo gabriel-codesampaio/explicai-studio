@@ -55,6 +55,8 @@ export const manualRoutes: Route[] = [
         title: meta.title,
         language: meta.language,
         theme: meta.theme ?? {},
+        cover: meta.cover ?? {},
+        footer: meta.footer ?? {},
         audiences: meta.audiences ?? [],
         pages: await readPageTree(dir, { allowNewer: true }),
       });

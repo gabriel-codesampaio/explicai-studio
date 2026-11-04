@@ -31,7 +31,7 @@ meu-workspace/
 }
 ```
 
-A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado (ver abaixo). O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões). O campo opcional `audiences` lista os perfis do manual (ver Público).
+A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado (ver abaixo). Os campos opcionais `cover` e `footer` guardam o texto da capa e do rodapé (ver Capa e rodapé). O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões). O campo opcional `audiences` lista os perfis do manual (ver Público).
 
 ### theme
 
@@ -82,6 +82,23 @@ No export o arquivo é copiado para `assets/` ao lado do `index.html` e entra po
 
 O core recusa, ao gravar (Studio e MCP), `text`, `accent` e cada cor de `headings` com contraste menor que 4,5:1 com o branco, e um `highlight` que deixe o texto por cima com menos de 4,5:1. A mensagem diz o contraste atual e o mínimo. Editar um campo mantém os outros.
 
+### Capa e rodapé
+
+`cover` e `footer` são opcionais, ficam na raiz do `manual.json` ao lado de `theme` e valem só para o HTML e o PDF; o Markdown exportado não muda. Manual sem eles exporta como antes, e a `version` do formato continua 1.
+
+```json
+"cover": { "subtitle": "Para: Acme", "author": "Time de Finanças", "version": "Versão 2.1", "date": "outubro de 2026" },
+"footer": { "text": "Confidencial · Acme", "pageNumbers": true }
+```
+
+| Campo | Efeito | Limite |
+|---|---|---|
+| `cover.subtitle`, `author`, `version`, `date` | Linhas abaixo do título da capa, nessa ordem; campo vazio não deixa espaço. Texto livre: o Studio sugere data e versão, mas nunca preenche sozinho | 120 caracteres cada |
+| `footer.text` | Linha no fim do HTML e, no PDF, texto à esquerda no rodapé de cada página (menos a capa) | 100 caracteres |
+| `footer.pageNumbers` | `true` põe "n / total" à direita no rodapé do PDF (menos a capa; a capa conta como página 1) | só `true` |
+
+O core (Studio e MCP) recusa texto acima do limite com o motivo (`too-long`) e não grava nada; texto vazio apaga o campo. O texto é escapado no HTML e na string CSS do rodapé. O rodapé por página usa as margens de página do CSS (`@page`), que o Chrome só aceita a partir da versão 131: em Chrome mais antigo o PDF sai sem texto e sem número, com um aviso no resultado da exportação, não erro. O export com público leva a mesma capa e o mesmo rodapé. O Studio edita tudo em Ajustes, Aparência do manual, com prévia.
+
 ## Campos desconhecidos
 
 `manual.json` e `assets/*.json` são lidos e regravados inteiros: campo que o Studio não conhece (de uma versão mais nova ou de uma ferramenta externa) volta intacto ao salvar, na raiz, em `theme`, nos nós da árvore de páginas e em cada marcação, destaque, seta e área clicável. Vale para o Studio e para o MCP, que regrava pelo `explicai/core`. Exceção: dentro de `style` (anotações), só os quatro campos conhecidos ficam; valor fora da lista já é descartado. Coberto por `test/unknown-fields.test.ts`. O frontmatter das páginas segue a mesma regra (`extra`).
@@ -120,6 +137,10 @@ Um link para outra página do manual é um link Markdown relativo ao arquivo: `[
 ## Cor do texto
 
 Um trecho colorido fica como `<span data-color="red">texto</span>`, com o nome de uma cor da paleta: `gray`, `red`, `orange`, `green`, `blue` ou `purple`. Dentro do `span` vale Markdown comum (`**negrito**`). Nome fora da paleta é ignorado pelo editor. No HTML e no PDF cada nome vira uma cor com contraste AA no branco; qualquer outro HTML continua saindo como texto. O Markdown exportado leva só o texto, sem o `span`.
+
+## Fonte do trecho
+
+Um trecho com fonte própria fica como `<span data-font="lora">texto</span>`, com o nome de uma fonte da lista da tabela de `theme` acima (`atkinson-hyperlegible-next`, `inter`, `source-sans-3`, `source-serif-4`, `lora`, `archivo`, `montserrat` ou `playfair-display`). Dentro do `span` vale Markdown comum (`**negrito**`), e ele pode ficar dentro de um `span` de cor ou conter um. Nome fora da lista é ignorado pelo editor e vira texto no HTML. Vale só para o trecho; a fonte do manual inteiro continua em `theme.fonts`. No HTML e no PDF o trecho sai na fonte escolhida e o export leva os arquivos dela (com a licença OFL) além das fontes do tema. O Markdown exportado leva só o texto, sem o `span`. Atalho no Studio: Ctrl+Shift+F abre o menu de fonte da barra da seleção; "Fonte padrão" e "limpar formatação" tiram a marca. Não muda o `FORMAT_VERSION`.
 
 ## Marca-texto
 
@@ -173,7 +194,7 @@ Sem `style` a imagem aparece como sempre e o HTML exportado não muda. Número, 
 |---|---|
 | marcador | `color`, `size`, `border` |
 | seta | `color`, `stroke`, `border` |
-| destaque | `border` (cor e preenchimento do destaque: T-195) |
+| destaque | `color` (marca-texto: `yellow` padrão, `green`, `pink`, `blue`, `orange`, cada uma com borda derivada mais escura), `border`, `fill` (`solid` padrão, `soft`, `none` = só contorno; opacidade 55%, 25% e 0, sem mistura multiplicativa) |
 | área clicável | `color`, `border`, `fill` (`solid`, `soft` padrão, `none`) |
 
 `fill: "none"` junto com `border: "none"` deixaria a área invisível: `border` volta a `s` ao ler. No HTML e no PDF o `style` do item vira as mesmas variáveis CSS no próprio elemento (mais `--preenchimento`), sem JavaScript; o chip da legenda usa a cor do marcador. Sem `style` nos itens o HTML exportado não muda e `version` continua 1. Leitor antigo descarta o `style` do item e mostra a marcação com o estilo da imagem.

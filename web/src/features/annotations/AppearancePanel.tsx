@@ -1,27 +1,8 @@
 import { type AnnotationStyle, STYLE_PALETTE, type StyleBorder, type StyleColor, type StyleStep } from "@/lib/annotationStyle";
 import { t } from "@/lib/i18n";
+import { BORDERS, COLORS, SIZES, STROKES } from "./styleOptions";
 
-const COLORS: { id: StyleColor; label: () => string }[] = [
-  { id: "cobalt", label: () => t("Cobalto") },
-  { id: "ink", label: () => t("Tinta") },
-  { id: "red", label: () => t("Vermelho") },
-  { id: "green", label: () => t("Verde") },
-  { id: "purple", label: () => t("Roxo") },
-  { id: "orange", label: () => t("Laranja") },
-];
-const SIZES: { id: StyleStep; label: () => string }[] = [
-  { id: "s", label: () => t("Pequeno") },
-  { id: "m", label: () => t("Médio") },
-  { id: "l", label: () => t("Grande") },
-];
-const STROKES: { id: StyleStep; label: () => string }[] = [
-  { id: "s", label: () => t("Fina") },
-  { id: "m", label: () => t("Normal") },
-  { id: "l", label: () => t("Grossa") },
-];
-const BORDERS: { id: StyleBorder; label: () => string }[] = [{ id: "none", label: () => t("Nenhuma") }, ...STROKES];
-
-const option =
+export const option =
   "flex min-h-9 items-center gap-1.5 rounded-md border border-border px-2.5 text-sm hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-bold [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11";
 
 interface Props {
@@ -54,7 +35,6 @@ export function AppearancePanel({ style, onChange }: Props) {
 
   return (
     <section className="grid gap-3" aria-label={t("Aparência das marcações")}>
-      <h3 className="rotulo">{t("Aparência")}</h3>
       <fieldset className="grid gap-1.5">
         <legend className="mb-1 text-sm font-bold">{t("Cor das marcações")}</legend>
         <div className="flex flex-wrap gap-1.5">

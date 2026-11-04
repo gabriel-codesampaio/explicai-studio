@@ -388,9 +388,12 @@ test.describe("marcações", () => {
     await openImage(page);
     await page.getByRole("button", { name: "Editar imagem" }).click();
     const dialog = markDialog(page);
-    const box = await dialog.getByRole("img").boundingBox();
-    if (!box) throw new Error("sem caixa");
-    const at = (fx: number, fy: number) => [box.x + box.width * fx, box.y + box.height * fy] as const;
+    // A imagem encolhe quando a lista e o painel crescem: a caixa é relida a cada gesto.
+    const at = async (fx: number, fy: number) => {
+      const box = await dialog.getByRole("img").boundingBox();
+      if (!box) throw new Error("sem caixa");
+      return [box.x + box.width * fx, box.y + box.height * fy] as const;
+    };
     const drag = async (a: readonly [number, number], b: readonly [number, number]) => {
       await page.mouse.move(...a);
       await page.mouse.down();
@@ -399,14 +402,14 @@ test.describe("marcações", () => {
     };
 
     await dialog.getByRole("button", { name: "Marcador" }).click();
-    await page.mouse.click(...at(0.15, 0.15));
+    await page.mouse.click(...(await at(0.15, 0.15)));
     await dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" }).fill("Botão Novo");
     await dialog.getByRole("button", { name: "Destaque" }).click();
-    await drag(at(0.3, 0.3), at(0.5, 0.45));
+    await drag(await at(0.3, 0.3), await at(0.5, 0.45));
     await dialog.getByRole("button", { name: "Seta" }).click();
-    await drag(at(0.6, 0.6), at(0.8, 0.8));
+    await drag(await at(0.6, 0.6), await at(0.8, 0.8));
     await dialog.getByRole("button", { name: "Área clicável" }).click();
-    await drag(at(0.1, 0.6), at(0.3, 0.8));
+    await drag(await at(0.1, 0.6), await at(0.3, 0.8));
     await expect(dialog.getByRole("button", { name: "Excluir destaque 1" })).toBeVisible();
     await expect(dialog.getByRole("button", { name: "Excluir seta 1" })).toBeVisible();
     await expect(dialog.getByRole("button", { name: "Excluir área 1" })).toBeVisible();
@@ -419,7 +422,7 @@ test.describe("marcações", () => {
 
     // Selecionar o marcador e apagar com Delete.
     await dialog.getByRole("button", { name: "Selecionar" }).click();
-    await page.mouse.click(...at(0.15, 0.15));
+    await page.mouse.click(...(await at(0.15, 0.15)));
     await page.keyboard.press("Delete");
     await expect(dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" })).toHaveCount(0);
     await dialog.getByRole("button", { name: "Desfazer" }).click();
@@ -511,6 +514,7 @@ test.describe("marcações", () => {
     const disc = dialog.locator("[data-n='1']");
     const box = () => disc.evaluate((el) => ({ w: (el as HTMLElement).offsetWidth, bg: getComputedStyle(el).backgroundColor }));
 
+    await dialog.getByText("Padrão da imagem").click(); // painel recolhido por padrão
     expect(await box()).toEqual({ w: 24, bg: "rgb(43, 79, 224)" }); // sem style: o de sempre
     await expect(dialog.getByRole("button", { name: "Cobalto" })).toHaveAttribute("aria-pressed", "true");
 
@@ -533,10 +537,49 @@ test.describe("marcações", () => {
     await page.reload();
     await openImage(page);
     await page.getByRole("button", { name: "Editar imagem" }).click();
+    await dialog.getByText("Padrão da imagem").click();
     await dialog.getByRole("button", { name: "Voltar ao padrão" }).click();
     await dialog.getByRole("button", { name: "Salvar marcações" }).click();
     await expect(dialog).toBeHidden();
     expect(await annotations(request, slug)).not.toHaveProperty("style");
+  });
+});
+
+test.describe("estilo do item", () => {
+  test("trocar cor e tamanho do marcador 2 muda só ele, grava e sai no HTML", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Estilo Item");
+    await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, {
+      data: {
+        version: 1,
+        markers: [
+          { id: "m1", n: 1, x: 0.3, y: 0.3 },
+          { id: "m2", n: 2, x: 0.6, y: 0.6 },
+        ],
+        highlights: [],
+        arrows: [],
+        hotspots: [],
+      },
+    });
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    const dialog = markDialog(page);
+    await dialog.getByRole("button", { name: "Selecionar" }).click();
+    await dialog.locator("[data-n='2']").click();
+    const panel = dialog.getByRole("region", { name: "Estilo do item" });
+    await expect(panel).toContainText("Marcador 2");
+    await expect(panel).toContainText("Herdando da imagem");
+    await panel.getByRole("button", { name: "Vermelho" }).click();
+    await panel.getByRole("button", { name: "Grande" }).click();
+    await expect(dialog.locator("[data-n='2']")).toHaveCSS("background-color", "rgb(196, 38, 29)");
+    await expect(dialog.locator("[data-n='1']")).toHaveCSS("background-color", "rgb(43, 79, 224)");
+    await dialog.getByRole("button", { name: "Salvar marcações" }).click();
+    await expect(dialog).toBeHidden();
+    const a = await annotations(request, slug);
+    expect(a.markers[1].style).toEqual({ color: "red", size: "l" });
+    expect(a.markers[0]).not.toHaveProperty("style");
+    const html = await (await request.get((await exportApi(request, slug, "html")).url)).text();
+    expect(html).toContain("#c4261d");
   });
 });
 

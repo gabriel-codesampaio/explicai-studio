@@ -1,6 +1,6 @@
 import type { Editor as TiptapEditor } from "@tiptap/react";
-import { ChevronRight } from "lucide-react";
-import { Fragment, useState } from "react";
+import { ChevronRight, Pencil } from "lucide-react";
+import { Fragment, useRef, useState } from "react";
 import { Editor } from "@/features/editor/Editor";
 import { useHeadings } from "@/features/editor/headings";
 import { PageOutline, PageOutlineButton } from "@/features/editor/PageOutline";
@@ -8,6 +8,7 @@ import { ExportDialog } from "@/features/export/ExportDialog";
 import { AudienceMenu } from "@/features/pages/AudienceMenu";
 import { FirstStepHint } from "@/features/pages/FirstStepHint";
 import { StatusMenu } from "@/features/pages/StatusMenu";
+import { ManualAppearanceDialog } from "@/features/settings/ManualAppearanceDialog";
 import { PinnedNotice } from "@/features/versions/PinnedNotice";
 import { VersionsPanel } from "@/features/versions/VersionsPanel";
 import { useStudioContext } from "@/hooks/StudioContext";
@@ -37,6 +38,8 @@ export function PageView({ manual, page }: Props) {
   const [title, setTitle] = useState(page.title);
   const [empty, setEmpty] = useState(!page.body.trim());
   const [exportOpen, setExportOpen] = useState(false);
+  const [coverOpen, setCoverOpen] = useState(false);
+  const coverBtn = useRef<HTMLButtonElement>(null);
   const headings = useHeadings(editor);
   const readOnly = manual.newerFormat !== undefined;
   const pinned = Boolean(findItem(manual.pages, page.id)?.published);
@@ -95,16 +98,42 @@ export function PageView({ manual, page }: Props) {
 
           {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
           <h1 className="sr-only">{title || t("Sem título")}</h1>
-          <div className="mt-3 mb-3">
-            <PageTitle
-              initialTitle={page.title}
-              readOnly={readOnly}
-              onChange={(next) => {
-                setTitle(next);
-                studio.editPage({ title: next });
-              }}
-              onEnter={() => editor?.commands.focus("start")}
-            />
+          <div className="group mt-3 mb-3 flex items-start gap-2">
+            <div className="min-w-0 flex-1">
+              <PageTitle
+                initialTitle={page.title}
+                readOnly={readOnly}
+                onChange={(next) => {
+                  setTitle(next);
+                  studio.editPage({ title: next });
+                }}
+                onEnter={() => editor?.commands.focus("start")}
+              />
+            </div>
+            {!readOnly && (
+              <>
+                {/* Edita a capa do manual, não o título da página. Sempre ocupa o lugar: aparecer não desloca nada. */}
+                <button
+                  ref={coverBtn}
+                  type="button"
+                  aria-label={t("Editar a capa e o rodapé do manual")}
+                  title={t("Editar a capa e o rodapé do manual")}
+                  onClick={() => setCoverOpen(true)}
+                  className="mt-1.5 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted hover:text-foreground focus-visible:opacity-100 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:opacity-100"
+                >
+                  <Pencil className="size-4" aria-hidden />
+                </button>
+                <ManualAppearanceDialog
+                  section="cover"
+                  open={coverOpen}
+                  onOpenChange={(open) => {
+                    setCoverOpen(open);
+                    // Sem gatilho dentro do Dialog: devolve o foco ao botão depois que o Radix terminar.
+                    if (!open) setTimeout(() => coverBtn.current?.focus(), 0);
+                  }}
+                />
+              </>
+            )}
           </div>
 
           {empty && !readOnly && <FirstStepHint onExport={() => setExportOpen(true)} />}
@@ -123,7 +152,10 @@ export function PageView({ manual, page }: Props) {
           />
         </article>
         {editor && headings.length > 0 && (
-          <aside className="sticky top-0 hidden max-h-svh w-56 self-start overflow-y-auto pt-24 pr-6 xl:block">
+          <aside
+            aria-label={t("Índice da página")}
+            className="sticky top-0 hidden max-h-svh w-56 self-start overflow-y-auto pt-24 pr-6 xl:block"
+          >
             <PageOutline editor={editor} headings={headings} />
           </aside>
         )}

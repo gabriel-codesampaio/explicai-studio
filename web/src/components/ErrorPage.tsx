@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useRef } from "react";
 import { Brand } from "@/components/Brand";
+import { SkipLink } from "@/components/SkipLink";
 import { Button } from "@/components/ui/button";
 import { CopyCode } from "@/features/errors/CopyCode";
 import { plainTitle, splitHighlight } from "@/lib/errorPages";
@@ -37,57 +38,64 @@ export function ErrorPage({ title, children, action, secondary, technical, statu
     };
   }, [standalone, title]);
 
+  const Body = standalone ? "main" : "div";
   return (
     <div className="flex min-h-full flex-col bg-background">
       {standalone && (
-        <header className="mx-auto w-full max-w-5xl px-5 py-5 sm:px-9">
-          <Brand />
-        </header>
+        <>
+          <SkipLink />
+          <header className="mx-auto w-full max-w-5xl px-5 py-5 sm:px-9">
+            <Brand />
+          </header>
+        </>
       )}
-      <div role="alert" className="mx-auto my-auto grid w-full max-w-5xl px-6 py-12 sm:px-10 [@media(max-height:600px)]:py-6">
-        <div className="grid max-w-2xl justify-items-start gap-5">
-          <h1
-            ref={heading}
-            tabIndex={-1}
-            className="font-display text-4xl leading-[1.08] font-extrabold tracking-tight [font-stretch:108%] text-balance outline-none sm:text-5xl"
-          >
-            {splitHighlight(title).map((part) =>
-              part.mark ? (
-                <mark
-                  key={part.text}
-                  className="-mx-1 rounded-[2px] bg-marca-faixa px-1 text-inherit [box-decoration-break:clone]"
+      {/* Dentro do Studio o `main` já existe (App.tsx); só a página inteira ganha o seu. */}
+      <Body {...(standalone && { id: "conteudo", tabIndex: -1 })} className="my-auto outline-none">
+        <div role="alert" className="mx-auto grid w-full max-w-5xl px-6 py-12 sm:px-10 [@media(max-height:600px)]:py-6">
+          <div className="grid max-w-2xl justify-items-start gap-5">
+            <h1
+              ref={heading}
+              tabIndex={-1}
+              className="font-display text-4xl leading-[1.08] font-extrabold tracking-tight [font-stretch:108%] text-balance outline-none sm:text-5xl"
+            >
+              {splitHighlight(title).map((part) =>
+                part.mark ? (
+                  <mark
+                    key={part.text}
+                    className="-mx-1 rounded-[2px] bg-marca-faixa px-1 text-inherit [box-decoration-break:clone]"
+                  >
+                    {part.text}
+                  </mark>
+                ) : (
+                  part.text
+                ),
+              )}
+            </h1>
+            <p className="max-w-prose text-lg text-pretty text-muted-foreground">{children}</p>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
+              <Button size="lg" className="[@media(pointer:coarse)]:min-h-11" onClick={action.onClick}>
+                {action.label}
+              </Button>
+              {secondary && (
+                <button
+                  type="button"
+                  onClick={secondary.onClick}
+                  className="[@media(pointer:coarse)]:min-h-11 rounded-md px-1 font-bold text-primary underline-offset-4 hover:underline"
                 >
-                  {part.text}
-                </mark>
-              ) : (
-                part.text
-              ),
+                  {secondary.label}
+                </button>
+              )}
+            </div>
+            {status && (
+              <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span aria-hidden className="size-2 shrink-0 rounded-full bg-primary motion-safe:animate-pulse" />
+                {status}
+              </p>
             )}
-          </h1>
-          <p className="max-w-prose text-lg text-pretty text-muted-foreground">{children}</p>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1">
-            <Button size="lg" className="[@media(pointer:coarse)]:min-h-11" onClick={action.onClick}>
-              {action.label}
-            </Button>
-            {secondary && (
-              <button
-                type="button"
-                onClick={secondary.onClick}
-                className="[@media(pointer:coarse)]:min-h-11 rounded-md px-1 font-bold text-primary underline-offset-4 hover:underline"
-              >
-                {secondary.label}
-              </button>
-            )}
+            <CopyCode code={technical} />
           </div>
-          {status && (
-            <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span aria-hidden className="size-2 shrink-0 rounded-full bg-primary motion-safe:animate-pulse" />
-              {status}
-            </p>
-          )}
-          <CopyCode code={technical} />
         </div>
-      </div>
+      </Body>
     </div>
   );
 }
