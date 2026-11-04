@@ -13,6 +13,8 @@ Hoje Studio (0.3.0 no npm; o `package.json` desta branch ainda diz 0.2.1, a bran
 3. **Compatibilidade para frente, com aviso.** Manual de formato maior que o suportado abre com mensagem clara ("atualize o Studio") e não é regravado. Hoje só lança erro (`manuals.ts:60`).
 4. **Migração.** Sem migração na 1.0: não há v2. Existe a regra escrita: v2 só com comando `explicai migrate`, backup antes e leitura de v1 mantida pela 1.x toda.
 5. **Semver dos pontos de contato:** formato em disco, `explicai/core` (exports), flags do CLI, nomes e schemas das tools e prompts do MCP. A API HTTP local do Studio fica fora (uso interno); dizer isso.
+> Decisão posterior da pessoa (2026-11-04): só o Studio (`explicai`) vai a 1.0; o MCP segue 0.x, com semver próprio. Vale sobre os itens 6 e a pergunta 1 abaixo.
+
 6. **Studio e MCP andam juntos.** O MCP declara a faixa de `explicai` que aceita; versão fora da faixa dá erro com instrução. Hipótese a conferir: `contract.test.ts` já cobre parte.
 7. **Limites declarados:** PDF exige Chrome, Edge ou Chromium na máquina; "público" não é controle de acesso (já está no formato); sem captura de tela, sem colaboração.
 
