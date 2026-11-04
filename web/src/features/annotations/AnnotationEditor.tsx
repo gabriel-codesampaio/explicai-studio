@@ -199,7 +199,7 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 }}
               />
             </div>
-            <div className="grid content-start gap-4">
+            <div className="grid min-w-0 grid-cols-1 content-start gap-4">
               <div className="order-last md:order-first">
                 {selectedItem ? (
                   <ItemStylePanel

@@ -1,4 +1,4 @@
-import type { StyleBorder, StyleColor, StyleFill, StyleStep } from "@/lib/annotationStyle";
+import type { HighlightColor, StyleBorder, StyleColor, StyleFill, StyleStep } from "@/lib/annotationStyle";
 import { t } from "@/lib/i18n";
 
 /** Opções dos painéis de estilo (imagem e item). */
@@ -8,6 +8,13 @@ export const COLORS: { id: StyleColor; label: () => string }[] = [
   { id: "red", label: () => t("Vermelho") },
   { id: "green", label: () => t("Verde") },
   { id: "purple", label: () => t("Roxo") },
+  { id: "orange", label: () => t("Laranja") },
+];
+export const HIGHLIGHT_COLORS: { id: HighlightColor; label: () => string }[] = [
+  { id: "yellow", label: () => t("Amarelo") },
+  { id: "green", label: () => t("Verde") },
+  { id: "pink", label: () => t("Rosa") },
+  { id: "blue", label: () => t("Azul") },
   { id: "orange", label: () => t("Laranja") },
 ];
 export const SIZES: { id: StyleStep; label: () => string }[] = [

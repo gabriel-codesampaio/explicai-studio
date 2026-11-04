@@ -3,18 +3,20 @@
  * web/src/lib/annotationStyle.ts; test/annotation-style.test.ts garante que as duas são idênticas.
  */
 export type StyleColor = "cobalt" | "ink" | "red" | "green" | "purple" | "orange";
+/** Cores da paleta de marca-texto (só o destaque usa). */
+export type HighlightColor = "yellow" | "green" | "pink" | "blue" | "orange";
 export type StyleStep = "s" | "m" | "l";
 export type StyleBorder = StyleStep | "none";
-/** Preenchimento da área clicável (só por item). */
+/** Preenchimento da área clicável e do destaque (só por item). */
 export type StyleFill = "solid" | "soft" | "none";
 export type StyleItemKind = "marker" | "arrow" | "highlight" | "hotspot";
 
 export interface AnnotationStyle {
-  color?: StyleColor;
+  color?: StyleColor | HighlightColor;
   size?: StyleStep;
   stroke?: StyleStep;
   border?: StyleBorder;
-  /** Só vale em item (área clicável); a imagem não tem preenchimento. */
+  /** Só vale em item (destaque e área clicável); a imagem não tem preenchimento. */
   fill?: StyleFill;
 }
 
@@ -31,6 +33,21 @@ export const STYLE_PALETTE: Record<StyleColor, { claro: string; sobre: string; e
   purple: { claro: "#7b3fc4", sobre: "#ffffff", escuro: "#b894f0", sobreEscuro: "#0e1120" },
   orange: { claro: "#b24a00", sobre: "#ffffff", escuro: "#ffa14d", sobreEscuro: "#0e1120" },
 };
+
+/**
+ * Marca-texto: `fill` é a cor do preenchimento, `border` a borda derivada, mais escura (3:1 contra branco).
+ * Medido em test/highlight-palette.test.ts, junto com o texto escuro sobre o preenchimento.
+ */
+export const HIGHLIGHT_PALETTE: Record<HighlightColor, { fill: string; border: string }> = {
+  yellow: { fill: "#ffd43b", border: "#8a6d00" },
+  green: { fill: "#5ed38a", border: "#1a7a3c" },
+  pink: { fill: "#ff7eb6", border: "#b0245f" },
+  blue: { fill: "#6cb8ff", border: "#1d5fa8" },
+  orange: { fill: "#ffab5e", border: "#a84400" },
+};
+
+/** Opacidade do preenchimento do destaque (sem `multiply`: o texto do print continua legível sobre o azul). */
+export const HIGHLIGHT_FILL_ALPHA: Record<StyleFill, number> = { solid: 0.55, soft: 0.25, none: 0 };
 
 /** Diâmetro do disco do marcador (px) e tamanho do número. `m` é o padrão de sempre. */
 export const MARKER_SIZES: Record<StyleStep, { disc: number; font: number }> = {
@@ -70,11 +87,11 @@ export function parseStyle(v: unknown): AnnotationStyle | undefined {
   return Object.keys(style).length ? style : undefined;
 }
 
-/** Campos que cada tipo de item aceita; o resto é ignorado. Cor e preenchimento do destaque ficam para o T-195. */
+/** Campos que cada tipo de item aceita; o resto é ignorado. */
 const ITEM_FIELDS: Record<StyleItemKind, (keyof AnnotationStyle)[]> = {
   marker: ["color", "size", "border"],
   arrow: ["color", "stroke", "border"],
-  highlight: ["border"],
+  highlight: ["color", "border", "fill"],
   hotspot: ["color", "border", "fill"],
 };
 
@@ -83,14 +100,22 @@ const ITEM_FIELDS: Record<StyleItemKind, (keyof AnnotationStyle)[]> = {
  * Preenchimento e borda ambos `none` deixariam a área invisível: a borda volta a `s`.
  */
 export function parseItemStyle(kind: StyleItemKind, v: unknown): AnnotationStyle | undefined {
+  const hl = kind === "highlight";
+  const raw = (typeof v === "object" && v !== null ? v : {}) as { color?: unknown };
+  const { color: _color, ...common } = parseStyle(v) ?? {};
   const all: AnnotationStyle = {
-    ...parseStyle(v),
+    ...common,
+    // O destaque tem paleta própria; "green" e "orange" existem nas duas.
+    ...(!hl && _color ? { color: _color } : {}),
+    ...(hl && typeof raw.color === "string" && Object.hasOwn(HIGHLIGHT_PALETTE, raw.color)
+      ? { color: raw.color as HighlightColor }
+      : {}),
     ...(typeof v === "object" && v !== null && ["solid", "soft", "none"].includes((v as { fill?: string }).fill as string)
       ? { fill: (v as { fill: StyleFill }).fill }
       : {}),
   };
   const style = Object.fromEntries(
-    Object.entries(all).filter(([k]) => ITEM_FIELDS[kind].includes(k as keyof AnnotationStyle)),
+    Object.entries(all).filter(([k, val]) => val !== undefined && ITEM_FIELDS[kind].includes(k as keyof AnnotationStyle)),
   ) as AnnotationStyle;
   if (style.fill === "none" && style.border === "none") style.border = "s";
   return Object.keys(style).length ? style : undefined;
@@ -115,10 +140,24 @@ const alpha = (hex: string, a: number) =>
  * Variáveis CSS do estilo, só as escolhidas. No export (`adaptive` falso) vale a cor clara; no Studio,
  * `light-dark()` troca sozinho com o tema.
  */
-export function styleVars(style: AnnotationStyle | undefined, adaptive = false): Record<string, string> {
+export function styleVars(style: AnnotationStyle | undefined, adaptive = false, kind?: StyleItemKind): Record<string, string> {
   const vars: Record<string, string> = {};
-  if (style?.color) {
-    const p = STYLE_PALETTE[style.color];
+  const hl = kind === "highlight";
+  if (hl && (style?.color || style?.fill)) {
+    // Cor ou preenchimento escolhido: tira o `multiply` e usa a opacidade do passo (cheio por padrão).
+    const pct = HIGHLIGHT_FILL_ALPHA[style.fill ?? "solid"];
+    const p =
+      style.color && Object.hasOwn(HIGHLIGHT_PALETTE, style.color) ? HIGHLIGHT_PALETTE[style.color as HighlightColor] : undefined;
+    vars["--hl-mistura"] = "normal";
+    if (p) {
+      vars["--hl-borda"] = p.border;
+      vars["--hl-fundo"] = alpha(p.fill, pct);
+    } else {
+      // Só o preenchimento: a cor base é a do destaque do tema (--marca).
+      vars["--hl-fundo"] = `color-mix(in srgb,var(--marca) ${pct * 100}%,transparent)`;
+    }
+  } else if (style?.color) {
+    const p = STYLE_PALETTE[style.color as StyleColor];
     vars["--anotacao"] = adaptive ? `light-dark(${p.claro},${p.escuro})` : p.claro;
     vars["--sobre-anotacao"] = adaptive ? `light-dark(${p.sobre},${p.sobreEscuro})` : p.sobre;
     vars["--anotacao-fundo"] = alpha(p.claro, 0.08);
@@ -131,9 +170,9 @@ export function styleVars(style: AnnotationStyle | undefined, adaptive = false):
   if (style?.border) {
     vars["--borda"] = style.border === "none" ? "0px" : `${BORDER_PX[style.border]}px`;
     // Destaque: contorno da própria cor, mais escuro, para a espessura aparecer.
-    if (style.border !== "none") vars["--borda-destaque"] = "color-mix(in srgb,var(--marca) 55%,#000)";
+    if (style.border !== "none" && !vars["--hl-borda"]) vars["--borda-destaque"] = "color-mix(in srgb,var(--marca) 55%,#000)";
   }
-  if (style?.fill) {
+  if (style?.fill && !hl) {
     const pct = { solid: "25%", soft: "8%", none: "0%" }[style.fill];
     vars["--preenchimento"] = `color-mix(in srgb,var(--anotacao) ${pct},transparent)`;
   }
