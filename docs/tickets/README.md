@@ -52,7 +52,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-155](T-155-botao-remover-imagem.md) | Adicionar botão Remover imagem no painel da imagem | P2 | aberto | frontend |
 | [T-156](T-156-foco-da-marcacao-na-legenda.md) | Levar o foco à legenda depois de marcar, sem quebrar os atalhos | P2 | aberto | frontend |
-| [T-157](T-157-painel-da-marcacao-apertado.md) | Dar espaço ao painel lateral da marcação | P2 | aberto | design |
 | [T-158](T-158-um-nome-para-publico.md) | Usar um nome só para o público da página | P2 | aberto | frontend |
 | [T-159](T-159-versao-da-pagina-com-nome-certo.md) | Deixar claro que "Versão" vale para a página, não para o manual | P2 | aberto | frontend |
 | [T-161](T-161-lixeira-com-foco-e-confirmacao.md) | Proteger a limpeza da lixeira e renomear a ação | P2 | aberto | frontend |
@@ -78,6 +77,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 |----|--------|------------|--------|--------|
 | [T-125](fechados/T-125-manual-de-app-real-pelo-mcp.md) | Manual de um app real feito com o MCP | P1 | feito | codelab #2, #3, #4 |
 | [T-133](fechados/T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | feito | #30 |
+| [T-157](fechados/T-157-painel-da-marcacao-apertado.md) | Dar espaço ao painel lateral da marcação | P2 | feito | a8cbb7a |
 | [T-141](fechados/T-141-sidebar-corta-titulos-cedo.md) | Sidebar corta títulos e o seletor do manual cedo demais | P2 | feito | #36 |
 | [T-142](fechados/T-142-status-so-bolinha-na-arvore.md) | Status da página vira só a bolinha na árvore | P2 | feito | #36 |
 | [T-140](fechados/T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | feito | #34 |
