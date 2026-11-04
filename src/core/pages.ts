@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { rm, stat } from "node:fs/promises";
 import path from "node:path";
-import { parseAudience } from "./audience.js";
+import { parseAudience, registerAudiences } from "./audience.js";
 import { ExplicaiError } from "./errors.js";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
@@ -13,7 +13,7 @@ import { PAGE_STATUSES, type Page, type PageNode, type PageStatus } from "./type
 /** Página pode ficar sem título enquanto é escrita: a árvore mostra "Sem título" e o arquivo vira sem-titulo.md. */
 export async function addPage(
   dir: string,
-  opts: { title: string; body?: string; parentId?: string | null; index?: number },
+  opts: { title: string; body?: string; parentId?: string | null; index?: number; audience?: string[] },
 ): Promise<Page> {
   const title = opts.title.trim();
   const page: Page = {
@@ -23,6 +23,8 @@ export async function addPage(
     body: opts.body ?? "",
     file: await newPageFile(dir, title),
   };
+  const audience = parseAudience(opts.audience);
+  if (audience) page.audience = audience;
 
   // Arquivo primeiro: se gravar falhar, a árvore não aponta para o que não existe. Se a árvore falhar, desfaz o arquivo.
   await writePageFile(dir, page);
@@ -37,6 +39,7 @@ export async function addPage(
     await rm(resolveInside(dir, page.file), { force: true });
     throw err;
   }
+  await registerAudiences(dir, page.audience);
   return page;
 }
 
@@ -66,6 +69,8 @@ export interface PageTreeNode {
   title: string;
   status: PageStatus;
   file: string;
+  /** Perfis que veem a página; sem o campo, todos. */
+  audience?: string[];
   /** Preenchido quando o arquivo da página sumiu ou está com erro: a página aparece, com o aviso. */
   problem?: string;
   /** Versão escolhida para o manual final, quando há uma (ver versions.ts). */
@@ -88,8 +93,8 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
           children: await walk(n.children),
         };
         try {
-          const { title, status } = await readPageFile(dir, n.file);
-          return { ...base, title, status };
+          const { title, status, audience } = await readPageFile(dir, n.file);
+          return { ...base, title, status, ...(audience ? { audience } : {}) };
         } catch (err) {
           return { ...base, title: "", status: "rascunho" as const, problem: err instanceof Error ? err.message : String(err) };
         }
@@ -124,12 +129,13 @@ async function readPageFile(
     const status = PAGE_STATUSES.includes(data.status as PageStatus) ? (data.status as PageStatus) : "rascunho";
     const rev = createHash("sha256").update(text).digest("hex").slice(0, 16);
     const { id: _id, title, status: _s, audience, ...extra } = data;
+    const aud = parseAudience(audience);
     return {
       title: typeof title === "string" ? title : "",
       status,
       body,
       rev,
-      ...(parseAudience(audience) ? { audience: parseAudience(audience) } : {}),
+      ...(aud ? { audience: aud } : {}),
       ...(Object.keys(extra).length ? { extra } : {}),
     };
   } catch (err) {
@@ -195,6 +201,7 @@ export async function updatePage(
         await writePageFile(dir, next);
       });
     }
+    await registerAudiences(dir, next.audience);
     return { ...next, version: await fileVersion(dir, next.file), rev: (await readPageFile(dir, next.file)).rev };
   }
 
@@ -213,6 +220,7 @@ export async function updatePage(
     page.file,
     next.file,
   );
+  await registerAudiences(dir, next.audience);
   return { ...next, version: await fileVersion(dir, next.file), rev: (await readPageFile(dir, next.file)).rev };
 }
 

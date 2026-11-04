@@ -13,7 +13,7 @@ import { renderHtml } from "./html.js";
 import { checkLogoFile, checkLogoPath, LOGO_EXT, LOGO_MAX_BYTES, logoSizeError, logoTypeError } from "./logo.js";
 import { renderMarkdown } from "./markdown.js";
 import { printPdf } from "./pdf.js";
-import { type ImageInfo, loadImages } from "./refs.js";
+import { hiddenLinkWarnings, type ImageInfo, loadImages } from "./refs.js";
 import { mergeTheme, type ThemePatch, usedFonts } from "./theme.js";
 
 export { logoSizeError } from "./logo.js";
@@ -50,7 +50,12 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   const missing: string[] = [];
   const broken: string[] = [];
   const images = await loadImages(dir, collected.pages, missing, broken);
-  const warnings = [...collected.warnings, ...missing.map((asset) => `Imagem não encontrada: ${asset}`), ...broken];
+  const warnings = [
+    ...collected.warnings,
+    ...hiddenLinkWarnings(collected.pages, collected.hidden, images),
+    ...missing.map((asset) => `Imagem não encontrada: ${asset}`),
+    ...broken,
+  ];
   const root = resolveInside(dir, EXPORT_DIR);
   const result = (file: string): ExportResult => ({
     format,

@@ -15,6 +15,8 @@ export interface ImageInfo {
   annotations: Annotations;
 }
 
+/** Link `[texto](./arquivo.md)`, para trocar por só o texto quando a página não vai para este público. */
+export const LINK_TO_FILE = /(?<!!)\[([^\]]*)\]\((?:\.\/)?([^/)#\s]+\.md)(?:#[^)\s]*)?\)/g;
 const IMAGE = /!\[[^\]]*\]\(([^)\s]+)/g;
 
 /** `../assets/tela.png` (como está na página) → `assets/tela.png`. Imagem de fora do manual: null. */
@@ -75,4 +77,29 @@ export function pageLink(href: string, pages: ExportPage[]): string | null {
 export function safeHref(href: string): string | null {
   if (/^(#|mailto:|https?:\/\/)/i.test(href)) return href;
   return null;
+}
+
+/** Avisos do que sumiu por causa do público: link que virou texto e área clicável removida. */
+export function hiddenLinkWarnings(
+  pages: ExportPage[],
+  hidden: { id: string; fileName: string }[],
+  images: Map<string, ImageInfo>,
+): string[] {
+  if (!hidden.length) return [];
+  const files = new Set(hidden.map((h) => h.fileName));
+  const ids = new Set(hidden.map((h) => h.id));
+  const out: string[] = [];
+  for (const page of pages) {
+    for (const [, , file] of page.body.matchAll(LINK_TO_FILE)) {
+      if (file && files.has(decodeUri(file)))
+        out.push(`Página "${page.title}": o link para ${file} virou texto (página fora deste público).`);
+    }
+  }
+  for (const { asset, annotations } of images.values()) {
+    for (const h of annotations.hotspots) {
+      if (h.target.type !== "url" && ids.has(h.target.pageId))
+        out.push(`Imagem ${asset}: área clicável para página fora deste público foi removida.`);
+    }
+  }
+  return out;
 }
