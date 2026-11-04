@@ -84,5 +84,8 @@ export function useAutosave(save: (job: Job) => Promise<void>, delay = 600) {
     return () => window.removeEventListener("beforeunload", warn);
   }, [flush]);
 
-  return { state, savedAt, queue, flush, retry: flush, discard };
+  /** O que está na fila para esta página (ex.: para mostrar o que a gravação sobrescreveria). */
+  const pendingPatch = useCallback((id: string) => pending.current.get(id)?.patch, []);
+
+  return { state, savedAt, queue, flush, retry: flush, discard, pendingPatch };
 }
