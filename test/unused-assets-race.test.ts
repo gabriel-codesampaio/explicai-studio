@@ -1,4 +1,4 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
@@ -33,5 +33,14 @@ it("arquivo que some entre a listagem e o stat é ignorado, sem derrubar a busca
   process.env.EXPLICAI_ASSET_GRACE_MS = "0";
   await writeFile(path.join(dir, "assets", "sumiu.png"), "x");
   await writeFile(path.join(dir, "assets", "solta.png"), "x");
+  expect(await findUnusedAssets(dir)).toEqual(["assets/solta.png"]);
+});
+
+it("grace 0 não poupa arquivo com mtime à frente do relógio (Date.now é inteiro, mtimeMs tem fração)", async () => {
+  process.env.EXPLICAI_ASSET_GRACE_MS = "0";
+  const file = path.join(dir, "assets", "solta.png");
+  await writeFile(file, "x");
+  const future = new Date(Date.now() + 5);
+  await utimes(file, future, future);
   expect(await findUnusedAssets(dir)).toEqual(["assets/solta.png"]);
 });
