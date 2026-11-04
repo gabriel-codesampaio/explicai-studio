@@ -15,7 +15,13 @@
   }
   * {
     border-color: var(--border);
-    scrollbar-color: var(--linha) transparent;
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, var(--cobalto) 35%, var(--linha)) transparent;
+  }
+  /* Reserva o espaço da barra: ela não cobre conteúdo nem borda do painel vizinho, e nada pula ao rolar. Só nos painéis fixos: diálogo e menu ficam simétricos. */
+  aside,
+  main {
+    scrollbar-gutter: stable;
   }
   ::selection {
     background: var(--selecao);
