@@ -1,0 +1,42 @@
+name: Meu manual antigo não abriu
+description: Um manual criado numa versão anterior dá erro ao abrir, editar ou exportar
+labels: ["compatibilidade"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        O formato da pasta só cresce por acréscimo, então manuais antigos deveriam abrir. Se o seu não abriu, queremos saber.
+  - type: input
+    id: versao-studio
+    attributes:
+      label: Versão do Studio
+      description: Rode `explicai --version`.
+      placeholder: 0.3.0
+    validations:
+      required: true
+  - type: input
+    id: versao-criacao
+    attributes:
+      label: Versão do Studio com que o manual foi criado
+      description: Se não souber, diga mais ou menos quando criou.
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: erro
+    attributes:
+      label: Mensagem de erro
+      description: Cole o texto exato que apareceu.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: manual-json
+    attributes:
+      label: O manual.json
+      description: Arraste o arquivo `manual.json` do manual para cá. Antes, tire títulos, nomes e qualquer dado sensível.
+  - type: textarea
+    id: extra
+    attributes:
+      label: Mais alguma coisa
+      description: O que você fazia quando o erro apareceu?
