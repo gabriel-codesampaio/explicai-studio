@@ -22,7 +22,8 @@ export const ANNOTATION_CSS = `
 .mk .disc::before{content:attr(data-n);color:var(--sobre-anotacao);font:600 13px/1 var(--mono)}
 .legend{display:grid;gap:6px;margin-top:16px;font-size:15px;line-height:1.4}
 .legend .row{display:flex;align-items:center;gap:10px;break-inside:avoid}
-.legend .n{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 4px;border-radius:12px;background:var(--anotacao);color:var(--sobre-anotacao);font:600 13px var(--mono);print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.legend .n{display:inline-grid;place-items:center;box-sizing:border-box;min-width:24px;height:24px;padding:0 4px;border-radius:12px;background:var(--anotacao);color:var(--sobre-anotacao);font:600 13px/1 var(--mono);print-color-adjust:exact;-webkit-print-color-adjust:exact}
+@supports(text-box:trim-both cap alphabetic){.mk .disc::before{text-box:trim-both cap alphabetic}.legend .n{display:inline-block;height:auto;padding-block:calc((24px - 1cap)/2);text-align:center;text-box:trim-both cap alphabetic}}
 `;
 
 /** Só entra no export quando alguma imagem tem `style`: manual sem ele sai byte a byte como sempre. */
@@ -30,4 +31,12 @@ export const ANNOTATION_STYLE_CSS = `
 .hl,.hot{border-width:calc(2px*var(--marca-espessura,1))}
 .mk .disc{left:calc(var(--disco,24px)/-2);top:calc(var(--disco,24px)/-2);width:var(--disco,24px);height:var(--disco,24px)}
 .mk .disc::before{font-size:var(--disco-fonte,13px)}
+`;
+
+/** Só entra quando alguma imagem tem `style.border`; as variáveis vêm do `.shot` (styleVars). */
+export const ANNOTATION_BORDER_CSS = `
+.hl,.hot{border-width:var(--borda,calc(2px*var(--marca-espessura,1)))}
+.hl{border-color:var(--borda-destaque,var(--marca))}
+.mk .disc{box-shadow:0 0 0 var(--borda,2px) #fff}
+.mk .tail polygon{stroke-width:calc(var(--borda,1px)*2)}
 `;

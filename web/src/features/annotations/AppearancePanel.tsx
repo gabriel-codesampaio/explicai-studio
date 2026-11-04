@@ -1,4 +1,4 @@
-import { type AnnotationStyle, STYLE_PALETTE, type StyleColor, type StyleStep } from "@/lib/annotationStyle";
+import { type AnnotationStyle, STYLE_PALETTE, type StyleBorder, type StyleColor, type StyleStep } from "@/lib/annotationStyle";
 import { t } from "@/lib/i18n";
 
 const COLORS: { id: StyleColor; label: () => string }[] = [
@@ -19,6 +19,7 @@ const STROKES: { id: StyleStep; label: () => string }[] = [
   { id: "m", label: () => t("Normal") },
   { id: "l", label: () => t("Grossa") },
 ];
+const BORDERS: { id: StyleBorder; label: () => string }[] = [{ id: "none", label: () => t("Nenhuma") }, ...STROKES];
 
 const option =
   "flex min-h-9 items-center gap-1.5 rounded-md border border-border px-2.5 text-sm hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-bold [@media(pointer:coarse)]:min-h-11 [@media(pointer:coarse)]:min-w-11";
@@ -29,10 +30,10 @@ interface Props {
   onChange: (style: AnnotationStyle | undefined) => void;
 }
 
-/** Aparência das marcações desta imagem: cor, tamanho do marcador e espessura. Ausente é o padrão de sempre (cobalto, médio, normal). */
+/** Aparência das marcações desta imagem: cor, tamanho do marcador, espessura da seta e borda. Ausente é o padrão de sempre (cobalto, médio, normal). */
 export function AppearancePanel({ style, onChange }: Props) {
   const set = (patch: AnnotationStyle) => onChange({ ...style, ...patch });
-  const steps = (key: "size" | "stroke", legend: string, items: { id: StyleStep; label: () => string }[]) => (
+  const steps = (key: "size" | "stroke" | "border", legend: string, items: { id: StyleBorder; label: () => string }[]) => (
     <fieldset className="grid gap-1.5">
       <legend className="mb-1 text-sm font-bold">{legend}</legend>
       <div className="flex flex-wrap gap-1.5">
@@ -76,7 +77,8 @@ export function AppearancePanel({ style, onChange }: Props) {
         </div>
       </fieldset>
       {steps("size", t("Tamanho do marcador"), SIZES)}
-      {steps("stroke", t("Espessura da seta e do contorno"), STROKES)}
+      {steps("stroke", t("Espessura da seta"), STROKES)}
+      {steps("border", t("Borda"), BORDERS)}
       {style && (
         <button
           type="button"
