@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A2 (avaliado no commit 60a0e3d)
 
@@ -21,4 +21,4 @@ Achado A2. O botão Exportar fica fora da área visível: 14 px visíveis a 800 
 Abrir o diálogo em 1280x600, 1280x720 e 1280x800 e medir com evaluate_script a posição do botão e do X (`getBoundingClientRect`). Exportar e conferir que o resultado e o botão aparecem sem rolar a janela. Repetir em 375 px.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit `b13e292`. Diálogo em coluna: cabeçalho e rodapé fixos, miolo rola; resultado e erro dentro do rodapé, com foco e scrollIntoView (sem animação em prefers-reduced-motion). e2e 1280x600, 720 e 800: título, X, Exportar e link à vista. Título cortado do lote anterior sumiu (não havia mais rolagem do conteúdo inteiro). Fica: 375 px conferido só pelo T-188.

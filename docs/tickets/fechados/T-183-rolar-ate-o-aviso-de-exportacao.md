@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: pedido da pessoa, 2026-11-04 (lote 1.0)
 
@@ -22,4 +22,4 @@ Depois de exportar, o aviso "Site (HTML) exportado · N páginas" com "Abrir o a
 E2e de exportação em 1280x720: aviso dentro da área visível ao terminar.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit `b13e292`, junto do T-152. Aviso com role=status/alert dentro do rodapé, foco e scrollIntoView ao terminar (sucesso e erro).

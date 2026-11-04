@@ -15,8 +15,8 @@ const DRAFT: StatusInfo = { id: "rascunho", label: t("Rascunho"), hint: t("Ainda
 export const STATUSES: StatusInfo[] = [
   DRAFT,
   { id: "revisao", label: t("Em revisão"), hint: t("Pronta para alguém conferir"), token: "cor-orange" },
-  { id: "aprovado", label: t("Aprovado"), hint: t("Conferida, pode ir para o manual"), token: "cor-green" },
-  { id: "publicado", label: t("Publicado"), hint: t("Já está no manual entregue"), token: "cobalto" },
+  { id: "aprovado", label: t("Aprovado"), hint: t("Aprovada, pode ir para o manual"), token: "cor-green" },
+  { id: "publicado", label: t("Publicado"), hint: t("Publicada, já está no manual entregue"), token: "cobalto" },
 ];
 
 export const statusOf = (id: PageStatus): StatusInfo => STATUSES.find((s) => s.id === id) ?? DRAFT;

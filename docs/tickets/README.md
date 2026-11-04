@@ -38,13 +38,11 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-188](T-188-aparencia-do-manual-nos-ajustes.md) | "Aparência do manual" nos Ajustes, fora da exportação | P2 | aberto | frontend |
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
 | [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
-| [T-183](T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | aberto | frontend |
+| [T-184](T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | aberto | frontend |
 | [T-220](T-220-publicar-studio-0-3-0-e-mcp-0-1-0.md) | Publicar Studio 0.3.0 e explicai-mcp 0.1.0 | P1 | aberto | supervisor |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
 | [T-151](T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | aberto | frontend |
-| [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
-| [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
@@ -72,7 +70,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
 | [T-164](T-164-criar-manual-sem-motivo.md) | Explicar por que o botão Criar manual está desabilitado | P3 | aberto | frontend |
 | [T-165](T-165-barra-da-selecao-cobre-linha.md) | Barra da seleção não cobrir a linha seguinte | P3 | aberto | design |
-| [T-166](T-166-status-com-generos-misturados.md) | Padronizar o gênero e o vocabulário dos status | P3 | aberto | frontend |
 | [T-167](T-167-refazer-na-lista-de-atalhos.md) | Listar o Refazer na lista de atalhos | P3 | aberto | frontend |
 | [T-169](T-169-primeiro-uso-sem-marca.md) | Pôr a marca na tela de primeiro uso, como nas telas de erro | P3 | aberto | design |
 | [T-170](T-170-arvore-aceita-busca-por-digitacao.md) | Deixar a árvore de páginas aceitar busca por digitação | P3 | aberto | frontend |
@@ -216,4 +213,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
 | [T-168](fechados/T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | descartado | decisão da pessoa |
 | [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
+| [T-241](fechados/T-241-ponto-do-item-de-radio-no-menu.md) | Ponto do item de rádio colide com o marcador próprio do item | P3 | feito | `b1947f6` |
+| [T-152](fechados/T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | feito | `b13e292` |
+| [T-183](fechados/T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | feito | `b13e292` |
 | [T-184](fechados/T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | feito | `122fe06` |

@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A17 (avaliado no commit 60a0e3d)
 
@@ -21,4 +21,4 @@ Achado A17. Os status misturam gêneros: Aprovado e Publicado têm dicas como "C
 Abrir o menu de status e ler todas as dicas. Conferir o texto do diálogo de exportação com "só aprovadas" marcado. Grep pelos termos antigos.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito: dicas de Aprovado e Publicado concordam com as demais (feminino, da página) e usam o termo do status; a exportação já dizia "aprovadas". Sem mudar o ExportDialog (fora do escopo desta fila).
