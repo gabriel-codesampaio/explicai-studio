@@ -44,8 +44,13 @@ function useSize() {
 export function AnnotationOverlay({ annotations, redactions = [], redactStyle = "bar", crops = [], selectedId, onGrab }: Props) {
   const { ref, size } = useSize();
   const px = (p: Point) => ({ x: p.x * size.w, y: p.y * size.h });
-  const stroke = STROKE_SCALE[annotations.style?.stroke ?? "m"];
-  const shapes = placeMarkers(annotations.markers.map(px), size.w, size.h, MARKER_SIZES[annotations.style?.size ?? "m"].disc);
+  // Cascata item > imagem: o item só sobrescreve o que escolheu (as variáveis CSS vão no próprio elemento).
+  const shapes = placeMarkers(
+    annotations.markers.map(px),
+    size.w,
+    size.h,
+    annotations.markers.map((m) => MARKER_SIZES[m.style?.size ?? annotations.style?.size ?? "m"].disc),
+  );
   // Contorno do destaque e da área: a borda escolhida, ou os 2 px de sempre vezes a espessura (igual ao .hl/.hot do export).
   const border = { borderWidth: "var(--borda, calc(2px * var(--marca-espessura, 1)))" };
   const hlBorder = { ...border, borderColor: "var(--borda-destaque, var(--marca))" };
@@ -130,7 +135,14 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
             ring(h.id),
             interactive && "cursor-move",
           )}
-          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%`, ...hlBorder }}
+          style={{
+            left: `${h.x * 100}%`,
+            top: `${h.y * 100}%`,
+            width: `${h.w * 100}%`,
+            height: `${h.h * 100}%`,
+            ...hlBorder,
+            ...styleVars(h.style, true),
+          }}
         />
       ))}
       {annotations.hotspots.map((h) => (
@@ -138,11 +150,19 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
           key={h.id}
           onPointerDown={pick(h.id)}
           className={cn(
-            "absolute block rounded-[3px] border-2 border-dashed border-anotacao bg-anotacao/8",
+            "absolute block rounded-[3px] border-2 border-dashed border-anotacao",
             ring(h.id),
             interactive && "cursor-move",
           )}
-          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%`, ...border }}
+          style={{
+            left: `${h.x * 100}%`,
+            top: `${h.y * 100}%`,
+            width: `${h.w * 100}%`,
+            height: `${h.h * 100}%`,
+            ...border,
+            background: "var(--preenchimento, color-mix(in srgb, var(--anotacao) 8%, transparent))",
+            ...styleVars(h.style, true),
+          }}
         >
           <Link2 className="absolute -top-2.5 -right-2.5 size-5 rounded-full bg-anotacao p-0.5 text-white" />
         </span>
@@ -151,12 +171,18 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
         <svg className="absolute inset-0 overflow-visible" width={size.w} height={size.h} role="presentation">
           {annotations.arrows.map((a) => {
             // Mesma espessura do export (relativa à imagem); selecionar desenha um anel, não engorda a seta.
-            const thickness = arrowThickness(Math.max(size.w, size.h), stroke);
+            const eff = { ...annotations.style, ...a.style };
+            const thickness = arrowThickness(Math.max(size.w, size.h), STROKE_SCALE[eff.stroke ?? "m"]);
             const { shaft, head } = arrowShape(px(a.from), px(a.to), thickness);
             const pts = head.map((p) => `${p.x},${p.y}`).join(" ");
-            const halo = arrowHalo(thickness, annotations.style?.border);
+            const halo = arrowHalo(thickness, eff.border);
             return (
-              <g key={a.id} onPointerDown={pick(a.id)} className={cn(interactive && "cursor-move")}>
+              <g
+                key={a.id}
+                onPointerDown={pick(a.id)}
+                className={cn(interactive && "cursor-move")}
+                style={styleVars(a.style, true)}
+              >
                 {/* Faixa larga e transparente para facilitar o clique na seta. */}
                 <line x1={px(a.from).x} y1={px(a.from).y} x2={px(a.to).x} y2={px(a.to).y} stroke="transparent" strokeWidth={14} />
                 {a.id === selectedId && (
@@ -192,7 +218,11 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
           const { disc, tail } = shapes[i] as (typeof shapes)[number];
           // O gancho fica no alvo (a posição gravada); o disco sai ao lado, ligado pela cauda.
           return (
-            <span key={m.id} className="absolute size-0" style={{ left: `${m.x * 100}%`, top: `${m.y * 100}%` }}>
+            <span
+              key={m.id}
+              className="absolute size-0"
+              style={{ left: `${m.x * 100}%`, top: `${m.y * 100}%`, ...styleVars(m.style, true) }}
+            >
               {tail && (
                 <svg
                   className="absolute top-0 left-0 overflow-visible"
