@@ -54,6 +54,15 @@ export function SlashMenu({ items, command, ref }: Props) {
     },
   }));
 
+  if (items.length === 0) {
+    // Sem opção, um listbox vazio é violação de ARIA (4.1.2): vira texto comum.
+    return (
+      <p className="z-50 w-80 rounded-lg border border-border bg-popover px-3 py-2 text-sm text-muted-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]">
+        {t("Nenhum bloco com esse nome.")}
+      </p>
+    );
+  }
+
   return (
     <div
       ref={listRef}
@@ -61,38 +70,34 @@ export function SlashMenu({ items, command, ref }: Props) {
       aria-label={t("Inserir bloco")}
       className="z-50 max-h-[min(20rem,var(--slash-max-h,20rem))] w-80 overflow-y-auto rounded-lg border border-border bg-popover p-1 text-popover-foreground shadow-[0_8px_24px_-12px_rgb(21_26_51/0.35)]"
     >
-      {items.length === 0 ? (
-        <p className="px-3 py-2 text-sm text-muted-foreground">{t("Nenhum bloco com esse nome.")}</p>
-      ) : (
-        groupBlocks(items).map((group) => (
-          // biome-ignore lint/a11y/useSemanticElements: group dentro de listbox é o padrão ARIA; fieldset não cabe aí
-          <div key={group.id} role="group" aria-labelledby={`slash-${group.id}`}>
-            <p id={`slash-${group.id}`} className="rotulo px-2 pt-2 pb-1">
-              {group.label}
-            </p>
-            {group.items.map((item) => {
-              const i = items.indexOf(item);
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="option"
-                  aria-selected={i === index}
-                  onMouseEnter={() => setIndex(i)}
-                  onClick={() => command(item)}
-                  className={cn("flex w-full items-center gap-2 rounded-md px-2 py-1 text-left", i === index && "bg-accent")}
-                >
-                  <SlashPreview block={item} />
-                  <span className="grid leading-tight">
-                    <span className="text-sm font-bold">{item.label}</span>
-                    <span className="text-xs text-muted-foreground">{item.hint}</span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        ))
-      )}
+      {groupBlocks(items).map((group) => (
+        // biome-ignore lint/a11y/useSemanticElements: group dentro de listbox é o padrão ARIA; fieldset não cabe aí
+        <div key={group.id} role="group" aria-labelledby={`slash-${group.id}`}>
+          <p id={`slash-${group.id}`} className="rotulo px-2 pt-2 pb-1">
+            {group.label}
+          </p>
+          {group.items.map((item) => {
+            const i = items.indexOf(item);
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="option"
+                aria-selected={i === index}
+                onMouseEnter={() => setIndex(i)}
+                onClick={() => command(item)}
+                className={cn("flex w-full items-center gap-2 rounded-md px-2 py-1 text-left", i === index && "bg-accent")}
+              >
+                <SlashPreview block={item} />
+                <span className="grid leading-tight">
+                  <span className="text-sm font-bold">{item.label}</span>
+                  <span className="text-xs text-muted-foreground">{item.hint}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }

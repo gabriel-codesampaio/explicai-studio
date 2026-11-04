@@ -70,8 +70,8 @@ export function PageSearch({ open, onOpenChange }: Props) {
           <input
             autoFocus
             role="combobox"
-            aria-expanded="true"
-            aria-controls="busca-resultados"
+            aria-expanded={matches.length > 0}
+            aria-controls={matches.length > 0 ? "busca-resultados" : undefined}
             aria-activedescendant={matches[index] ? `busca-${matches[index].item.id}` : undefined}
             aria-label={t("Buscar página pelo título")}
             placeholder={t("Buscar página pelo título…")}
@@ -84,50 +84,51 @@ export function PageSearch({ open, onOpenChange }: Props) {
             className="h-12 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground"
           />
         </div>
-        <div
-          id="busca-resultados"
-          role="listbox"
-          aria-label={t("Páginas encontradas")}
-          className="max-h-[50vh] overflow-y-auto p-1"
-        >
-          {matches.length === 0 && (
-            <p className="px-3 py-6 text-center text-sm text-muted-foreground">{t("Nenhuma página com esse título.")}</p>
-          )}
-          {matches.map((m, i) => (
-            <div
-              key={m.item.id}
-              id={`busca-${m.item.id}`}
-              role="option"
-              tabIndex={-1}
-              aria-selected={i === index}
-              onMouseMove={() => setIndex(i)}
-              onClick={() => go(m.item.id)}
-              onKeyDown={() => {}}
-              className={cn("flex cursor-pointer items-center gap-2 rounded-md px-3 py-2", i === index && "bg-accent")}
-            >
-              {m.number && (
-                <span aria-hidden className="shrink-0 font-mono text-xs tabular-nums text-primary">
-                  {m.number}
-                </span>
-              )}
-              <span className="grid min-w-0 flex-1 leading-tight">
-                <span className="truncate text-sm font-bold">{m.item.title || t("Sem título")}</span>
-                {m.path.length > 0 && (
-                  <span className="flex min-w-0 items-center gap-1 truncate text-xs text-muted-foreground">
-                    {m.path.map((p, j) => (
-                      <span key={m.path.slice(0, j + 1).join("/")} className="flex items-center gap-1">
-                        {j > 0 && <ChevronRight className="size-3" aria-hidden />}
-                        {p}
-                      </span>
-                    ))}
+        {matches.length === 0 ? (
+          <p className="px-3 py-6 text-center text-sm text-muted-foreground">{t("Nenhuma página com esse título.")}</p>
+        ) : (
+          <div
+            id="busca-resultados"
+            role="listbox"
+            aria-label={t("Páginas encontradas")}
+            className="max-h-[50vh] overflow-y-auto p-1"
+          >
+            {matches.map((m, i) => (
+              <div
+                key={m.item.id}
+                id={`busca-${m.item.id}`}
+                role="option"
+                tabIndex={-1}
+                aria-selected={i === index}
+                onMouseMove={() => setIndex(i)}
+                onClick={() => go(m.item.id)}
+                onKeyDown={() => {}}
+                className={cn("flex cursor-pointer items-center gap-2 rounded-md px-3 py-2", i === index && "bg-accent")}
+              >
+                {m.number && (
+                  <span aria-hidden className="shrink-0 font-mono text-xs tabular-nums text-primary">
+                    {m.number}
                   </span>
                 )}
-              </span>
-              {m.item.status !== "rascunho" && <StatusLabel status={m.item.status} className="text-xs font-medium" />}
-              {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
-            </div>
-          ))}
-        </div>
+                <span className="grid min-w-0 flex-1 leading-tight">
+                  <span className="truncate text-sm font-bold">{m.item.title || t("Sem título")}</span>
+                  {m.path.length > 0 && (
+                    <span className="flex min-w-0 items-center gap-1 truncate text-xs text-muted-foreground">
+                      {m.path.map((p, j) => (
+                        <span key={m.path.slice(0, j + 1).join("/")} className="flex items-center gap-1">
+                          {j > 0 && <ChevronRight className="size-3" aria-hidden />}
+                          {p}
+                        </span>
+                      ))}
+                    </span>
+                  )}
+                </span>
+                {m.item.status !== "rascunho" && <StatusLabel status={m.item.status} className="text-xs font-medium" />}
+                {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
+              </div>
+            ))}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
