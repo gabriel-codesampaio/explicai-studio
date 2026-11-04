@@ -16,10 +16,8 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
 | [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
-| [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
-| [T-137](T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | aberto | qa |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
 | [T-149](T-149-sobras-da-revisao-de-desempenho.md) | Fila entre processos e tamanho do bundle | P3 | aberto | frontend |
@@ -70,6 +68,8 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-144](fechados/T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | feito | #38 |
 | [T-145](fechados/T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | feito | #39 |
 | [T-146](fechados/T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | feito | #40 |
+| [T-134](fechados/T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | feito | #44 |
+| [T-137](fechados/T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | feito | #44 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
