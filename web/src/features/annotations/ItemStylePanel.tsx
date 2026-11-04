@@ -60,7 +60,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
             aria-pressed={value === s.id}
             disabled={disabled?.(s.id)}
             onClick={() => set({ [key]: s.id })}
-            className={`${option} min-h-8 px-2 disabled:opacity-50`}
+            className={`${option} px-2 disabled:opacity-50`}
           >
             {s.label()}
           </button>
@@ -79,7 +79,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
           <button
             type="button"
             onClick={() => onChange(undefined)}
-            className="rounded-md px-1 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 [@media(pointer:coarse)]:min-h-11"
+            className="min-h-7 rounded-md px-1 text-sm text-muted-foreground underline underline-offset-2 hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 [@media(pointer:coarse)]:min-h-11"
           >
             {t("Voltar ao padrão")}
           </button>
