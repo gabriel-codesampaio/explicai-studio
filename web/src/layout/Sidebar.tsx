@@ -73,15 +73,35 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
 
       {manual && (
         <nav aria-label={t("Páginas do manual")} className="grid grid-cols-1 gap-1">
+          {manual.audiences.length > 0 && (
+            <div className="mb-2 flex flex-col gap-1 px-2">
+              <label htmlFor="ver-como" className="rotulo text-muted-foreground">
+                {t("Ver como público")}
+              </label>
+              <Select value={profile || TODOS} onValueChange={(v) => setViewAs(v === TODOS ? "" : v)}>
+                <SelectTrigger id="ver-como" className="w-full px-1.5 py-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={TODOS}>{t("Todos")}</SelectItem>
+                  {manual.audiences.map((a) => (
+                    <SelectItem key={a} value={a}>
+                      {a}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <button
             type="button"
             onClick={onSearch}
-            className="mb-1 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="mb-3 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
             <Kbd className="ml-auto">Ctrl+P</Kbd>
           </button>
-          <div className="flex items-center justify-between px-2 text-[13px] text-muted-foreground">
+          <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
             <span className="rotulo">{t("Páginas")}</span>
             <button
               type="button"
@@ -94,24 +114,6 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
             </button>
           </div>
-          {manual.audiences.length > 0 && (
-            <label htmlFor="ver-como" className="flex items-center gap-2 px-2 text-[13px] text-muted-foreground">
-              {t("Ver como público")}
-              <Select value={profile || TODOS} onValueChange={(v) => setViewAs(v === TODOS ? "" : v)}>
-                <SelectTrigger id="ver-como" className="flex-1 px-1.5 py-1">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={TODOS}>{t("Todos")}</SelectItem>
-                  {manual.audiences.map((a) => (
-                    <SelectItem key={a} value={a}>
-                      {a}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </label>
-          )}
           {manual.pages.length === 0 ? (
             <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
           ) : (
