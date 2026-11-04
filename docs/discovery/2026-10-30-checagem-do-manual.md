@@ -6,12 +6,12 @@ Ideia do caderno (28/10): "verificar se o que está no manual ainda funciona no 
 Quem mantém o manual de um sistema (dev, software house, suporte) não sabe quando uma tela mudou e o passo escrito ficou errado. Descobre quando o cliente reclama. Hoje faz sem ferramenta: abre o sistema, relê o manual e compara a olho, ou nem faz. Gatilho "a tela mudou e o manual ficou velho" (`brand/discovery/90_SYNTHESIS.md:41`). Hipótese: ainda não há usuário real que confirme a dor (PRODUCT.md, "Evidence on Hand").
 
 ## O que já existe
-- **A spec deixa de fora de propósito:** "checagem automática do manual no sistema (Chrome DevTools MCP)" está em "Fora da v1" (`docs/spec-v1.md:51`). Este discovery decide se sai de lá.
+- **A spec deixa de fora de propósito:** "checagem automática do manual no sistema (Chrome DevTools MCP)" está em "Fora da v1" (`docs/discovery/archives/spec-v1.md:51`). Este discovery decide se sai de lá.
 - **Passos são texto livre.** Lista numerada com `**negrito**` no botão (`docs/manual-format.md`, exemplo de página). Não há campo de URL, seletor ou "resultado esperado". Quem vai ler isso é um modelo, não um script.
 - **Imagem + anotações em JSON ao lado** (`assets/<img>.json`, `docs/manual-format.md`, "Anotações da imagem"): `markers` com `label` ("Novo cliente"), `highlights`, `hotspots`, coordenadas de 0 a 1. O `label` do marcador é a melhor pista de "qual elemento é este".
 - **Nada guarda a URL de origem do print** nem a data em que foi tirado. Sem isso, a checagem não sabe onde abrir cada tela. Formato de dados mudando: risco alto (ver abaixo).
 - **PDF já usa navegador headless** (`src/core/export/pdf.ts:51`, `EXPLICAI_BROWSER`). Há código que acha Chrome, mas não conduz páginas.
-- **`explicai-mcp`** (irmão, só leitura): hoje só tem README e LICENSE, sem código. Usará `explicai/core` (`CLAUDE.md`, "Estrutura"). A spec o define como "funciona sem o Studio aberto" (`docs/spec-v1.md:46`).
+- **`explicai-mcp`** (irmão, só leitura): hoje só tem README e LICENSE, sem código. Usará `explicai/core` (`CLAUDE.md`, "Estrutura"). A spec o define como "funciona sem o Studio aberto" (`docs/discovery/archives/spec-v1.md:46`).
 - **Versões e status** (`.versoes/`, `status:`, `published`) já permitem marcar uma página como "revisada em tal data".
 
 ## Concorrentes
@@ -63,7 +63,7 @@ Perguntas que esse corte não responde (e ficam para depois): onde fica o login,
 5. Tem usuário real para testar a dor? → Rodar em um manual de verdade seu antes de abrir ticket de B.
 
 ## Rascunho de spec (opção A)
-- **Escopo:** (no `explicai-mcp`) ferramenta `roteiro_de_checagem` que lê uma página e devolve passos, rótulos dos marcadores e caminho dos prints. Uma instrução para o agente: abrir o sistema com o Chrome DevTools MCP, seguir o roteiro só em leitura, devolver relatório. (Neste repositório) atualizar `docs/spec-v1.md:51` para "pós-v1, em avaliação" e, se o `core` precisar de um helper de leitura de passos+rótulos, expô-lo em `src/core`. Sem mudança no formato, no Studio nem no HTML exportado.
+- **Escopo:** (no `explicai-mcp`) ferramenta `roteiro_de_checagem` que lê uma página e devolve passos, rótulos dos marcadores e caminho dos prints. Uma instrução para o agente: abrir o sistema com o Chrome DevTools MCP, seguir o roteiro só em leitura, devolver relatório. (Neste repositório) atualizar `docs/discovery/archives/spec-v1.md:51` para "pós-v1, em avaliação" e, se o `core` precisar de um helper de leitura de passos+rótulos, expô-lo em `src/core`. Sem mudança no formato, no Studio nem no HTML exportado.
 - **Critérios de aceite:**
   - Para uma página com 5 passos e 3 marcadores, o roteiro lista os 5 passos e os 3 rótulos, na ordem.
   - Página sem imagem devolve só os passos, sem erro.

@@ -2,12 +2,12 @@
 
 Editor de manuais open source no estilo do editor do Confluence. Roda localmente com `npx explicai` e salva cada manual como uma pasta de Markdown com imagens. O projeto irmão, `explicai-mcp`, usa o módulo `explicai/core` para montar manuais pela IA.
 
-Especificação da v1: `docs/spec-v1.md`. Formato em disco: `docs/manual-format.md`.
+Formato em disco: `docs/manual-format.md`. Estado do trabalho: `docs/passagem.md`. Fila: `docs/tickets/README.md`.
 
 ## Stack
 
 - TypeScript 7 em modo estrito, ESM (`"type": "module"`, imports com `.js`)
-- Node 20 ou mais novo
+- Node 20.12 ou mais novo
 - Testes com Vitest (happy-dom nos testes do editor)
 - Editor: React 19 + Vite + Tiptap 3 com `@tiptap/markdown`
 - Servidor local: `node:http` puro, sem framework
@@ -41,7 +41,7 @@ src/cli.ts     comando `explicai`
 web/src/       editor: lib/ (sem React), hooks/, features/, components/, layout/, styles/
 test/          núcleo, servidor e roteador
 web/test/      ida e volta do Markdown e lógica da árvore
-docs/          formato do manual e especificação
+docs/          formato do manual, tickets e discoveries
 ```
 
 Mudou `web/src/features/editor/extensions.ts`? Rode `web/test/markdown.test.ts`: ele garante que abrir e salvar uma página não perde conteúdo.
