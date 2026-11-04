@@ -1,5 +1,5 @@
 import { ChevronDown, Users } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverDescription, PopoverTrigger } from "@/components/ui/popover";
 import { t } from "@/lib/i18n";
 
@@ -11,18 +11,30 @@ export function AudienceMenu({
 }: {
   audience: string[];
   known: string[];
-  onChange: (audience: string[]) => void;
+  onChange: (audience: string[]) => Promise<void> | void;
 }) {
   const [draft, setDraft] = useState("");
-  const options = [...new Set([...known, ...audience])];
-  const toggle = (name: string) => onChange(audience.includes(name) ? audience.filter((a) => a !== name) : [...audience, name]);
+  // O que a pessoa já escolheu e ainda está gravando: o clique seguinte parte daqui, não do valor antigo (T-135).
+  const [pending, setPending] = useState<string[] | null>(null);
+  const inFlight = useRef(0);
+  const current = pending ?? audience;
+  const change = (next: string[]) => {
+    setPending(next);
+    inFlight.current += 1;
+    void Promise.resolve(onChange(next)).finally(() => {
+      inFlight.current -= 1;
+      if (inFlight.current === 0) setPending(null);
+    });
+  };
+  const options = [...new Set([...known, ...current])];
+  const toggle = (name: string) => change(current.includes(name) ? current.filter((a) => a !== name) : [...current, name]);
   const add = (e: FormEvent) => {
     e.preventDefault();
     const name = draft.trim();
-    if (name && !audience.includes(name)) onChange([...audience, name]);
+    if (name && !current.includes(name)) change([...current, name]);
     setDraft("");
   };
-  const summary = audience.length ? audience.join(", ") : t("Todos");
+  const summary = current.length ? current.join(", ") : t("Todos");
 
   return (
     <Popover>
@@ -47,7 +59,7 @@ export function AudienceMenu({
             >
               <input
                 type="checkbox"
-                checked={audience.includes(name)}
+                checked={current.includes(name)}
                 onChange={() => toggle(name)}
                 className="size-4 accent-[var(--primary)]"
               />

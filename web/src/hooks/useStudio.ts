@@ -314,7 +314,14 @@ export function useStudio() {
   };
 
   /** Perfis da página aberta. Lista vazia = todos. Grava na hora e atualiza a árvore e a lista de perfis do manual. */
-  const setPageAudience = (audience: string[]) =>
+  const audienceQueue = useRef<Promise<void>>(Promise.resolve());
+  const setPageAudience = (audience: string[]) => {
+    // Em fila: duas trocas seguidas gravam na ordem em que foram feitas, e a última vence (T-135).
+    const next = audienceQueue.current.then(() => saveAudience(audience));
+    audienceQueue.current = next;
+    return next;
+  };
+  const saveAudience = (audience: string[]) =>
     run(async () => {
       if (!manual || !page) return;
       await flush();
