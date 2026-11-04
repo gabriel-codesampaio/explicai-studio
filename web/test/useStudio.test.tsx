@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useStudio } from "../src/hooks/useStudio";
 import { ApiError, api, type Page } from "../src/lib/api";
@@ -215,5 +216,49 @@ describe("useStudio: conflito com o disco", () => {
     expect(result.current.manual?.pages).toHaveLength(4);
     expect(result.current.page?.body).toBe("de fora");
     expect(result.current.revision).toBe(rev + 1);
+  });
+  describe("erros do sync ao voltar ao foco", () => {
+    const focus = () =>
+      act(async () => {
+        window.dispatchEvent(new Event("focus"));
+      });
+
+    it("página apagada por fora: avisa, volta à árvore e oferece copiar o texto não gravado", async () => {
+      const { result } = await openFirstPage();
+      update.mockRejectedValue(new ApiError("sumiu", "not-found", {}, 404));
+      act(() => result.current.editPage({ body: "meu texto" }));
+      vi.spyOn(api, "getManual").mockResolvedValue({ slug: "m", title: "M", pages: [node("a"), node("b")] } as never);
+      await focus();
+
+      await waitFor(() => expect(toast.warning).toHaveBeenCalled());
+      const [, opts] = vi.mocked(toast.warning).mock.calls.at(-1) as unknown as [
+        string,
+        { action?: { label: string; onClick: () => void } },
+      ];
+      expect(opts.action?.label).toMatch(/Copiar/);
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
+      opts.action?.onClick();
+      expect(writeText).toHaveBeenCalledWith("meu texto");
+      expect(result.current.manual?.pages).toHaveLength(2);
+      expect(result.current.page?.id).not.toBe("p0"); // não fica no editor da página apagada
+    });
+
+    it("outro erro vira toast com o motivo", async () => {
+      await openFirstPage();
+      vi.mocked(toast.error).mockClear();
+      vi.spyOn(api, "listManuals").mockRejectedValue(new ApiError("disco cheio", "x", {}, 500));
+      await focus();
+      await waitFor(() => expect(toast.error).toHaveBeenCalledWith("disco cheio", expect.anything()));
+    });
+
+    it("offline segue silencioso: só marca o servidor como fora", async () => {
+      const { result } = await openFirstPage();
+      vi.mocked(toast.error).mockClear();
+      vi.spyOn(api, "listManuals").mockRejectedValue(new ApiError("x", "offline"));
+      await focus();
+      await waitFor(() => expect(result.current.serverDown).toBe(true));
+      expect(toast.error).not.toHaveBeenCalled();
+    });
   });
 });

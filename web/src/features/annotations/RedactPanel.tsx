@@ -50,7 +50,6 @@ export function RedactPanel({ slug, asset, src, rects, inGit, style, onStyle, on
 
   return (
     <section className="grid gap-2 rounded-md border border-border p-3" aria-label={t("Ocultar dados")}>
-      <h3 className="rotulo">{t("Ocultar dados")}</h3>
       <p className="text-sm">
         {rects.length === 0
           ? t("Arraste sobre o dado que deve sumir.")

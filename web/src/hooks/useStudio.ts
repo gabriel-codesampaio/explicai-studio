@@ -228,6 +228,18 @@ export function useStudio() {
    */
   const pageRef = useRef(page);
   pageRef.current = page;
+  /** A página aberta foi apagada por fora: avisa, volta à árvore e deixa o texto não gravado a um clique de ser copiado. */
+  const pageGone = (gone: Page) => {
+    const patch = autosave.pendingPatch(gone.id);
+    const text = patch?.body ?? patch?.title;
+    autosave.discard(gone.id);
+    setPage(null);
+    if (manual) writeLocation({ slug: manual.slug, pageId: null });
+    toast.warning(t("A página “{title}” foi apagada fora do Studio.", { title: gone.title }), {
+      duration: Number.POSITIVE_INFINITY,
+      action: text ? { label: t("Copiar meu texto"), onClick: () => void navigator.clipboard?.writeText(text) } : undefined,
+    });
+  };
   const syncRef = useRef<() => Promise<void>>(async () => {});
   syncRef.current = async () => {
     if (!manuals || down) return;
@@ -236,7 +248,8 @@ export function useStudio() {
       setManuals(list);
       if (!manual) return void (notFound && (await openFromLocation(list)));
       const ok = await flush();
-      await refreshManual(manual.slug);
+      const detail = await refreshManual(manual.slug);
+      if (page && !findItem(detail.pages, page.id)) return void pageGone(page);
       if (!page || !ok || conflict.current) return;
       const fresh = await api.getPage(manual.slug, page.id);
       // Trocou de página ou digitou durante a leitura: não joga o editor de volta nem apaga o texto novo.
@@ -247,7 +260,9 @@ export function useStudio() {
         setRevision((r) => r + 1);
       }
     } catch (err) {
-      if (isOffline(err)) setServerDown(true); // outro erro (página apagada por fora etc.): a próxima ação mostra
+      if (isOffline(err)) setServerDown(true);
+      else if (err instanceof ApiError && err.status === 404 && page) pageGone(page);
+      else toast.error(errorMessage(err), { id: "sync-error" }); // id fixo: foco repetido não empilha o mesmo aviso
     }
   };
   useOnFocus(() => void syncRef.current());
@@ -354,7 +369,14 @@ export function useStudio() {
   };
 
   /** Perfis da página aberta. Lista vazia = todos. Grava na hora e atualiza a árvore e a lista de perfis do manual. */
-  const setPageAudience = (audience: string[]) =>
+  const audienceQueue = useRef<Promise<void>>(Promise.resolve());
+  const setPageAudience = (audience: string[]) => {
+    // Em fila: duas trocas seguidas gravam na ordem em que foram feitas, e a última vence (T-135).
+    const next = audienceQueue.current.then(() => saveAudience(audience));
+    audienceQueue.current = next;
+    return next;
+  };
+  const saveAudience = (audience: string[]) =>
     run(async () => {
       if (!manual || !page) return;
       await flush();
@@ -373,6 +395,26 @@ export function useStudio() {
       });
       await refreshManual(manual.slug);
     });
+
+  /**
+   * Cria, renomeia ou remove um público do manual. Erros sobem para o diálogo mostrar junto ao campo.
+   * Renomear e remover mexem no arquivo das páginas: grava a fila antes (o editor não regrava o nome antigo) e relê a página aberta.
+   */
+  const changeAudiences = async (call: (slug: string) => Promise<unknown>, touchesPages: boolean) => {
+    if (!manual) return;
+    if (touchesPages) {
+      await audienceQueue.current.catch(() => {});
+      await flush();
+    }
+    await call(manual.slug);
+    await refreshManual(manual.slug);
+    if (touchesPages && page) await showPage(manual.slug, page.id);
+  };
+  const audiences = {
+    add: (name: string) => changeAudiences((slug) => api.addAudience(slug, name), false),
+    rename: (from: string, name: string) => changeAudiences((slug) => api.renameAudience(slug, from, name), true),
+    remove: (name: string) => changeAudiences((slug) => api.removeAudience(slug, name), true),
+  };
 
   /** Etapa da página aberta no fluxo de aprovação. Grava na hora e atualiza a etiqueta na árvore. */
   const setPageStatus = (status: PageStatus) =>
@@ -497,6 +539,7 @@ export function useStudio() {
     uploadManualLogo,
     setPageStatus,
     setPageAudience,
+    audiences,
     createManual,
     renameManual,
     editPage,

@@ -1,0 +1,20 @@
+name: Sugestão
+description: Uma ideia ou melhoria para o Studio
+labels: ["sugestão"]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: O que você está tentando fazer
+      description: Descreva a situação em que sentiu falta de algo.
+    validations:
+      required: true
+  - type: textarea
+    id: ideia
+    attributes:
+      label: O que ajudaria
+      description: Se já tem uma ideia de solução, conte. Se não, tudo bem.
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Como você faz hoje

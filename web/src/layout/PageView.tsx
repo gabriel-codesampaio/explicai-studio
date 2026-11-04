@@ -73,9 +73,10 @@ export function PageView({ manual, page }: Props) {
                 onPublish={studio.publishVersion}
               />
               <AudienceMenu
+                key={page.id}
                 audience={page.audience ?? []}
                 known={manual.audiences}
-                onChange={(a) => void studio.setPageAudience(a)}
+                onChange={(a) => studio.setPageAudience(a)}
               />
               <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
               {editor && headings.length > 0 && <PageOutlineButton editor={editor} headings={headings} />}

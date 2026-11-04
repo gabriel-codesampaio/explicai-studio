@@ -2,7 +2,15 @@
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
-    "includes": ["**", "!!**/dist", "!**/web/src/components/ui", "!**/.impeccable", "!**/package-lock.json", "!**/*.md"]
+    "includes": [
+      "**",
+      "!!**/dist",
+      "!**/web/src/components/ui",
+      "!**/.impeccable",
+      "!**/package-lock.json",
+      "!**/*.md",
+      "!test/fixtures/manuais-antigos"
+    ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 130 },
   "javascript": { "formatter": { "quoteStyle": "double", "semicolons": "always", "trailingCommas": "all" } },

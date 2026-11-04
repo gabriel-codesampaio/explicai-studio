@@ -1,5 +1,4 @@
 import { ArrowUpRight, Highlighter, Link2, X } from "lucide-react";
-import { Fragment } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { styleVars } from "@/lib/annotationStyle";
@@ -56,26 +55,24 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
       {annotations.markers.length > 0 && (
         <section className="grid gap-1.5">
           <h3 className="rotulo">{t("Legenda")}</h3>
+          {annotations.markers.some((m) => !m.label?.trim()) && (
+            <p className="px-2 text-xs text-muted-foreground">{t("Sem descrição: o print mostra só o número.")}</p>
+          )}
           {[...annotations.markers]
             .sort((a, b) => a.n - b.n)
             .map((m) => (
-              <Fragment key={m.id}>
-                <div className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
-                  <span className="num-chip shrink-0 bg-anotacao text-sobre-anotacao">{m.n}</span>
-                  <Input
-                    aria-label={t("O que o marcador {n} mostra", { n: m.n })}
-                    value={m.label ?? ""}
-                    placeholder={t("O que este marcador mostra?")}
-                    onFocus={() => onSelect(m.id)}
-                    onChange={(e) => onChange(updateMarker(annotations, m.id, e.target.value))}
-                    className="h-8"
-                  />
-                  <RemoveButton label={t("Excluir marcador {n}", { n: m.n })} onClick={() => remove(m.id)} />
-                </div>
-                {!m.label?.trim() && (
-                  <p className="px-2 text-xs text-muted-foreground">{t("Sem descrição: o print mostra só o número.")}</p>
-                )}
-              </Fragment>
+              <div key={m.id} className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
+                <span className="num-chip shrink-0 bg-anotacao text-sobre-anotacao">{m.n}</span>
+                <Input
+                  aria-label={t("O que o marcador {n} mostra", { n: m.n })}
+                  value={m.label ?? ""}
+                  placeholder={t("O que este marcador mostra?")}
+                  onFocus={() => onSelect(m.id)}
+                  onChange={(e) => onChange(updateMarker(annotations, m.id, e.target.value))}
+                  className="h-8"
+                />
+                <RemoveButton label={t("Excluir marcador {n}", { n: m.n })} onClick={() => remove(m.id)} />
+              </div>
             ))}
         </section>
       )}
