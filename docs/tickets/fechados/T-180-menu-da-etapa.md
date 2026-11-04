@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: design
 - Origem: pedido da pessoa, 2026-11-04 (lote 1.0)
 
@@ -23,4 +23,4 @@ O menu "Etapa da página" está esquisito: o item atual mostra dois indicadores 
 Abrir o menu em cada etapa, 1280 claro e escuro; teste existente do StatusMenu.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit `dee581e`. StatusMenu: um indicador por item (bolinha da etapa), atual com fundo e check; ponto padrão do radio oculto. Contraste mínimo 4,73 claro e 5,11 escuro. Cores em status.ts já estavam na paleta, sem mudança.
