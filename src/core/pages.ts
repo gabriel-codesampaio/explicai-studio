@@ -132,16 +132,15 @@ export async function updatePage(
   dir: string,
   id: string,
   patch: { title?: string; body?: string; status?: PageStatus },
-  opts: { fileName?: "keep" | "sync" | undefined; ifMatch?: string | undefined; ifRev?: string | undefined } = {},
+  opts: {
+    fileName?: "keep" | "sync" | undefined;
+    ifMatch?: string | undefined;
+    ifRev?: string | undefined;
+    /** Roda dentro da fila, depois de `ifRev`/`ifMatch` passarem e antes de gravar (ex.: guardar versão). */
+    beforeWrite?: (() => Promise<void>) | undefined;
+  } = {},
 ): Promise<Page> {
   const page = await readPage(dir, id);
-  // shortcut: a checagem do rev e a gravação não são atômicas (milissegundos); upgrade se aparecer na prática.
-  if (opts.ifRev !== undefined && opts.ifRev !== page.rev) {
-    throw new ExplicaiError(
-      "rev-conflict",
-      "A página mudou desde a última leitura. Leia a página de novo (read_page) e refaça a edição com o rev novo.",
-    );
-  }
   if (patch.status !== undefined && !PAGE_STATUSES.includes(patch.status)) {
     throw new Error(`Status inválido: ${patch.status}. Use ${PAGE_STATUSES.join(", ")}.`);
   }
@@ -155,12 +154,23 @@ export async function updatePage(
   const sameName =
     opts.fileName === "keep" ||
     (opts.fileName === "sync" ? fileMatchesTitle(page.file, next.title) : slugify(next.title) === slugify(page.title));
-  const { ifMatch } = opts;
+  const { ifMatch, ifRev, beforeWrite } = opts;
+  // Dentro da fila da pasta: rev e versão em disco são conferidos no mesmo passo da gravação.
+  const check = async () => {
+    if (ifRev !== undefined && ifRev !== (await readPage(dir, id)).rev) {
+      throw new ExplicaiError(
+        "rev-conflict",
+        "A página mudou desde a última leitura. Leia a página de novo (read_page) e refaça a edição com o rev novo.",
+      );
+    }
+    if (ifMatch !== undefined) await assertVersion(dir, page.file, ifMatch);
+    await beforeWrite?.();
+  };
   if (sameName) {
-    if (ifMatch === undefined) await writePageFile(dir, next);
+    if (ifMatch === undefined && ifRev === undefined && beforeWrite === undefined) await writePageFile(dir, next);
     else {
       await inQueue(dir, async () => {
-        await assertVersion(dir, page.file, ifMatch);
+        await check();
         await writePageFile(dir, next);
       });
     }
@@ -168,7 +178,7 @@ export async function updatePage(
   }
 
   // shortcut: com renomeio, a checagem e a gravação não são atômicas (janela de milissegundos); upgrade se aparecer na prática.
-  if (ifMatch !== undefined) await inQueue(dir, () => assertVersion(dir, page.file, ifMatch));
+  if (ifMatch !== undefined || ifRev !== undefined || beforeWrite !== undefined) await inQueue(dir, check);
   next.file = await newPageFile(dir, next.title);
   await writePageFile(dir, next);
   const others = await updateManual(dir, (meta) => {
