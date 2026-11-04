@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A13 (avaliado no commit 60a0e3d)
 
@@ -21,4 +21,4 @@ Achado A13. O aviso de conflito não mostra o que mudou e empurra a página 57 p
 Forçar um conflito de disco e medir com evaluate_script a posição do texto antes e depois do aviso. Conferir a diferença exibida com uma alteração conhecida.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito: faixa por cima da página (h-0 sticky + absolute, deslocamento 0 px medido em 1280 e 375) com o trecho que difere no disco e no texto da pessoa (`lib/conflictDiff.ts`). Botões iguais. Observação: a faixa cobre o topo da página enquanto a pessoa escolhe.

@@ -4,8 +4,9 @@
  */
 export const EN: Record<string, string> = {
   "Nenhuma imagem sem uso.": "No unused images.",
-  "Imagens que nenhuma página usa, contando versões e lixeira, vão para a lixeira.":
-    "Images that no page uses, counting versions and trash, go to the trash.",
+  "Move para a lixeira as imagens que nenhuma página usa, contando versões e lixeira.":
+    "Moves to the trash the images that no page uses, counting versions and trash.",
+  "Confirmar limpeza": "Confirm cleanup",
   Recortar: "Crop",
   "Recortar imagem": "Crop image",
   "Ferramenta Recortar": "Crop tool",
@@ -137,8 +138,8 @@ export const EN: Record<string, string> = {
   "Arraste do início até a ponta da seta": "Drag from the start to the tip of the arrow",
   "Arraste sobre a área que leva a outra página": "Drag over the area that leads to another page",
   "Arraste sobre o que merece atenção": "Drag over what deserves attention",
-  "As páginas excluídas ficam na pasta .lixeira do manual até você restaurar ou apagar.":
-    "Deleted pages stay in the manual's .lixeira folder until you restore or delete them.",
+  "As páginas excluídas ficam na pasta .lixeira do manual até você restaurar.":
+    "Deleted pages stay in the manual's .lixeira folder until you restore them.",
   Atalhos: "Shortcuts",
   "Atalhos de teclado": "Keyboard shortcuts",
   "Bloco de código": "Code block",
@@ -225,9 +226,9 @@ export const EN: Record<string, string> = {
   Formatação: "Formatting",
   Formato: "Format",
   Grafite: "Graphite",
-  "Guardar versão": "Save version",
-  'Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que vai para o manual final. Sem ela, vale o texto atual.':
-    'Save the text as it is now to come back to it later. The "Manual version" is the one that goes into the final manual. Without one, the current text is used.',
+  "Guardar versão da página": "Save page version",
+  'Estas versões são só desta página, não do manual inteiro. Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que esta página usa no manual final. Sem ela, vale o texto atual.':
+    'These versions belong to this page only, not to the whole manual. Save the text as it is now to come back to it later. The "Manual version" is the one this page uses in the final manual. Without one, the current text is used.',
   Idioma: "Language",
   "Idioma da interface": "Interface language",
   "Muda só o Studio, neste navegador.": "Changes only the Studio, in this browser.",
@@ -266,7 +267,7 @@ export const EN: Record<string, string> = {
   "Mostrar ou esconder as páginas": "Show or hide pages",
   Mover: "Move",
   "Mover a página para cima ou para baixo": "Move the page up or down",
-  "Mover para a lixeira": "Move to trash",
+  "Limpar imagens sem uso": "Clean up unused images",
   "Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.":
     "Only changes the Studio, in this browser. The manual color is in Export manual.",
   "Não foi possível abrir o Studio.": "Could not open the Studio.",
@@ -335,7 +336,7 @@ export const EN: Record<string, string> = {
   "Adicionar coluna à direita": "Add column to the right",
   "Adicionar linha abaixo": "Add row below",
   Restaurar: "Restore",
-  "Restaurar esta": "Restore this one",
+  "Restaurar na página": "Restore on this page",
   "Resultado esperado": "Expected result",
   "Salvando…": "Saving…",
   "Salvar marcações": "Save markups",
@@ -376,6 +377,11 @@ export const EN: Record<string, string> = {
   "Manter a minha versão grava o seu texto por cima do arquivo. Recarregar do disco descarta o que você escreveu aqui.":
     "Keep my version writes your text over the file. Reload from disk discards what you wrote here.",
   "Recarregar do disco": "Reload from disk",
+  "(vazio)": "(empty)",
+  "No disco": "On disk",
+  "O seu texto": "Your text",
+  "{n} linha difere.": "{n} line differs.",
+  "{n} linhas diferem.": "{n} lines differ.",
   "Manter a minha versão": "Keep my version",
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",
@@ -395,7 +401,7 @@ export const EN: Record<string, string> = {
   "Algo que exige cuidado": "Something that needs care",
   "Um risco que não dá para desfazer": "A risk that cannot be undone",
   "Uma informação a mais": "Extra information",
-  "Tirar do manual": "Remove from manual",
+  "Tirar da página do manual": "Remove page from manual",
   Remover: "Delete",
   "Remover a versão {nome}?": "Delete version {nome}?",
   "Remover versão {nome}": "Delete version {nome}",
@@ -412,7 +418,7 @@ export const EN: Record<string, string> = {
   "Um passo por linha, na ordem de uso": "One step per line, in the order of use",
   "Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.":
     "One page per screen or task works well. Start with the one people use most.",
-  "Usar no manual": "Use in manual",
+  "Usar na página do manual": "Use on the manual page",
   "Usar o texto atual": "Use the current text",
   "Use um endereço http, https ou mailto.": "Use an http, https or mailto address.",
   Ver: "View",
