@@ -52,7 +52,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-155](T-155-botao-remover-imagem.md) | Adicionar botão Remover imagem no painel da imagem | P2 | aberto | frontend |
 | [T-156](T-156-foco-da-marcacao-na-legenda.md) | Levar o foco à legenda depois de marcar, sem quebrar os atalhos | P2 | aberto | frontend |
 | [T-158](T-158-um-nome-para-publico.md) | Usar um nome só para o público da página | P2 | aberto | frontend |
-| [T-159](T-159-versao-da-pagina-com-nome-certo.md) | Deixar claro que "Versão" vale para a página, não para o manual | P2 | aberto | frontend |
 | [T-162](T-162-lixeira-e-ajuda-com-lugar-proprio.md) | Dar à lixeira e à ajuda um lugar próprio no menu | P2 | aberto | design |
 | [T-173](T-173-foco-preso-em-menus-com-aria-hidden.md) | Conferir o foco nos menus abertos com fundo aria-hidden | P2 | aberto | qa |
 | [T-174](T-174-alvos-pequenos-abaixo-de-24-px.md) | Levar alvos de toque abaixo de 24 px a 24 px | P2 | aberto | frontend |
