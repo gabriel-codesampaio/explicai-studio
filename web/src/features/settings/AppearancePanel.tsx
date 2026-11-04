@@ -10,7 +10,7 @@ const MODES: { id: Mode; label: string; Icon: typeof Sun }[] = [
   { id: "system", label: t("Sistema"), Icon: Monitor },
 ];
 
-/** Painel "Aparência" (aberto pelo menu "Ajustes" da barra lateral): tema claro/escuro. */
+/** Painel "Tema do Studio" (aberto pelo menu "Ajustes" da barra lateral): tema claro/escuro. */
 export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const group = useRef<HTMLDivElement>(null);
   const [look, setLook] = useState(readAppearance);
@@ -36,7 +36,7 @@ export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenC
           )?.focus();
         }}
       >
-        <DialogTitle className="font-display text-lg font-extrabold tracking-tight">{t("Aparência")}</DialogTitle>
+        <DialogTitle className="font-display text-lg font-extrabold tracking-tight">{t("Tema do Studio")}</DialogTitle>
         <fieldset>
           <legend className="mb-2 rotulo">{t("Tema")}</legend>
           <div ref={group} className="grid grid-cols-3 gap-1 rounded-md bg-muted p-1">
@@ -59,7 +59,7 @@ export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenC
           )}
         </fieldset>
         <p className="text-xs text-muted-foreground">
-          {t("Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.")}
+          {t("Muda só o Studio, neste navegador. Cores e fontes do manual ficam em Ajustes, Aparência do manual.")}
         </p>
       </DialogContent>
     </Dialog>

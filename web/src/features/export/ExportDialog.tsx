@@ -11,14 +11,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ManualAppearanceDialog } from "@/features/settings/ManualAppearanceDialog";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { busyLabel, ExportStatus } from "./ExportStatus";
-import { LogoField } from "./LogoField";
-import { ThemeFields } from "./ThemeFields";
 
 const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] = [
   { id: "html", label: t("Site (HTML)"), hint: t("Um arquivo para publicar ou abrir no navegador."), ext: ".html" },
@@ -26,7 +25,7 @@ const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] 
   { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), ext: ".md" },
 ];
 
-/** Botão "Exportar manual" do topo da página: escolhe o formato e a cor, exporta e mostra onde ficou. */
+/** Botão "Exportar manual" do topo da página: escolhe o formato, exporta e mostra onde ficou. */
 // O Radix não aceita value "" em item: esta sentinela fica só aqui; o valor de fora segue "".
 const TODOS = "__todos__";
 
@@ -40,6 +39,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
   const audiences = studio.manual?.audiences ?? [];
   const [audience, setAudience] = useState("");
   const audienceOn = audiences.includes(audience) ? audience : "";
+  const [appearanceOpen, setAppearanceOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ExportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -171,31 +171,19 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
             </label>
           )}
 
-          {format !== "markdown" && studio.manual && (
-            <>
-              <LogoField slug={studio.manual.slug} logo={studio.manual.theme.logo} disabled={busy} />
-              <ThemeFields theme={studio.manual.theme} />
-              <label className="flex items-start gap-2.5 text-sm">
-                <input
-                  type="checkbox"
-                  checked={studio.manual.theme.hideColophon === true}
-                  disabled={busy}
-                  onChange={(e) =>
-                    void studio
-                      .setManualTheme({ hideColophon: e.target.checked ? true : null })
-                      .catch((err: unknown) => studio.reportError(errorMessage(err)))
-                  }
-                  className="mt-0.5 size-4 accent-[var(--primary)]"
-                />
-                <span className="grid leading-tight">
-                  <span className="font-bold">{t("Sem o rodapé do Explicaí")}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {t('Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.')}
-                  </span>
-                </span>
-              </label>
-            </>
+          {format !== "markdown" && (
+            <p className="text-xs text-muted-foreground">
+              {t("Cores, fontes, capa e rodapé:")}{" "}
+              <button
+                type="button"
+                onClick={() => setAppearanceOpen(true)}
+                className="cursor-pointer font-bold text-primary underline underline-offset-2 [@media(pointer:coarse)]:min-h-11"
+              >
+                {t("Aparência do manual")}
+              </button>
+            </p>
           )}
+          <ManualAppearanceDialog open={appearanceOpen} onOpenChange={setAppearanceOpen} />
         </div>
 
         {/* Rodapé fixo: o botão e o resultado ficam à vista; só o miolo acima rola. */}
