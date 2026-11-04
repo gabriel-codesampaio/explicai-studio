@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: M
-- Status: aberto
+- Status: concluído
 - Agente: frontend
 - Origem: discovery [aparencia-sidebar-e-perfis](../discovery/aparencia-sidebar-e-perfis.md), pedido da pessoa 2026-11-04 (lote 1.0)
 
@@ -22,4 +22,8 @@ Decisões da pessoa (2026-11-04): termo único "Público" ("perfil" sai da inter
 Os critérios acima, com script Playwright (uma largura na fatia; matriz 375/1280, claro/escuro, pt/en no fecho do lote).
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commits: 86e88f6 (rota do themeCss no escopo da amostra), 4cd46ab (amostra ao vivo na Aparência), aa07eeb (formatação) e o commit que fecha este ticket.
+
+Feito: rota `theme/css` com escopo; `ThemeSample` ao lado das seções em lg, com as fontes da prévia e `aria-hidden` (os h4 a h6 são só visual).
+
+Ficou de fora: 375 px e a matriz tema/idioma não foram medidos. `manual.json` editado à mão não valida `accent` na leitura (já existia no export).

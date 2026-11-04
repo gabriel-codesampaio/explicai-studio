@@ -44,6 +44,7 @@ export function ThemeSample({ slug, theme }: { slug: string; theme: ManualTheme 
         className="amostra-manual grid gap-2 rounded-lg border border-border bg-white p-5 text-[15px] leading-relaxed"
         style={{ color: "var(--tinta, #151a33)", fontFamily: `var(--texto, ${body})` }}
         data-testid="amostra-manual"
+        aria-hidden
       >
         <h4
           className="m-0 text-3xl font-extrabold leading-tight"
