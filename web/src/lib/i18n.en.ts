@@ -383,6 +383,8 @@ export const EN: Record<string, string> = {
   "{n} linha difere.": "{n} line differs.",
   "{n} linhas diferem.": "{n} lines differ.",
   "Manter a minha versão": "Keep my version",
+  "A página “{title}” foi apagada fora do Studio.": "The page “{title}” was deleted outside Studio.",
+  "Copiar meu texto": "Copy my text",
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",
   "Tipo de bloco: {tipo}": "Block type: {tipo}",
