@@ -12,6 +12,12 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-179](T-179-rolagem-sobre-o-layout.md) | Tirar a barra de rolagem de cima do layout | P2 | aberto | design |
+| [T-180](T-180-menu-da-etapa.md) | Redesenhar o menu da etapa da página | P2 | aberto | design |
+| [T-181](T-181-select-da-casa.md) | Criar o Select do Studio, com cursor de clique | P2 | aberto | frontend |
+| [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
+| [T-183](T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | aberto | frontend |
+| [T-184](T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | aberto | frontend |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
 | [T-151](T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | aberto | frontend |
 | [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
