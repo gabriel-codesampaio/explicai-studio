@@ -47,13 +47,26 @@ function stepsWithoutResult(body: string): string[] {
     if (STEP.test(line)) {
       close();
       cur = { head: line.replace(STEP, "").trim().slice(0, 60), ok: /resultado:/i.test(line) };
-    } else if (cur && BREAK.test(line)) {
+    } else if (cur && /resultado:/i.test(line) && !/^\s*#/.test(line)) cur.ok = true;
+    else if (cur && BREAK.test(line)) {
       close();
       cur = null;
-    } else if (cur && /resultado:/i.test(line)) cur.ok = true;
+    }
   }
   close();
   return out;
+}
+
+/** Texto sem as linhas de bloco de código: link e imagem ali são exemplo, não link do manual. */
+function prose(body: string): string {
+  let fence = false;
+  return body
+    .split(/\r?\n/)
+    .filter((line) => {
+      if (/^\s*```/.test(line)) fence = !fence;
+      return !fence && !/^\s*```/.test(line);
+    })
+    .join("\n");
 }
 
 /**
@@ -71,9 +84,10 @@ export async function checkManual(dir: string): Promise<CheckFinding[]> {
     const steps = stepsWithoutResult(page.body);
     for (const s of steps) add("step-without-result", `Passo sem "Resultado:": ${s}`);
     if (/\bA confirmar\b/.test(page.body)) add("to-confirm", 'A página contém "A confirmar".');
-    const images = [...new Set([...page.body.matchAll(IMAGE)].map((m) => decode(m[1] as string).replace(/^(\.\.\/)+/, "")))];
+    const text = prose(page.body);
+    const images = [...new Set([...text.matchAll(IMAGE)].map((m) => decode(m[1] as string).replace(/^(\.\.\/)+/, "")))];
     if (images.length === 0 && /^\s*\d+\.\s/m.test(page.body)) add("no-image", "A página tem passos e nenhum print.");
-    for (const href of [...page.body.matchAll(LINK)].map((m) => m[1] as string)) {
+    for (const href of [...text.matchAll(LINK)].map((m) => m[1] as string)) {
       const m = /^(?:\.\/)?([^/#?]+\.md)(?:#.*)?$/.exec(href);
       if (m && !files.has(m[1] as string)) add("dead-link", `Link para página que não existe: ${href}`);
     }
