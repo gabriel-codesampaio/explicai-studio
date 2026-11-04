@@ -3,6 +3,8 @@ import {
   type ExportFormat,
   exportManual,
   logoSizeError,
+  setManualCover,
+  setManualFooter,
   setManualLogo,
   setManualTheme,
 } from "../../core/index.js";
@@ -35,6 +37,24 @@ export const exportRoutes: Route[] = [
     path: "/api/manuals/:slug/theme",
     handle: async (ctx) => {
       await setManualTheme(manualDir(ctx), await readJson(ctx.req));
+      return json({ ok: true });
+    },
+  },
+  {
+    // Muda só os campos enviados: { subtitle?, author?, version?, date? } (até 120 caracteres; null apaga). Texto longo: 400 e nada é gravado.
+    method: "PUT",
+    path: "/api/manuals/:slug/cover",
+    handle: async (ctx) => {
+      await setManualCover(manualDir(ctx), await readJson(ctx.req));
+      return json({ ok: true });
+    },
+  },
+  {
+    // { text? (até 100 caracteres), pageNumbers? (boolean) }; null apaga o campo.
+    method: "PUT",
+    path: "/api/manuals/:slug/footer",
+    handle: async (ctx) => {
+      await setManualFooter(manualDir(ctx), await readJson(ctx.req));
       return json({ ok: true });
     },
   },

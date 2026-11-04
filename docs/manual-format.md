@@ -31,7 +31,7 @@ meu-workspace/
 }
 ```
 
-A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado (ver abaixo). O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões). O campo opcional `audiences` lista os perfis do manual (ver Público).
+A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado (ver abaixo). Os campos opcionais `cover` e `footer` guardam o texto da capa e do rodapé (ver Capa e rodapé). O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões). O campo opcional `audiences` lista os perfis do manual (ver Público).
 
 ### theme
 
@@ -81,6 +81,23 @@ Nome fora da lista é recusado ao gravar. O HTML leva só as fontes escolhidas, 
 No export o arquivo é copiado para `assets/` ao lado do `index.html` e entra por `<img>` (o SVG não roda script) na capa e no topo do sumário. O tamanho na capa tem teto (96 px de altura), então um logo grande não estoura a página do PDF. Se o arquivo sumir do disco, o export sai sem logo e avisa. Trocar ou tirar o logo não mexe em cores nem fontes, e mudar cores ou fontes não mexe no logo. O arquivo continua em `assets/` depois de tirar o logo.
 
 O core recusa, ao gravar (Studio e MCP), `text`, `accent` e cada cor de `headings` com contraste menor que 4,5:1 com o branco, e um `highlight` que deixe o texto por cima com menos de 4,5:1. A mensagem diz o contraste atual e o mínimo. Editar um campo mantém os outros.
+
+### Capa e rodapé
+
+`cover` e `footer` são opcionais, ficam na raiz do `manual.json` ao lado de `theme` e valem só para o HTML e o PDF; o Markdown exportado não muda. Manual sem eles exporta como antes, e a `version` do formato continua 1.
+
+```json
+"cover": { "subtitle": "Para: Acme", "author": "Time de Finanças", "version": "Versão 2.1", "date": "outubro de 2026" },
+"footer": { "text": "Confidencial · Acme", "pageNumbers": true }
+```
+
+| Campo | Efeito | Limite |
+|---|---|---|
+| `cover.subtitle`, `author`, `version`, `date` | Linhas abaixo do título da capa, nessa ordem; campo vazio não deixa espaço. Texto livre: o Studio sugere data e versão, mas nunca preenche sozinho | 120 caracteres cada |
+| `footer.text` | Linha no fim do HTML e, no PDF, texto à esquerda no rodapé de cada página (menos a capa) | 100 caracteres |
+| `footer.pageNumbers` | `true` põe "n / total" à direita no rodapé do PDF (menos a capa; a capa conta como página 1) | só `true` |
+
+O core (Studio e MCP) recusa texto acima do limite com o motivo (`too-long`) e não grava nada; texto vazio apaga o campo. O texto é escapado no HTML e na string CSS do rodapé. O rodapé por página usa as margens de página do CSS (`@page`), que o Chrome só aceita a partir da versão 131: em Chrome mais antigo o PDF sai sem texto e sem número, com um aviso no resultado da exportação, não erro. O export com público leva a mesma capa e o mesmo rodapé. O Studio edita tudo em Ajustes, Aparência do manual, com prévia.
 
 ## Campos desconhecidos
 

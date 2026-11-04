@@ -20,6 +20,10 @@ export interface ManualMeta {
   language: string;
   /** Aparência do manual exportado. Sem ela, vale a cor da marca. */
   theme?: ManualTheme;
+  /** Texto da capa do HTML e do PDF. Sem ele, a capa traz só título e leitura. */
+  cover?: ManualCover;
+  /** Rodapé do HTML e do PDF. */
+  footer?: ManualFooter;
   /** Perfis do manual (`admin`, `cliente`…). Sem a lista, todo mundo vê tudo. Não é controle de acesso. */
   audiences?: string[];
   pages: PageNode[];
@@ -48,6 +52,21 @@ export interface ManualTheme {
   logo?: string;
   /** `true` exporta sem o rodapé "Manual feito com o Explicaí Studio". Sem o campo, o rodapé aparece. */
   hideColophon?: true;
+}
+
+/** Texto livre da capa, até 120 caracteres cada. O Studio só sugere data e versão; nunca preenche. */
+export interface ManualCover {
+  subtitle?: string;
+  author?: string;
+  version?: string;
+  date?: string;
+}
+
+export interface ManualFooter {
+  /** Até 100 caracteres. */
+  text?: string;
+  /** `true` numera as páginas do PDF ("n / total", menos a capa). */
+  pageNumbers?: true;
 }
 
 export interface Manual {

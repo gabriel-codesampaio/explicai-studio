@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { addPage, createManual, exportManual, findBrowser } from "../src/core/index.js";
+import { addPage, createManual, exportManual, findBrowser, setManualFooter } from "../src/core/index.js";
 import { createStudioServer } from "../src/server/index.js";
 
 /** Nenhum Chrome de verdade roda aqui: `execFile` é trocado por um navegador de mentira que só grava o PDF. */
@@ -12,6 +12,7 @@ const fake = vi.hoisted(() => ({
   calls: [] as { file: string; args: string[] }[],
   fail: null as Error | null,
   write: true,
+  version: "",
 }));
 
 vi.mock("node:child_process", async (importOriginal) => {
@@ -19,6 +20,7 @@ vi.mock("node:child_process", async (importOriginal) => {
   const { writeFileSync } = await import("node:fs");
   const execFile = Object.assign(() => undefined, {
     [promisify.custom]: async (file: string, args: string[]) => {
+      if (args.includes("--version")) return { stdout: fake.version, stderr: "" };
       fake.calls.push({ file, args });
       if (fake.fail) throw fake.fail;
       const out = args.find((a) => a.startsWith("--print-to-pdf="))?.slice("--print-to-pdf=".length);
@@ -37,6 +39,7 @@ beforeEach(async () => {
   fake.calls.length = 0;
   fake.fail = null;
   fake.write = true;
+  fake.version = "";
   workspace = await mkdtemp(path.join(tmpdir(), "explicai-pdf-"));
   empty = await mkdtemp(path.join(tmpdir(), "explicai-nobrowser-"));
   dir = (await createManual(workspace, { title: "Financeiro Pro ✓", language: "pt-BR" })).dir;
@@ -163,5 +166,24 @@ describe("PDF com navegador (de mentira)", () => {
     withBrowser();
     await expect(exportManual(dir, "pdf", { onlyApproved: true })).rejects.toMatchObject({ code: "no-approved-pages" });
     expect(fake.calls).toEqual([]);
+  });
+});
+
+describe("PDF: rodapé por página e versão do Chrome", () => {
+  it("Chrome anterior ao 131: o PDF sai e vem um aviso, não um erro", async () => {
+    withBrowser();
+    fake.version = "Google Chrome 120.0.6099.109";
+    await setManualFooter(dir, { pageNumbers: true });
+    const r = await exportManual(dir, "pdf");
+    expect(r.warnings.join(" ")).toMatch(/navegador instalado é o 120.*131/);
+  });
+
+  it("Chrome 131 ou versão desconhecida: sem aviso; sem rodapé, nem pergunta a versão", async () => {
+    withBrowser();
+    await setManualFooter(dir, { text: "Confidencial" });
+    fake.version = "Google Chrome 131.0.6778.86";
+    expect((await exportManual(dir, "pdf")).warnings).toEqual([]);
+    fake.version = "";
+    expect((await exportManual(dir, "pdf")).warnings).toEqual([]);
   });
 });

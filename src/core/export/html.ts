@@ -13,13 +13,16 @@ import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./a
 import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
+import { muted } from "./color.js";
+import { COVER_CSS, coverHtml } from "./cover.js";
+import { FOOTER_CSS, footerHtml, footerPageCss } from "./footer.js";
 import { exportLevels } from "./headings.js";
 import { highlightExtension } from "./highlight.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
 import { liftResult } from "./resultado.js";
 import { colorSpanOpen, TEXT_COLORS } from "./textColors.js";
-import { fontFacesCss, themeCss } from "./theme.js";
+import { DEFAULT_TEXT, fontFacesCss, themeCss } from "./theme.js";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
@@ -49,6 +52,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 `
     : "";
   const styles = [...images.values()].flatMap((i) => styleOf(i.annotations));
+  const foot = footerHtml(meta.footer) + (meta.theme?.hideColophon ? "" : L.colophon);
   const sections = pages.map((p, i) => renderPage(p, pages, images, L, pages[i - 1], pages[i + 1])).join("\n");
 
   return `<!doctype html>
@@ -59,7 +63,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
 <style>${fontFacesCss(meta.theme)}
-${CSS}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}</style>
+${CSS}${extraCss(meta)}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
@@ -75,15 +79,29 @@ ${toc}
 <main>
 <header class="cover">
 ${logoImg}<h1>${esc(meta.title)}</h1>
-<p>${pages.length ? L.readTime(pages.length, minutes) : L.pages(0)}</p>
+${coverHtml(meta.cover)}<p>${pages.length ? L.readTime(pages.length, minutes) : L.pages(0)}</p>
 ${start}</header>
 ${sections}
-${meta.theme?.hideColophon ? "" : `<footer class="colophon">${L.colophon}</footer>`}
+${foot ? `<footer class="colophon">${foot}</footer>` : ""}
 </main>
 </div>
 </body>
 </html>
 `;
+}
+
+/** CSS da capa e do rodapé: só entra quando o manual tem texto de capa ou de rodapé. */
+function extraCss(meta: Collected["meta"]): string {
+  const css = [
+    meta.cover && Object.keys(meta.cover).length ? COVER_CSS : "",
+    footerHtml(meta.footer) ? FOOTER_CSS : "",
+    footerPageCss(meta.footer, muted(meta.theme?.text ?? DEFAULT_TEXT)),
+  ].join("");
+  // No papel o texto do rodapé vai na margem de cada página; a linha do fim só aparece na tela.
+  return css
+    ? `${css}@media print{.foot-text{display:none}}
+`
+    : "";
 }
 
 /** Títulos do texto da página, na ordem. */
