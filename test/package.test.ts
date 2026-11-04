@@ -35,7 +35,7 @@ describe("pacote npm", () => {
 
   it("declara bin, engines, exports e metadados", () => {
     expect(pkg.bin).toEqual({ explicai: "dist/cli.js" });
-    expect(pkg.engines.node).toMatch(/^>=20/);
+    expect(pkg.engines.node).toMatch(/^>=22/);
     expect(pkg.exports["./core"]?.default).toBe("./dist/core/index.js");
     expect(pkg.repository.url).toContain("gabriel-codesampaio/explicai-studio");
     for (const k of ["description", "homepage", "bugs", "license", "keywords"]) expect(pkg[k], k).toBeTruthy();

@@ -8,7 +8,7 @@ Quem participa segue o [código de conduta](CODE_OF_CONDUCT.md).
 
 ## Como rodar
 
-Precisa do Node 20.12 ou mais novo.
+Precisa do Node 22.12 ou mais novo.
 
 ```bash
 git clone https://github.com/gabriel-codesampaio/explicai-studio.git
