@@ -1,4 +1,5 @@
 import { decodeUri, slugify } from "../text.js";
+import { legendRows } from "./annotationShapes.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
@@ -56,9 +57,8 @@ export function renderMarkdown(collected: Collected, images: Map<string, ImageIn
 /** Legenda e áreas clicáveis do print, em texto, uma por linha. */
 function imageNotes(info: ImageInfo, pages: ExportPage[], L: Labels, hiddenIds: Set<string>): string[] {
   const { markers, hotspots } = info.annotations;
-  const lines = [...markers]
-    .sort((a, b) => a.n - b.n)
-    .map((m) => `${m.n}. ${m.label ?? L.noDescription}`)
+  const lines = legendRows(markers)
+    .map((r) => `${r.n}. ${r.label}`)
     .concat(
       hotspots
         .filter((h) => h.target.type === "url" || !hiddenIds.has(h.target.pageId))

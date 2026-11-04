@@ -2,22 +2,18 @@ import { legendRows } from "@/lib/annotationShapes";
 import type { Marker } from "@/lib/annotations";
 import { t } from "@/lib/i18n";
 
-/** Legenda numerada da imagem: uma linha por descrição; marcadores sem descrição em sequência dividem uma. Mesmo desenho do export (.legend). */
+/** Legenda numerada da imagem: uma linha por marcador com descrição. Mesmo desenho do export (.legend). */
 export function AnnotationLegend({ markers }: { markers: Marker[] }) {
-  if (markers.length === 0) return null;
+  const rows = legendRows(markers);
+  if (rows.length === 0) return null;
   return (
     <ol className="mt-3 grid gap-0.5 text-[15px] leading-[1.4]" aria-label={t("Legenda da imagem")}>
-      {legendRows(markers).map((r) => (
-        <li key={r.numbers[0]} className="flex items-center gap-1">
-          {r.badges.map((n) => (
-            <span
-              key={n}
-              className="inline-grid h-5 min-w-5 place-items-center px-1 rounded-full bg-anotacao font-mono text-[11px] font-semibold text-sobre-anotacao"
-            >
-              {n}
-            </span>
-          ))}
-          <span className={r.label ? "ml-0.5" : "ml-0.5 text-muted-foreground italic"}>{r.label || t("Sem descrição")}</span>
+      {rows.map((r) => (
+        <li key={r.n} className="flex items-center gap-1">
+          <span className="inline-grid h-6 min-w-6 place-items-center px-1 rounded-full bg-anotacao font-mono text-[13px] font-semibold text-sobre-anotacao">
+            {r.n}
+          </span>
+          <span className="ml-0.5">{r.label}</span>
         </li>
       ))}
     </ol>

@@ -19,7 +19,7 @@ describe("checkManual", () => {
       hotspots: [{ x: 0, y: 0, w: 1, h: 1, target: { type: "page", pageId: "inexistente" } }],
     });
     const ok = await saveAsset(dir, "ok.png", PNG);
-    await appendAnnotations(dir, ok, { markers: [{ x: 0.5, y: 0.5 }] });
+    await appendAnnotations(dir, ok, { markers: [{ x: 0.5, y: 0.5, label: "Botão" }] });
     const bad = await addPage(dir, {
       title: "Ruim",
       body: `1. Clique em **A**.\n2. Clique em **B**.\nResultado: abre.\n\n[x](./nao-existe.md)\n\nA confirmar.\n\n![](../${bare})\n![](../${hot})\n![](../assets/some.png)`,
@@ -44,6 +44,23 @@ describe("checkManual", () => {
       "to-confirm",
     ]);
     expect(found.filter((f) => !["Ruim"].includes(f.title) && f.title !== "Apagada")).toEqual([]);
+  });
+
+  it("avisa do marcador sem descrição, um achado por imagem", async () => {
+    const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
+    const { dir } = await createManual(ws, { title: "M", language: "pt-BR" });
+    const img = await saveAsset(dir, "a.png", PNG);
+    await appendAnnotations(dir, img, {
+      markers: [
+        { x: 0.1, y: 0.1, label: "Ok" },
+        { x: 0.2, y: 0.2 },
+        { x: 0.3, y: 0.3, label: "  " },
+      ],
+    });
+    const page = await addPage(dir, { title: "P", body: `![](../${img})` });
+    expect(await checkManual(dir)).toEqual([
+      { pageId: page.id, title: "P", kind: "marker-without-label", detail: `Marcador sem descrição em ${img}: 2, 3` },
+    ]);
   });
 
   it("página com passos e sem print", async () => {

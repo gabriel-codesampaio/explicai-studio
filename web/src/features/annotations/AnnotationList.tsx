@@ -1,4 +1,5 @@
 import { ArrowUpRight, Highlighter, Link2, X } from "lucide-react";
+import { Fragment } from "react";
 import { Input } from "@/components/ui/input";
 import { type Annotations, type HotspotTarget, removeAnnotation, updateHotspot, updateMarker } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
@@ -56,20 +57,25 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
           {[...annotations.markers]
             .sort((a, b) => a.n - b.n)
             .map((m) => (
-              <div key={m.id} className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-anotacao font-mono text-xs font-semibold text-sobre-anotacao">
-                  {m.n}
-                </span>
-                <Input
-                  aria-label={t("O que o marcador {n} mostra", { n: m.n })}
-                  value={m.label ?? ""}
-                  placeholder={t("O que este marcador mostra?")}
-                  onFocus={() => onSelect(m.id)}
-                  onChange={(e) => onChange(updateMarker(annotations, m.id, e.target.value))}
-                  className="h-8"
-                />
-                <RemoveButton label={t("Excluir marcador {n}", { n: m.n })} onClick={() => remove(m.id)} />
-              </div>
+              <Fragment key={m.id}>
+                <div className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
+                  <span className="grid size-6 shrink-0 place-items-center rounded-full bg-anotacao font-mono text-xs font-semibold text-sobre-anotacao">
+                    {m.n}
+                  </span>
+                  <Input
+                    aria-label={t("O que o marcador {n} mostra", { n: m.n })}
+                    value={m.label ?? ""}
+                    placeholder={t("O que este marcador mostra?")}
+                    onFocus={() => onSelect(m.id)}
+                    onChange={(e) => onChange(updateMarker(annotations, m.id, e.target.value))}
+                    className="h-8"
+                  />
+                  <RemoveButton label={t("Excluir marcador {n}", { n: m.n })} onClick={() => remove(m.id)} />
+                </div>
+                {!m.label?.trim() && (
+                  <p className="px-2 text-xs text-muted-foreground">{t("Sem descrição: o print mostra só o número.")}</p>
+                )}
+              </Fragment>
             ))}
         </section>
       )}

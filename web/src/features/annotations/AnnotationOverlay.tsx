@@ -1,6 +1,6 @@
 import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
-import { arrowShape } from "@/lib/annotationShapes";
+import { arrowShape, placeMarkers } from "@/lib/annotationShapes";
 import type { Annotations, Handle, Highlight, Point, Rect } from "@/lib/annotations";
 import { REDACT_CSS, type RedactStyle } from "@/lib/redact";
 import { cn } from "@/lib/utils";
@@ -43,6 +43,7 @@ function useSize() {
 export function AnnotationOverlay({ annotations, redactions = [], redactStyle = "bar", crops = [], selectedId, onGrab }: Props) {
   const { ref, size } = useSize();
   const px = (p: Point) => ({ x: p.x * size.w, y: p.y * size.h });
+  const shapes = placeMarkers(annotations.markers.map(px), size.w, size.h);
   const interactive = Boolean(onGrab);
   const pick =
     (id: string, handle: Handle = "move") =>
@@ -166,21 +167,44 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
           })}
         </svg>
       )}
-      {annotations.markers.map((m) => (
-        <span
-          key={m.id}
-          onPointerDown={pick(m.id)}
-          className={cn(
-            "absolute size-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-anotacao shadow-[0_0_0_2px_#fff,inset_0_0_0_2px_#fff]",
-            "before:absolute before:-top-3 before:-left-3 before:grid before:size-5 before:place-items-center before:rounded-full before:bg-anotacao before:font-mono before:text-[11px] before:font-semibold before:text-sobre-anotacao before:shadow-[0_0_0_2px_#fff] before:content-[attr(data-n)]",
-            ring(m.id),
-            interactive && "cursor-move",
-          )}
-          style={{ left: `${m.x * 100}%`, top: `${m.y * 100}%` }}
-          // O número vem do CSS: dentro do editor, um texto aqui entraria no conteúdo lido pelo leitor de tela.
-          data-n={m.n}
-        />
-      ))}
+      {size.w > 0 &&
+        annotations.markers.map((m, i) => {
+          const { disc, tail } = shapes[i] as (typeof shapes)[number];
+          // O gancho fica no alvo (a posição gravada); o disco sai ao lado, ligado pela cauda.
+          return (
+            <span key={m.id} className="absolute size-0" style={{ left: `${m.x * 100}%`, top: `${m.y * 100}%` }}>
+              {tail && (
+                <svg
+                  className="absolute top-0 left-0 overflow-visible"
+                  width={1}
+                  height={1}
+                  role="presentation"
+                  onPointerDown={pick(m.id)}
+                >
+                  <polygon
+                    points={tail.map((p) => `${p.x},${p.y}`).join(" ")}
+                    fill="var(--anotacao)"
+                    stroke="#fff"
+                    strokeWidth={2}
+                    strokeLinejoin="round"
+                    paintOrder="stroke"
+                  />
+                </svg>
+              )}
+              <span
+                onPointerDown={pick(m.id)}
+                className={cn(
+                  "absolute -top-3 -left-3 grid size-6 place-items-center rounded-full bg-anotacao font-mono text-[13px] leading-none font-semibold text-sobre-anotacao shadow-[0_0_0_2px_#fff] before:content-[attr(data-n)]",
+                  ring(m.id),
+                  interactive && "cursor-move",
+                )}
+                style={{ transform: `translate(${disc.x}px, ${disc.y}px)` }}
+                // O número vem do CSS: dentro do editor, um texto aqui entraria no conteúdo lido pelo leitor de tela.
+                data-n={m.n}
+              />
+            </span>
+          );
+        })}
       {interactive &&
         selectedRect && [
           handle("nw", { x: selectedRect.x, y: selectedRect.y }, "nwse-resize"),

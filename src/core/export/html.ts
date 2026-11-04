@@ -1,7 +1,7 @@
 import { Marked, type Tokens } from "marked";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
 import { ANNOTATION_CSS } from "./annotationCss.js";
-import { arrowShape, legendRows } from "./annotationShapes.js";
+import { arrowShape, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
@@ -213,15 +213,24 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
         })
         .join("")}</svg>`
     : "";
+  // O disco tem tamanho fixo em px; a direção da cauda sai de um quadro de referência estreito, que vale também em tela pequena.
+  const ref = Math.min(1, MARKER_REF_WIDTH / w);
+  const shapes = placeMarkers(
+    a.markers.map((m) => ({ x: m.x * w * ref, y: m.y * h * ref })),
+    w * ref,
+    h * ref,
+  );
   const markers = a.markers
-    .map((m) => `<span class="mk" style="left:${pct(m.x)};top:${pct(m.y)}" data-n="${m.n}" aria-hidden="true"></span>`)
+    .map((m, i) => {
+      const { disc, tail } = shapes[i] as (typeof shapes)[number];
+      const svg = tail
+        ? `<svg class="tail" width="1" height="1" aria-hidden="true"><polygon points="${tail.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ")}"/></svg>`
+        : "";
+      return `<span class="mk" style="left:${pct(m.x)};top:${pct(m.y)}" aria-hidden="true">${svg}<span class="disc" style="transform:translate(${f1(disc.x)}px,${f1(disc.y)}px)" data-n="${m.n}"></span></span>`;
+    })
     .join("");
   const legend = legendRows(a.markers)
-    .map((r) => {
-      const nums = r.badges.map((n) => `<span class="n">${n}</span>`).join("");
-      const text = r.label ? esc(r.label) : `<span class="none">${L.noDescription}</span>`;
-      return `<span class="row" role="listitem">${nums}<span>${text}</span></span>`;
-    })
+    .map((r) => `<span class="row" role="listitem"><span class="n">${r.n}</span><span>${esc(r.label)}</span></span>`)
     .join("");
 
   const img = `<img src="${esc(info.asset)}" alt="${esc(alt)}"${info.size ? ` width="${w}" height="${h}"` : ""} loading="lazy">`;
@@ -229,6 +238,9 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     legend ? `<span class="legend" role="list" aria-label="${L.legend}">${legend}</span>` : ""
   }</span>`;
 }
+
+/** Largura do quadro em que se decide para onde cada cauda aponta (px): estreito de propósito, para o disco caber também no celular. */
+const MARKER_REF_WIDTH = 320;
 
 const CSS = `
 :root{--accent:#2b4fe0;--anotacao:#2b4fe0;--anotacao-fundo:rgba(43,79,224,.08);--sobre-anotacao:#fff;--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--t-cover:#000;--t-page:#000;--t-h1:#000;--t-h2:#000;--t-h3:#000;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;

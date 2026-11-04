@@ -236,7 +236,7 @@ export const EN: Record<string, string> = {
   "Já está no manual entregue": "Already in the delivered manual",
   Legenda: "Legend",
   "Legenda da imagem": "Image legend",
-  "Sem descrição": "No description",
+  "Sem descrição: o print mostra só o número.": "No description: the image shows only the number.",
   Link: "Link",
   "Link para outra página ou endereço": "Link to another page or address",
   "Link para uma página ou endereço": "Link to a page or address",

@@ -36,25 +36,62 @@ export function arrowShape(from: Pt, to: Pt, thickness: number): ArrowShape {
 }
 
 export interface LegendRow {
-  numbers: number[];
-  /** Selos a mostrar: um por número, ou um só intervalo ("1–8") para 3 ou mais sem descrição. */
-  badges: string[];
-  /** Vazio quando o marcador não tem descrição. */
+  n: number;
   label: string;
 }
 
-/** Linhas da legenda por número; marcadores sem descrição em sequência dividem uma linha só. */
+/** Linhas da legenda por número. Marcador sem descrição não tem linha: o número no print basta. */
 export function legendRows(markers: { n: number; label?: string }[]): LegendRow[] {
-  const rows: LegendRow[] = [];
-  for (const m of [...markers].sort((a, b) => a.n - b.n)) {
-    const label = (m.label ?? "").trim();
-    const last = rows.at(-1);
-    if (!label && last && !last.label) last.numbers.push(m.n);
-    else rows.push({ numbers: [m.n], badges: [], label });
-  }
-  for (const r of rows) {
-    const [first, last] = [r.numbers[0], r.numbers.at(-1)];
-    r.badges = !r.label && r.numbers.length >= 3 ? [`${first}–${last}`] : r.numbers.map(String);
-  }
-  return rows;
+  return [...markers]
+    .sort((a, b) => a.n - b.n)
+    .map((m) => ({ n: m.n, label: (m.label ?? "").trim() }))
+    .filter((r) => r.label);
+}
+
+/** Diâmetro do disco do marcador, em px. */
+export const MARKER_DISC = 24;
+
+export interface MarkerShape {
+  /** Centro do disco, relativo ao alvo (a posição gravada). */
+  disc: Pt;
+  /** Triângulo da cauda, relativo ao alvo: a ponta em (0, 0), a base na borda do disco. Null se o alvo cai dentro do disco. */
+  tail: [Pt, Pt, Pt] | null;
+}
+
+const REACH = 1.15; // centro do disco a REACH x diâmetro do alvo: sobra uma cauda de ~0,65 diâmetro
+const GAP = 2;
+
+/**
+ * Onde cada marcador desenha o disco. O alvo é a posição gravada; o disco sobe e vai para o lado com mais
+ * espaço, ligado ao alvo por uma cauda. Tenta outros ângulos quando o disco sairia da imagem ou cobriria
+ * outro disco ou outro alvo. `w` e `h` na mesma unidade dos alvos (px); a ordem da lista decide quem escolhe primeiro.
+ */
+export function placeMarkers(targets: Pt[], w: number, h: number, size = MARKER_DISC): MarkerShape[] {
+  const r = size / 2;
+  const reach = size * REACH;
+  const placed: Pt[] = [];
+  const fits = (c: Pt, self: number) =>
+    c.x >= r &&
+    c.x <= w - r &&
+    c.y >= r &&
+    c.y <= h - r &&
+    placed.every((o) => Math.hypot(c.x - o.x, c.y - o.y) >= size + GAP) &&
+    targets.every((t, j) => j === self || Math.hypot(c.x - t.x, c.y - t.y) >= r + GAP);
+  return targets.map((t, i) => {
+    const side = t.x < w / 2 ? 1 : -1;
+    const around = [45, -45, 0, 90, -90, 135, -135, 180].map((deg) => (deg * side * Math.PI) / 180);
+    const at = (a: number): Pt => ({ x: t.x + Math.sin(a) * reach, y: t.y - Math.cos(a) * reach });
+    const found = around.map(at).find((c) => fits(c, i)) ?? at(around[0] as number);
+    const c = { x: Math.min(Math.max(found.x, r), w - r), y: Math.min(Math.max(found.y, r), h - r) };
+    placed.push(c);
+    const len = Math.hypot(t.x - c.x, t.y - c.y);
+    if (len <= r) return { disc: { x: c.x - t.x, y: c.y - t.y }, tail: null };
+    const [ux, uy] = [(t.x - c.x) / len, (t.y - c.y) / len];
+    const [along, half] = [r * Math.cos(0.6), r * Math.sin(0.6)]; // base a ~34 graus de cada lado
+    const base = (k: number): Pt => ({
+      x: c.x - t.x + ux * along - uy * half * k,
+      y: c.y - t.y + uy * along + ux * half * k,
+    });
+    return { disc: { x: c.x - t.x, y: c.y - t.y }, tail: [{ x: 0, y: 0 }, base(1), base(-1)] };
+  });
 }
