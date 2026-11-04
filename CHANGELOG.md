@@ -6,6 +6,12 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+### Adicionado
+
+- Estilo por marcação (`style` em cada marcador, seta, destaque e área clicável de `assets/<imagem>.json`): cor, tamanho, espessura, borda e preenchimento (área) valem só para o item e sobrepõem o estilo da imagem. Vale no Studio, no HTML e no PDF; sem `style`, tudo sai como antes. Recorte, edição no Studio e `annotate_image` preservam o campo. A tela para escolher o estilo vem em seguida (T-194).
+
+Added: per-item `style` (marker, arrow, highlight, hotspot) overriding the image style; preserved by crop, editing and `annotate_image`. No UI yet.
+
 ## [0.3.0] - 2026-11-04
 
 ### Adicionado
