@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "title": "Financeiro",
+  "language": "pt-BR",
+  "audiences": ["admin", "operador"],
+  "theme": {
+    "accent": "#0f7a55",
+    "fonts": {
+      "text": "lora",
+      "headings": "playfair-display"
+    },
+    "logo": "assets/logo-cliente.svg"
+  },
+  "pages": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "file": "pages/visao-geral.md",
+      "children": [
+        {
+          "id": "22222222-2222-4222-8222-222222222222",
+          "file": "pages/cadastrar-cliente.md",
+          "published": "2026-10-29T13-02-11-480Z",
+          "children": []
+        }
+      ]
+    }
+  ]
+}
