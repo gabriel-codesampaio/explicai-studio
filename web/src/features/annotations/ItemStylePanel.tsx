@@ -44,9 +44,10 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
     hl
       ? { background: HIGHLIGHT_PALETTE[id as HighlightColor].fill, color: "#151a33" }
       : { background: STYLE_PALETTE[id as StyleColor].claro, color: STYLE_PALETTE[id as StyleColor].sobre };
-  const color: StyleColor | HighlightColor = hl ? (style?.color ?? "yellow") : (style?.color ?? imageStyle?.color ?? "cobalt");
+  const color: StyleColor | HighlightColor | undefined = hl ? style?.color : (style?.color ?? imageStyle?.color ?? "cobalt");
   const border: StyleBorder = style?.border ?? imageStyle?.border ?? "m";
-  const fill = style?.fill ?? (hl ? "solid" : "soft");
+  // Destaque sem fill herda o visual do tema (multiply): nenhum botão marcado.
+  const fill = style?.fill ?? (hl ? undefined : "soft");
 
   const steps = (
     key: "size" | "stroke" | "border" | "fill",
@@ -54,6 +55,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
     items: { id: string; label: () => string }[],
     value: string,
     disabled?: (id: string) => boolean,
+    hint?: string,
   ) => (
     <fieldset className="flex items-center gap-2">
       <legend className="sr-only">{legend}</legend>
@@ -67,6 +69,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
             type="button"
             aria-pressed={value === s.id}
             disabled={disabled?.(s.id)}
+            title={disabled?.(s.id) ? hint : undefined}
             onClick={() => set({ [key]: s.id })}
             className={`${option} px-2 disabled:opacity-50`}
           >
@@ -119,9 +122,16 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
       )}
       {fields.includes("size") && steps("size", t("Tamanho"), SIZES, style?.size ?? "m")}
       {fields.includes("stroke") && steps("stroke", t("Espessura"), STROKES, style?.stroke ?? "m")}
-      {fields.includes("fill") && steps("fill", t("Preenchimento"), FILLS, fill)}
+      {fields.includes("fill") && steps("fill", t("Preenchimento"), FILLS, fill ?? "")}
       {fields.includes("border") &&
-        steps("border", t("Borda"), BORDERS, border, (id) => id === "none" && (kind === "hotspot" || hl) && fill === "none")}
+        steps(
+          "border",
+          t("Borda"),
+          BORDERS,
+          border,
+          (id) => id === "none" && (kind === "hotspot" || hl) && fill === "none",
+          t("Sem preenchimento precisa de borda"),
+        )}
       {!style && <p className="text-xs text-muted-foreground">{t("Herdando da imagem")}</p>}
     </section>
   );

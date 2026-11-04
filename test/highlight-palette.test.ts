@@ -79,6 +79,10 @@ describe("estilo do destaque", () => {
     expect(v["--hl-mistura"]).toBe("normal");
     expect(v["--hl-fundo"]).toMatch(/,0\)$/);
     expect(v["--hl-borda"]).toBe(HIGHLIGHT_PALETTE.blue.border);
+    const soFill = styleVars({ fill: "soft" }, false, "highlight");
+    expect(soFill["--hl-fundo"]).toContain("var(--marca)");
+    expect(soFill["--hl-borda"]).toBeUndefined();
+    expect(styleVars({ color: "red" as never, fill: "soft" }, false, "highlight")["--hl-fundo"]).toContain("var(--marca)");
     expect(styleVars({ border: "m" }, false, "highlight")["--hl-mistura"]).toBeUndefined();
     expect(styleVars(undefined, false, "highlight")).toEqual({});
   });

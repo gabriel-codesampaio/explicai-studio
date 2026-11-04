@@ -48,7 +48,7 @@ describe("ItemStylePanel", () => {
     expect(screen.queryByRole("button", { name: "Vermelho" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Rosa" }));
     expect(onChange).toHaveBeenLastCalledWith({ color: "pink" });
-    expect(screen.getByRole("button", { name: "Cheio" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Cheio" }).getAttribute("aria-pressed")).toBe("false");
     rerender(panel("highlight", { fill: "none" }, onChange));
     expect((screen.getByRole("button", { name: "Nenhuma" }) as HTMLButtonElement).disabled).toBe(true);
   });

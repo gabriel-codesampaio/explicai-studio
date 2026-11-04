@@ -465,6 +465,7 @@ export const EN: Record<string, string> = {
   Azul: "Blue",
   Cinza: "Gray",
   Laranja: "Orange",
+  "Sem preenchimento precisa de borda": "No fill needs a border",
   Amarelo: "Yellow",
   Rosa: "Pink",
   Roxo: "Purple",

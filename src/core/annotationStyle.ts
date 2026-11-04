@@ -145,10 +145,17 @@ export function styleVars(style: AnnotationStyle | undefined, adaptive = false, 
   const hl = kind === "highlight";
   if (hl && (style?.color || style?.fill)) {
     // Cor ou preenchimento escolhido: tira o `multiply` e usa a opacidade do passo (cheio por padrão).
-    const p = HIGHLIGHT_PALETTE[(style.color as HighlightColor) ?? "yellow"];
-    vars["--hl-borda"] = p.border;
+    const pct = HIGHLIGHT_FILL_ALPHA[style.fill ?? "solid"];
+    const p =
+      style.color && Object.hasOwn(HIGHLIGHT_PALETTE, style.color) ? HIGHLIGHT_PALETTE[style.color as HighlightColor] : undefined;
     vars["--hl-mistura"] = "normal";
-    vars["--hl-fundo"] = alpha(p.fill, HIGHLIGHT_FILL_ALPHA[style.fill ?? "solid"]);
+    if (p) {
+      vars["--hl-borda"] = p.border;
+      vars["--hl-fundo"] = alpha(p.fill, pct);
+    } else {
+      // Só o preenchimento: a cor base é a do destaque do tema (--marca).
+      vars["--hl-fundo"] = `color-mix(in srgb,var(--marca) ${pct * 100}%,transparent)`;
+    }
   } else if (style?.color) {
     const p = STYLE_PALETTE[style.color as StyleColor];
     vars["--anotacao"] = adaptive ? `light-dark(${p.claro},${p.escuro})` : p.claro;
