@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
 import { draftChanged, type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
-import { t } from "@/lib/i18n";
+import { t, tn } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
 import { TOOL_KEYS, toolForKey } from "@/lib/toolShortcuts";
 import { flattenItems } from "@/lib/tree";
@@ -15,6 +15,7 @@ import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
 import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
+import { Pending } from "./Pending";
 import { RedactPanel } from "./RedactPanel";
 import { ReducePanel } from "./ReducePanel";
 
@@ -185,49 +186,63 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
             </div>
             <div className="grid content-start gap-4">
               {(tool === "redact" || draft.redact.length > 0) && (
-                <RedactPanel
-                  slug={slug}
-                  asset={asset}
-                  src={src}
-                  rects={draft.redact}
-                  inGit={inGit}
-                  style={redactStyle}
-                  onStyle={(s) => {
-                    saveRedactStyle(s);
-                    setRedactStyle(s);
-                  }}
-                  onDiscard={() => {
-                    change({ ...draft, redact: [] });
-                    setSelectedId(null);
-                  }}
-                  onApplied={() => {
-                    // Já virou pixel: não há o que desfazer nem listar.
-                    setPast([]);
-                    setEdited({ ...draft, redact: [] });
-                    setSelectedId(null);
-                  }}
-                />
+                <Pending
+                  open={tool === "redact"}
+                  title={t("Ocultar dados")}
+                  status={tn(draft.redact.length, "{n} área a ocultar", "{n} áreas a ocultar")}
+                  onToggle={() => setTool(tool === "redact" ? "select" : "redact")}
+                >
+                  <RedactPanel
+                    slug={slug}
+                    asset={asset}
+                    src={src}
+                    rects={draft.redact}
+                    inGit={inGit}
+                    style={redactStyle}
+                    onStyle={(s) => {
+                      saveRedactStyle(s);
+                      setRedactStyle(s);
+                    }}
+                    onDiscard={() => {
+                      change({ ...draft, redact: [] });
+                      setSelectedId(null);
+                    }}
+                    onApplied={() => {
+                      // Já virou pixel: não há o que desfazer nem listar.
+                      setPast([]);
+                      setEdited({ ...draft, redact: [] });
+                      setSelectedId(null);
+                    }}
+                  />
+                </Pending>
               )}
               {(tool === "crop" || draft.crop.length > 0) && (
-                <CropPanel
-                  slug={slug}
-                  asset={asset}
-                  src={src}
-                  annotations={draft.ann}
-                  crop={draft.crop}
-                  hasRedactions={draft.redact.length > 0}
-                  inGit={inGit}
-                  onDiscard={() => {
-                    change({ ...draft, crop: [] });
-                    setSelectedId(null);
-                  }}
-                  onApplied={(ann) => {
-                    // Já virou pixel e as marcações vão para o disco: não há o que desfazer.
-                    setPast([]);
-                    setEdited({ ann, redact: [], crop: [] });
-                    setSelectedId(null);
-                  }}
-                />
+                <Pending
+                  open={tool === "crop"}
+                  title={t("Recortar imagem")}
+                  status={draft.crop.length > 0 ? t("Recorte pendente") : t("Sem recorte")}
+                  onToggle={() => setTool(tool === "crop" ? "select" : "crop")}
+                >
+                  <CropPanel
+                    slug={slug}
+                    asset={asset}
+                    src={src}
+                    annotations={draft.ann}
+                    crop={draft.crop}
+                    hasRedactions={draft.redact.length > 0}
+                    inGit={inGit}
+                    onDiscard={() => {
+                      change({ ...draft, crop: [] });
+                      setSelectedId(null);
+                    }}
+                    onApplied={(ann) => {
+                      // Já virou pixel e as marcações vão para o disco: não há o que desfazer.
+                      setPast([]);
+                      setEdited({ ann, redact: [], crop: [] });
+                      setSelectedId(null);
+                    }}
+                  />
+                </Pending>
               )}
               <ReducePanel
                 slug={slug}
