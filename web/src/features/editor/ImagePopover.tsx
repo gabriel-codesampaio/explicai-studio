@@ -1,9 +1,10 @@
 import { NodeSelection } from "@tiptap/pm/state";
 import { type Editor, useEditorState } from "@tiptap/react";
-import { PenLine } from "lucide-react";
+import { PenLine, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Kbd } from "@/components/ui/kbd";
 import { assetPathFromSrc } from "@/lib/annotations";
 import { t } from "@/lib/i18n";
 import { ImageSizePicker } from "../annotations/ImageSizePicker";
@@ -85,19 +86,24 @@ export function ImagePopover({
             {t("Quem usa leitor de tela e a IA que lê o manual entendem a imagem por aqui.")}
           </p>
           {assetPathFromSrc(image.src) && <ImageSizePicker slug={slug} src={image.src} />}
-          {assetPathFromSrc(image.src) && (
-            <Button
-              type="button"
-              size="sm"
-              className="mt-1 justify-self-start"
-              onClick={() => {
-                setDismissedAt(image.pos);
-                onAnnotate(image.src, image.alt);
-              }}
-            >
-              <PenLine /> {t("Editar imagem")}
+          <div className="mt-1 flex flex-wrap gap-2">
+            {assetPathFromSrc(image.src) && (
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => {
+                  setDismissedAt(image.pos);
+                  onAnnotate(image.src, image.alt);
+                }}
+              >
+                <PenLine /> {t("Editar imagem")}
+              </Button>
+            )}
+            {/* Mesma ação do Delete com a imagem selecionada; Ctrl+Z restaura. */}
+            <Button type="button" size="sm" variant="outline" onClick={() => editor.chain().focus().deleteSelection().run()}>
+              <Trash2 /> {t("Remover imagem")} <Kbd>Del</Kbd>
             </Button>
-          )}
+          </div>
         </div>
       )}
     </AnchoredPopover>

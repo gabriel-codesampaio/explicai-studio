@@ -259,6 +259,7 @@ export const EN: Record<string, string> = {
   Marcador: "Marker",
   "Marcando imagens": "Marking up images",
   "Editar imagem": "Edit image",
+  "Remover imagem": "Remove image",
   "Tamanho da imagem": "Image size",
   "Não foi possível salvar o tamanho.": "Could not save the size.",
   Pequena: "Small",
