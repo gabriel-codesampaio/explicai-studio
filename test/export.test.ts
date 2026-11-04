@@ -110,6 +110,12 @@ describe("exportação", () => {
     expect(await readFile(path.join(dir, "exportacao/html/assets/tela.png"))).toHaveLength(33);
   });
 
+  it("HTML: a imagem leva width e height do arquivo", async () => {
+    await seed();
+    const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    expect(html).toContain(`alt="Tela de clientes" width="800" height="600" loading="lazy"`);
+  });
+
   it("HTML: leva as fontes da marca junto, sem depender de internet", async () => {
     await seed();
     const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");

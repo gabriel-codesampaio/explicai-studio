@@ -53,7 +53,7 @@ ${logoImg}<h1>${esc(meta.title)}</h1>
 <p>${L.pages(pages.length)}</p>
 </header>
 ${sections}
-<footer class="colophon">${L.colophon}</footer>
+${meta.theme?.hideColophon ? "" : `<footer class="colophon">${L.colophon}</footer>`}
 </main>
 </div>
 </body>
