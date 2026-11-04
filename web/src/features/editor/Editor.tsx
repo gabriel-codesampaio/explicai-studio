@@ -32,9 +32,11 @@ interface Props {
   pages: TreeItem[];
   /** Entrega a instância do editor ao pai (ex.: Enter no título leva o cursor para o texto). */
   onReady?: (editor: TiptapEditor) => void;
+  /** Manual de formato mais novo: só leitura, sem barra de ferramentas. */
+  readOnly?: boolean;
 }
 
-export function Editor({ slug, initialMarkdown, onChange, onError, onReady, pages }: Props) {
+export function Editor({ slug, initialMarkdown, onChange, onError, onReady, pages, readOnly = false }: Props) {
   // Os callbacks mudam a cada render; as extensões são criadas uma vez e leem sempre a versão atual.
   const latest = useRef({ slug, onChange, onError });
   latest.current = { slug, onChange, onError };
@@ -88,6 +90,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
     ],
     content: toEditorMarkdown(slug, initialMarkdown),
     contentType: "markdown",
+    editable: !readOnly,
     shouldRerenderOnTransaction: false,
     editorProps: { attributes },
     onUpdate: ({ editor: ed }) => latest.current.onChange(toDiskMarkdown(ed.getMarkdown())),
@@ -106,7 +109,7 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
 
   return (
     <div>
-      <Toolbar editor={editor} onPickImage={pickImage} onEditLink={() => setLinkOpen(true)} />
+      {!readOnly && <Toolbar editor={editor} onPickImage={pickImage} onEditLink={() => setLinkOpen(true)} />}
       <input
         ref={fileInput}
         type="file"

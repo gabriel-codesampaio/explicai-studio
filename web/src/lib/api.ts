@@ -61,6 +61,8 @@ export interface ManualDetail extends ManualSummary {
   theme: ManualTheme;
   /** Perfis conhecidos do manual (`admin`, `cliente`…). */
   audiences: string[];
+  /** Formato do manual quando é mais novo que o do Studio: abre só para leitura. */
+  newerFormat?: number;
   pages: TreeItem[];
 }
 
@@ -254,6 +256,13 @@ const CODED: Record<string, (p: Record<string, string | number>) => string> = {
   "malformed-url": () => t("O endereço pedido tem um % malformado. Confira o endereço e tente de novo."),
   "annotations-invalid": (p) =>
     t("As marcações de {file} estão com erro de sintaxe. Corrija ou apague o arquivo.", { file: String(p.file) }),
+  "format-newer": (p) =>
+    t(
+      "Este manual usa o formato {version}, mais novo que o deste Studio. Atualize o Studio (npx explicai@latest) para editar. Nada foi alterado.",
+      {
+        version: String(p.version),
+      },
+    ),
   "disk-conflict": () =>
     t("Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão."),
   "no-browser": () =>
