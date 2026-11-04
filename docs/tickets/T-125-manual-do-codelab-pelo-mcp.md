@@ -5,7 +5,7 @@
 - Status: aberto
 - Agente: supervisor
 - Origem: pedido da pessoa (2026-11-03)
-- Depende de: T-122, T-123, T-124
+- Depende de: T-124, T-131, T-132
 
 ## Problema
 A pessoa pediu um manual de [gabriel-codesampaio/codelab](https://github.com/gabriel-codesampaio/codelab) feito com o MCP. É também a primeira prova real dele.
