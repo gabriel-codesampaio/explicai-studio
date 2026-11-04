@@ -4,7 +4,15 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
-import { draftChanged, type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
+import {
+  draftChanged,
+  findItem,
+  type HotspotTarget,
+  nudge,
+  removeAnnotation,
+  type Tool,
+  updateItemStyle,
+} from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
@@ -15,6 +23,7 @@ import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
 import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
+import { ItemStylePanel } from "./ItemStylePanel";
 import { Pending } from "./Pending";
 import { RedactPanel } from "./RedactPanel";
 import { ReducePanel } from "./ReducePanel";
@@ -80,6 +89,12 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
 
   const firstPage = flattenItems(pages)[0];
   const defaultTarget: HotspotTarget = firstPage ? { type: "page", pageId: firstPage.id } : { type: "url", href: "https://" };
+  const selectedItem = draft && selectedId ? findItem(draft.ann, selectedId) : null;
+  const itemName = selectedItem
+    ? selectedItem.n
+      ? `${t("Marcador")} ${selectedItem.n}`
+      : { arrow: t("Seta"), highlight: t("Destaque"), hotspot: t("Área clicável"), marker: t("Marcador") }[selectedItem.kind]
+    : "";
   const current = TOOLS.find((t) => t.tool === tool) ?? TOOLS[0];
 
   const save = async () => {
@@ -185,6 +200,19 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               />
             </div>
             <div className="grid content-start gap-4">
+              <div className="order-last md:order-first">
+                {selectedItem ? (
+                  <ItemStylePanel
+                    kind={selectedItem.kind}
+                    name={itemName}
+                    style={selectedItem.style}
+                    imageStyle={draft.ann.style}
+                    onChange={(style) => change({ ...draft, ann: updateItemStyle(draft.ann, selectedId ?? "", style) })}
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground">{t("Clique numa marcação para dar um estilo só a ela.")}</p>
+                )}
+              </div>
               {(tool === "redact" || draft.redact.length > 0) && (
                 <Pending
                   open={tool === "redact"}
@@ -259,13 +287,20 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 onSelect={setSelectedId}
                 onChange={(ann) => change({ ...draft, ann })}
               />
-              <AppearancePanel
-                style={draft.ann.style}
-                onChange={(style) => {
-                  const { style: _old, ...rest } = draft.ann;
-                  change({ ...draft, ann: style ? { ...rest, style } : rest });
-                }}
-              />
+              <details className="rounded-md border border-border p-3">
+                <summary className="cursor-pointer rounded-md text-sm font-bold focus-visible:ring-[3px] focus-visible:ring-ring/50">
+                  {t("Padrão da imagem")}
+                </summary>
+                <div className="mt-3">
+                  <AppearancePanel
+                    style={draft.ann.style}
+                    onChange={(style) => {
+                      const { style: _old, ...rest } = draft.ann;
+                      change({ ...draft, ann: style ? { ...rest, style } : rest });
+                    }}
+                  />
+                </div>
+              </details>
             </div>
           </div>
         ) : (
