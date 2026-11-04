@@ -4,6 +4,7 @@ import {
   addMarker,
   addShape,
   assetPathFromSrc,
+  draftChanged,
   emptyAnnotations,
   isTooSmall,
   moveAnnotation,
@@ -131,5 +132,20 @@ describe("tamanho de exibição", () => {
 
   it("mexer nas marcações preserva o display", () => {
     expect(addMarker(withMarkers(1, "m"), { x: 0.5, y: 0.5 }).display).toBe("m");
+  });
+});
+
+describe("draftChanged", () => {
+  const base = emptyAnnotations();
+  it("sem mudança não pergunta", () => {
+    expect(draftChanged({ ann: base, redact: [], crop: [] }, null)).toBe(false);
+    expect(draftChanged({ ann: addMarker(base, { x: 0.1, y: 0.1 }), redact: [], crop: [] }, null)).toBe(true);
+  });
+  it("marcador novo, removido ou área pendente contam como mudança", () => {
+    const saved = addMarker(base, { x: 0.1, y: 0.1 });
+    expect(draftChanged({ ann: saved, redact: [], crop: [] }, saved)).toBe(false);
+    expect(draftChanged({ ann: addMarker(saved, { x: 0.5, y: 0.5 }), redact: [], crop: [] }, saved)).toBe(true);
+    expect(draftChanged({ ann: base, redact: [], crop: [] }, saved)).toBe(true);
+    expect(draftChanged({ ann: saved, redact: [{}], crop: [] }, saved)).toBe(true);
   });
 });

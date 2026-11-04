@@ -4,7 +4,11 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
+<<<<<<< HEAD
 import { type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
+=======
+import { draftChanged, type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
+>>>>>>> origin/main
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
@@ -54,9 +58,9 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
     if (draft) setPast([...past.slice(-49), draft]);
     setEdited(next);
   };
-  // Sair com áreas a ocultar ainda não aplicadas perderia a proteção em silêncio: pergunta antes.
+  // Sair com mudança não salva (ou áreas a ocultar ainda não aplicadas) perderia trabalho em silêncio: pergunta antes.
   const [leaving, setLeaving] = useState(false);
-  const requestClose = () => (draft?.redact.length ? setLeaving(true) : onClose());
+  const requestClose = () => (draft && draftChanged(draft, saved) ? setLeaving(true) : onClose());
   const [inGit, setInGit] = useState(false);
   const [redactStyle, setRedactStyle] = useState(readRedactStyle);
   useEffect(() => {
@@ -87,7 +91,9 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
     setError(null);
     try {
       await saveAnnotations(slug, asset, draft.ann);
-      requestClose();
+      // Marcações já gravadas; só áreas a ocultar/recortar pendentes ainda pedem confirmação.
+      if (draft.redact.length > 0 || draft.crop.length > 0) setLeaving(true);
+      else onClose();
     } catch (err) {
       setError(errorMessage(err, t("Não foi possível salvar as marcações.")));
     } finally {
@@ -274,16 +280,18 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
       </DialogContent>
       {leaving && (
         <ConfirmDialog
-          title={t("Sair sem ocultar?")}
+          title={draft?.redact.length ? t("Sair sem ocultar?") : t("Descartar as alterações?")}
           confirmLabel={t("Sair e descartar")}
           cancelLabel={t("Continuar editando")}
           onConfirm={onClose}
           onCancel={() => setLeaving(false)}
         >
           <p>
-            {t(
-              "As áreas a ocultar ainda não foram aplicadas. Se você sair, elas se perdem e o print continua com os dados à mostra.",
-            )}
+            {draft?.redact.length
+              ? t(
+                  "As áreas a ocultar ainda não foram aplicadas. Se você sair, elas se perdem e o print continua com os dados à mostra.",
+                )
+              : t("Você mudou as marcações e não salvou. Se sair, as mudanças se perdem.")}
           </p>
         </ConfirmDialog>
       )}

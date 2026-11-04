@@ -444,8 +444,29 @@ test.describe("marcações", () => {
       .click({ position: { x: 40, y: 40 } });
     await expect(markDialog(page).getByRole("textbox", { name: "O que o marcador 1 mostra" })).toBeVisible();
     await markDialog(page).getByRole("button", { name: "Cancelar" }).click();
+    const ask = page.getByRole("dialog", { name: "Descartar as alterações?" });
+    await ask.getByRole("button", { name: "Continuar editando" }).click();
+    await expect(markDialog(page).getByRole("textbox", { name: "O que o marcador 1 mostra" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(ask).toBeVisible();
+    await ask.getByRole("button", { name: "Sair e descartar" }).click();
     await expect(markDialog(page)).toBeHidden();
     expect((await annotations(request, slug)).markers).toEqual([]);
+  });
+
+  test("sem mudança a marcação fecha sem perguntar e a imagem reabre no primeiro clique", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Reabrir");
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    await page.keyboard.press("Escape");
+    await expect(markDialog(page)).toBeHidden();
+    await images(page).first().click();
+    await expect(page.getByRole("textbox", { name: "Descrição da imagem" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("textbox", { name: "Descrição da imagem" })).toBeHidden();
+    await images(page).first().click();
+    await expect(page.getByRole("textbox", { name: "Descrição da imagem" })).toBeVisible();
   });
 
   test("a legenda aparece na página e continua depois de recarregar", async ({ page, request }) => {

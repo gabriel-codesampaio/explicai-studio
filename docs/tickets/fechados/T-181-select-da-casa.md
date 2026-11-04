@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: pedido da pessoa, 2026-11-04 (lote 1.0)
 
@@ -22,4 +22,4 @@ Os campos de escolha usam o `<select>` nativo: lista feia, fora da marca, e sem 
 Testes dos três pontos de uso; print de cada Select aberto, 1280 claro.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commits `91a69cb`, `b7c0906`, `d03a564`. `ui/select.tsx` (Radix) nos 3 usos, valor externo "" via sentinela interna; regra única de cursor em `base.css`. Typecheck, biome, vitest 607 ok, e2e publico e campos ok. Teclado vem do Radix, não testado; escuro e 375 não conferidos.

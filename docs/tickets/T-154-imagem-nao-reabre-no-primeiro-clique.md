@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A4 (avaliado no commit 60a0e3d)
 
@@ -23,4 +23,4 @@ Reproduzido pela pessoa em 2026-11-04 (lote 1.0): clicar na imagem (abre o paine
 Clicar na imagem, fechar com Esc, clicar de novo na imagem: abre na primeira vez. Repetir fechando por clique fora. Teste e2e do fluxo de imagem.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito: clique na imagem com o balão dispensado reabre (`ImagePopover`). e2e cobre Esc e fechar a marcação.

@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A1 (avaliado no commit 60a0e3d)
 
@@ -21,4 +21,4 @@ Achado A1. Fechar a marcação (Esc, Cancelar ou clicar fora) descarta marcadore
 Abrir a marcação, adicionar um marcador e apertar Esc: a pergunta aparece. Cancelar mantém 2 marcadores. Descartar fecha e, ao reabrir, há 1. Repetir com Cancelar e clique fora. Teste unitário do critério "mudou ou não".
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito: `draftChanged()` em `lib/annotations.ts` com teste; `requestClose` pergunta se o rascunho mudou; Esc, Cancelar e clique fora passam por ele. Salvar fecha direto. e2e atualizado.

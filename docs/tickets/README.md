@@ -12,6 +12,24 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+<<<<<<< HEAD
+=======
+| [T-198](T-198-politica-de-compatibilidade.md) | Escrever a política de compatibilidade e semver | P1 | aberto | escritor |
+| [T-199](T-199-fixtures-de-manuais-antigos.md) | Fixtures de manual 0.1, 0.2 e 0.3 com teste de abrir, editar, salvar e exportar | P1 | aberto | qa |
+| [T-200](T-200-preservar-campo-desconhecido.md) | Preservar campo desconhecido ao regravar manual.json e assets | P1 | aberto | frontend |
+| [T-201](T-201-abrir-formato-maior-so-leitura.md) | Abrir manual de formato maior só para leitura, com aviso | P2 | aberto | frontend |
+| [T-202](T-202-mcp-checa-faixa-do-explicai.md) | MCP confere a faixa de versão do explicai | P2 | aberto | supervisor |
+| [T-203](T-203-ci-em-tres-plataformas.md) | CI em Windows, macOS e Linux e nos Node do engines | P2 | aberto | qa |
+| [T-204](T-204-auditoria-a11y-da-1-0.md) | Auditoria completa de acessibilidade para a 1.0 | P2 | aberto | qa |
+| [T-205](T-205-metas-de-desempenho.md) | Medir e fixar metas de desempenho com teste de orçamento | P2 | aberto | qa |
+| [T-206](T-206-paridade-pt-en.md) | Teste de paridade de chaves pt/en | P2 | aberto | qa |
+| [T-207](T-207-docs-da-1-0.md) | Docs da 1.0: primeiros passos, exemplo e compatibilidade | P2 | aberto | escritor |
+| [T-208](T-208-modelos-de-issue.md) | Modelos de issue no GitHub, com "meu manual antigo não abriu" | P2 | aberto | frontend |
+| [T-209](T-209-checklist-release-1-0.md) | Checklist de release da 1.0 | P1 | aberto | supervisor |
+| [T-190](T-190-borda-do-destaque-e-nenhuma-borda.md) | Borda do destaque visível e opção "nenhuma borda" | P1 | aberto | frontend |
+| [T-191](T-191-setas-sem-defeito.md) | Setas sem defeito | P1 | aberto | frontend |
+| [T-192](T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | aberto | frontend |
+>>>>>>> origin/main
 | [T-193](T-193-estilo-por-marcador-formato.md) | Estilo por marcador, formato e export | P1 | aberto | frontend |
 | [T-194](T-194-painel-estilo-do-item.md) | Painel Estilo do item selecionado | P1 | aberto | design |
 | [T-195](T-195-destaque-com-cor-e-preenchimento.md) | Destaque com cor, preenchimento e borda | P2 | aberto | frontend |
@@ -22,9 +40,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-187](T-187-dialogo-publicos-do-manual.md) | Diálogo "Públicos do manual" nos Ajustes | P2 | aberto | frontend |
 | [T-188](T-188-aparencia-do-manual-nos-ajustes.md) | "Aparência do manual" nos Ajustes, fora da exportação | P2 | aberto | frontend |
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
-| [T-179](T-179-rolagem-sobre-o-layout.md) | Tirar a barra de rolagem de cima do layout | P2 | aberto | design |
-| [T-180](T-180-menu-da-etapa.md) | Redesenhar o menu da etapa da página | P2 | aberto | design |
-| [T-181](T-181-select-da-casa.md) | Criar o Select do Studio, com cursor de clique | P2 | aberto | frontend |
 | [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
 | [T-183](T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | aberto | frontend |
 | [T-184](T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | aberto | frontend |

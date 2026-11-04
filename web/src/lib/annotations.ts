@@ -104,6 +104,15 @@ export function removeAnnotation(ann: Annotations, id: string): Annotations {
   };
 }
 
+/** O rascunho difere do gravado? Áreas a ocultar ou recortar ainda não aplicadas contam como mudança. */
+export function draftChanged(
+  draft: { ann: Annotations; redact: unknown[]; crop: unknown[] },
+  saved: Annotations | null,
+): boolean {
+  if (draft.redact.length > 0 || draft.crop.length > 0) return true;
+  return JSON.stringify(draft.ann) !== JSON.stringify(saved ?? emptyAnnotations());
+}
+
 export function countAnnotations(ann: Annotations): number {
   return ann.markers.length + ann.highlights.length + ann.arrows.length + ann.hotspots.length;
 }
