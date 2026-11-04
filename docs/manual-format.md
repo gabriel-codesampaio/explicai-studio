@@ -185,6 +185,8 @@ A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do
 - `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
 - `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
 
+Exportar para um público (perfil) grava ao lado, sem apagar os outros: `exportacao/html-<perfil>/`, `exportacao/markdown-<perfil>/` e `exportacao/<titulo>-<perfil>.pdf`. Sem perfil, os nomes acima.
+
 Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a Versão do manual (a versão apontada por `published`) ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. Com `audience`, só entram as páginas do perfil (ver Público). HTML colado no texto sai como texto (só a cor do texto passa, ver acima), e links só passam se forem `http`, `https`, `mailto` ou âncora.
 
 ## Regras

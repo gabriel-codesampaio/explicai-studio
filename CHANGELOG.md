@@ -10,6 +10,8 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Adicionado
 
+- Divisor (linha divisória) no menu de blocos e no menu `/`; `---` no arquivo, `<hr>` no HTML e no PDF.
+
 - Marca-texto no editor (botão nas duas barras e Ctrl+Shift+H), salvo como `==texto==`. No HTML e no PDF vira `<mark>` amarelo; o Markdown exportado mantém `==texto==`.
 - Versões: botão "Remover" em cada versão guardada, com confirmação no diálogo. A versão marcada como "Usar no manual" não se remove (botão desligado, dica "Escolha outra versão antes"). Rota `DELETE /api/manuals/:slug/pages/:id/versions/:versionId` (409 para a marcada).
 - Renomear o manual pelo seletor do Studio (`PUT /api/manuals/:slug`): muda só o `title` em `manual.json`; pasta, endereço e ids ficam iguais.
@@ -20,6 +22,8 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 - Editor: corretor ortográfico explícito no idioma do manual e, na ajuda, como adicionar uma palavra ao dicionário.
 
 ### Alterado
+
+- Exportar para um público grava HTML e Markdown em `exportacao/html-<perfil>/` e `exportacao/markdown-<perfil>/` (como o PDF), sem apagar o export de outro perfil.
 
 - Exportar HTML: destaque em "Resultado:" e "Result:", print largo abre no tamanho original, sumário com as seções e recolhível no celular, navegação entre páginas e capa com tempo de leitura e por onde começar.
 - Marcador de imagem: disco numerado de 24 px com cauda apontando o alvo, no Studio e no HTML e PDF exportados. A posição gravada continua sendo o alvo; manuais antigos abrem sem perder marcador.
