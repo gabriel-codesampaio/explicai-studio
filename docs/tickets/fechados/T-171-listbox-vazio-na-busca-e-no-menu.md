@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado B1 (avaliado no commit 60a0e3d)
 
@@ -21,4 +21,4 @@ Achado B1, axe crítico, critério 4.1.2. Há listbox vazio, sem opções, na bu
 Buscar um termo sem resultado e digitar um filtro sem resultado no menu "/". Conferir que não há listbox vazio e rodar axe nas duas telas.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito: sem resultado, `PageSearch` e `SlashMenu` mostram texto comum, sem listbox. Teste em `web/test/emptyListbox.test.tsx`. Axe nas duas telas não rodado.
