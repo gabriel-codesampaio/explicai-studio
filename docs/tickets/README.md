@@ -38,7 +38,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-221](T-221-numero-do-disco-em-posicao-fracionaria.md) | Número do disco desvia até 1 px em posição fracionária | P3 | aberto | frontend |
 | [T-220](T-220-publicar-studio-0-3-0-e-mcp-0-1-0.md) | Publicar Studio 0.3.0 e explicai-mcp 0.1.0 | P1 | aberto | supervisor |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
-| [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
@@ -54,9 +53,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-156](T-156-foco-da-marcacao-na-legenda.md) | Levar o foco à legenda depois de marcar, sem quebrar os atalhos | P2 | aberto | frontend |
 | [T-158](T-158-um-nome-para-publico.md) | Usar um nome só para o público da página | P2 | aberto | frontend |
 | [T-159](T-159-versao-da-pagina-com-nome-certo.md) | Deixar claro que "Versão" vale para a página, não para o manual | P2 | aberto | frontend |
-| [T-161](T-161-lixeira-com-foco-e-confirmacao.md) | Proteger a limpeza da lixeira e renomear a ação | P2 | aberto | frontend |
 | [T-162](T-162-lixeira-e-ajuda-com-lugar-proprio.md) | Dar à lixeira e à ajuda um lugar próprio no menu | P2 | aberto | design |
-| [T-163](T-163-aviso-de-conflito-mostra-diferenca.md) | Mostrar o que mudou no aviso de conflito, sem empurrar o texto | P2 | aberto | frontend |
 | [T-173](T-173-foco-preso-em-menus-com-aria-hidden.md) | Conferir o foco nos menus abertos com fundo aria-hidden | P2 | aberto | qa |
 | [T-174](T-174-alvos-pequenos-abaixo-de-24-px.md) | Levar alvos de toque abaixo de 24 px a 24 px | P2 | aberto | frontend |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |

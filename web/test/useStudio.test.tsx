@@ -190,4 +190,30 @@ describe("useStudio: conflito com o disco", () => {
     await waitFor(() => expect(result.current.save.state).toBe("saved"));
     expect(result.current.diskConflict).toBe(false);
   });
+
+  it("ao voltar ao foco, rebusca manuais, árvore e a página que mudou no disco", async () => {
+    vi.spyOn(api, "getPage").mockImplementation(async (_s, id) => ({ ...pageOf(id), version: "v1" }) as Page);
+    const { result } = await openFirstPage();
+    expect(result.current.manual?.pages).toHaveLength(3);
+
+    vi.spyOn(api, "listManuals").mockResolvedValue([
+      { slug: "m", title: "M" },
+      { slug: "novo", title: "N" },
+    ] as never);
+    vi.spyOn(api, "getManual").mockResolvedValue({
+      slug: "m",
+      title: "M",
+      pages: [node("p0"), node("a"), node("b"), node("c")],
+    } as never);
+    vi.spyOn(api, "getPage").mockImplementation(async (_s, id) => ({ ...pageOf(id), body: "de fora", version: "v2" }) as Page);
+    const rev = result.current.revision;
+    await act(async () => {
+      window.dispatchEvent(new Event("focus"));
+    });
+
+    await waitFor(() => expect(result.current.manuals).toHaveLength(2));
+    expect(result.current.manual?.pages).toHaveLength(4);
+    expect(result.current.page?.body).toBe("de fora");
+    expect(result.current.revision).toBe(rev + 1);
+  });
 });
