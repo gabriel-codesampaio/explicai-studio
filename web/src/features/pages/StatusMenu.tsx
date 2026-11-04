@@ -37,6 +37,21 @@ export function StatusLabel({ status, className }: { status: PageStatus; classNa
   );
 }
 
+/** Só a bolinha, para a árvore estreita. O nome fica em tooltip e para leitor de tela: a cor nunca é o único sinal. */
+export function StatusMark({ status, className }: { status: PageStatus; className?: string }) {
+  const info = statusOf(status);
+  return (
+    <span
+      title={info.label}
+      className={cn("inline-flex shrink-0 items-center", className)}
+      style={{ color: `var(--${info.token})` }}
+    >
+      <StatusDot status={status} />
+      <span className="sr-only">{info.label}</span>
+    </span>
+  );
+}
+
 /** Status da página no topo dela: rascunho, em revisão, aprovado ou publicado. */
 export function StatusMenu({ status, onChange }: { status: PageStatus; onChange: (status: PageStatus) => void }) {
   return (
