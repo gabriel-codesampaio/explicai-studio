@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { rm, stat } from "node:fs/promises";
 import path from "node:path";
+import { isValidAudience, parseAudience, registerAudiences } from "./audience.js";
 import { ExplicaiError } from "./errors.js";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
@@ -12,7 +13,7 @@ import { PAGE_STATUSES, type Page, type PageNode, type PageStatus } from "./type
 /** Página pode ficar sem título enquanto é escrita: a árvore mostra "Sem título" e o arquivo vira sem-titulo.md. */
 export async function addPage(
   dir: string,
-  opts: { title: string; body?: string; parentId?: string | null; index?: number },
+  opts: { title: string; body?: string; parentId?: string | null; index?: number; audience?: string[] },
 ): Promise<Page> {
   const title = opts.title.trim();
   const page: Page = {
@@ -22,6 +23,8 @@ export async function addPage(
     body: opts.body ?? "",
     file: await newPageFile(dir, title),
   };
+  const audience = parseAudience(opts.audience);
+  if (audience) page.audience = audience;
 
   // Arquivo primeiro: se gravar falhar, a árvore não aponta para o que não existe. Se a árvore falhar, desfaz o arquivo.
   await writePageFile(dir, page);
@@ -36,6 +39,7 @@ export async function addPage(
     await rm(resolveInside(dir, page.file), { force: true });
     throw err;
   }
+  await registerAudiences(dir, page.audience);
   return page;
 }
 
@@ -65,6 +69,8 @@ export interface PageTreeNode {
   title: string;
   status: PageStatus;
   file: string;
+  /** Perfis que veem a página; sem o campo, todos. */
+  audience?: string[];
   /** Preenchido quando o arquivo da página sumiu ou está com erro: a página aparece, com o aviso. */
   problem?: string;
   /** Versão escolhida para o manual final, quando há uma (ver versions.ts). */
@@ -87,8 +93,8 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
           children: await walk(n.children),
         };
         try {
-          const { title, status } = await readPageFile(dir, n.file);
-          return { ...base, title, status };
+          const { title, status, audience } = await readPageFile(dir, n.file);
+          return { ...base, title, status, ...(audience ? { audience } : {}) };
         } catch (err) {
           return { ...base, title: "", status: "rascunho" as const, problem: err instanceof Error ? err.message : String(err) };
         }
@@ -101,7 +107,14 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
 async function readPageFile(
   dir: string,
   file: string,
-): Promise<{ title: string; status: PageStatus; body: string; rev: string }> {
+): Promise<{
+  title: string;
+  status: PageStatus;
+  body: string;
+  rev: string;
+  audience?: string[];
+  extra?: Record<string, unknown>;
+}> {
   let text: string;
   try {
     text = await readText(resolveInside(dir, file));
@@ -115,7 +128,17 @@ async function readPageFile(
     const { data, body } = splitFrontmatter(text);
     const status = PAGE_STATUSES.includes(data.status as PageStatus) ? (data.status as PageStatus) : "rascunho";
     const rev = createHash("sha256").update(text).digest("hex").slice(0, 16);
-    return { title: typeof data.title === "string" ? data.title : "", status, body, rev };
+    const { id: _id, title, status: _s, audience, ...extra } = data;
+    if (!isValidAudience(audience)) throw new Error("audience deve ser um texto ou uma lista de textos, como [admin, operador].");
+    const aud = parseAudience(audience);
+    return {
+      title: typeof title === "string" ? title : "",
+      status,
+      body,
+      rev,
+      ...(aud ? { audience: aud } : {}),
+      ...(Object.keys(extra).length ? { extra } : {}),
+    };
   } catch (err) {
     const detail = err instanceof Error ? err.message.split("\n")[0] : String(err);
     throw new Error(`O cabeçalho (frontmatter) de ${file} tem um erro: ${detail}`);
@@ -131,7 +154,7 @@ async function readPageFile(
 export async function updatePage(
   dir: string,
   id: string,
-  patch: { title?: string; body?: string; status?: PageStatus },
+  patch: { title?: string; body?: string; status?: PageStatus; audience?: string[] | null },
   opts: {
     fileName?: "keep" | "sync" | undefined;
     ifMatch?: string | undefined;
@@ -150,6 +173,11 @@ export async function updatePage(
     ...(patch.title === undefined ? {} : { title: patch.title.trim() }),
     ...(patch.body === undefined ? {} : { body: patch.body }),
   };
+  if (patch.audience !== undefined) {
+    const audience = parseAudience(patch.audience);
+    if (audience) next.audience = audience;
+    else delete next.audience;
+  }
 
   const sameName =
     opts.fileName === "keep" ||
@@ -174,6 +202,7 @@ export async function updatePage(
         await writePageFile(dir, next);
       });
     }
+    await registerAudiences(dir, next.audience);
     return { ...next, version: await fileVersion(dir, next.file), rev: (await readPageFile(dir, next.file)).rev };
   }
 
@@ -192,6 +221,7 @@ export async function updatePage(
     page.file,
     next.file,
   );
+  await registerAudiences(dir, next.audience);
   return { ...next, version: await fileVersion(dir, next.file), rev: (await readPageFile(dir, next.file)).rev };
 }
 
@@ -236,5 +266,8 @@ async function newPageFile(dir: string, title: string): Promise<string> {
 async function writePageFile(dir: string, page: Page): Promise<void> {
   // Rascunho é o padrão e não vai para o arquivo: página escrita à mão continua igual.
   const status = page.status === "rascunho" ? {} : { status: page.status };
-  await atomicWrite(resolveInside(dir, page.file), joinFrontmatter({ id: page.id, title: page.title, ...status }, page.body));
+  const audience = page.audience?.length ? { audience: page.audience } : {};
+  // Campos que o Studio não conhece voltam como vieram; os conhecidos vêm por último e vencem.
+  const data = { ...page.extra, id: page.id, title: page.title, ...status, ...audience };
+  await atomicWrite(resolveInside(dir, page.file), joinFrontmatter(data, page.body));
 }

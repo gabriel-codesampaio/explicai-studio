@@ -13,7 +13,7 @@ import { renderHtml } from "./html.js";
 import { checkLogoFile, checkLogoPath, LOGO_EXT, LOGO_MAX_BYTES, logoSizeError, logoTypeError } from "./logo.js";
 import { renderMarkdown } from "./markdown.js";
 import { printPdf } from "./pdf.js";
-import { type ImageInfo, loadImages } from "./refs.js";
+import { hiddenLinkWarnings, type ImageInfo, loadImages } from "./refs.js";
 import { mergeTheme, type ThemePatch, usedFonts } from "./theme.js";
 
 export { logoSizeError } from "./logo.js";
@@ -30,6 +30,8 @@ export interface ExportResult {
   /** Arquivo principal, relativo à pasta do manual (`exportacao/html/index.html`). */
   file: string;
   pages: number;
+  /** Perfil do export, quando houve filtro. HTML e Markdown ficam nas mesmas pastas; o PDF leva o perfil no nome. */
+  audience?: string;
   /** Páginas que ficaram de fora e imagens que não existem, com o motivo. */
   warnings: string[];
 }
@@ -44,18 +46,29 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   if (opts.onlyApproved && collected.pages.length === 0) {
     throw new ExplicaiError(
       "no-approved-pages",
-      "Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.",
+      opts.audience
+        ? `Nenhuma página aprovada ou publicada é visível para o público "${opts.audience.trim()}".`
+        : "Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas.",
     );
   }
   const missing: string[] = [];
   const broken: string[] = [];
   const images = await loadImages(dir, collected.pages, missing, broken);
-  const warnings = [...collected.warnings, ...missing.map((asset) => `Imagem não encontrada: ${asset}`), ...broken];
+  const warnings = [
+    ...collected.warnings,
+    ...hiddenLinkWarnings(collected.pages, collected.hidden, images),
+    ...missing.map((asset) => `Imagem não encontrada: ${asset}`),
+    ...broken,
+  ];
+  if (opts.audience && collected.pages.length === 0) {
+    warnings.push(`O público "${opts.audience.trim()}" não vê nenhuma página: o manual saiu vazio.`);
+  }
   const root = resolveInside(dir, EXPORT_DIR);
   const result = (file: string): ExportResult => ({
     format,
     file: relativePosix(dir, file),
     pages: collected.pages.length,
+    ...(opts.audience?.trim() ? { audience: opts.audience.trim() } : {}),
     warnings,
   });
 
@@ -76,7 +89,8 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   const html = path.join(out, "index.html");
   if (format === "html") return result(html);
 
-  const pdf = path.join(root, `${slugify(collected.meta.title) || "manual"}.pdf`);
+  const profile = opts.audience?.trim() ? `-${slugify(opts.audience) || "publico"}` : "";
+  const pdf = path.join(root, `${slugify(collected.meta.title) || "manual"}${profile}.pdf`);
   await rm(pdf, { force: true });
   await printPdf(html, pdf);
   return result(pdf);

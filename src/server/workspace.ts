@@ -18,3 +18,17 @@ export function optionalString(v: unknown): string | undefined {
 export function optionalNumber(v: unknown): number | undefined {
   return typeof v === "number" ? v : undefined;
 }
+
+/** Lista de perfis (`["admin"]`); `null` apaga. Outro tipo: 400. */
+export function optionalAudience(v: unknown): string[] | null | undefined {
+  if (v === undefined || v === null) return v;
+  if (Array.isArray(v) && v.length <= 10 && v.every((x) => typeof x === "string" && x.length <= 40)) return v as string[];
+  throw new HttpError(400, "audience deve ser uma lista de até 10 textos de até 40 caracteres, ou null.");
+}
+
+/** Perfil para exportar: ausente = todos; presente precisa ser texto não vazio (senão o filtro sumiria sem aviso). */
+export function optionalProfile(v: unknown): string | undefined {
+  if (v === undefined || v === null) return undefined;
+  if (typeof v === "string" && v.trim() && v.length <= 40) return v;
+  throw new HttpError(400, "audience deve ser um texto de 1 a 40 caracteres.");
+}

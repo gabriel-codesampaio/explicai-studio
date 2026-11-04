@@ -2,7 +2,7 @@ import { decodeUri, slugify } from "../text.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
-import { assetFromSrc, type ImageInfo } from "./refs.js";
+import { assetFromSrc, type ImageInfo, stripHiddenLinks } from "./refs.js";
 import { TEXT_COLORS } from "./textColors.js";
 
 const IMAGE_LINE = /!\[([^\]]*)\]\(([^)\s]+)\)/g;
@@ -16,14 +16,16 @@ const PAGE_LINK = /\]\((?:\.\/)?([^/)#\s]+\.md)(#[^)\s]*)?\)/g;
  * em texto (a IA não vê a imagem, mas lê o que ela aponta).
  */
 export function renderMarkdown(collected: Collected, images: Map<string, ImageInfo>): string {
-  const { meta, pages } = collected;
+  const { meta, pages, hidden } = collected;
+  const hiddenFiles = new Set(hidden.map((h) => h.fileName.toLowerCase()));
+  const hiddenIds = new Set(hidden.map((h) => h.id));
   const L = labelsFor(meta.language);
   const anchor = (p: ExportPage) => slugify(`${p.number} ${p.title}`);
   const toc = pages.map((p) => `${"  ".repeat(p.depth)}- [${p.number} ${p.title}](#${anchor(p)})`).join("\n");
 
   const sections = pages.map((page) => {
     const level = Math.min(page.depth + 2, 6);
-    const body = shiftHeadings(page.body, level)
+    const body = shiftHeadings(hiddenFiles.size ? stripHiddenLinks(page.body, hiddenFiles).text : page.body, level)
       .replace(COLOR_SPAN, (all, name: string, text: string) => (Object.hasOwn(TEXT_COLORS, name) ? text : all))
       .replace(PAGE_LINK, (all, file: string, hash: string | undefined) => {
         const target = pages.find((p) => p.fileName === decodeUri(file));
@@ -38,7 +40,7 @@ export function renderMarkdown(collected: Collected, images: Map<string, ImageIn
           const asset = assetFromSrc(src);
           const info = asset ? images.get(asset) : undefined;
           if (!info) return all;
-          notes.push(...imageNotes(info, pages, L));
+          notes.push(...imageNotes(info, pages, L, hiddenIds));
           return `![${alt}](${info.asset})`;
         });
         if (!notes.length) return out;
@@ -52,18 +54,20 @@ export function renderMarkdown(collected: Collected, images: Map<string, ImageIn
 }
 
 /** Legenda e áreas clicáveis do print, em texto, uma por linha. */
-function imageNotes(info: ImageInfo, pages: ExportPage[], L: Labels): string[] {
+function imageNotes(info: ImageInfo, pages: ExportPage[], L: Labels, hiddenIds: Set<string>): string[] {
   const { markers, hotspots } = info.annotations;
   const lines = [...markers]
     .sort((a, b) => a.n - b.n)
     .map((m) => `${m.n}. ${m.label ?? L.noDescription}`)
     .concat(
-      hotspots.map((h) => {
-        if (h.target.type === "url") return L.hotspotUrl(h.target.href);
-        const id = h.target.pageId;
-        const page = pages.find((p) => p.id === id);
-        return L.hotspotPage(page?.title ?? L.removedPage);
-      }),
+      hotspots
+        .filter((h) => h.target.type === "url" || !hiddenIds.has(h.target.pageId))
+        .map((h) => {
+          if (h.target.type === "url") return L.hotspotUrl(h.target.href);
+          const id = h.target.pageId;
+          const page = pages.find((p) => p.id === id);
+          return L.hotspotPage(page?.title ?? L.removedPage);
+        }),
     );
   return lines;
 }

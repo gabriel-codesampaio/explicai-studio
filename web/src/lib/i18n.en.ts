@@ -495,4 +495,17 @@ export const EN: Record<string, string> = {
   "O servidor *não conseguiu responder*": "The server *could not respond*",
   "Se continuar, feche o comando explicai no terminal e rode de novo.":
     "If it keeps happening, stop the explicai command in the terminal and run it again.",
+  Todos: "Everyone",
+  "Público da página: {publico}": "Page audience: {publico}",
+  "Quem vê esta página": "Who sees this page",
+  "Novo perfil": "New profile",
+  "Ex.: admin": "E.g. admin",
+  Adicionar: "Add",
+  "Sem nenhum perfil marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.":
+    "With no profile checked, the page is for everyone. It only filters what you export: the manual's files keep everything.",
+  "Para quem exportar": "Who to export for",
+  "Todos (o manual inteiro)": "Everyone (the whole manual)",
+  "Só entram as páginas desse perfil e as sem restrição. Links para as outras viram texto. Não é controle de acesso.":
+    "Only this profile's pages and the unrestricted ones are included. Links to the others become plain text. This is not access control.",
+  "Ver como": "View as",
 };
