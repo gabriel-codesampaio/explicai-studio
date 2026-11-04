@@ -1012,7 +1012,7 @@ for (const mode of ["light", "dark"] as const) {
     await page.mouse.down();
     await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5, { steps: 5 });
     await page.mouse.up();
-    expect(await borderContrast(dialog.getByLabel("Destino da área 1"))).toBeGreaterThanOrEqual(3);
+    expect(await borderContrast(dialog.getByRole("combobox", { name: "Destino da área 1" }))).toBeGreaterThanOrEqual(3);
     await page.keyboard.press("Escape");
 
     await page.getByRole("button", { name: "Exportar manual" }).click();

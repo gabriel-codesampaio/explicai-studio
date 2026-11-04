@@ -1,6 +1,7 @@
 import { ArrowUpRight, Highlighter, Link2, X } from "lucide-react";
 import { Fragment } from "react";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { styleVars } from "@/lib/annotationStyle";
 import { type Annotations, type HotspotTarget, removeAnnotation, updateHotspot, updateMarker } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
@@ -87,25 +88,28 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
           {annotations.hotspots.map((h, i) => (
             <div key={h.id} className={cn(row(h.id === selectedId), "flex-wrap")} onPointerDown={() => onSelect(h.id)}>
               <Link2 className="size-4 shrink-0 text-primary" aria-hidden />
-              <select
-                aria-label={t("Destino da área {n}", { n: i + 1 })}
+              <Select
                 value={h.target.type === "page" ? h.target.pageId : "__url"}
-                onFocus={() => onSelect(h.id)}
-                onChange={(e) =>
-                  setTarget(
-                    h.id,
-                    e.target.value === "__url" ? { type: "url", href: "https://" } : { type: "page", pageId: e.target.value },
-                  )
+                onValueChange={(v) =>
+                  setTarget(h.id, v === "__url" ? { type: "url", href: "https://" } : { type: "page", pageId: v })
                 }
-                className="h-8 min-w-0 flex-1 rounded-md border border-input bg-card px-2 text-sm"
               >
-                {allPages.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {t("Página: {titulo}", { titulo: p.title || t("Sem título") })}
-                  </option>
-                ))}
-                <option value="__url">{t("Endereço na web…")}</option>
-              </select>
+                <SelectTrigger
+                  aria-label={t("Destino da área {n}", { n: i + 1 })}
+                  onFocus={() => onSelect(h.id)}
+                  className="h-8 min-w-0 flex-1 bg-card py-0"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {allPages.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {t("Página: {titulo}", { titulo: p.title || t("Sem título") })}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="__url">{t("Endereço na web…")}</SelectItem>
+                </SelectContent>
+              </Select>
               <RemoveButton label={t("Excluir área {n}", { n: i + 1 })} onClick={() => remove(h.id)} />
               {h.target.type === "url" && (
                 <Input
