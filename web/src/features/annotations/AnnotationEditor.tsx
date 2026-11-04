@@ -200,17 +200,19 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               />
             </div>
             <div className="grid content-start gap-4">
-              {selectedItem ? (
-                <ItemStylePanel
-                  kind={selectedItem.kind}
-                  name={itemName}
-                  style={selectedItem.style}
-                  imageStyle={draft.ann.style}
-                  onChange={(style) => change({ ...draft, ann: updateItemStyle(draft.ann, selectedId ?? "", style) })}
-                />
-              ) : (
-                <p className="text-sm text-muted-foreground">{t("Clique numa marcação para dar um estilo só a ela.")}</p>
-              )}
+              <div className="order-last md:order-first">
+                {selectedItem ? (
+                  <ItemStylePanel
+                    kind={selectedItem.kind}
+                    name={itemName}
+                    style={selectedItem.style}
+                    imageStyle={draft.ann.style}
+                    onChange={(style) => change({ ...draft, ann: updateItemStyle(draft.ann, selectedId ?? "", style) })}
+                  />
+                ) : (
+                  <p className="text-sm text-muted-foreground">{t("Clique numa marcação para dar um estilo só a ela.")}</p>
+                )}
+              </div>
               {(tool === "redact" || draft.redact.length > 0) && (
                 <Pending
                   open={tool === "redact"}
