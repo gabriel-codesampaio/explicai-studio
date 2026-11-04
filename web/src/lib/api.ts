@@ -209,6 +209,8 @@ export const api = {
   listFonts: () => call<FontInfo[]>("/api/fonts"),
   exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean, audience?: string) =>
     call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved, ...(audience ? { audience } : {}) })),
+  /** Variáveis do tema (o `themeCss` do export) no escopo `.amostra-manual`. */
+  themeCss: (slug: string) => call<{ css: string }>(`${manualUrl(slug)}/theme/css`),
   setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),
 
   /** Envia o logo (PNG, JPG ou SVG, até 1 MB); o servidor guarda em assets/ e põe no tema. */

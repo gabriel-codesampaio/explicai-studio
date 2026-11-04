@@ -5,7 +5,7 @@ import { FontPicker } from "./FontPicker";
 import { useFontPreview } from "./useFontPreview";
 
 /** As fontes da marca, usadas quando o manual não escolhe outra. */
-const DEFAULT_FONTS = { text: "atkinson-hyperlegible-next", headings: "archivo" };
+export const DEFAULT_FONTS = { text: "atkinson-hyperlegible-next", headings: "archivo" };
 
 /** Fontes do texto e dos títulos do manual. A do texto também vale ao vivo no editor. Cada campo salva sozinho. */
 export function FontFields({ theme }: { theme: ManualTheme }) {
