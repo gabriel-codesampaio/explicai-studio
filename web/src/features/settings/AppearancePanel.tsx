@@ -2,7 +2,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { useRef, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { t } from "@/lib/i18n";
-import { type Appearance, type Mode, readAppearance, saveAppearance } from "@/lib/theme";
+import { type Appearance, type Mode, readAppearance, saveAppearance, useResolvedTheme } from "@/lib/theme";
 
 const MODES: { id: Mode; label: string; Icon: typeof Sun }[] = [
   { id: "light", label: t("Claro"), Icon: Sun },
@@ -14,6 +14,7 @@ const MODES: { id: Mode; label: string; Icon: typeof Sun }[] = [
 export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const group = useRef<HTMLDivElement>(null);
   const [look, setLook] = useState(readAppearance);
+  const resolved = useResolvedTheme();
   const change = (patch: Partial<Appearance>) => {
     // Lê o que está gravado, e não o estado deste render: dois cliques seguidos não se atropelam.
     const next = { ...readAppearance(), ...patch };
@@ -51,6 +52,11 @@ export function AppearancePanel({ open, onOpenChange }: { open: boolean; onOpenC
               </button>
             ))}
           </div>
+          {look.mode === "system" && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {resolved === "dark" ? t("Agora está escuro, como no seu sistema.") : t("Agora está claro, como no seu sistema.")}
+            </p>
+          )}
         </fieldset>
         <p className="text-xs text-muted-foreground">
           {t("Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.")}

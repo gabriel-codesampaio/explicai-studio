@@ -8,6 +8,7 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Corrigido
 
+- Aparência: com Sistema marcado, o painel diz se o tema valendo agora é claro ou escuro.
 - Editor: imagem colada ou solta acompanha o texto digitado durante o envio e entra no ponto certo, sem erro quando a página encolhe.
 - CLI: `--version` mostra a versão, e opção desconhecida mostra o uso em vez de um erro do Node.
 

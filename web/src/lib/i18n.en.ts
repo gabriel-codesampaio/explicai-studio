@@ -337,6 +337,8 @@ export const EN: Record<string, string> = {
   Seta: "Arrow",
   "Seta {n}": "Arrow {n}",
   Sistema: "System",
+  "Agora está escuro, como no seu sistema.": "Dark right now, following your system.",
+  "Agora está claro, como no seu sistema.": "Light right now, following your system.",
   "Site (HTML)": "Website (HTML)",
   "Só páginas aprovadas": "Approved pages only",
   "Status da página: {status}": "Page status: {status}",
