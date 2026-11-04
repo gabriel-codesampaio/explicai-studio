@@ -24,7 +24,7 @@ export function ImageView({ node, extension, selected }: NodeViewProps) {
         <img src={src} alt={alt} draggable={false} className={selected ? "ProseMirror-selectednode" : undefined} />
         {annotations && <AnnotationOverlay annotations={annotations} />}
       </span>
-      {annotations && <AnnotationLegend markers={annotations.markers} />}
+      {annotations && <AnnotationLegend markers={annotations.markers} style={annotations.style} />}
     </NodeViewWrapper>
   );
 }
