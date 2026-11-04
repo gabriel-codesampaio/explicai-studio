@@ -6,6 +6,16 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+### Adicionado
+
+- Exportar: opção "Sem o rodapé do Explicaí" no HTML e no PDF (`theme.hideColophon`).
+- Página vazia: passo a passo do primeiro print, com atalho para Exportar; o mesmo texto está na ajuda.
+- Editor: corretor ortográfico explícito no idioma do manual e, na ajuda, como adicionar uma palavra ao dicionário.
+
+### Corrigido
+
+- Exportar HTML: imagens com `width` e `height`, para a página não pular enquanto carrega.
+
 ## [0.2.1] - 2026-11-03
 
 ### Corrigido
