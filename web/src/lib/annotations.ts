@@ -4,6 +4,7 @@
  * Coordenadas vão de 0 a 1, relativas à largura e à altura da imagem.
  */
 
+import { ARROW_MIN_DRAG } from "./annotationShapes";
 import type { AnnotationStyle } from "./annotationStyle";
 import { decodeComponent } from "./text";
 
@@ -118,6 +119,7 @@ export type Tool = "select" | AnnotationKind | "redact" | "crop";
 export function addShape(ann: Annotations, tool: AnnotationKind, a: Point, b: Point, target: HotspotTarget): Annotations | null {
   if (tool === "marker") return addMarker(ann, a);
   if (isTooSmall(a, b)) return null;
+  if (tool === "arrow" && Math.hypot(a.x - b.x, a.y - b.y) < ARROW_MIN_DRAG) return null;
   const id = newId(tool);
   if (tool === "arrow") return { ...ann, arrows: [...ann.arrows, { id, from: clampPoint(a), to: clampPoint(b) }] };
   const rect = rectFrom(a, b);
@@ -132,6 +134,21 @@ export function updateMarker(ann: Annotations, id: string, label: string): Annot
 
 export function updateHotspot(ann: Annotations, id: string, target: HotspotTarget): Annotations {
   return { ...ann, hotspots: ann.hotspots.map((h) => (h.id === id ? { ...h, target } : h)) };
+}
+
+const KEY_STEP: Record<string, [number, number]> = {
+  ArrowLeft: [-1, 0],
+  ArrowRight: [1, 0],
+  ArrowUp: [0, -1],
+  ArrowDown: [0, 1],
+};
+
+/** Seta `id` deslocada pela tecla de seta: 1% da imagem, 5% com Shift. Null se a tecla ou a marcação não servem. */
+export function nudge(ann: Annotations, id: string, key: string, big: boolean): Annotations | null {
+  const dir = KEY_STEP[key];
+  if (!dir || !ann.arrows.some((a) => a.id === id)) return null;
+  const step = big ? 0.05 : 0.01;
+  return moveAnnotation(ann, id, "move", dir[0] * step, dir[1] * step);
 }
 
 /** Parte da marcação que está sendo arrastada: ela inteira, um canto do retângulo ou uma ponta da seta. */

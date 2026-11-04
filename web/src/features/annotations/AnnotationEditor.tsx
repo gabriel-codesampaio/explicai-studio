@@ -4,7 +4,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
-import { type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
+import { type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
@@ -120,6 +120,13 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               crop: draft.crop.filter((r) => r.id !== selectedId),
             });
             setSelectedId(null);
+          }
+          if (selectedId && draft && !target.closest("input, select, textarea, [role=toolbar]")) {
+            const moved = nudge(draft.ann, selectedId, e.key, e.shiftKey);
+            if (moved) {
+              e.preventDefault();
+              change({ ann: moved, redact: draft.redact, crop: draft.crop });
+            }
           }
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !target.closest("input, select, textarea")) {
             e.preventDefault();

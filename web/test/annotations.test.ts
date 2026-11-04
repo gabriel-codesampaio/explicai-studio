@@ -7,6 +7,7 @@ import {
   emptyAnnotations,
   isTooSmall,
   moveAnnotation,
+  nudge,
   rectFrom,
   removeAnnotation,
   warnsSmall,
@@ -29,6 +30,18 @@ describe("marcações de imagem", () => {
   it("trata arraste mínimo como clique", () => {
     expect(isTooSmall({ x: 0.5, y: 0.5 }, { x: 0.503, y: 0.5 })).toBe(true);
     expect(isTooSmall({ x: 0.5, y: 0.5 }, { x: 0.6, y: 0.5 })).toBe(false);
+  });
+
+  it("setas do teclado movem só a seta, 1% por passo e 5% com Shift", () => {
+    const ann: Annotations = {
+      ...emptyAnnotations(),
+      arrows: [{ id: "a", from: { x: 0.2, y: 0.2 }, to: { x: 0.4, y: 0.4 } }],
+      markers: [{ id: "m", n: 1, x: 0.5, y: 0.5 }],
+    };
+    expect(nudge(ann, "a", "ArrowRight", false)?.arrows[0]?.to.x).toBeCloseTo(0.41);
+    expect(nudge(ann, "a", "ArrowUp", true)?.arrows[0]?.from.y).toBeCloseTo(0.15);
+    expect(nudge(ann, "m", "ArrowLeft", false)).toBeNull();
+    expect(nudge(ann, "a", "a", false)).toBeNull();
   });
 
   it("numera os marcadores em sequência e renumera ao excluir", () => {
@@ -55,6 +68,8 @@ describe("marcações de imagem", () => {
     expect(addShape(ann, "arrow", a, b, target)?.arrows[0]).toMatchObject({ from: a, to: b });
     expect(addShape(ann, "hotspot", a, b, target)?.hotspots[0]).toMatchObject({ target });
     expect(addShape(ann, "highlight", a, { x: 0.101, y: 0.1 }, target)).toBeNull();
+    expect(addShape(ann, "arrow", a, { x: 0.12, y: 0.1 }, target)).toBeNull(); // seta pede 3%
+    expect(addShape(ann, "arrow", a, { x: 0.14, y: 0.1 }, target)?.arrows).toHaveLength(1);
     expect(addShape(ann, "marker", a, a, target)?.markers[0]).toMatchObject({ n: 1, x: 0.1, y: 0.1 });
   });
 });

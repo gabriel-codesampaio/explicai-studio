@@ -2,7 +2,7 @@ import { Marked, type Tokens } from "marked";
 import { arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
 import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
-import { arrowShape, legendRows, placeMarkers } from "./annotationShapes.js";
+import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
@@ -208,7 +208,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
   const arrows = a.arrows.length
     ? `<svg class="arrows" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">${a.arrows
         .map(({ from, to }) => {
-          const t = unit * 0.005 * STROKE_SCALE[a.style?.stroke ?? "m"];
+          const t = arrowThickness(unit, STROKE_SCALE[a.style?.stroke ?? "m"]);
           const { shaft: s, head } = arrowShape(px(from), px(to), t);
           const line = `x1="${f1(s.x1)}" y1="${f1(s.y1)}" x2="${f1(s.x2)}" y2="${f1(s.y2)}"`;
           const pts = head.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ");

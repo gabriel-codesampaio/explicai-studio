@@ -1,6 +1,6 @@
 import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
-import { arrowShape, placeMarkers } from "@/lib/annotationShapes";
+import { arrowShape, arrowThickness, placeMarkers } from "@/lib/annotationShapes";
 import { arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "@/lib/annotationStyle";
 import type { Annotations, Handle, Highlight, Point, Rect } from "@/lib/annotations";
 import { REDACT_CSS, type RedactStyle } from "@/lib/redact";
@@ -150,7 +150,8 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
       {size.w > 0 && annotations.arrows.length > 0 && (
         <svg className="absolute inset-0 overflow-visible" width={size.w} height={size.h} role="presentation">
           {annotations.arrows.map((a) => {
-            const thickness = (a.id === selectedId ? 5 : 3.5) * stroke;
+            // Mesma espessura do export (relativa à imagem); selecionar desenha um anel, não engorda a seta.
+            const thickness = arrowThickness(Math.max(size.w, size.h), stroke);
             const { shaft, head } = arrowShape(px(a.from), px(a.to), thickness);
             const pts = head.map((p) => `${p.x},${p.y}`).join(" ");
             const halo = arrowHalo(thickness, annotations.style?.border);
@@ -158,6 +159,12 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
               <g key={a.id} onPointerDown={pick(a.id)} className={cn(interactive && "cursor-move")}>
                 {/* Faixa larga e transparente para facilitar o clique na seta. */}
                 <line x1={px(a.from).x} y1={px(a.from).y} x2={px(a.to).x} y2={px(a.to).y} stroke="transparent" strokeWidth={14} />
+                {a.id === selectedId && (
+                  <g stroke="var(--primary)" strokeLinejoin="round" strokeLinecap="round">
+                    <line x1={shaft.x1} y1={shaft.y1} x2={shaft.x2} y2={shaft.y2} strokeWidth={(halo?.shaft ?? thickness) + 6} />
+                    <polygon points={pts} fill="var(--primary)" strokeWidth={(halo?.head ?? 0) + 6} />
+                  </g>
+                )}
                 {/* Contorno branco: a seta se lê sobre print claro e escuro (igual ao .halo do export). */}
                 {halo && (
                   <g stroke="#fff" strokeOpacity={0.9} strokeLinejoin="round" strokeLinecap="round">
