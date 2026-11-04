@@ -1,4 +1,5 @@
 import { ArrowUpRight, Highlighter, Link2, X } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { styleVars } from "@/lib/annotationStyle";
@@ -37,6 +38,15 @@ function RemoveButton({ label, onClick }: { label: string; onClick: () => void }
 /** Lista ao lado da imagem: nome de cada marcador (vira a legenda) e destino de cada área clicável. */
 export function AnnotationList({ annotations, pages, selectedId, onSelect, onChange, onOpenStyle }: Props) {
   const allPages = flattenItems(pages);
+  // Marcador novo leva o foco à legenda dele; Esc ali devolve o teclado ao canvas (AnnotationEditor).
+  const legends = useRef(new Map<string, HTMLInputElement>());
+  const seen = useRef(new Set(annotations.markers.map((m) => m.id)));
+  useEffect(() => {
+    const created = annotations.markers.filter((m) => !seen.current.has(m.id));
+    seen.current = new Set(annotations.markers.map((m) => m.id));
+    const last = created.at(-1);
+    if (last) legends.current.get(last.id)?.focus();
+  }, [annotations.markers]);
   const remove = (id: string) => onChange(removeAnnotation(annotations, id));
   const setTarget = (id: string, target: HotspotTarget) => onChange(updateHotspot(annotations, id, target));
   const empty =
@@ -66,6 +76,11 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
               <div key={m.id} className={row(m.id === selectedId)} onPointerDown={() => onSelect(m.id)}>
                 <span className="num-chip shrink-0 bg-anotacao text-sobre-anotacao">{m.n}</span>
                 <Input
+                  data-legend-input
+                  ref={(el) => {
+                    if (el) legends.current.set(m.id, el);
+                    else legends.current.delete(m.id);
+                  }}
                   aria-label={t("O que o marcador {n} mostra", { n: m.n })}
                   value={m.label ?? ""}
                   placeholder={t("O que este marcador mostra?")}

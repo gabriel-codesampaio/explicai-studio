@@ -124,9 +124,9 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[aria-pressed="true"]')?.focus();
         }}
         onEscapeKeyDown={(e) => {
-          // Esc no painel Estilo devolve o foco ao canvas em vez de fechar a janela.
+          // Esc no painel Estilo ou numa legenda devolve o foco ao canvas em vez de fechar a janela.
           const target = e.target as HTMLElement | null;
-          if (!target?.closest("[data-style-panel]")) return;
+          if (!target?.closest("[data-style-panel], [data-legend-input]")) return;
           e.preventDefault();
           document.querySelector<HTMLElement>("[data-annotation-canvas]")?.focus();
         }}
