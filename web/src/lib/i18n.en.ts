@@ -270,8 +270,8 @@ export const EN: Record<string, string> = {
   Mover: "Move",
   "Mover a página para cima ou para baixo": "Move the page up or down",
   "Limpar imagens sem uso": "Clean up unused images",
-  "Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.":
-    "Only changes the Studio, in this browser. The manual color is in Export manual.",
+  "Muda só o Studio, neste navegador. Cores e fontes do manual ficam em Ajustes, Aparência do manual.":
+    "Only changes the Studio, in this browser. Manual colors and fonts are in Settings, Manual appearance.",
   "Não foi possível abrir o Studio.": "Could not open the Studio.",
   "Não foi possível enviar a imagem.": "Could not upload the image.",
   "Não foi possível exportar o manual.": "Could not export the manual.",
@@ -390,8 +390,14 @@ export const EN: Record<string, string> = {
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",
   "Tipo de bloco: {tipo}": "Block type: {tipo}",
-  "Fonte do manual: {fonte}": "Manual font: {fonte}",
-  "Fonte do manual inteiro": "Font for the whole manual",
+  "Aparência do manual": "Manual appearance",
+  "Tema do Studio": "Studio theme",
+  "Vale para o HTML, o PDF e o texto do editor. O tema do Studio fica à parte.":
+    "Applies to the HTML, the PDF and the editor text. The Studio theme is separate.",
+  "Fontes do manual": "Manual fonts",
+  Logo: "Logo",
+  Rodapé: "Footer",
+  "Cores, fontes, capa e rodapé:": "Colors, fonts, cover and footer:",
   "Tipo de alerta: {tipo}": "Alert type: {tipo}",
   Estrutura: "Structure",
   "Passo a passo": "Step by step",
