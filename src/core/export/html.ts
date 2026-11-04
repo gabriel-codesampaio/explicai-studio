@@ -1,5 +1,13 @@
 import { Marked, type Tokens } from "marked";
-import { type AnnotationStyle, arrowHalo, MARKER_SIZES, resolveItemStyle, STROKE_SCALE, styleVars } from "../annotationStyle.js";
+import {
+  type AnnotationStyle,
+  arrowHalo,
+  MARKER_SIZES,
+  resolveItemStyle,
+  STROKE_SCALE,
+  type StyleItemKind,
+  styleVars,
+} from "../annotationStyle.js";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
 import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
 import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
@@ -186,8 +194,8 @@ export const styleOf = (a: Annotations): AnnotationStyle[] =>
   );
 
 /** Variáveis CSS do estilo como atributo `style=""` (com `;` na frente, para juntar a outro). */
-const varsAttr = (st: AnnotationStyle | undefined) =>
-  Object.entries(styleVars(st))
+const varsAttr = (st: AnnotationStyle | undefined, kind?: StyleItemKind) =>
+  Object.entries(styleVars(st, false, kind))
     .map(([k, v]) => `;${k}:${v}`)
     .join("");
 
@@ -206,7 +214,9 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
   const box = (r: { x: number; y: number; w: number; h: number }) =>
     `left:${pct(r.x)};top:${pct(r.y)};width:${pct(r.w)};height:${pct(r.h)}`;
 
-  const highlights = a.highlights.map((r) => `<span class="hl" style="${box(r)}${varsAttr(r.style)}"></span>`).join("");
+  const highlights = a.highlights
+    .map((r) => `<span class="hl" style="${box(r)}${varsAttr(resolveItemStyle(r.style, a.style), "highlight")}"></span>`)
+    .join("");
   const hotspots = a.hotspots
     .map((r) => {
       const link = hotspotHref(r.target, pages);
