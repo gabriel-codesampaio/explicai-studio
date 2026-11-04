@@ -5,6 +5,7 @@ import { arrowShape, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
+import { highlightExtension } from "./highlight.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
 import { liftResult } from "./resultado.js";
@@ -105,6 +106,7 @@ function renderPage(
   let openSpans = 0;
   const marked = new Marked({
     gfm: true,
+    extensions: [highlightExtension],
     walkTokens(t) {
       if (t.type === "list_item") liftResult(t as Tokens.ListItem);
     },
@@ -278,6 +280,8 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .page-body h3{font-size:22px}.page-body h4{font-size:19px}.page-body h5,.page-body h6{font-size:17px}
 .page-body p{margin:.6em 0}
 .page-body a{color:var(--accent);text-underline-offset:.2em}
+.page-body mark{background:var(--marca-faixa);color:inherit;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page-body mark [data-color="orange"]{color:#a34400}.page-body mark [data-color="green"]{color:#137034}
 .page-body code{font:.88em var(--mono);background:var(--papel);border:1px solid var(--linha);border-radius:4px;padding:.05em .35em}
 .page-body pre{font:14px/1.5 var(--mono);background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:12px 14px;overflow-x:auto}
 .page-body pre code{background:none;border:0;padding:0}
