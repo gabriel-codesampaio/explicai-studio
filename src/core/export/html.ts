@@ -1,6 +1,7 @@
 import { Marked, type Tokens } from "marked";
+import { MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
-import { ANNOTATION_CSS } from "./annotationCss.js";
+import { ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
 import { arrowShape, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
@@ -49,7 +50,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
 <style>${fontFacesCss(meta.theme)}
-${CSS}${themeCss(meta.theme)}</style>
+${CSS}${[...images.values()].some((i) => i.annotations.style) ? ANNOTATION_STYLE_CSS : ""}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
@@ -207,7 +208,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
   const arrows = a.arrows.length
     ? `<svg class="arrows" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">${a.arrows
         .map(({ from, to }) => {
-          const t = unit * 0.005;
+          const t = unit * 0.005 * STROKE_SCALE[a.style?.stroke ?? "m"];
           const { shaft: s, head } = arrowShape(px(from), px(to), t);
           const line = `x1="${f1(s.x1)}" y1="${f1(s.y1)}" x2="${f1(s.x2)}" y2="${f1(s.y2)}"`;
           const pts = head.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ");
@@ -221,6 +222,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     a.markers.map((m) => ({ x: m.x * w * ref, y: m.y * h * ref })),
     w * ref,
     h * ref,
+    MARKER_SIZES[a.style?.size ?? "m"].disc,
   );
   const markers = a.markers
     .map((m, i) => {
@@ -236,7 +238,10 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     .join("");
 
   const img = `<img src="${esc(info.asset)}" alt="${esc(alt)}"${info.size ? ` width="${w}" height="${h}"` : ""} loading="lazy">`;
-  return `<span class="shot${a.display ? ` shot-${a.display}` : ""}"><span class="frame" style="aspect-ratio:${w} / ${h}">${zoom(img, info, L)}${highlights}${arrows}${hotspots}${markers}</span>${
+  const vars = Object.entries(styleVars(a.style))
+    .map(([k, v]) => `${k}:${v}`)
+    .join(";");
+  return `<span class="shot${a.display ? ` shot-${a.display}` : ""}"${vars ? ` style="${vars}"` : ""}><span class="frame" style="aspect-ratio:${w} / ${h}">${zoom(img, info, L)}${highlights}${arrows}${hotspots}${markers}</span>${
     legend ? `<span class="legend" role="list" aria-label="${L.legend}">${legend}</span>` : ""
   }</span>`;
 }

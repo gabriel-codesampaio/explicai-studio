@@ -5,7 +5,16 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { MARKER_SIZES, parseStyle, STROKE_SCALE, STYLE_PALETTE, styleVars } from "../src/core/annotationStyle.js";
 import { contrast } from "../src/core/export/color.js";
 import { MIN_CONTRAST } from "../src/core/export/theme.js";
-import { appendAnnotations, createManual, parseAnnotations, readAnnotations, writeAnnotations } from "../src/core/index.js";
+import {
+  addPage,
+  appendAnnotations,
+  createManual,
+  exportManual,
+  parseAnnotations,
+  readAnnotations,
+  saveAsset,
+  writeAnnotations,
+} from "../src/core/index.js";
 
 const base = { version: 1, markers: [], highlights: [], arrows: [], hotspots: [] };
 
@@ -98,5 +107,59 @@ describe("gravar e regravar", () => {
   it("abrir arquivo sem style não grava style", async () => {
     await writeAnnotations(dir, "assets/a.png", base);
     expect(await readAnnotations(dir, "assets/a.png")).not.toHaveProperty("style");
+  });
+});
+
+describe("exportação com style", () => {
+  let workspace: string;
+  let n = 0;
+  beforeEach(async () => {
+    workspace = await mkdtemp(path.join(tmpdir(), "explicai-style-exp-"));
+  });
+  afterEach(async () => {
+    await rm(workspace, { recursive: true, force: true });
+  });
+
+  // Um manual novo por chamada, igual em tudo menos no style.
+  const out = async (style?: unknown) => {
+    const { dir } = await createManual(workspace, { title: `M${++n}`, language: "pt-BR" });
+    const asset = await saveAsset(dir, "tela.png", new Uint8Array([1, 2, 3]));
+    await writeAnnotations(dir, asset, {
+      ...base,
+      ...(style === undefined ? {} : { style }),
+      markers: [{ id: "m1", n: 1, x: 0.5, y: 0.5, label: "Botão" }],
+      arrows: [{ id: "a1", from: { x: 0.1, y: 0.1 }, to: { x: 0.4, y: 0.4 } }],
+    });
+    await addPage(dir, { title: "P", body: `![Tela](../${asset})` });
+    return readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+  };
+  // Só o miolo da página: o resto muda com o id e a data de cada manual.
+  const shot = (html: string) => /<span class="shot[\s\S]*?<\/span><\/span><\/span>/.exec(html)?.[0] ?? "";
+  const arrowWidth = (html: string) => Number(/<line (?!class)[^>]*stroke-width="([\d.]+)"/.exec(html)?.[1]);
+
+  it("sem style, ou com style que não vale nada, o HTML não carrega o estilo e é igual", async () => {
+    const sem = await out();
+    expect(sem).not.toMatch(/--disco|--marca-espessura|calc\(2px/);
+    expect(sem).toContain('<span class="shot"><span class="frame"');
+    expect(shot(await out({ color: "rosa" }))).toBe(shot(sem));
+  });
+
+  it("style vira variáveis no .shot (print e legenda herdam) e as regras que as usam", async () => {
+    const html = await out({ color: "red", size: "l", stroke: "l" });
+    const vars = /<span class="shot" style="([^"]*)">/.exec(html)?.[1] ?? "";
+    expect(vars).toContain("--anotacao:#c4261d");
+    expect(vars).toContain("--sobre-anotacao:#ffffff");
+    expect(vars).toContain("--disco:32px");
+    expect(vars).toContain("--marca-espessura:1.5");
+    expect(html).toContain("calc(2px*var(--marca-espessura,1))");
+  });
+
+  it("o degrau m é a espessura de sempre; s e l afinam e engrossam a seta", async () => {
+    const [sem, s, m, l] = (await Promise.all([out(), out({ stroke: "s" }), out({ stroke: "m" }), out({ stroke: "l" })])).map(
+      arrowWidth,
+    );
+    expect(m).toBe(sem);
+    expect(s).toBeLessThan(m as number);
+    expect(l).toBeGreaterThan(m as number);
   });
 });
