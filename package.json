@@ -1,6 +1,6 @@
 {
   "name": "explicai",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Open source manual builder: paste screenshots, mark them up and export to HTML, PDF and Markdown. Construtor de manuais open source: do print ao manual pronto em HTML, PDF e Markdown.",
   "license": "MIT",
   "author": "Gabriel Sampaio",
