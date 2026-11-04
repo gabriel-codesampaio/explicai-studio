@@ -340,6 +340,9 @@ export const EN: Record<string, string> = {
   "Agora está escuro, como no seu sistema.": "Dark right now, following your system.",
   "Agora está claro, como no seu sistema.": "Light right now, following your system.",
   "Site (HTML)": "Website (HTML)",
+  "Corretor ortográfico": "Spell checker",
+  "O corretor é o do navegador e segue o idioma do manual. Para ensinar uma palavra, clique nela com o botão direito, sublinhada em vermelho, e escolha Adicionar ao dicionário.":
+    "The spell checker is the browser's and follows the manual language. To teach it a word, right-click the red-underlined word and choose Add to dictionary.",
   "Só páginas aprovadas": "Approved pages only",
   "Sem o rodapé do Explicaí": "Without the Explicaí footer",
   'Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.':
