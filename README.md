@@ -78,7 +78,7 @@ await exportManual(manual.dir, "html");
 
 ### Contribuir
 
-Contribuições são bem-vindas. Abra uma [issue](https://github.com/gabriel-codesampaio/explicai-studio/issues) para conversar sobre a ideia, ou mande um pull request com `npm run check` passando. O código está em [github.com/gabriel-codesampaio/explicai-studio](https://github.com/gabriel-codesampaio/explicai-studio).
+Contribuições são bem-vindas. Abra uma [issue](https://github.com/gabriel-codesampaio/explicai-studio/issues) para conversar sobre a ideia, ou mande um pull request seguindo o [guia de contribuição](CONTRIBUTING.md). O código está em [github.com/gabriel-codesampaio/explicai-studio](https://github.com/gabriel-codesampaio/explicai-studio).
 
 ## English
 
@@ -106,6 +106,10 @@ Each manual is a folder of Markdown files you can keep in git next to your code:
 ### Library
 
 `explicai/core` exports the functions the Studio uses to read, write and export manuals (`createManual`, `addPage`, `exportManual` and more), as in the example above. Types are included.
+
+### Contributing
+
+Contributions are welcome. See the [contributing guide](CONTRIBUTING.md), which has a summary in English, and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Licença / License
 
