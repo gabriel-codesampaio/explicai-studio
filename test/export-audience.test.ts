@@ -83,7 +83,7 @@ describe("export por público", () => {
     const outputs = [
       await readFile(path.join(dir, html.file), "utf8"),
       await readFile(path.join(dir, md.file), "utf8"),
-      await readFile(path.join(dir, "exportacao/html/index.html"), "utf8"), // o que o PDF imprimiu
+      await readFile(path.join(dir, "exportacao/html-cliente/index.html"), "utf8"), // o que o PDF imprimiu
     ];
     for (const text of outputs) {
       for (const leak of [SECRET, "Cobranças", "Estornos", "estorno", "tela-admin", "cobrancas.md"]) {
@@ -94,9 +94,9 @@ describe("export por público", () => {
     // O link virou texto; sem hotspot para a página filtrada.
     expect(outputs[0]).toContain("Veja as cobranças e o painel");
     expect(outputs[0]).not.toContain('class="hot"');
-    expect(await files("html")).toContain("assets");
-    expect(await readdir(path.join(dir, "exportacao/html/assets"))).toEqual(["tela-cliente.png"]);
-    expect(await readdir(path.join(dir, "exportacao/markdown/assets"))).toEqual(["tela-cliente.png"]);
+    expect(await files("html-cliente")).toContain("assets");
+    expect(await readdir(path.join(dir, "exportacao/html-cliente/assets"))).toEqual(["tela-cliente.png"]);
+    expect(await readdir(path.join(dir, "exportacao/markdown-cliente/assets"))).toEqual(["tela-cliente.png"]);
     for (const r of [html, md, pdf]) {
       expect(r.warnings.join("\n")).toMatch(/link para cobrancas\.md virou texto/);
       expect(r.warnings.join("\n")).toMatch(/área clicável.*removida/);
@@ -184,6 +184,33 @@ m
     expect(text).not.toContain("filha-secreta");
     expect(r.warnings.join("\n")).toMatch(/audience deve ser/);
     expect(r.warnings.join("\n")).toMatch(/não vê nenhuma página/);
+  });
+
+  it("HTML e Markdown de perfis diferentes ficam lado a lado, e sem perfil o nome é o de sempre", async () => {
+    await seed();
+    const [c, a, all] = [
+      await exportManual(dir, "html", { audience: "cliente" }),
+      await exportManual(dir, "html", { audience: "admin" }),
+      await exportManual(dir, "html"),
+    ];
+    expect([c.file, a.file, all.file]).toEqual([
+      "exportacao/html-cliente/index.html",
+      "exportacao/html-admin/index.html",
+      "exportacao/html/index.html",
+    ]);
+    for (const f of [c.file, a.file, all.file]) expect(await readFile(path.join(dir, f), "utf8")).toContain("<html");
+    expect(await readFile(path.join(dir, c.file), "utf8")).not.toContain("Estornos");
+    expect(await readFile(path.join(dir, a.file), "utf8")).toContain("Estornos");
+    const [mc, ma, mall] = [
+      await exportManual(dir, "markdown", { audience: "cliente" }),
+      await exportManual(dir, "markdown", { audience: "admin" }),
+      await exportManual(dir, "markdown"),
+    ];
+    expect([mc.file, ma.file, mall.file]).toEqual([
+      "exportacao/markdown-cliente/manual.md",
+      "exportacao/markdown-admin/manual.md",
+      "exportacao/markdown/manual.md",
+    ]);
   });
 
   it("PDF de um perfil leva o perfil no nome e no resultado", async () => {
