@@ -81,6 +81,7 @@ export async function writeManual(dir: string, meta: ManualMeta): Promise<void> 
   await atomicWrite(path.join(dir, META_FILE), `${JSON.stringify(meta, null, 2)}\n`);
 }
 
+// shortcut: fila só dentro do processo, Studio e MCP no mesmo manual podem se atropelar; upgrade = lock de arquivo
 const queues = new Map<string, Promise<unknown>>();
 
 /**
