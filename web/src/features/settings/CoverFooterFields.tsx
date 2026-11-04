@@ -82,8 +82,9 @@ export function CoverFooterFields() {
       <fieldset aria-label={t("Prévia da capa e do rodapé")} className="grid min-w-0 gap-2 border-0 p-0">
         <div className="rounded-md border border-border bg-white p-4 text-[#151a33]">
           <p className="font-display text-lg font-extrabold leading-tight">{manual.title}</p>
-          {coverLines(draft).map((line) => (
-            <p key={line} className="mt-1 whitespace-pre-line break-words text-xs text-[#575e78]">
+          {coverLines(draft).map((line, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: linhas podem repetir (versão igual à data); a lista só é recriada inteira.
+            <p key={i} className="mt-1 whitespace-pre-line break-words text-xs text-[#575e78]">
               {line}
             </p>
           ))}

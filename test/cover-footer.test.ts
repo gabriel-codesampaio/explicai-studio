@@ -2,6 +2,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { coverLines } from "../src/core/export/cover.js";
 import { cssString, footerPageCss } from "../src/core/export/footer.js";
 import { addPage, createManual, exportManual, readManual, setManualCover, setManualFooter } from "../src/core/index.js";
 
@@ -63,6 +64,10 @@ describe("capa e rodapé: HTML", () => {
     const lines = [...doc.matchAll(/<p class="cover-line">([^<]*)<\/p>/g)].map((m) => m[1]);
     expect(lines).toEqual(["Para: Acme", "Versão 2.1", "outubro de 2026"]);
     expect(doc.indexOf('cover-line">Para')).toBeGreaterThan(doc.indexOf("<h1>"));
+  });
+
+  it("coverLines ignora valor que não é texto (manual.json editado à mão)", () => {
+    expect(coverLines({ subtitle: 5, author: " Time " } as never)).toEqual(["Time"]);
   });
 
   it("texto com < \" '  e quebra de linha sai literal no HTML e no CSS do PDF", async () => {

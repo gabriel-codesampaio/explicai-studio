@@ -39,7 +39,7 @@ export function mergeCover(current: ManualCover | undefined, patch: CoverPatch):
 
 /** Linhas da capa na ordem subtítulo, autor, versão, data; campo vazio não entra. */
 export function coverLines(cover: ManualCover | undefined): string[] {
-  return COVER_FIELDS.map((k) => cover?.[k]?.trim() ?? "").filter(Boolean);
+  return COVER_FIELDS.map((k) => (typeof cover?.[k] === "string" ? cover[k].trim() : "")).filter(Boolean);
 }
 
 /** Texto de usuário em HTML (`<`, `&`, aspas). */
