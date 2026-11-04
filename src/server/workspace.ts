@@ -18,3 +18,10 @@ export function optionalString(v: unknown): string | undefined {
 export function optionalNumber(v: unknown): number | undefined {
   return typeof v === "number" ? v : undefined;
 }
+
+/** Lista de perfis (`["admin"]`); `null` apaga. Outro tipo: 400. */
+export function optionalAudience(v: unknown): string[] | null | undefined {
+  if (v === undefined || v === null) return v;
+  if (Array.isArray(v) && v.every((x) => typeof x === "string")) return v as string[];
+  throw new HttpError(400, "audience deve ser uma lista de textos ou null.");
+}

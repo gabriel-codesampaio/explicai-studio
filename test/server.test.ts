@@ -242,6 +242,32 @@ describe("API de versões", () => {
   });
 });
 
+describe("API de público", () => {
+  it("grava audience na página, lista os perfis no manual e exporta por perfil", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));
+    const a = await (await fetch(`${base}/api/manuals/m/pages`, json("POST", { title: "Aberta", body: "para todos" }))).json();
+    const b = await (
+      await fetch(`${base}/api/manuals/m/pages`, json("POST", { title: "Admin", body: "so admin", audience: ["admin"] }))
+    ).json();
+    expect(b.audience).toEqual(["admin"]);
+    const put = await fetch(`${base}/api/manuals/m/pages/${a.id}`, json("PUT", { audience: ["cliente"] }));
+    expect((await put.json()).audience).toEqual(["cliente"]);
+    expect((await fetch(`${base}/api/manuals/m/pages/${a.id}`, json("PUT", { audience: "admin" }))).status).toBe(400);
+
+    const manual = await (await fetch(`${base}/api/manuals/m`)).json();
+    expect(manual.audiences).toEqual(["admin", "cliente"]);
+    expect(manual.pages.map((p: { audience?: string[] }) => p.audience)).toEqual([["cliente"], ["admin"]]);
+
+    const out = await (
+      await fetch(`${base}/api/manuals/m/export`, json("POST", { format: "markdown", audience: "admin" }))
+    ).json();
+    expect(out.pages).toBe(1);
+    const text = await (await fetch(`${base}${out.url}`)).text();
+    expect(text).toContain("so admin");
+    expect(text).not.toContain("para todos");
+  });
+});
+
 describe("API de exportação", () => {
   it("exporta em HTML e Markdown, recusa formato desconhecido e grava a cor do manual", async () => {
     await fetch(`${base}/api/manuals`, json("POST", { title: "M" }));

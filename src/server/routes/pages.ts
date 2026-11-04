@@ -10,7 +10,7 @@ import {
 } from "../../core/index.js";
 import { json, readJson } from "../http.js";
 import type { Route } from "../router.js";
-import { manualDir, optionalNumber, optionalString } from "../workspace.js";
+import { manualDir, optionalAudience, optionalNumber, optionalString } from "../workspace.js";
 
 const PAGE = "/api/manuals/:slug/pages/:id";
 
@@ -22,11 +22,13 @@ export const pageRoutes: Route[] = [
       const body = await readJson(ctx.req);
       const text = optionalString(body.body);
       const index = optionalNumber(body.index);
+      const audience = optionalAudience(body.audience);
       const page = await addPage(manualDir(ctx), {
         title: optionalString(body.title) ?? "",
         parentId: optionalString(body.parentId) ?? null,
         ...(text === undefined ? {} : { body: text }),
         ...(index === undefined ? {} : { index }),
+        ...(audience ? { audience } : {}),
       });
       return json(page, 201);
     },
@@ -44,7 +46,9 @@ export const pageRoutes: Route[] = [
       const title = optionalString(body.title);
       const text = optionalString(body.body);
       const status = optionalString(body.status) as PageStatus | undefined;
+      const audience = optionalAudience(body.audience);
       const patch = {
+        ...(audience === undefined ? {} : { audience }),
         ...(title === undefined ? {} : { title }),
         ...(text === undefined ? {} : { body: text }),
         ...(status === undefined ? {} : { status }),
