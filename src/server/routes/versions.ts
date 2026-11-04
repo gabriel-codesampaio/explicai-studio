@@ -1,4 +1,4 @@
-import { listVersions, publishVersion, readVersion, restoreVersion, saveVersion } from "../../core/index.js";
+import { deleteVersion, listVersions, publishVersion, readVersion, restoreVersion, saveVersion } from "../../core/index.js";
 import { HttpError, json, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir, optionalString } from "../workspace.js";
@@ -23,6 +23,14 @@ export const versionRoutes: Route[] = [
     method: "GET",
     path: `${VERSIONS}/:versionId`,
     handle: async (ctx) => json(await readVersion(manualDir(ctx), ctx.params.id ?? "", ctx.params.versionId ?? "")),
+  },
+  {
+    method: "DELETE",
+    path: `${VERSIONS}/:versionId`,
+    handle: async (ctx) => {
+      await deleteVersion(manualDir(ctx), ctx.params.id ?? "", ctx.params.versionId ?? "");
+      return json({ ok: true });
+    },
   },
   {
     method: "POST",
