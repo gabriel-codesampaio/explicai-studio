@@ -93,6 +93,15 @@ describe("leitura do HTML exportado", () => {
     expect(out).not.toContain("counter-reset:passo");
   });
 
+  it("divisor `---` vira <hr> no HTML e fica `---` no Markdown", async () => {
+    await addPage(dir, { title: "Divisor", body: "Antes.\n\n---\n\nDepois." });
+    const out = await html();
+    expect(out).toMatch(/<hr\s*\/?>/);
+    expect(out).toContain(".page-body hr{");
+    const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
+    expect(md).toContain("Antes.\n\n---\n\nDepois.");
+  });
+
   it("print largo leva link para o original; print estreito, não", async () => {
     const wide = await saveAsset(dir, "larga.png", png(2560, 400));
     const small = await saveAsset(dir, "pequena.png", png(300, 200));
