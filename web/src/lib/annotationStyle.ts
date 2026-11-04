@@ -96,6 +96,18 @@ export function parseItemStyle(kind: StyleItemKind, v: unknown): AnnotationStyle
   return Object.keys(style).length ? style : undefined;
 }
 
+/**
+ * Estilo do item já com a regra "sem preenchimento e sem borda": se o `fill` é `none` e a borda que vale
+ * (do item, ou herdada da imagem) é `none`, a borda do item vira `s`. Evita a área invisível.
+ */
+export function resolveItemStyle(
+  item: AnnotationStyle | undefined,
+  image: AnnotationStyle | undefined,
+): AnnotationStyle | undefined {
+  if (item?.fill !== "none" || (item.border ?? image?.border) !== "none") return item;
+  return { ...item, border: "s" };
+}
+
 const alpha = (hex: string, a: number) =>
   `rgba(${[1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16)).join(",")},${a})`;
 

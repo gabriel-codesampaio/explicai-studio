@@ -1,5 +1,5 @@
 import { Marked, type Tokens } from "marked";
-import { type AnnotationStyle, arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
+import { type AnnotationStyle, arrowHalo, MARKER_SIZES, resolveItemStyle, STROKE_SCALE, styleVars } from "../annotationStyle.js";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
 import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
 import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
@@ -211,7 +211,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     .map((r) => {
       const link = hotspotHref(r.target, pages);
       return link
-        ? `<a class="hot" href="${esc(link.href)}" style="${box(r)}${varsAttr(r.style)}"><span class="sr">${L.goTo} ${esc(link.label)}</span></a>`
+        ? `<a class="hot" href="${esc(link.href)}" style="${box(r)}${varsAttr(resolveItemStyle(r.style, a.style))}"><span class="sr">${L.goTo} ${esc(link.label)}</span></a>`
         : "";
     })
     .join("");

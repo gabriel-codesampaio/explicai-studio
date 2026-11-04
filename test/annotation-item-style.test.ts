@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { parseItemStyle } from "../src/core/annotationStyle.js";
+import { parseItemStyle, resolveItemStyle } from "../src/core/annotationStyle.js";
 import {
   addPage,
   appendAnnotations,
@@ -38,6 +38,33 @@ describe("parseItemStyle", () => {
     expect(parseItemStyle("hotspot", { fill: "none", border: "none" })).toEqual({ fill: "none", border: "s" });
     expect(parseItemStyle("hotspot", { fill: "none", border: "l" })).toEqual({ fill: "none", border: "l" });
     expect(parseItemStyle("hotspot", { fill: "soft", border: "none" })).toEqual({ fill: "soft", border: "none" });
+  });
+});
+
+describe("resolveItemStyle", () => {
+  it("fill none com borda none herdada da imagem: a borda do item vira s", () => {
+    expect(resolveItemStyle({ fill: "none" }, { border: "none" })).toEqual({ fill: "none", border: "s" });
+    expect(resolveItemStyle({ fill: "none", border: "l" }, { border: "none" })).toEqual({ fill: "none", border: "l" });
+    expect(resolveItemStyle({ fill: "soft" }, { border: "none" })).toEqual({ fill: "soft" });
+    expect(resolveItemStyle(undefined, { border: "none" })).toBeUndefined();
+  });
+
+  it("no export a área sem preenchimento sobre imagem sem borda ganha --borda:1px", async () => {
+    const ws = await mkdtemp(path.join(tmpdir(), "explicai-resolve-"));
+    try {
+      const { dir } = await createManual(ws, { title: "R", language: "pt-BR" });
+      const asset = await saveAsset(dir, "tela.png", new Uint8Array([1, 2, 3]));
+      await writeAnnotations(dir, asset, {
+        ...base,
+        style: { border: "none" },
+        hotspots: [{ id: "t1", ...A, w: 0.2, h: 0.1, target: { type: "url", href: "https://a.com" }, style: { fill: "none" } }],
+      });
+      await addPage(dir, { title: "P", body: `![Tela](../${asset})` });
+      const h = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+      expect(/class="hot"[^>]*style="[^"]*--borda:1px/.test(h)).toBe(true);
+    } finally {
+      await rm(ws, { recursive: true, force: true });
+    }
   });
 });
 

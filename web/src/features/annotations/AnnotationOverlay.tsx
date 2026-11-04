@@ -1,7 +1,7 @@
 import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { arrowShape, arrowThickness, placeMarkers } from "@/lib/annotationShapes";
-import { arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "@/lib/annotationStyle";
+import { arrowHalo, MARKER_SIZES, resolveItemStyle, STROKE_SCALE, styleVars } from "@/lib/annotationStyle";
 import type { Annotations, Handle, Highlight, Point, Rect } from "@/lib/annotations";
 import { REDACT_CSS, type RedactStyle } from "@/lib/redact";
 import { cn } from "@/lib/utils";
@@ -161,7 +161,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
             height: `${h.h * 100}%`,
             ...border,
             background: "var(--preenchimento, color-mix(in srgb, var(--anotacao) 8%, transparent))",
-            ...styleVars(h.style, true),
+            ...styleVars(resolveItemStyle(h.style, annotations.style), true),
           }}
         >
           <Link2 className="absolute -top-2.5 -right-2.5 size-5 rounded-full bg-anotacao p-0.5 text-white" />
