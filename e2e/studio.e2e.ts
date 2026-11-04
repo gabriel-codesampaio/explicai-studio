@@ -1209,3 +1209,14 @@ test("exportação: logo do cliente entra na capa do HTML, a recusa diz o motivo
   const detail = await (await request.get(`/api/manuals/${slug}`)).json();
   expect(detail.theme).toEqual({ accent: "#7a3fc4" });
 });
+
+// T-142: na árvore o status é só a bolinha; o nome fica no tooltip e para leitor de tela.
+test("árvore mostra o status só como bolinha, com nome acessível", async ({ page, request }) => {
+  const { slug, pages } = await setup(request, "Manual Status", ["Revisada"]);
+  await request.put(`/api/manuals/${slug}/pages/${pages[0]?.id}`, { data: { status: "publicado" } });
+  await page.goto(`/#/${slug}`);
+  const mark = page.getByRole("navigation", { name: "Páginas do manual" }).locator('[title="Publicado"]');
+  await expect(mark).toHaveCount(1);
+  await expect(mark).toHaveText("Publicado"); // só no texto para leitor de tela
+  expect((await mark.boundingBox())?.width).toBeLessThan(16);
+});

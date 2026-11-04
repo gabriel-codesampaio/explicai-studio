@@ -5,7 +5,7 @@ import { t } from "@/lib/i18n";
 import { type DropZone, dropTarget, findItem, numberPages } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { type PageAction, PageActions } from "./PageActions";
-import { StatusLabel } from "./StatusMenu";
+import { StatusMark } from "./StatusMenu";
 import { useTreeKeyboard } from "./useTreeKeyboard";
 
 const DRAG_TYPE = "text/x-explicai-page";
@@ -112,7 +112,7 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
                 >
                   {item.title || (item.problem ? item.file.split("/").pop() : t("Sem título"))}
                 </span>
-                {item.status !== "rascunho" && <StatusLabel status={item.status} className="ml-2 text-xs font-medium" />}
+                {item.status !== "rascunho" && <StatusMark status={item.status} className="ml-2" />}
                 {item.problem && (
                   <span title={item.problem} className="ml-1.5 inline-flex align-[-2px] text-destructive">
                     <TriangleAlert className="size-3.5" aria-hidden />
