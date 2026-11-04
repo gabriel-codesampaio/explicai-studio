@@ -74,10 +74,7 @@ describe("renameAudience", () => {
     const entry = JSON.parse(await readFile(entryPath, "utf8"));
     entry.node.file = "../../fora.md";
     await writeFile(entryPath, JSON.stringify(entry));
-    await writeFile(path.join(dir, "fora.md"), "---
-audience: [admin]
----
-x");
+    await writeFile(path.join(dir, "fora.md"), "---\naudience: [admin]\n---\nx");
     await renameAudience(dir, "admin", "novo");
     expect(await readFile(path.join(dir, "fora.md"), "utf8")).toContain("admin");
   });
