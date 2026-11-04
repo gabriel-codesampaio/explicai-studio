@@ -73,8 +73,9 @@ export function StatusMenu({ status, onChange }: { status: PageStatus; onChange:
             <DropdownMenuRadioItem
               key={s.id}
               value={s.id}
-              // O indicador padrão (ponto) sai: a bolinha da etapa é o único indicador; o atual ganha fundo e check.
-              className="group items-start gap-2.5 pl-2 data-[state=checked]:bg-muted [&>span:first-child]:hidden"
+              // Sem o ponto padrão: a bolinha da etapa é o indicador; o atual ganha fundo e check.
+              indicator={false}
+              className="group items-start gap-2.5 data-[state=checked]:bg-muted"
             >
               <span style={{ color: `var(--${s.token})` }} className="mt-1">
                 <StatusDot status={s.id} />

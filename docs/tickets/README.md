@@ -215,6 +215,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-192](fechados/T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | feito | branch feat/t-190-191-192-estilo-marcacoes |
 | [T-151](fechados/T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | feito | `51a386c` |
 | [T-154](fechados/T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | feito | `45c8c2c` |
+| [T-241](fechados/T-241-ponto-do-item-de-radio-no-menu.md) | Ponto do item de rádio colide com o marcador próprio do item | P3 | feito | `b1947f6` |
 | [T-152](fechados/T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | feito | `b13e292` |
 | [T-183](fechados/T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | feito | `b13e292` |
 | [T-184](fechados/T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | feito | `122fe06` |
