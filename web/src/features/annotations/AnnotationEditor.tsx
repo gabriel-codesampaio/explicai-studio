@@ -4,11 +4,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
-<<<<<<< HEAD
-import { type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
-=======
-import { draftChanged, type HotspotTarget, removeAnnotation, type Tool } from "@/lib/annotations";
->>>>>>> origin/main
+import { draftChanged, type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
