@@ -18,6 +18,7 @@ import { readLocation, writeLocation } from "../lib/hashRoute";
 import { locale, t, tn } from "../lib/i18n";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
 import { useAutosave } from "./useAutosave";
+import { useOnFocus } from "./useOnFocus";
 import { useReconnect } from "./useReconnect";
 
 /** Tempo sem gravar o título até o arquivo da página mudar de nome. */
@@ -211,6 +212,33 @@ export function useStudio() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, [openFromLocation]);
+
+  /**
+   * A aba voltou ao foco: o que mudou no disco (MCP, outro editor) entra na tela. Lista de manuais e árvore são
+   * rebuscadas; a página aberta é gravada se tinha fila (o servidor acusa edição externa e a faixa de conflito
+   * aparece) e, sem conflito e sem fila, é trocada pela versão do disco.
+   */
+  const syncRef = useRef<() => Promise<void>>(async () => {});
+  syncRef.current = async () => {
+    if (!manuals || down) return;
+    try {
+      const list = await api.listManuals();
+      setManuals(list);
+      if (!manual) return void (notFound && (await openFromLocation(list)));
+      const ok = await flush();
+      await refreshManual(manual.slug);
+      if (!page || !ok || conflict.current) return;
+      const fresh = await api.getPage(manual.slug, page.id);
+      if (fresh.version && fresh.version !== versions.current.get(page.id)) {
+        remember(fresh);
+        setPage(fresh);
+        setRevision((r) => r + 1);
+      }
+    } catch (err) {
+      if (isOffline(err)) setServerDown(true); // outro erro (página apagada por fora etc.): a próxima ação mostra
+    }
+  };
+  useOnFocus(() => void syncRef.current());
 
   // Servidor fora: confere com espera crescente; ao voltar, termina a abertura ou regrava o que ficou na fila.
   const down = serverDown || (manuals === null && isOffline(bootError));
