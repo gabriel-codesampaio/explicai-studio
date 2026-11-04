@@ -4,11 +4,13 @@
  */
 export type StyleColor = "cobalt" | "ink" | "red" | "green" | "purple" | "orange";
 export type StyleStep = "s" | "m" | "l";
+export type StyleBorder = StyleStep | "none";
 
 export interface AnnotationStyle {
   color?: StyleColor;
   size?: StyleStep;
   stroke?: StyleStep;
+  border?: StyleBorder;
 }
 
 /**
@@ -35,6 +37,19 @@ export const MARKER_SIZES: Record<StyleStep, { disc: number; font: number }> = {
 /** Fator sobre a espessura de sempre (seta e contorno de destaque e de área). */
 export const STROKE_SCALE: Record<StyleStep, number> = { s: 0.75, m: 1, l: 1.5 };
 
+/** Borda em px inteiros (o navegador arredonda fração para baixo). Sem o campo vale o 2 px de sempre. */
+export const BORDER_PX: Record<StyleStep, number> = { s: 1, m: 2, l: 3 };
+
+/**
+ * Halo branco da seta: larguras do traço da haste e da ponta. Sem borda, o de sempre (2,2x e 1,2x a espessura);
+ * com borda, a espessura mais a borda dos dois lados; `none` não tem halo.
+ */
+export function arrowHalo(thickness: number, border: StyleBorder | undefined): { shaft: number; head: number } | null {
+  if (border === "none") return null;
+  if (!border) return { shaft: thickness * 2.2, head: thickness * 1.2 };
+  return { shaft: thickness + 2 * BORDER_PX[border], head: 2 * BORDER_PX[border] };
+}
+
 const isStep = (v: unknown): v is StyleStep => v === "s" || v === "m" || v === "l";
 
 /** Valor inválido é ignorado campo a campo; sem nenhum campo válido, não há `style`. */
@@ -45,6 +60,7 @@ export function parseStyle(v: unknown): AnnotationStyle | undefined {
     ...(typeof r.color === "string" && Object.hasOwn(STYLE_PALETTE, r.color) ? { color: r.color as StyleColor } : {}),
     ...(isStep(r.size) ? { size: r.size } : {}),
     ...(isStep(r.stroke) ? { stroke: r.stroke } : {}),
+    ...(isStep(r.border) || r.border === "none" ? { border: r.border as StyleBorder } : {}),
   };
   return Object.keys(style).length ? style : undefined;
 }
@@ -69,5 +85,10 @@ export function styleVars(style: AnnotationStyle | undefined, adaptive = false):
     vars["--disco-fonte"] = `${MARKER_SIZES[style.size].font}px`;
   }
   if (style?.stroke) vars["--marca-espessura"] = String(STROKE_SCALE[style.stroke]);
+  if (style?.border) {
+    vars["--borda"] = style.border === "none" ? "0px" : `${BORDER_PX[style.border]}px`;
+    // Destaque: contorno da própria cor, mais escuro, para a espessura aparecer.
+    if (style.border !== "none") vars["--borda-destaque"] = "color-mix(in srgb,var(--marca) 55%,#000)";
+  }
   return vars;
 }

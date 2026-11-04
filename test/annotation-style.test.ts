@@ -2,7 +2,15 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { MARKER_SIZES, parseStyle, STROKE_SCALE, STYLE_PALETTE, styleVars } from "../src/core/annotationStyle.js";
+import {
+  arrowHalo,
+  BORDER_PX,
+  MARKER_SIZES,
+  parseStyle,
+  STROKE_SCALE,
+  STYLE_PALETTE,
+  styleVars,
+} from "../src/core/annotationStyle.js";
 import { contrast } from "../src/core/export/color.js";
 import { MIN_CONTRAST } from "../src/core/export/theme.js";
 import {
@@ -44,6 +52,12 @@ describe("parseStyle", () => {
     expect(parseStyle({ color: "toString" })).toBeUndefined();
   });
 
+  it("border aceita none, s, m, l e ignora o resto", () => {
+    for (const b of ["none", "s", "m", "l"]) expect(parseStyle({ border: b })).toEqual({ border: b });
+    expect(parseStyle({ border: "xl" })).toBeUndefined();
+    expect(parseStyle({ border: 2, color: "red" })).toEqual({ color: "red" });
+  });
+
   it.each([undefined, null, "red", 4, [], {}, { color: "#ff0000" }])("%j não vira style", (v) => {
     expect(parseStyle(v)).toBeUndefined();
   });
@@ -69,6 +83,25 @@ describe("styleVars", () => {
       "--disco": "20px",
     });
     expect(styleVars({ color: "red" }, true)["--anotacao"]).toBe("light-dark(#c4261d,#ff8a80)");
+  });
+});
+
+describe("borda", () => {
+  it("degraus em px inteiros e variáveis só quando escolhida", () => {
+    expect(BORDER_PX).toEqual({ s: 1, m: 2, l: 3 });
+    expect(styleVars({ border: "l" })).toEqual({
+      "--borda": "3px",
+      "--borda-destaque": "color-mix(in srgb,var(--marca) 55%,#000)",
+    });
+    expect(styleVars({ border: "none" })).toEqual({ "--borda": "0px" });
+    expect(styleVars({ color: "red" })).not.toHaveProperty("--borda");
+  });
+
+  it("halo da seta: padrão de sempre, nenhum, ou a espessura mais a borda dos dois lados", () => {
+    expect(arrowHalo(10, undefined)).toEqual({ shaft: 22, head: 12 });
+    expect(arrowHalo(10, "none")).toBeNull();
+    expect(arrowHalo(10, "s")).toEqual({ shaft: 12, head: 2 });
+    expect(arrowHalo(10, "l")).toEqual({ shaft: 16, head: 6 });
   });
 });
 
@@ -152,6 +185,16 @@ describe("exportação com style", () => {
     expect(vars).toContain("--disco:32px");
     expect(vars).toContain("--marca-espessura:1.5");
     expect(html).toContain("calc(2px*var(--marca-espessura,1))");
+  });
+
+  it("border: sem o campo nada muda; com ele entram a regra e as variáveis; none tira o halo da seta", async () => {
+    const sem = await out({ color: "red" });
+    expect(sem).not.toContain("--borda");
+    const l = await out({ border: "l" });
+    expect(/<span class="shot" style="([^"]*)">/.exec(l)?.[1]).toContain("--borda:3px");
+    expect(l).toContain("border-width:var(--borda");
+    expect(l).toContain('class="halo"');
+    expect(shot(await out({ border: "none" }))).not.toContain('class="halo"');
   });
 
   it("o degrau m é a espessura de sempre; s e l afinam e engrossam a seta", async () => {

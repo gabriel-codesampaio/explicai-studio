@@ -24,9 +24,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-207](T-207-docs-da-1-0.md) | Docs da 1.0: primeiros passos, exemplo e compatibilidade | P2 | aberto | escritor |
 | [T-208](T-208-modelos-de-issue.md) | Modelos de issue no GitHub, com "meu manual antigo não abriu" | P2 | aberto | frontend |
 | [T-209](T-209-checklist-release-1-0.md) | Checklist de release da 1.0 | P1 | aberto | supervisor |
-| [T-190](T-190-borda-do-destaque-e-nenhuma-borda.md) | Borda do destaque visível e opção "nenhuma borda" | P1 | aberto | frontend |
-| [T-191](T-191-setas-sem-defeito.md) | Setas sem defeito | P1 | aberto | frontend |
-| [T-192](T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | aberto | frontend |
 | [T-193](T-193-estilo-por-marcador-formato.md) | Estilo por marcador, formato e export | P1 | aberto | frontend |
 | [T-194](T-194-painel-estilo-do-item.md) | Painel Estilo do item selecionado | P1 | aberto | design |
 | [T-195](T-195-destaque-com-cor-e-preenchimento.md) | Destaque com cor, preenchimento e borda | P2 | aberto | frontend |
@@ -38,10 +35,9 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-188](T-188-aparencia-do-manual-nos-ajustes.md) | "Aparência do manual" nos Ajustes, fora da exportação | P2 | aberto | frontend |
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
 | [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
-| [T-184](T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | aberto | frontend |
+| [T-221](T-221-numero-do-disco-em-posicao-fracionaria.md) | Número do disco desvia até 1 px em posição fracionária | P3 | aberto | frontend |
 | [T-220](T-220-publicar-studio-0-3-0-e-mcp-0-1-0.md) | Publicar Studio 0.3.0 e explicai-mcp 0.1.0 | P1 | aberto | supervisor |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
-| [T-151](T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | aberto | frontend |
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
@@ -54,7 +50,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-154](T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | aberto | frontend |
 | [T-155](T-155-botao-remover-imagem.md) | Adicionar botão Remover imagem no painel da imagem | P2 | aberto | frontend |
 | [T-156](T-156-foco-da-marcacao-na-legenda.md) | Levar o foco à legenda depois de marcar, sem quebrar os atalhos | P2 | aberto | frontend |
 | [T-157](T-157-painel-da-marcacao-apertado.md) | Dar espaço ao painel lateral da marcação | P2 | aberto | design |
@@ -214,6 +209,11 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
 | [T-168](fechados/T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | descartado | decisão da pessoa |
 | [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
+| [T-190](fechados/T-190-borda-do-destaque-e-nenhuma-borda.md) | Borda do destaque visível e opção "nenhuma borda" | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
+| [T-191](fechados/T-191-setas-sem-defeito.md) | Setas sem defeito | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
+| [T-192](fechados/T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | feito | branch feat/t-190-191-192-estilo-marcacoes |
+| [T-151](fechados/T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | feito | `51a386c` |
+| [T-154](fechados/T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | feito | `45c8c2c` |
 | [T-241](fechados/T-241-ponto-do-item-de-radio-no-menu.md) | Ponto do item de rádio colide com o marcador próprio do item | P3 | feito | `b1947f6` |
 | [T-152](fechados/T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | feito | `b13e292` |
 | [T-183](fechados/T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | feito | `b13e292` |

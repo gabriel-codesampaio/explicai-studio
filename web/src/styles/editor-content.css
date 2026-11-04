@@ -81,6 +81,17 @@
   font-family: var(--fonte-mono);
   font-size: 0.82em;
   font-weight: 700;
+  line-height: 1;
+}
+/* Número pela altura das maiúsculas (igual ao export); sem suporte, o grid com line-height 1 centra. */
+@supports (text-box: trim-both cap alphabetic) {
+  :is(.tiptap > ol, .tiptap li > ol) > li::before {
+    display: block;
+    height: auto;
+    padding-block: calc((1.55em - 1cap) / 2);
+    text-align: center;
+    text-box: trim-both cap alphabetic;
+  }
 }
 .tiptap li > :is(img, p > img, span > img, .react-renderer) {
   margin-top: 0.5em;

@@ -1,8 +1,8 @@
 import { Marked, type Tokens } from "marked";
-import { MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
+import { arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
-import { ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
-import { arrowShape, legendRows, placeMarkers } from "./annotationShapes.js";
+import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
+import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
@@ -50,7 +50,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
 <style>${fontFacesCss(meta.theme)}
-${CSS}${[...images.values()].some((i) => i.annotations.style) ? ANNOTATION_STYLE_CSS : ""}${themeCss(meta.theme)}</style>
+${CSS}${[...images.values()].some((i) => i.annotations.style) ? ANNOTATION_STYLE_CSS : ""}${[...images.values()].some((i) => i.annotations.style?.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
@@ -208,11 +208,15 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
   const arrows = a.arrows.length
     ? `<svg class="arrows" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">${a.arrows
         .map(({ from, to }) => {
-          const t = unit * 0.005 * STROKE_SCALE[a.style?.stroke ?? "m"];
+          const t = arrowThickness(unit, STROKE_SCALE[a.style?.stroke ?? "m"]);
           const { shaft: s, head } = arrowShape(px(from), px(to), t);
           const line = `x1="${f1(s.x1)}" y1="${f1(s.y1)}" x2="${f1(s.x2)}" y2="${f1(s.y2)}"`;
           const pts = head.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ");
-          return `<line class="halo" ${line} stroke-width="${f1(t * 2.2)}"/><polygon class="halo" points="${pts}" stroke-width="${f1(t * 1.2)}"/><line ${line} stroke-width="${f1(t)}"/><polygon points="${pts}"/>`;
+          const halo = arrowHalo(t, a.style?.border);
+          const under = halo
+            ? `<line class="halo" ${line} stroke-width="${f1(halo.shaft)}"/><polygon class="halo" points="${pts}" stroke-width="${f1(halo.head)}"/>`
+            : "";
+          return `${under}<line ${line} stroke-width="${f1(t)}"/><polygon points="${pts}"/>`;
         })
         .join("")}</svg>`
     : "";
@@ -299,7 +303,8 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .page-body>ol,.page-body li>ol{list-style:none;padding-left:2.25em}
 .page-body>ol>li,.page-body li>ol>li{position:relative}
 .page-body>ol>li+li,.page-body li>ol>li+li{margin-top:.6em}
-.page-body>ol>li::before,.page-body li>ol>li::before{content:counter(list-item);position:absolute;left:-2.25em;top:.12em;display:grid;place-items:center;width:1.55em;height:1.55em;border-radius:50%;background:var(--accent);color:#fff;font:700 .82em var(--mono)}
+.page-body>ol>li::before,.page-body li>ol>li::before{content:counter(list-item);position:absolute;left:-2.25em;top:.12em;display:grid;place-items:center;width:1.55em;height:1.55em;border-radius:50%;background:var(--accent);color:#fff;font:700 .82em/1 var(--mono)}
+@supports(text-box:trim-both cap alphabetic){.page-body>ol>li::before,.page-body li>ol>li::before{display:block;height:auto;padding-block:calc((1.55em - 1cap)/2);text-align:center;text-box:trim-both cap alphabetic}}
 .page-body li>blockquote{margin:.6em 0 0;padding:0;border:0;color:var(--tinta)}
 .page-body li>blockquote>p{display:inline;background:linear-gradient(transparent 50%,var(--marca-faixa) 50%)}
 .page-body li>blockquote>p>strong:first-child{font:700 .78em var(--mono);letter-spacing:.04em;text-transform:uppercase}

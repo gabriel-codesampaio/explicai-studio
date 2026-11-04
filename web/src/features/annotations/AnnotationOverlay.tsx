@@ -1,7 +1,7 @@
 import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
-import { arrowShape, placeMarkers } from "@/lib/annotationShapes";
-import { MARKER_SIZES, STROKE_SCALE, styleVars } from "@/lib/annotationStyle";
+import { arrowShape, arrowThickness, placeMarkers } from "@/lib/annotationShapes";
+import { arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "@/lib/annotationStyle";
 import type { Annotations, Handle, Highlight, Point, Rect } from "@/lib/annotations";
 import { REDACT_CSS, type RedactStyle } from "@/lib/redact";
 import { cn } from "@/lib/utils";
@@ -46,8 +46,9 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
   const px = (p: Point) => ({ x: p.x * size.w, y: p.y * size.h });
   const stroke = STROKE_SCALE[annotations.style?.stroke ?? "m"];
   const shapes = placeMarkers(annotations.markers.map(px), size.w, size.h, MARKER_SIZES[annotations.style?.size ?? "m"].disc);
-  // Contorno do destaque e da área: os 2 px de sempre vezes a espessura escolhida (igual ao .hl/.hot do export).
-  const border = { borderWidth: "calc(2px * var(--marca-espessura, 1))" };
+  // Contorno do destaque e da área: a borda escolhida, ou os 2 px de sempre vezes a espessura (igual ao .hl/.hot do export).
+  const border = { borderWidth: "var(--borda, calc(2px * var(--marca-espessura, 1)))" };
+  const hlBorder = { ...border, borderColor: "var(--borda-destaque, var(--marca))" };
   const interactive = Boolean(onGrab);
   const pick =
     (id: string, handle: Handle = "move") =>
@@ -129,7 +130,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
             ring(h.id),
             interactive && "cursor-move",
           )}
-          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%`, ...border }}
+          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%`, ...hlBorder }}
         />
       ))}
       {annotations.hotspots.map((h) => (
@@ -149,18 +150,28 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
       {size.w > 0 && annotations.arrows.length > 0 && (
         <svg className="absolute inset-0 overflow-visible" width={size.w} height={size.h} role="presentation">
           {annotations.arrows.map((a) => {
-            const thickness = (a.id === selectedId ? 5 : 3.5) * stroke;
+            // Mesma espessura do export (relativa à imagem); selecionar desenha um anel, não engorda a seta.
+            const thickness = arrowThickness(Math.max(size.w, size.h), stroke);
             const { shaft, head } = arrowShape(px(a.from), px(a.to), thickness);
             const pts = head.map((p) => `${p.x},${p.y}`).join(" ");
+            const halo = arrowHalo(thickness, annotations.style?.border);
             return (
               <g key={a.id} onPointerDown={pick(a.id)} className={cn(interactive && "cursor-move")}>
                 {/* Faixa larga e transparente para facilitar o clique na seta. */}
                 <line x1={px(a.from).x} y1={px(a.from).y} x2={px(a.to).x} y2={px(a.to).y} stroke="transparent" strokeWidth={14} />
+                {a.id === selectedId && (
+                  <g stroke="var(--primary)" strokeLinejoin="round" strokeLinecap="round">
+                    <line x1={shaft.x1} y1={shaft.y1} x2={shaft.x2} y2={shaft.y2} strokeWidth={(halo?.shaft ?? thickness) + 6} />
+                    <polygon points={pts} fill="var(--primary)" strokeWidth={(halo?.head ?? 0) + 6} />
+                  </g>
+                )}
                 {/* Contorno branco: a seta se lê sobre print claro e escuro (igual ao .halo do export). */}
-                <g stroke="#fff" strokeOpacity={0.9} strokeLinejoin="round" strokeLinecap="round">
-                  <line x1={shaft.x1} y1={shaft.y1} x2={shaft.x2} y2={shaft.y2} strokeWidth={thickness * 2.2} />
-                  <polygon points={pts} fill="#fff" strokeWidth={thickness * 1.2} />
-                </g>
+                {halo && (
+                  <g stroke="#fff" strokeOpacity={0.9} strokeLinejoin="round" strokeLinecap="round">
+                    <line x1={shaft.x1} y1={shaft.y1} x2={shaft.x2} y2={shaft.y2} strokeWidth={halo.shaft} />
+                    <polygon points={pts} fill="#fff" strokeWidth={halo.head} />
+                  </g>
+                )}
                 <line
                   x1={shaft.x1}
                   y1={shaft.y1}
@@ -194,7 +205,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
                     points={tail.map((p) => `${p.x},${p.y}`).join(" ")}
                     fill="var(--anotacao)"
                     stroke="#fff"
-                    strokeWidth={2}
+                    style={{ strokeWidth: "calc(var(--borda, 1px) * 2)" }}
                     strokeLinejoin="round"
                     paintOrder="stroke"
                   />
@@ -204,7 +215,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
                 onPointerDown={pick(m.id)}
                 className={cn(
                   // O after amplia o alvo de clique para 24 px mesmo no disco pequeno (20 px).
-                  "absolute grid place-items-center rounded-full bg-anotacao font-mono leading-none font-semibold text-sobre-anotacao shadow-[0_0_0_2px_#fff] before:content-[attr(data-n)] after:absolute after:-inset-0.5 after:content-['']",
+                  "absolute grid place-items-center rounded-full bg-anotacao font-mono leading-none font-semibold text-sobre-anotacao before:content-[attr(data-n)] before:[text-box:trim-both_cap_alphabetic] after:absolute after:-inset-0.5 after:content-['']",
                   ring(m.id),
                   interactive && "cursor-move",
                 )}
@@ -212,8 +223,9 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
                   width: "var(--disco, 24px)",
                   height: "var(--disco, 24px)",
                   margin: "calc(var(--disco, 24px) / -2) 0 0 calc(var(--disco, 24px) / -2)",
-                  fontSize: "var(--disco-fonte, 13px)",
                   transform: `translate(${disc.x}px, ${disc.y}px)`,
+                  fontSize: "var(--disco-fonte, 13px)",
+                  boxShadow: "0 0 0 var(--borda, 2px) #fff",
                 }}
                 // O número vem do CSS: dentro do editor, um texto aqui entraria no conteúdo lido pelo leitor de tela.
                 data-n={m.n}

@@ -15,9 +15,7 @@ export function AnnotationLegend({ markers, style }: { markers: Marker[]; style?
     >
       {rows.map((r) => (
         <li key={r.n} className="flex items-center gap-2.5">
-          <span className="inline-grid h-6 min-w-6 place-items-center px-1 rounded-full bg-anotacao font-mono text-[13px] font-semibold text-sobre-anotacao">
-            {r.n}
-          </span>
+          <span className="num-chip bg-anotacao text-sobre-anotacao">{r.n}</span>
           <span>{r.label}</span>
         </li>
       ))}
