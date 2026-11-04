@@ -19,7 +19,7 @@ import { mergeTheme, type ThemePatch, usedFonts } from "./theme.js";
 export { logoSizeError } from "./logo.js";
 export { findBrowser } from "./pdf.js";
 
-/** Pasta da exportação, dentro do manual. Cada exportação substitui a anterior do mesmo formato. */
+/** Pasta da exportação, dentro do manual. Cada exportação substitui a anterior do mesmo formato e perfil. */
 export const EXPORT_DIR = "exportacao";
 
 export type ExportFormat = "html" | "pdf" | "markdown";
@@ -30,7 +30,7 @@ export interface ExportResult {
   /** Arquivo principal, relativo à pasta do manual (`exportacao/html/index.html`). */
   file: string;
   pages: number;
-  /** Perfil do export, quando houve filtro. HTML e Markdown ficam nas mesmas pastas; o PDF leva o perfil no nome. */
+  /** Perfil do export, quando houve filtro. HTML, Markdown e PDF levam o perfil no nome da pasta ou do arquivo. */
   audience?: string;
   /** Páginas que ficaram de fora e imagens que não existem, com o motivo. */
   warnings: string[];
@@ -64,6 +64,8 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
     warnings.push(`O público "${opts.audience.trim()}" não vê nenhuma página: o manual saiu vazio.`);
   }
   const root = resolveInside(dir, EXPORT_DIR);
+  // Com perfil, cada um tem a sua pasta (html-cliente), para um export não apagar o do outro (T-134).
+  const profile = opts.audience?.trim() ? `-${slugify(opts.audience) || "publico"}` : "";
   const result = (file: string): ExportResult => ({
     format,
     file: relativePosix(dir, file),
@@ -73,14 +75,14 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   });
 
   if (format === "markdown") {
-    const out = await buildThenSwap(path.join(root, "markdown"), async (tmp) => {
+    const out = await buildThenSwap(path.join(root, `markdown${profile}`), async (tmp) => {
       await copyImages(dir, images, tmp);
       await atomicWrite(path.join(tmp, "manual.md"), renderMarkdown(collected, images));
     });
     return result(path.join(out, "manual.md"));
   }
 
-  const out = await buildThenSwap(path.join(root, "html"), async (tmp) => {
+  const out = await buildThenSwap(path.join(root, `html${profile}`), async (tmp) => {
     await copyImages(dir, images, tmp);
     await copyFonts(tmp, collected.meta.theme);
     const logo = await copyLogo(dir, tmp, collected.meta.theme, warnings);
@@ -89,7 +91,6 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   const html = path.join(out, "index.html");
   if (format === "html") return result(html);
 
-  const profile = opts.audience?.trim() ? `-${slugify(opts.audience) || "publico"}` : "";
   const pdf = path.join(root, `${slugify(collected.meta.title) || "manual"}${profile}.pdf`);
   await rm(pdf, { force: true });
   await printPdf(html, pdf);

@@ -139,6 +139,8 @@ export const EN: Record<string, string> = {
   Atalhos: "Shortcuts",
   "Atalhos de teclado": "Keyboard shortcuts",
   "Bloco de código": "Code block",
+  Divisor: "Divider",
+  "Linha que separa partes da página": "Line that separates parts of the page",
   "Buscar página": "Find page",
   "Buscar página pelo título": "Find page by title",
   "Buscar página pelo título…": "Find page by title…",

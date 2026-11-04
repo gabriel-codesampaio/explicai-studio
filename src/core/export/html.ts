@@ -290,6 +290,7 @@ main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .page-body code{font:.88em var(--mono);background:var(--papel);border:1px solid var(--linha);border-radius:4px;padding:.05em .35em}
 .page-body pre{font:14px/1.5 var(--mono);background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:12px 14px;overflow-x:auto}
 .page-body pre code{background:none;border:0;padding:0}
+.page-body hr{border:0;border-top:1px solid var(--linha);margin:1.5em 0}
 .page-body blockquote{margin:.6em 0;padding:2px 0 2px 16px;border-left:2px solid var(--linha);color:var(--grafite)}
 .page-body table{border-collapse:collapse;width:100%;margin:.8em 0;font-size:15px}
 .page-body th,.page-body td{border:1px solid var(--linha);padding:6px 10px;text-align:left;vertical-align:top}

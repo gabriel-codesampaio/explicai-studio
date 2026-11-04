@@ -39,6 +39,17 @@ test("primeiro uso: cria manual e página, escreve e o texto continua lá depois
   await expect(editor(page)).toContainText("Clique em Novo cliente.");
 });
 
+// T-146: divisor pelo menu "/".
+test("menu / insere o divisor", async ({ page, request }) => {
+  const { slug } = await setup(request, "Manual Divisor", ["Divisor"]);
+  await page.goto(`/#/${slug}`);
+  await editor(page).click();
+  await page.keyboard.type("/divisor");
+  await expect(page.getByRole("option", { name: /Divisor/ })).toBeVisible();
+  await page.keyboard.press("Enter");
+  await expect(editor(page).locator("hr")).toHaveCount(1);
+});
+
 test("menu / insere passos numerados", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Barra", ["Passos"]);
   await page.goto(`/#/${slug}`);
