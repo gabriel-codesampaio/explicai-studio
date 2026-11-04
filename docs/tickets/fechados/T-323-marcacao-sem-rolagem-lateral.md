@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: aberto
+- Status: fechado
 - Agente: frontend
 - Origem: pedido da pessoa, 2026-11-04 (print a ~1250 px de largura)
 
@@ -10,10 +10,10 @@
 O painel Estilo (T-194) não cabe na coluna de 20rem: "Grande", "Normal" e as bordas dos campos saem do diálogo, e aparece rolagem lateral embaixo da imagem.
 
 ## Critérios de aceite
-- [ ] Nenhuma rolagem horizontal no diálogo em 375, 768, 1280 e 1920 px, com scrollWidth <= clientWidth medido por script.
-- [ ] Controles segmentados de tamanho e borda cabem na coluna, ou quebram linha sem cortar opção.
-- [ ] Abaixo de `md`, painel embaixo da imagem, com a mesma regra.
-- [ ] Imagem encolhe para caber; marcações continuam na posição certa.
+- [x] Nenhuma rolagem horizontal no diálogo em 375, 768, 1280 e 1920 px, com scrollWidth <= clientWidth medido por script.
+- [x] Controles segmentados de tamanho e borda cabem na coluna, ou quebram linha sem cortar opção.
+- [x] Abaixo de `md`, painel embaixo da imagem, com a mesma regra.
+- [x] Imagem encolhe para caber; marcações continuam na posição certa.
 
 ## Onde
 - web/src/features/annotations/AnnotationEditor.tsx:185 (grade da coluna) e o painel Estilo
