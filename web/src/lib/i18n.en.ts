@@ -371,6 +371,7 @@ export const EN: Record<string, string> = {
   "Status da página: {status}": "Page status: {status}",
   Subseção: "Subsection",
   Tabela: "Table",
+  Coluna: "Column",
   Tema: "Theme",
   "Tentar de novo": "Try again",
   "Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão.":
