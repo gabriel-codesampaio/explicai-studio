@@ -46,8 +46,11 @@ beforeEach(async () => {
   await addPage(dir, { title: "Início", body: "Texto" });
 });
 
+const realPlatform = process.platform;
+
 afterEach(async () => {
   vi.unstubAllEnvs();
+  Object.defineProperty(process, "platform", { value: realPlatform });
   await rm(workspace, { recursive: true, force: true });
   await rm(empty, { recursive: true, force: true });
 });
@@ -59,6 +62,8 @@ function withoutBrowser() {
   vi.stubEnv("PROGRAMFILES", empty);
   vi.stubEnv("PROGRAMFILES(X86)", empty);
   vi.stubEnv("LOCALAPPDATA", empty);
+  // No macOS o Chrome fica em /Applications, fora do PATH: o teste força o caminho do Linux.
+  Object.defineProperty(process, "platform", { value: "linux" });
 }
 
 /** Um "navegador" que existe de verdade no disco (o executável do Node serve de arquivo). */

@@ -27,6 +27,25 @@ jobs:
       - run: npm run typecheck
       - run: npm run test:cov
 
+  # O check exigido continua sendo "Lint, tipos e testes" (Linux). Estes dois só provam que
+  # os testes passam em Windows e macOS; lint e cobertura não dependem do sistema.
+  plataformas:
+    name: Testes (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
   e2e:
     name: E2E (Chromium)
     runs-on: ubuntu-latest
