@@ -25,6 +25,6 @@ Commits: 759610c (menu ⋯ com Lixeira, Aparência e Atalhos), 060a936 (Exportar
 
 O que foi feito: `ExportDialog` com botão sólido na linha do topo da `PageView`, único botão de destaque da tela. `layout/MoreMenu.tsx` novo; Lixeira e Aparência viraram Dialog controlado (antes popover ancorado no gatilho que saiu); ShortcutsDialog controlado.
 
-Verificação: `npm run check` 96 testes, `npm run test:e2e` 17 verdes (exportar pelo topo, painéis pelo ⋯ com foco voltando, os mesmos painéis dentro da gaveta em 375×800, restaurar fecha a lixeira). Medidas em 375, 960 e 1440: botão dentro da janela, acima do título, sem rolagem lateral. Design aprovou 1440 claro e a gaveta em 375 (prints em `C:/Users/PC/explicai-prints/p1/T-006/`). Revisão sem achados que bloqueiem.
+Verificação: `npm run check` 96 testes, `npm run test:e2e` 17 verdes (exportar pelo topo, painéis pelo ⋯ com foco voltando, os mesmos painéis dentro da gaveta em 375×800, restaurar fecha a lixeira). Medidas em 375, 960 e 1440: botão dentro da janela, acima do título, sem rolagem lateral. Design aprovou 1440 claro e a gaveta em 375 (prints em `~/explicai-prints/p1/T-006/`). Revisão sem achados que bloqueiem.
 
 Ficou de fora: o escuro não foi visto. Se a restauração falhar, a lixeira fecha e o erro aparece em toast.

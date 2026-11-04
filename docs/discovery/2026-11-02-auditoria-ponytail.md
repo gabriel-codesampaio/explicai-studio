@@ -156,7 +156,7 @@ Resumo: 3 altas, 11 médias, 11 baixas (os itens 22 e 23 são notas, não defeit
 
 ### 18. Mensagens de erro com caminho absoluto; diretório vira 400
 
-`src/server/http.ts:78,88-95`: o corpo de erro repassa `err.message` do Node, que inclui `ENOENT: no such file ... 'C:\Users\PC\...'`. Pedir `/files/m/assets` (diretório) dá `EISDIR` com status 400. O navegador mostra isso em aviso. Correção: mapear `ENOENT`/`EISDIR`/`EACCES` para frases fixas (e 404 para diretório). P, frontend.
+`src/server/http.ts:78,88-95`: o corpo de erro repassa `err.message` do Node, que inclui `ENOENT: no such file ... '~\...'`. Pedir `/files/m/assets` (diretório) dá `EISDIR` com status 400. O navegador mostra isso em aviso. Correção: mapear `ENOENT`/`EISDIR`/`EACCES` para frases fixas (e 404 para diretório). P, frontend.
 
 ### 19. Um `entry.json` quebrado esconde toda a lixeira
 

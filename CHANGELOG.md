@@ -6,11 +6,17 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-03
+
 ### Corrigido
 
 - Aparência: com Sistema marcado, o painel diz se o tema valendo agora é claro ou escuro.
 - Editor: imagem colada ou solta acompanha o texto digitado durante o envio e entra no ponto certo, sem erro quando a página encolhe.
 - CLI: `--version` mostra a versão, e opção desconhecida mostra o uso em vez de um erro do Node.
+
+### English summary
+
+An image pasted while you type now lands in the right place. With System selected, the Appearance panel says which theme is active. `--version` works, and an unknown CLI option shows the usage instead of a Node error.
 
 ## [0.2.0] - 2026-11-03
 
@@ -74,5 +80,6 @@ A 0.1.0 foi a primeira versão do Studio; este bloco reúne o que entrou desde a
 
 New since 0.1.0: bundled OFL fonts and font choice for exports, manual theme colors and client logo, alert blocks, text colors with names, a floating selection toolbar, a richer `/` menu, table row and column controls, annotation shortcuts, full-screen error pages, translated errors, GitHub Actions CI and a much larger test suite. New: warning instead of overwrite when a page changed on disk outside the Studio. Image tools: hide sensitive data (solid bar or strong blur burned into the pixels), display size (small, medium, wide), crop with annotations remapped, and resolution/weight reduction. Fixes cover autosave races, per-folder write queue, atomic exports, unused-image cleanup and many editor and accessibility details. Security: symlinks that leave the manual folder are refused, CSP on `/files/`, same-port `Origin` check. The npm package no longer ships source maps.
 
-[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.1.0...v0.2.0
