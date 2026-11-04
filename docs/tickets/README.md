@@ -26,6 +26,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
 | [T-137](T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | aberto | qa |
+| [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-130](T-130-menores-do-t-123.md) | Menores deixados pelo T-123 | P3 | aberto | frontend |
 | [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |

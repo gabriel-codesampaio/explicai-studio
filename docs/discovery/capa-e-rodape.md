@@ -115,6 +115,12 @@ Recomendo A: resolve "de quem, qual versão, para quem" e numera o PDF. Observar
 6. Imagem de fundo e texto longo na capa? Recomendo não (quebra contraste e layout).
 7. PDF sem número em Chrome antigo é aceitável (sem erro, com aviso)? Recomendo sim.
 
+## Decisões tomadas (2026-11-04)
+
+A pessoa respondeu: "Edição na capa direta, crie uma etapa pra isso"; "sim prévia"; "texto livre, somente dê a sugestão"; "por manual"; "por enquanto sem imagem de fundo"; e "ok" para PDF sem número em Chrome antigo, com aviso.
+
+O escopo fica na opção B, mais uma etapa de edição direta na capa. Ver T-147.
+
 ## Rascunho de spec da opção A
 
 **Escopo**
