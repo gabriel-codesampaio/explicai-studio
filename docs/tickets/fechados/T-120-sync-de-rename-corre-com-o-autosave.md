@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: fechado
+- Status: feito
 - Agente: frontend
 - Origem: revisão de código da release 0.2.0 (2026-11-03)
 

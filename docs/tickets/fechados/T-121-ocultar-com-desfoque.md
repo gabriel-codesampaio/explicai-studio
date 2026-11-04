@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: concluído
+- Status: feito
 - Agente: frontend (+ design, qa)
 - Origem: pedido da pessoa em 2026-11-03, ao testar o T-116 ("adicione uma personalização pra desfocar"). Reabre só o ponto do discovery que tinha descartado o borrão; as outras decisões do T-116 continuam.
 
