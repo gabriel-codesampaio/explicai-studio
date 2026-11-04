@@ -217,6 +217,9 @@
   border: 1px solid var(--linha);
   display: block;
 }
+.tiptap[contenteditable="true"] img {
+  cursor: pointer;
+}
 .tiptap img.ProseMirror-selectednode {
   outline: 3px solid var(--cobalto);
   outline-offset: 2px;
