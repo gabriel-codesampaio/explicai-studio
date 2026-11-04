@@ -16,6 +16,8 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 Added: per-item `style` (marker, arrow, highlight, hotspot) overriding the image style; preserved by crop, editing and `annotate_image`. No UI yet.
 
+- `AnnotationsPatch` (`explicai/core`) aceita `style` em cada item, e os tipos do estilo saem de `explicai/core`; é o que o `annotate_image` do MCP usa. / `AnnotationsPatch` takes a per-item `style`; style types are exported from `explicai/core`.
+
 ## [0.3.0] - 2026-11-04
 
 ### Adicionado
