@@ -62,7 +62,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
       <span aria-hidden className="w-24 shrink-0 text-sm font-bold">
         {legend}
       </span>
-      <div className="flex flex-nowrap gap-1">
+      <div className="flex flex-wrap gap-1">
         {items.map((s) => (
           <button
             key={s.id}
