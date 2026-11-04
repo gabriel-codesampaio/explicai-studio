@@ -1,20 +1,22 @@
 # T-182: Pôr a troca de fonte na barra da seleção, discreta
 
 - Prioridade: P2
-- Tamanho: P
-- Status: aberto (decisão pendente: ver abaixo)
+- Tamanho: M
+- Status: aberto
 - Agente: frontend
 - Origem: pedido da pessoa, 2026-11-04 (lote 1.0)
 
 ## Problema
 A barra que aparece ao selecionar texto (Texto, B, I, código, link, limpar, cor) não tem atalho nem opção de fonte. A pessoa quer a opção ali, discreta e diferente da barra principal.
 
-Decisão pendente: hoje a fonte vale para o manual inteiro (FontMenu, T-160). Na barra da seleção ela trocaria só o trecho (exige campo novo no formato) ou abriria a fonte do manual?
+Decidido (pessoa, 2026-11-04): troca a fonte **só do trecho selecionado**. A fonte do manual inteiro continua na tela de Aparência (discovery aparencia-sidebar-e-perfis). Exige marca nova no formato: Markdown com a fonte do trecho, lida e gravada sem perda, aceita só fontes da lista do manual, renderizada no HTML e no PDF.
 
 ## Critérios de aceite
 - [ ] Controle de fonte na barra da seleção, compacto (ícone ou rótulo curto), com dica e atalho listados em ShortcutsDialog.
 - [ ] Visual da barra da seleção diferente da barra fixa (mais leve), sem cobrir a linha seguinte (T-165).
-- [ ] Comportamento conforme a decisão acima, com teste.
+- [ ] Fonte aplicada só ao trecho; "limpar formatação" remove; ida e volta Markdown sem perda (teste no core); export HTML e PDF com a fonte do trecho.
+- [ ] Fonte fora da lista é ignorada ao ler (validação no parser).
+- [ ] Documentado em manual-format.md.
 
 ## Onde
 - web/src/features/editor/SelectionMenu.tsx, web/src/features/editor/FontMenu.tsx

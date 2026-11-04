@@ -12,6 +12,11 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-185](T-185-sidebar-respiro-e-ver-como.md) | Sidebar: mais respiro no cabeçalho e "Ver como" acima da busca | P2 | aberto | frontend |
+| [T-186](T-186-publicos-criar-renomear-remover.md) | Públicos: criar, renomear e remover (core e API) | P2 | aberto | frontend |
+| [T-187](T-187-dialogo-publicos-do-manual.md) | Diálogo "Públicos do manual" nos Ajustes | P2 | aberto | frontend |
+| [T-188](T-188-aparencia-do-manual-nos-ajustes.md) | "Aparência do manual" nos Ajustes, fora da exportação | P2 | aberto | frontend |
+| [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
 | [T-179](T-179-rolagem-sobre-o-layout.md) | Tirar a barra de rolagem de cima do layout | P2 | aberto | design |
 | [T-180](T-180-menu-da-etapa.md) | Redesenhar o menu da etapa da página | P2 | aberto | design |
 | [T-181](T-181-select-da-casa.md) | Criar o Select do Studio, com cursor de clique | P2 | aberto | frontend |
@@ -24,7 +29,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
 | [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
-| [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
 | [T-149](T-149-sobras-da-revisao-de-desempenho.md) | Fila entre processos e tamanho do bundle | P3 | aberto | frontend |
@@ -41,11 +45,9 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-157](T-157-painel-da-marcacao-apertado.md) | Dar espaço ao painel lateral da marcação | P2 | aberto | design |
 | [T-158](T-158-um-nome-para-publico.md) | Usar um nome só para o público da página | P2 | aberto | frontend |
 | [T-159](T-159-versao-da-pagina-com-nome-certo.md) | Deixar claro que "Versão" vale para a página, não para o manual | P2 | aberto | frontend |
-| [T-160](T-160-fonte-do-manual-no-lugar-certo.md) | Levar a fonte do manual para onde o alcance é claro | P2 | aberto | frontend |
 | [T-161](T-161-lixeira-com-foco-e-confirmacao.md) | Proteger a limpeza da lixeira e renomear a ação | P2 | aberto | frontend |
 | [T-162](T-162-lixeira-e-ajuda-com-lugar-proprio.md) | Dar à lixeira e à ajuda um lugar próprio no menu | P2 | aberto | design |
 | [T-163](T-163-aviso-de-conflito-mostra-diferenca.md) | Mostrar o que mudou no aviso de conflito, sem empurrar o texto | P2 | aberto | frontend |
-| [T-172](T-172-nome-acessivel-do-painel-de-publico.md) | Dar nome acessível ao painel de público da página | P2 | aberto | frontend |
 | [T-173](T-173-foco-preso-em-menus-com-aria-hidden.md) | Conferir o foco nos menus abertos com fundo aria-hidden | P2 | aberto | qa |
 | [T-174](T-174-alvos-pequenos-abaixo-de-24-px.md) | Levar alvos de toque abaixo de 24 px a 24 px | P2 | aberto | frontend |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |

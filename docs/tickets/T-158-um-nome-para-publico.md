@@ -9,6 +9,8 @@
 ## Problema
 Achado A8. O público tem quatro nomes: Ver como, Público da página, Quem vê esta página e Para quem exportar. Cada tela usa um. Relacionado ao T-124 (fechado: manual por público) e aos T-134 a T-137 (abertos, sobras do T-124).
 
+Decidido (pessoa, 2026-11-04): "Público" em toda parte: "Ver como público" (barra), "Público da página" (popover), "Público do export" (exportação), "Públicos do manual" (gestão, T-187). "Perfil" sai da interface, inclusive dos textos de ajuda.
+
 ## Critérios de aceite
 - [ ] A equipe escolhe um termo único e registra a escolha no Registro.
 - [ ] O termo aparece igual na barra lateral, no menu da página e no diálogo de exportação.
