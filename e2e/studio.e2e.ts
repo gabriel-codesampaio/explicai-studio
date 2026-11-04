@@ -883,7 +883,10 @@ test.describe("rodapés alinhados", () => {
   });
 });
 
-test("barra da seleção na primeira linha não cobre a barra fixa nem as dicas dela", async ({ page, request }) => {
+test("barra da seleção na primeira linha abre para cima, sobre a barra fixa, visível e clicável (T-165)", async ({
+  page,
+  request,
+}) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   const { slug } = await setup(request, "Manual Barra Cobre", ["Início"]);
   await page.goto(`/#/${slug}`);
@@ -893,20 +896,18 @@ test("barra da seleção na primeira linha não cobre a barra fixa nem as dicas 
   await page.keyboard.press("Shift+Home");
   const menu = page.getByRole("toolbar", { name: "Formatar seleção" });
   await expect(menu).toBeVisible();
-  const fixed = page.getByRole("toolbar", { name: "Formatação" });
+  const line = editor(page).locator("p").first();
   await expect
     .poll(async () => {
-      const [m, f] = await Promise.all([menu.boundingBox(), fixed.boundingBox()]);
-      return (m?.y ?? 0) >= (f?.y ?? 0) + (f?.height ?? 0) - 1;
+      const [m, l] = await Promise.all([menu.boundingBox(), line.boundingBox()]);
+      return (m?.y ?? 0) + (m?.height ?? 0) <= (l?.y ?? 0) + 1;
     })
     .toBe(true);
-  // Cor do texto em toque tem 44 px (teste "alvos de toque"); aqui, a dica da barra fixa aparece e fica livre.
-  await fixed.getByRole("button", { name: "Negrito" }).hover();
-  const tip = page.getByRole("tooltip");
-  await expect(tip).toContainText("Negrito");
-  const [tb, mb] = await Promise.all([tip.boundingBox(), menu.boundingBox()]);
-  const overlap = (tb?.y ?? 0) < (mb?.y ?? 0) + (mb?.height ?? 0) && (tb?.y ?? 0) + (tb?.height ?? 0) > (mb?.y ?? 0);
-  expect(overlap).toBe(false);
+  const onTop = await menu.evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return el.contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+  });
+  expect(onTop).toBe(true);
 });
 
 for (const [label, ext] of [
