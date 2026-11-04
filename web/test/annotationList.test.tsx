@@ -60,3 +60,22 @@ describe("ItemStylePanel: excluir e Esc", () => {
     expect(del).toHaveBeenCalledTimes(1);
   });
 });
+
+describe("AnnotationList: foco na legenda do marcador novo (T-156)", () => {
+  const props = { pages: [], selectedId: null, onSelect: () => {}, onChange: () => {} };
+
+  it("criar um marcador leva o foco ao campo dele", () => {
+    const one = addMarker(emptyAnnotations(), { x: 0.1, y: 0.5 });
+    const { rerender } = render(<AnnotationList annotations={one} {...props} />);
+    expect(document.activeElement).toBe(document.body);
+    rerender(<AnnotationList annotations={addMarker(one, { x: 0.4, y: 0.5 })} {...props} />);
+    expect(document.activeElement).toBe(screen.getByRole("textbox", { name: /marcador 2/i }));
+  });
+
+  it("marcar um destaque não rouba o foco", () => {
+    const one = addMarker(emptyAnnotations(), { x: 0.1, y: 0.5 });
+    const { rerender } = render(<AnnotationList annotations={one} {...props} />);
+    rerender(<AnnotationList annotations={{ ...one, highlights: [{ id: "h", x: 0, y: 0, w: 0.1, h: 0.1 }] }} {...props} />);
+    expect(document.activeElement).toBe(document.body);
+  });
+});
