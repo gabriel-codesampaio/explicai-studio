@@ -48,16 +48,13 @@ export function AudienceRow({ name, count, known, onRename, onRemove }: Props) {
         ) : (
           <Input
             autoFocus
+            data-editing
             value={value}
             onFocus={(e) => e.currentTarget.select()}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") void save();
-              if (e.key === "Escape") {
-                e.preventDefault();
-                e.stopPropagation();
-                stop();
-              }
+              if (e.key === "Escape") stop();
             }}
             maxLength={MAX_AUDIENCE_NAME + 10}
             aria-label={t("Novo nome de {nome}", { nome: name })}

@@ -49,7 +49,12 @@ export function AudiencesDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="gap-4 p-4 sm:max-w-lg" aria-describedby="aud-desc">
+      <DialogContent
+        className="gap-4 p-4 sm:max-w-lg"
+        aria-describedby="aud-desc"
+        // Esc na edição de uma linha cancela só a edição, não fecha o diálogo.
+        onEscapeKeyDown={(e) => e.target instanceof HTMLElement && e.target.dataset.editing !== undefined && e.preventDefault()}
+      >
         <DialogTitle className="font-display text-lg font-extrabold tracking-tight">{t("Públicos do manual")}</DialogTitle>
         <DialogDescription id="aud-desc" className="text-xs">
           {t("Cada página pode valer só para alguns públicos. Sem nenhum marcado, vale para todos.")}
@@ -77,7 +82,10 @@ export function AudiencesDialog({ open, onOpenChange }: { open: boolean; onOpenC
           <div className="flex gap-2">
             <Input
               value={draft}
-              onChange={(e) => setDraft(e.target.value)}
+              onChange={(e) => {
+                setDraft(e.target.value);
+                setError(null);
+              }}
               maxLength={MAX_AUDIENCE_NAME + 10}
               aria-label={t("Novo público")}
               aria-invalid={error !== null}
