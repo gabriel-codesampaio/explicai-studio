@@ -45,15 +45,15 @@ const iconButton =
  * e na página aberta, para quem chega não precisar adivinhar que eles existem. Em telas de toque,
  * onde não existe "passar o mouse", ficam sempre à vista.
  */
-export function PageActions({ item, pages, selected, menuOpen, onMenuOpenChange, onAction }: Props) {
+export function PageActions({ item, pages, menuOpen, onMenuOpenChange, onAction }: Props) {
   const name = item.title || t("Sem título");
   const sub = flattenItems(item.children).length;
 
   return (
     <span
       className={cn(
-        "flex opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 has-[[data-state=open]]:opacity-100 pointer-coarse:opacity-100",
-        selected && "opacity-100",
+        // Por cima do fim da linha (não reserva largura): o título usa o espaço todo até a mão chegar (T-141).
+        "absolute inset-y-0 right-1 flex items-center rounded-r-md bg-muted pl-1 opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 has-[[data-state=open]]:opacity-100 pointer-coarse:static pointer-coarse:bg-transparent pointer-coarse:opacity-100",
       )}
     >
       <Tooltip>
