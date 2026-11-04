@@ -94,7 +94,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           type="button"
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
-          {t("Versões")}
+          {t("Versões da página")}
           {pinned && (
             <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">{t("Versão do manual")}</span>
           )}
@@ -105,7 +105,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Versões desta página")}</DialogTitle>
           <DialogDescription>
             {t(
-              'Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que vai para o manual final. Sem ela, vale o texto atual.',
+              'Estas versões são só desta página, não do manual inteiro. Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que esta página usa no manual final. Sem ela, vale o texto atual.',
             )}
           </DialogDescription>
         </DialogHeader>
@@ -118,7 +118,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
             placeholder={t("Nome da versão (opcional), ex.: Revisada pelo suporte")}
             aria-label={t("Nome da versão (opcional)")}
           />
-          <Button type="submit">{t("Guardar versão")}</Button>
+          <Button type="submit">{t("Guardar versão da página")}</Button>
         </form>
 
         <div className="min-h-0 overflow-y-auto">
@@ -131,7 +131,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                 </Button>
                 <span className="flex-1 truncate text-sm font-bold">{noteLabel(preview.note)}</span>
                 <Button variant="outline" size="sm" onClick={() => void restore(preview.id)}>
-                  <RotateCcw aria-hidden /> {t("Restaurar esta")}
+                  <RotateCcw aria-hidden /> {t("Restaurar na página")}
                 </Button>
               </div>
               <VersionPreview slug={slug} version={preview} />
@@ -174,10 +174,10 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                         <Eye aria-hidden /> {t("Ver")}
                       </Button>
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void restore(v.id)}>
-                        <RotateCcw aria-hidden /> {t("Restaurar")}
+                        <RotateCcw aria-hidden /> {t("Restaurar na página")}
                       </Button>
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void publish(v.published ? null : v.id)}>
-                        <BookCheck aria-hidden /> {v.published ? t("Tirar do manual") : t("Usar no manual")}
+                        <BookCheck aria-hidden /> {v.published ? t("Tirar da página do manual") : t("Usar na página do manual")}
                       </Button>
                       <span title={v.published ? t("Escolha outra versão antes") : undefined}>
                         <Button
