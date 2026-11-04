@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { access, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -271,6 +271,31 @@ describe("exportação: cor do texto", () => {
     const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
     expect(md).toContain("Clique em **Excluir**,");
     expect(md).not.toContain('data-color="red"');
+  });
+});
+
+describe("exportação: fonte do trecho", () => {
+  const body =
+    'Veja <span data-font="lora">**isto**</span>, <span data-font="comic-sans">aquilo</span> e <span data-font="inter">aquilo</span>.';
+
+  it("HTML: só id da lista passa, o @font-face e o arquivo vão junto, e id fora da lista fica como texto", async () => {
+    await addPage(dir, { title: "Fontes", body });
+    const out = await exportManual(dir, "html");
+    const html = await readFile(path.join(dir, out.file), "utf8");
+    expect(html).toContain('<span data-font="lora"><strong>isto</strong></span>');
+    expect(html).toContain("&lt;span data-font=&quot;comic-sans&quot;&gt;");
+    expect(html).toContain('[data-font="lora"]{font-family:"Lora",Georgia');
+    expect(html).toContain("url(fonts/lora-latin-wght-normal.woff2)");
+    expect(html).toContain("url(fonts/inter-latin-wght-normal.woff2)");
+    expect(html).not.toContain("url(fonts/montserrat");
+    await access(path.join(path.dirname(path.join(dir, out.file)), "fonts", "lora-latin-wght-normal.woff2"));
+  });
+
+  it("Markdown: sai só o texto, sem o span", async () => {
+    await addPage(dir, { title: "Fontes", body });
+    const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
+    expect(md).toContain("Veja **isto**,");
+    expect(md).not.toContain('data-font="lora"');
   });
 });
 

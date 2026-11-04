@@ -156,10 +156,11 @@ export function themeCss(theme: ManualTheme | undefined): string {
 }
 
 /** As fontes que vão no export: texto, títulos (sem repetir) e a de código. */
-export function usedFonts(theme: ManualTheme | undefined): FontSpec[] {
+export function usedFonts(theme: ManualTheme | undefined, inline: FontSpec[] = []): FontSpec[] {
   const { text, headings } = themeFonts(theme);
-  return [...new Set([text, headings, MONO])];
+  return [...new Set([text, headings, MONO, ...inline])];
 }
 
 /** `@font-face` das fontes usadas, no mesmo formato do export. */
-export const fontFacesCss = (theme: ManualTheme | undefined): string => usedFonts(theme).map(fontFaceCss).join("\n");
+export const fontFacesCss = (theme: ManualTheme | undefined, inline: FontSpec[] = []): string =>
+  usedFonts(theme, inline).map(fontFaceCss).join("\n");

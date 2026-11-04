@@ -5,6 +5,7 @@ import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./a
 import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
+import { fontSpanOpen, fontStack, inlineFonts } from "./fonts.js";
 import { exportLevels } from "./headings.js";
 import { highlightExtension } from "./highlight.js";
 import { type Labels, labelsFor } from "./labels.js";
@@ -20,6 +21,7 @@ const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
 export function renderHtml(collected: Collected, images: Map<string, ImageInfo>, logo: string | null = null): string {
   const { meta, pages } = collected;
   const L = labelsFor(meta.language);
+  const inline = inlineFonts(pages.map((p) => p.body));
   const toc = pages
     .flatMap((p) => {
       const heads = pageHeadings(p.body);
@@ -50,8 +52,8 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
-<style>${fontFacesCss(meta.theme)}
-${CSS}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}</style>
+<style>${fontFacesCss(meta.theme, inline)}
+${CSS}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}${inline.map((f) => `[data-font="${f.id}"]{font-family:${fontStack(f)}}`).join("")}</style>
 </head>
 <body>
 <div class="layout">
@@ -143,12 +145,17 @@ ${this.parser.parse(callout.body)}</div>
 `;
       },
       // HTML colado no texto sai como texto: o manual exportado não roda código de ninguém.
-      // Só a cor do texto passa, e só com um nome da paleta (ver textColors.ts).
+      // Só passam a cor do texto (nome da paleta, ver textColors.ts) e a fonte do trecho (id da lista, ver fonts.ts).
       html({ text }: Tokens.HTML | Tokens.Tag) {
         const color = colorSpanOpen(text);
         if (color) {
           openSpans++;
           return `<span data-color="${color}">`;
+        }
+        const font = fontSpanOpen(text);
+        if (font) {
+          openSpans++;
+          return `<span data-font="${font.id}">`;
         }
         if (text === "</span>" && openSpans > 0) {
           openSpans--;
