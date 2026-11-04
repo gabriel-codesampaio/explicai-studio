@@ -30,7 +30,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-196](T-196-barra-da-marcacao-e-dicas.md) | Barra de ferramentas e dicas | P2 | aberto | frontend |
 | [T-197](T-197-mcp-estilo-por-item.md) | MCP `annotate_image` e `get_manual` com `style` por item | P2 | aberto | supervisor |
 | [T-185](T-185-sidebar-respiro-e-ver-como.md) | Sidebar: mais respiro no cabeçalho e "Ver como" acima da busca | P2 | aberto | frontend |
-| [T-186](T-186-publicos-criar-renomear-remover.md) | Públicos: criar, renomear e remover (core e API) | P2 | aberto | frontend |
 | [T-187](T-187-dialogo-publicos-do-manual.md) | Diálogo "Públicos do manual" nos Ajustes | P2 | aberto | frontend |
 | [T-188](T-188-aparencia-do-manual-nos-ajustes.md) | "Aparência do manual" nos Ajustes, fora da exportação | P2 | aberto | frontend |
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
@@ -210,6 +209,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-168](fechados/T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | descartado | decisão da pessoa |
 | [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
 | [T-190](fechados/T-190-borda-do-destaque-e-nenhuma-borda.md) | Borda do destaque visível e opção "nenhuma borda" | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
+| [T-186](fechados/T-186-publicos-criar-renomear-remover.md) | Públicos: criar, renomear e remover (core e API) | P2 | feito | branch feat/t-186-publicos-core |
 | [T-191](fechados/T-191-setas-sem-defeito.md) | Setas sem defeito | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
 | [T-192](fechados/T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | feito | branch feat/t-190-191-192-estilo-marcacoes |
 | [T-151](fechados/T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | feito | `51a386c` |
