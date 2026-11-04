@@ -23,8 +23,6 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
 | [T-140](T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | aberto | frontend |
-| [T-141](T-141-sidebar-corta-titulos-cedo.md) | Sidebar corta títulos e o seletor do manual cedo demais | P2 | aberto | frontend |
-| [T-142](T-142-status-so-bolinha-na-arvore.md) | Status da página vira só a bolinha na árvore | P2 | aberto | frontend |
 | [T-143](T-143-renomear-o-manual.md) | Renomear o manual | P2 | aberto | frontend |
 | [T-144](T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | aberto | frontend |
 | [T-145](T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | aberto | frontend |
@@ -52,6 +50,8 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
 | [T-133](fechados/T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | feito | #30 |
+| [T-141](fechados/T-141-sidebar-corta-titulos-cedo.md) | Sidebar corta títulos e o seletor do manual cedo demais | P2 | feito | #35 |
+| [T-142](fechados/T-142-status-so-bolinha-na-arvore.md) | Status da página vira só a bolinha na árvore | P2 | feito | #35 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
