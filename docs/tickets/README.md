@@ -12,6 +12,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-220](T-220-publicar-studio-0-3-0-e-mcp-0-1-0.md) | Publicar Studio 0.3.0 e explicai-mcp 0.1.0 | P1 | aberto | supervisor |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
 | [T-151](T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | aberto | frontend |
 | [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
