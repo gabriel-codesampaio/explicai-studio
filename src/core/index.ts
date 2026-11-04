@@ -33,6 +33,7 @@ export { listTrash, removePage, restorePage, TRASH_DIR, type TrashItem } from ".
 export { flatten } from "./tree.js";
 export * from "./types.js";
 export {
+  deleteVersion,
   listVersions,
   publishVersion,
   readVersion,
