@@ -22,6 +22,13 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-140](T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | aberto | frontend |
+| [T-141](T-141-sidebar-corta-titulos-cedo.md) | Sidebar corta títulos e o seletor do manual cedo demais | P2 | aberto | frontend |
+| [T-142](T-142-status-so-bolinha-na-arvore.md) | Status da página vira só a bolinha na árvore | P2 | aberto | frontend |
+| [T-143](T-143-renomear-o-manual.md) | Renomear o manual | P2 | aberto | frontend |
+| [T-144](T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | aberto | frontend |
+| [T-145](T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | aberto | frontend |
+| [T-146](T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | aberto | frontend |
 | [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
