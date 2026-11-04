@@ -11,7 +11,7 @@ test("página vazia ensina o primeiro passo, leva ao Exportar e some com texto",
 
   const hint = page.getByRole("region", { name: "Comece pelo primeiro print" });
   await expect(hint).toContainText("Ctrl+V");
-  await hint.getByRole("button", { name: "Exportar manual" }).click();
+  await hint.getByRole("button", { name: "Abrir a exportação" }).click();
   const dialog = page.getByRole("dialog", { name: "Exportar manual" });
   await expect(dialog).toBeVisible();
 

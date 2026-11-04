@@ -343,6 +343,7 @@ export const EN: Record<string, string> = {
   "Corretor ortográfico": "Spell checker",
   "O corretor é o do navegador e segue o idioma do manual. Para ensinar uma palavra, clique nela com o botão direito, sublinhada em vermelho, e escolha Adicionar ao dicionário.":
     "The spell checker is the browser's and follows the manual language. To teach it a word, right-click the red-underlined word and choose Add to dictionary.",
+  "Abrir a exportação": "Open export",
   "Comece pelo primeiro print": "Start with the first screenshot",
   "Cole um print com Ctrl+V.": "Paste a screenshot with Ctrl+V.",
   "Clique no print, escolha Editar imagem e numere o que a pessoa precisa clicar.":

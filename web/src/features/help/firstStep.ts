@@ -7,5 +7,5 @@ export const FIRST_STEP = {
     "Escreva ao lado de cada número o que ele mostra.",
   ],
   exportLine: "Com o manual pronto, exporte em HTML ou PDF.",
-  exportButton: "Exportar manual",
+  exportButton: "Abrir a exportação",
 } as const;
