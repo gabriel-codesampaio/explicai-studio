@@ -235,7 +235,7 @@ it("manual em inglês sai com os textos da exportação em inglês", async () =>
   expect(md).toContain("## 1 Untitled");
   expect(md).toContain("> Image legend:\n> 1. (no description)");
   const html = await readFile(path.join(en.dir, (await exportManual(en.dir, "html")).file), "utf8");
-  expect(html).toContain('<nav class="toc" aria-label="Contents">');
+  expect(html).toContain('<nav class="toc" id="sumario" aria-label="Contents">');
   expect(html).toContain("Manual made with Explicaí Studio.");
 });
 

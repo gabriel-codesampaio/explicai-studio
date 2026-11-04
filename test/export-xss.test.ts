@@ -82,7 +82,7 @@ describe("exportação: escape contra XSS", () => {
     expect(doc).toContain("&lt;iframe");
     expect(doc).toContain("&lt;img src=x onerror=alert(1)&gt;");
     // Só o sumário tem <a> (âncoras #p-…); <b>, <style> e <svg> não vêm do texto do autor.
-    expect(tags(doc).filter((t) => /^<(style|svg|b)\b/i.test(t) || /^<a\b(?![^>]*href="#p-)/i.test(t))).toEqual([]);
+    expect(tags(doc).filter((t) => /^<(style|svg|b)\b/i.test(t) || /^<a\b(?![^>]*href="#(?:p-|sumario))/i.test(t))).toEqual([]);
     expect(doc).not.toContain('onclick="alert');
   });
 
@@ -115,7 +115,7 @@ describe("exportação: escape contra XSS", () => {
     expectNoActiveContent(doc);
     const hrefs = tags(doc)
       .map((t) => /^<a\b[^>]*\shref="([^"]*)"/.exec(t)?.[1])
-      .filter((h): h is string => Boolean(h) && !h?.startsWith("#p-"));
+      .filter((h): h is string => Boolean(h) && !h?.startsWith("#p-") && h !== "#sumario");
     expect(hrefs.sort()).toEqual(["#secao", "https://auto.com", "https://ok.com/a?x=1&amp;y=2", "mailto:a@b.com"].sort());
     expect(doc).toContain("ruim 0");
     expect(doc).toMatch(/<a href="https:\/\/ok\.com[^"]*" rel="noopener noreferrer">Boa<\/a>/);

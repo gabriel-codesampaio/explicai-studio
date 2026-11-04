@@ -12,6 +12,13 @@ export interface Labels {
   removedPage: string;
   untitled: string;
   callouts: Record<string, string>;
+  pageNav: string;
+  prev: string;
+  next: string;
+  backToToc: string;
+  openOriginal: string;
+  start: string;
+  readTime: (pages: number, minutes: number) => string;
 }
 
 const PT: Labels = {
@@ -27,6 +34,13 @@ const PT: Labels = {
   removedPage: "removida",
   untitled: "Sem título",
   callouts: { tip: "Dica", warning: "Atenção", caution: "Erro", note: "Nota" },
+  pageNav: "Entre as páginas",
+  prev: "Anterior",
+  next: "Próxima",
+  backToToc: "Voltar ao sumário",
+  openOriginal: "Abrir a imagem no tamanho original",
+  start: "Comece por",
+  readTime: (n, min) => `${n} ${n === 1 ? "página" : "páginas"}, cerca de ${min} min de leitura`,
 };
 
 const EN: Labels = {
@@ -42,6 +56,13 @@ const EN: Labels = {
   removedPage: "removed",
   untitled: "Untitled",
   callouts: { tip: "Tip", warning: "Warning", caution: "Error", note: "Note" },
+  pageNav: "Between pages",
+  prev: "Previous",
+  next: "Next",
+  backToToc: "Back to contents",
+  openOriginal: "Open the image at full size",
+  start: "Start with",
+  readTime: (n, min) => `${n} ${n === 1 ? "page" : "pages"}, about ${min} min to read`,
 };
 
 /** Manual em português (pt, pt-BR, pt-PT) recebe os textos em português; os outros, em inglês. */
