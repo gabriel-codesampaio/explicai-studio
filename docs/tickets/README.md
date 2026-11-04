@@ -43,7 +43,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
-| [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | PRNUM |
+| [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
 | [T-035](fechados/T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | feito | #27 |
 | [T-124](fechados/T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | feito | #25, explicai-mcp #6 |
