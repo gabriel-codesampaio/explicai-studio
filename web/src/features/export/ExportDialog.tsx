@@ -176,6 +176,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
               {t("Cores, fontes, capa e rodapé:")}{" "}
               <button
                 type="button"
+                disabled={busy}
                 onClick={() => setAppearanceOpen(true)}
                 className="cursor-pointer font-bold text-primary underline underline-offset-2 [@media(pointer:coarse)]:min-h-11"
               >

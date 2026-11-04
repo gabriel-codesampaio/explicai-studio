@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test";
 
 // Página vazia que ensina o primeiro print (T-018), rodapé opcional (T-033) e corretor (T-036).
-test("página vazia ensina o primeiro passo, leva ao Exportar e some com texto", async ({ page, request }) => {
+test("página vazia leva ao Exportar, abre a Aparência do manual, desliga o rodapé e some com texto", async ({
+  page,
+  request,
+}) => {
   const manual = await (await request.post("/api/manuals", { data: { title: "Lote seis", language: "en-US" } })).json();
   const created = await (await request.post(`/api/manuals/${manual.slug}/pages`, { data: { title: "Vazia" } })).json();
   await page.goto(`/#/${manual.slug}/${created.id}`);
@@ -11,7 +14,18 @@ test("página vazia ensina o primeiro passo, leva ao Exportar e some com texto",
 
   const hint = page.getByRole("region", { name: "Comece pelo primeiro print" });
   await expect(hint).toContainText("Ctrl+V");
-  await expect(hint.getByRole("button", { name: "Abrir a exportação" })).toBeVisible();
+  await hint.getByRole("button", { name: "Abrir a exportação" }).click();
+  const exporting = page.getByRole("dialog", { name: "Exportar manual" });
+  await expect(exporting).toBeVisible();
+  // Ponteiro para a Aparência do manual: abre por cima e o Esc fecha só ele.
+  const pointer = exporting.getByRole("button", { name: "Aparência do manual" });
+  await pointer.click();
+  await expect(page.getByRole("dialog", { name: "Aparência do manual" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: "Aparência do manual" })).toBeHidden();
+  await expect(pointer).toBeFocused();
+  await page.keyboard.press("Escape");
+  await expect(exporting).toBeHidden();
   await page.getByRole("button", { name: "Ajustes" }).click();
   await page.getByRole("menuitem", { name: "Aparência do manual" }).click();
   const dialog = page.getByRole("dialog", { name: "Aparência do manual" });
