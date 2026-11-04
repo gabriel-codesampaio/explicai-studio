@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 interface Props {
   open: boolean;
   title: string;
-  /** Texto do estado, como "1 área a ocultar": lido junto com o título. */
+  /** Estado com o painel fechado, como "1 área a ocultar"; aberto, o corpo já o mostra. */
   status: string;
   onToggle: () => void;
   children: ReactNode;
@@ -23,7 +23,7 @@ export function Pending({ open, title, status, onToggle, children }: Props) {
       >
         <Chevron className="size-4 shrink-0" aria-hidden />
         <span className="font-bold">{title}</span>
-        <span className="ml-auto text-muted-foreground">{status}</span>
+        {!open && <span className="ml-auto text-muted-foreground">{status}</span>}
       </button>
       {open && children}
     </div>
