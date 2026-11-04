@@ -54,7 +54,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-165](T-165-barra-da-selecao-cobre-linha.md) | Barra da seleção não cobrir a linha seguinte | P3 | aberto | design |
 | [T-166](T-166-status-com-generos-misturados.md) | Padronizar o gênero e o vocabulário dos status | P3 | aberto | frontend |
 | [T-167](T-167-refazer-na-lista-de-atalhos.md) | Listar o Refazer na lista de atalhos | P3 | aberto | frontend |
-| [T-168](T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | aberto | design |
 | [T-169](T-169-primeiro-uso-sem-marca.md) | Pôr a marca na tela de primeiro uso, como nas telas de erro | P3 | aberto | design |
 | [T-170](T-170-arvore-aceita-busca-por-digitacao.md) | Deixar a árvore de páginas aceitar busca por digitação | P3 | aberto | frontend |
 | [T-176](T-176-paginas-de-erro-sem-main-e-sem-pular.md) | Dar main, nome às regiões e link para pular nas telas de erro | P3 | aberto | frontend |
@@ -190,4 +189,5 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-003](fechados/T-003-rotulos-mono.md) | Usar rótulos de seção em mono maiúsculo, como no brand book | P1 | feito | 77a41f9 |
 | [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
+| [T-168](fechados/T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | descartado | decisão da pessoa |
 | [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
