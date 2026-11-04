@@ -1,15 +1,16 @@
-import { Keyboard, Languages, Settings, SunMoon, Trash2 } from "lucide-react";
+import { Keyboard, Languages, Settings, SunMoon, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { TrashPanel } from "@/features/pages/TrashPanel";
 import { AppearancePanel } from "@/features/settings/AppearancePanel";
+import { AudiencesDialog } from "@/features/settings/AudiencesDialog";
 import { LANGS, LanguagePanel } from "@/features/settings/LanguagePanel";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { lang, t } from "@/lib/i18n";
 import { type Mode, readAppearance } from "@/lib/theme";
 
-type Panel = "trash" | "appearance" | "language" | "shortcuts";
+type Panel = "trash" | "audiences" | "appearance" | "language" | "shortcuts";
 
 /** Alvo de toque de 44 px em tela de toque, como a linha "Ajustes". */
 const TOUCH = "group/item [@media(pointer:coarse)]:min-h-11";
@@ -43,6 +44,11 @@ export function MoreMenu() {
               <Trash2 className={ICON} aria-hidden /> {t("Lixeira")}
             </DropdownMenuItem>
           )}
+          {manual && (
+            <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("audiences")}>
+              <Users className={ICON} aria-hidden /> {t("Públicos")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("appearance")}>
             <SunMoon className={ICON} aria-hidden /> {t("Aparência")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{t(MODE_LABELS[mode])}</span>
@@ -64,6 +70,7 @@ export function MoreMenu() {
           onRestore={(trashId, pageId) => restorePage(manual.slug, trashId, pageId)}
         />
       )}
+      {manual && <AudiencesDialog {...bind("audiences")} />}
       <AppearancePanel {...bind("appearance")} />
       <LanguagePanel {...bind("language")} />
       <ShortcutsDialog {...bind("shortcuts")} />
