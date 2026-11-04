@@ -14,9 +14,15 @@ export interface ArrowShape {
   head: [Pt, Pt, Pt];
 }
 
+/** Arraste mínimo de uma seta, em fração da imagem: abaixo disso não sobra haste. */
+export const ARROW_MIN_DRAG = 0.03;
+
+/** Espessura da seta: meio por cento do lado maior da imagem vezes a escala. Editor e export usam este cálculo. */
+export const arrowThickness = (unit: number, scale: number) => unit * 0.005 * scale;
+
 /**
- * Seta com ponta fechada. O tamanho da ponta é proporcional à espessura e encolhe em setas curtas
- * (no máximo 70% do comprimento), sem perder a forma. `thickness` na mesma unidade de `from` e `to`.
+ * Seta com ponta fechada. A ponta tem 5x a espessura de largura e encolhe em setas curtas (no máximo 40%
+ * do comprimento), sem perder a forma. `thickness` na mesma unidade de `from` e `to`.
  */
 export function arrowShape(from: Pt, to: Pt, thickness: number): ArrowShape {
   const dx = to.x - from.x;
@@ -24,8 +30,8 @@ export function arrowShape(from: Pt, to: Pt, thickness: number): ArrowShape {
   const len = Math.hypot(dx, dy);
   const ux = len === 0 ? 1 : dx / len;
   const uy = len === 0 ? 0 : dy / len;
-  const headLen = Math.min(thickness * 4.5, len * 0.7);
-  const half = headLen * 0.45;
+  const headLen = Math.min(thickness * 5.5, len * 0.4);
+  const half = (headLen * 5) / 11; // largura/comprimento = 5/5,5
   const bx = to.x - ux * headLen;
   const by = to.y - uy * headLen;
   const inside = headLen * 0.2;

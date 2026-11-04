@@ -152,15 +152,16 @@ No Studio cada tipo tem cor fixa e um ícone; a Nota usa a cor de destaque do ma
 
 `display` é opcional e guarda o tamanho da imagem na página: `"s"` (Pequena, até 40% da coluna), `"m"` (Média, 70%) ou `"full"` (Larga, 100%). Sem o campo, a imagem aparece como sempre: tamanho natural, limitada à coluna. Nenhum tamanho amplia a imagem acima do natural. Vale para a imagem em todo lugar onde ela aparece, no editor, no HTML e no PDF; o Markdown da página e o Markdown exportado não mudam, e as coordenadas das marcações continuam as mesmas. Valor fora de `s`, `m` e `full` é ignorado. O arquivo pode existir só com `display` (listas vazias). Quem regrava o JSON (o Studio, o Agent) deve manter o campo.
 
-`style` é opcional e guarda a aparência das marcações da imagem: `{ "color": "red", "size": "l", "stroke": "s" }`. Todos os campos são opcionais e valor fora da lista é ignorado (sem nenhum valor válido, o campo some).
+`style` é opcional e guarda a aparência das marcações da imagem: `{ "color": "red", "size": "l", "stroke": "s", "border": "m" }`. Todos os campos são opcionais e valor fora da lista é ignorado (sem nenhum valor válido, o campo some).
 
 | Campo | Valores | Efeito |
 |---|---|---|
 | `color` | `cobalt` (padrão), `ink`, `red`, `green`, `purple`, `orange` | Cor do marcador, da seta e da área clicável (não do destaque). Cada chave tem par claro/escuro e cor do número, todos com contraste de 4,5:1 ou mais. Sobrepõe a cor de destaque do tema nesta imagem. |
 | `size` | `s` (20 px), `m` (24 px, padrão), `l` (32 px) | Diâmetro do disco do marcador. |
 | `stroke` | `s`, `m` (padrão), `l` | Espessura da seta e do contorno de destaque e área (0,75, 1 e 1,5 vez a de sempre). |
+| `border` | `none`, `s` (1 px), `m` (2 px), `l` (3 px) | Borda de todas as marcações da imagem: anel branco do marcador, halo branco da seta e contorno de destaque e área. `none` tira. O destaque ganha contorno de cor própria, mais escura que o marca-texto, para a espessura aparecer. Sem o campo vale o de sempre. |
 
-Sem `style` a imagem aparece como sempre e o HTML exportado não muda. Número, ponta cheia, moldura e tracejado não dependem da cor. No HTML e no PDF o `style` vira variáveis CSS no `.shot` (`--anotacao`, `--sobre-anotacao`, `--disco`, `--marca-espessura`). `version` continua 1. Quem regrava o JSON (Studio, `annotate_image`) deve manter o campo.
+Sem `style` a imagem aparece como sempre e o HTML exportado não muda. Número, ponta cheia, moldura e tracejado não dependem da cor. No HTML e no PDF o `style` vira variáveis CSS no `.shot` (`--anotacao`, `--sobre-anotacao`, `--disco`, `--marca-espessura`, `--borda`). `version` continua 1. Quem regrava o JSON (Studio, `annotate_image`) deve manter o campo.
 
 Destinos de área clicável: `page` (outra página), `anchor` (seção de uma página) e `url` (só `http`, `https` ou `mailto`).
 
