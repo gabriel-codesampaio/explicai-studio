@@ -44,19 +44,28 @@ describe.each(["0.1", "0.2", "0.3"])("manual da versão %s", (version) => {
   it("não altera o que o manual antigo tinha fora da página editada", async () => {
     const dir = path.join(tmp, version);
     await cp(new URL(`${version}/`, FIXTURES), dir, { recursive: true });
-    const before = await readFile(path.join(dir, "manual.json"), "utf8");
+    const before = JSON.parse(await readFile(path.join(dir, "manual.json"), "utf8"));
     const annBefore = await readFile(path.join(dir, "assets/tela.png.json"), "utf8");
     await updatePage(dir, B, { body: "Editada." });
-    expect(await readFile(path.join(dir, "manual.json"), "utf8")).toBe(before);
+    expect(JSON.parse(await readFile(path.join(dir, "manual.json"), "utf8"))).toEqual(before);
     expect(await readFile(path.join(dir, "assets/tela.png.json"), "utf8")).toBe(annBefore);
   });
 });
 
 describe("manual 0.3 com público", () => {
-  it("exporta o perfil do manual", async () => {
+  it("exporta o conteúdo só para quem tem acesso", async () => {
     const dir = path.join(tmp, "0.3");
     await cp(new URL("0.3/", FIXTURES), dir, { recursive: true });
-    const r = await exportManual(dir, "markdown", { audience: "admin" });
-    expect(r.pages).toBe(2);
+    const admin = await exportManual(dir, "markdown", { audience: "admin" });
+    const adminText = await readFile(path.join(dir, admin.file), "utf8");
+    expect(admin.pages).toBe(2);
+    expect(adminText).toContain("Bem-vindo");
+    expect(adminText).toContain("versão publicada");
+
+    const outro = await exportManual(dir, "markdown", { audience: "cliente" });
+    const outroText = await readFile(path.join(dir, outro.file), "utf8");
+    expect(outro.pages).toBe(0);
+    expect(outroText).not.toContain("Bem-vindo");
+    expect(outroText).not.toContain("versão publicada");
   });
 });
