@@ -46,9 +46,14 @@ export function CreateManual({ firstRun, onCreate, onCancel }: Props) {
         />
       </div>
       <div className="flex gap-2">
-        <Button type="submit" disabled={!clean}>
+        <Button type="submit" disabled={!clean} aria-describedby={clean ? undefined : "new-manual-hint"}>
           {t("Criar manual")}
         </Button>
+        {!clean && (
+          <p id="new-manual-hint" className="self-center text-sm text-muted-foreground">
+            {t("Dê um nome ao manual.")}
+          </p>
+        )}
         {!firstRun && (
           <Button type="button" variant="ghost" onClick={onCancel}>
             {t("Cancelar")}
