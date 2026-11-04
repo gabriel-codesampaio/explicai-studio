@@ -25,6 +25,9 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
+| [T-131](T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | aberto | frontend |
+| [T-132](T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | aberto | frontend |
+| [T-133](T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | aberto | design |
 | [T-123](T-123-mcp-fase-2-sugere-e-automatiza.md) | MCP fase 2, sugerir e automatizar | P1 | aberto | frontend |
 | [T-125](T-125-manual-do-codelab-pelo-mcp.md) | Manual do CodeLab feito com o MCP | P1 | aberto | supervisor |
 | [T-124](T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | aberto | frontend |
