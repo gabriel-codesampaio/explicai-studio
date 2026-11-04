@@ -1,6 +1,6 @@
 # Marca em 15 linhas
 
-Resumo para quem mexe na tela. Completo: [brand book](https://gabriel-codesampaio.github.io/explicai-brandbook/) e `../brand/discovery/90_SYNTHESIS.md`.
+Resumo para quem mexe na tela. Completo: [brand book](https://gabriel-codesampaio.github.io/explicai-brandbook/) e `../explicai-brandbook/discovery/90_SYNTHESIS.md`.
 
 - **Ideia:** mesa de revisão. Papel claro, caneta azul (cobalto), marca-texto amarelo e números de marcador. Calmo, preciso, didático; nada de enfeite.
 - **Cores:** cobalto `#2B4FE0` (ação, links, números), marca-texto `#FFD43B` (só conteúdo realçado e página ativa), nanquim `#151A33` (texto), papel `#F5F6FA` (fundo). Escuro: fundo `#0E1120`, cobalto `#7088FF`. Tokens em `web/src/styles/tokens.css`.

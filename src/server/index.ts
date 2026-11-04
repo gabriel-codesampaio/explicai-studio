@@ -4,6 +4,7 @@ import { errorPage, pickLang } from "./errorPage.js";
 import { HttpError, publicMessage, send, sendJson, statusOf } from "./http.js";
 import { matchRoute, type Route, type StudioOptions } from "./router.js";
 import { assetRoutes } from "./routes/assets.js";
+import { audienceRoutes } from "./routes/audiences.js";
 import { exportRoutes } from "./routes/export.js";
 import { fontRoutes } from "./routes/fonts.js";
 import { manualRoutes } from "./routes/manuals.js";
@@ -18,6 +19,7 @@ export type { StudioOptions } from "./router.js";
 const routes: Route[] = [
   ...manualRoutes,
   ...pageRoutes,
+  ...audienceRoutes,
   ...versionRoutes,
   ...exportRoutes,
   ...fontRoutes,
