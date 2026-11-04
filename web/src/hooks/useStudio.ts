@@ -341,6 +341,26 @@ export function useStudio() {
       await refreshManual(manual.slug);
     });
 
+  /**
+   * Cria, renomeia ou remove um público do manual. Erros sobem para o diálogo mostrar junto ao campo.
+   * Renomear e remover mexem no arquivo das páginas: grava a fila antes (o editor não regrava o nome antigo) e relê a página aberta.
+   */
+  const changeAudiences = async (call: (slug: string) => Promise<unknown>, touchesPages: boolean) => {
+    if (!manual) return;
+    if (touchesPages) {
+      await audienceQueue.current.catch(() => {});
+      await flush();
+    }
+    await call(manual.slug);
+    await refreshManual(manual.slug);
+    if (touchesPages && page) await showPage(manual.slug, page.id);
+  };
+  const audiences = {
+    add: (name: string) => changeAudiences((slug) => api.addAudience(slug, name), false),
+    rename: (from: string, name: string) => changeAudiences((slug) => api.renameAudience(slug, from, name), true),
+    remove: (name: string) => changeAudiences((slug) => api.removeAudience(slug, name), true),
+  };
+
   /** Etapa da página aberta no fluxo de aprovação. Grava na hora e atualiza a etiqueta na árvore. */
   const setPageStatus = (status: PageStatus) =>
     run(async () => {
@@ -462,6 +482,7 @@ export function useStudio() {
     uploadManualLogo,
     setPageStatus,
     setPageAudience,
+    audiences,
     createManual,
     renameManual,
     editPage,

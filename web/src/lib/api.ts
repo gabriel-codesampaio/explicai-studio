@@ -198,6 +198,14 @@ export const api = {
   publishVersion: (slug: string, id: string, versionId: string | null) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/published`, send("PUT", { versionId })),
 
+  addAudience: (slug: string, name: string) => call<{ name: string }>(`${manualUrl(slug)}/audiences`, send("POST", { name })),
+  renameAudience: (slug: string, from: string, name: string) =>
+    call<{ name: string; pages: number }>(`${manualUrl(slug)}/audiences/${encodeURIComponent(from)}`, send("PATCH", { name })),
+  removeAudience: (slug: string, name: string) =>
+    call<{ freed: { id: string; title: string }[] }>(`${manualUrl(slug)}/audiences/${encodeURIComponent(name)}`, {
+      method: "DELETE",
+    }),
+
   listFonts: () => call<FontInfo[]>("/api/fonts"),
   exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean, audience?: string) =>
     call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved, ...(audience ? { audience } : {}) })),
@@ -253,6 +261,10 @@ const CODED: Record<string, (p: Record<string, string | number>) => string> = {
       "Para gerar o PDF, o Explicaí usa o Chrome, o Edge ou o Chromium da sua máquina, e nenhum foi encontrado. Instale um deles ou informe o caminho na variável EXPLICAI_BROWSER.",
     ),
   "no-approved-pages": () => t("Nenhuma página está aprovada ou publicada. Aprove uma página ou exporte todas."),
+  "audience-empty": () => t("Dê um nome ao público."),
+  "audience-too-long": (p) => t("O nome do público tem no máximo {max} caracteres.", { max: String(p.max) }),
+  "audience-duplicate": (p) => t("Já existe um público chamado {name}.", { name: String(p.name) }),
+  "audience-not-found": (p) => t("O público {name} não existe mais. Feche e abra de novo.", { name: String(p.name) }),
   "logo-type": () => t("O logo precisa ser PNG, JPG ou SVG. Escolha outro arquivo."),
   "logo-path": () => t("O logo precisa estar na pasta assets/ do manual."),
   "logo-missing": (p) => t("O logo {logo} não está mais no manual. Envie o arquivo de novo.", { logo: String(p.logo) }),
