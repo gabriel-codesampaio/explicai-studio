@@ -14,9 +14,11 @@ import {
   removePage,
   saveAsset,
   slugify,
+  renameManual,
   updatePage,
   writeAnnotations,
 } from "../src/core/index.js";
+import { updateManual } from "../src/core/manuals.js";
 
 let workspace: string;
 
@@ -183,5 +185,25 @@ describe("imagens e anotações", () => {
   it("recusa formato de imagem desconhecido", async () => {
     const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
     await expect(saveAsset(dir, "virus.exe", new Uint8Array([1]))).rejects.toThrow(/não suportado/);
+  });
+});
+
+describe("renameManual", () => {
+  it("muda só o título e mantém pasta e os outros campos", async () => {
+    const m = await createManual(workspace, { title: "Financeiro", language: "pt-BR" });
+    await updateManual(m.dir, (meta) => {
+      meta.theme = { primary: "#123456" };
+      meta.audiences = ["admin"];
+    });
+    await renameManual(m.dir, "  Contas a pagar  ");
+    const meta = await readManual(m.dir);
+    expect(meta).toMatchObject({ title: "Contas a pagar", theme: { primary: "#123456" }, audiences: ["admin"] });
+    expect((await listManuals(workspace))[0]?.dir).toBe(m.dir);
+  });
+
+  it("recusa título vazio sem mexer no arquivo", async () => {
+    const m = await createManual(workspace, { title: "Financeiro", language: "pt-BR" });
+    await expect(renameManual(m.dir, "   ")).rejects.toThrow(/vazio/);
+    expect((await readManual(m.dir)).title).toBe("Financeiro");
   });
 });
