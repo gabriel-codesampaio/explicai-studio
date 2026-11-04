@@ -1,7 +1,7 @@
 import { NodeSelection } from "@tiptap/pm/state";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { PenLine } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { assetPathFromSrc } from "@/lib/annotations";
@@ -36,6 +36,14 @@ export function ImagePopover({
   const [dismissedAt, setDismissedAt] = useState<number | null>(null);
   const open = image !== null && dismissedAt !== image.pos;
   if (image === null && dismissedAt !== null) setDismissedAt(null);
+  // A imagem segue selecionada depois de fechar o balão: um novo clique nela não muda a seleção, então reabre à mão.
+  useEffect(() => {
+    if (dismissedAt === null) return;
+    const dom = editor.view.dom;
+    const reopen = (e: MouseEvent) => (e.target as HTMLElement).closest("img") && setDismissedAt(null);
+    dom.addEventListener("click", reopen);
+    return () => dom.removeEventListener("click", reopen);
+  }, [dismissedAt, editor]);
 
   const rect = () => {
     const dom = image ? editor.view.nodeDOM(image.pos) : null;
