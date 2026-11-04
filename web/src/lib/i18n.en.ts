@@ -4,8 +4,9 @@
  */
 export const EN: Record<string, string> = {
   "Nenhuma imagem sem uso.": "No unused images.",
-  "Imagens que nenhuma página usa, contando versões e lixeira, vão para a lixeira.":
-    "Images that no page uses, counting versions and trash, go to the trash.",
+  "Move para a lixeira as imagens que nenhuma página usa, contando versões e lixeira.":
+    "Moves to the trash the images that no page uses, counting versions and trash.",
+  "Confirmar limpeza": "Confirm cleanup",
   Recortar: "Crop",
   "Recortar imagem": "Crop image",
   "Ferramenta Recortar": "Crop tool",
@@ -137,8 +138,8 @@ export const EN: Record<string, string> = {
   "Arraste do início até a ponta da seta": "Drag from the start to the tip of the arrow",
   "Arraste sobre a área que leva a outra página": "Drag over the area that leads to another page",
   "Arraste sobre o que merece atenção": "Drag over what deserves attention",
-  "As páginas excluídas ficam na pasta .lixeira do manual até você restaurar ou apagar.":
-    "Deleted pages stay in the manual's .lixeira folder until you restore or delete them.",
+  "As páginas excluídas ficam na pasta .lixeira do manual até você restaurar.":
+    "Deleted pages stay in the manual's .lixeira folder until you restore them.",
   Atalhos: "Shortcuts",
   "Atalhos de teclado": "Keyboard shortcuts",
   "Bloco de código": "Code block",
@@ -266,7 +267,7 @@ export const EN: Record<string, string> = {
   "Mostrar ou esconder as páginas": "Show or hide pages",
   Mover: "Move",
   "Mover a página para cima ou para baixo": "Move the page up or down",
-  "Mover para a lixeira": "Move to trash",
+  "Limpar imagens sem uso": "Clean up unused images",
   "Muda só o Studio, neste navegador. A cor do manual fica em Exportar manual.":
     "Only changes the Studio, in this browser. The manual color is in Export manual.",
   "Não foi possível abrir o Studio.": "Could not open the Studio.",

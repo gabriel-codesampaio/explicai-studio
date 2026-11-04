@@ -55,7 +55,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-157](T-157-painel-da-marcacao-apertado.md) | Dar espaço ao painel lateral da marcação | P2 | aberto | design |
 | [T-158](T-158-um-nome-para-publico.md) | Usar um nome só para o público da página | P2 | aberto | frontend |
 | [T-159](T-159-versao-da-pagina-com-nome-certo.md) | Deixar claro que "Versão" vale para a página, não para o manual | P2 | aberto | frontend |
-| [T-161](T-161-lixeira-com-foco-e-confirmacao.md) | Proteger a limpeza da lixeira e renomear a ação | P2 | aberto | frontend |
 | [T-162](T-162-lixeira-e-ajuda-com-lugar-proprio.md) | Dar à lixeira e à ajuda um lugar próprio no menu | P2 | aberto | design |
 | [T-163](T-163-aviso-de-conflito-mostra-diferenca.md) | Mostrar o que mudou no aviso de conflito, sem empurrar o texto | P2 | aberto | frontend |
 | [T-173](T-173-foco-preso-em-menus-com-aria-hidden.md) | Conferir o foco nos menus abertos com fundo aria-hidden | P2 | aberto | qa |

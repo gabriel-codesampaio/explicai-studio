@@ -19,14 +19,17 @@ interface Props {
 export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props) {
   const [items, setItems] = useState<TrashItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
 
   const load = () => {
     setItems(null);
     setError(null);
+    setConfirming(false);
     api.listTrash(slug).then(setItems, (err: unknown) => setError(errorMessage(err)));
   };
-  const clean = () =>
-    flush()
+  const clean = () => {
+    setConfirming(false);
+    return flush()
       .then((saved) => {
         // Fila não gravada: a imagem colada ainda não está em página nenhuma no disco.
         if (!saved) throw new Error(t("Há alterações sem salvar. Salve antes de limpar as imagens."));
@@ -42,6 +45,7 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props
         },
         (err: unknown) => setError(errorMessage(err)),
       );
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: recarrega só ao abrir
   useEffect(() => {
@@ -50,7 +54,15 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="gap-2 p-4 sm:max-w-sm" aria-describedby={undefined}>
+      <DialogContent
+        className="gap-2 p-4 sm:max-w-sm"
+        aria-describedby={undefined}
+        // O foco inicial fica no próprio painel: Enter logo ao abrir não aciona nada.
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+          (e.currentTarget as HTMLElement).focus();
+        }}
+      >
         <DialogTitle className="px-2 pt-1 pb-2 text-sm font-bold">{t("Lixeira deste manual")}</DialogTitle>
         {error && <p className="px-2 pb-2 text-sm text-destructive">{error}</p>}
         {!error && items === null && <p className="px-2 pb-2 text-sm text-muted-foreground">{t("Carregando…")}</p>}
@@ -78,17 +90,32 @@ export function TrashPanel({ slug, open, onOpenChange, onRestore, flush }: Props
           </ul>
         )}
         <div className="mx-2 mt-2 grid gap-1 rounded-md border border-border p-2 text-sm">
-          <p>{t("Imagens que nenhuma página usa, contando versões e lixeira, vão para a lixeira.")}</p>
-          <button
-            type="button"
-            onClick={() => void clean()}
-            className="flex w-fit items-center gap-1 rounded-md px-2 py-1 font-bold text-primary hover:bg-accent"
-          >
-            <ImageOff className="size-3.5" aria-hidden /> {t("Mover para a lixeira")}
-          </button>
+          <p>{t("Move para a lixeira as imagens que nenhuma página usa, contando versões e lixeira.")}</p>
+          {confirming ? (
+            <div className="flex flex-wrap items-center gap-1">
+              <button
+                type="button"
+                onClick={() => void clean()}
+                className="flex items-center gap-1 rounded-md px-2 py-1 font-bold text-destructive hover:bg-accent"
+              >
+                <ImageOff className="size-3.5" aria-hidden /> {t("Confirmar limpeza")}
+              </button>
+              <button type="button" onClick={() => setConfirming(false)} className="rounded-md px-2 py-1 hover:bg-accent">
+                {t("Cancelar")}
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirming(true)}
+              className="flex w-fit items-center gap-1 rounded-md px-2 py-1 font-bold text-primary hover:bg-accent"
+            >
+              <ImageOff className="size-3.5" aria-hidden /> {t("Limpar imagens sem uso")}
+            </button>
+          )}
         </div>
         <p className="px-2 pt-2 text-xs text-muted-foreground">
-          {t("As páginas excluídas ficam na pasta .lixeira do manual até você restaurar ou apagar.")}
+          {t("As páginas excluídas ficam na pasta .lixeira do manual até você restaurar.")}
         </p>
       </DialogContent>
     </Dialog>
