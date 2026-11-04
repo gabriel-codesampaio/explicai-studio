@@ -37,9 +37,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-187](T-187-dialogo-publicos-do-manual.md) | Diálogo "Públicos do manual" nos Ajustes | P2 | aberto | frontend |
 | [T-188](T-188-aparencia-do-manual-nos-ajustes.md) | "Aparência do manual" nos Ajustes, fora da exportação | P2 | aberto | frontend |
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
-| [T-179](T-179-rolagem-sobre-o-layout.md) | Tirar a barra de rolagem de cima do layout | P2 | aberto | design |
-| [T-180](T-180-menu-da-etapa.md) | Redesenhar o menu da etapa da página | P2 | aberto | design |
-| [T-181](T-181-select-da-casa.md) | Criar o Select do Studio, com cursor de clique | P2 | aberto | frontend |
 | [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
 | [T-183](T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | aberto | frontend |
 | [T-184](T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | aberto | frontend |

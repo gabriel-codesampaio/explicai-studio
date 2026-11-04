@@ -1,6 +1,7 @@
 import { PanelLeftClose, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { Brand } from "@/components/Brand";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import { RenameManualDialog } from "@/features/manuals/RenameManualDialog";
 import type { PageAction } from "@/features/pages/PageActions";
@@ -18,6 +19,9 @@ interface Props {
   onNavigate?: () => void;
   onSearch: () => void;
 }
+
+// O Radix não aceita value "" em item: esta sentinela fica só aqui; o valor de fora segue "".
+const TODOS = "__todos__";
 
 export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   const studio = useStudioContext();
@@ -90,20 +94,21 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             </button>
           </div>
           {manual.audiences.length > 0 && (
-            <label className="flex items-center gap-2 px-2 text-[13px] text-muted-foreground">
+            <label htmlFor="ver-como" className="flex items-center gap-2 px-2 text-[13px] text-muted-foreground">
               {t("Ver como")}
-              <select
-                value={profile ?? ""}
-                onChange={(e) => setViewAs(e.target.value)}
-                className="min-w-0 flex-1 rounded-md border border-input bg-background px-1.5 py-1 text-foreground [@media(pointer:coarse)]:min-h-11"
-              >
-                <option value="">{t("Todos")}</option>
-                {manual.audiences.map((a) => (
-                  <option key={a} value={a}>
-                    {a}
-                  </option>
-                ))}
-              </select>
+              <Select value={profile || TODOS} onValueChange={(v) => setViewAs(v === TODOS ? "" : v)}>
+                <SelectTrigger id="ver-como" className="flex-1 px-1.5 py-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={TODOS}>{t("Todos")}</SelectItem>
+                  {manual.audiences.map((a) => (
+                    <SelectItem key={a} value={a}>
+                      {a}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </label>
           )}
           {manual.pages.length === 0 ? (
