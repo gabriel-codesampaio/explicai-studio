@@ -1,6 +1,6 @@
 # Personalizar marcações da imagem: o que, onde e quanto
 
-Data: 2026-11-04. Discovery. Sem código, sem ticket, sem commit. Complementa [marcacao-de-imagem](./marcacao-de-imagem.md) e [T-133](../tickets/T-133-decisoes-da-marcacao-de-imagem.md); não repete nem muda a direção visual de lá (disco cobalto, caneta azul + marca-texto, marcador ao lado com cauda).
+Data: 2026-11-04. Discovery. Sem código, sem ticket, sem commit. Complementa [marcacao-de-imagem](archives/marcacao-de-imagem.md) e [T-133](../tickets/fechados/T-133-decisoes-da-marcacao-de-imagem.md); não repete nem muda a direção visual de lá (disco cobalto, caneta azul + marca-texto, marcador ao lado com cauda).
 
 Pedido da pessoa: "adicionar personalização dessas ferramentas, tá tudo azul e borda; personalização dos marcadores".
 

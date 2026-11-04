@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: [Discovery de ortografia](../discovery/2026-10-30-ortografia.md) (2026-10-30)
+- Origem: [Discovery de ortografia](../../discovery/archives/2026-10-30-ortografia.md) (2026-10-30)
 
 ## Problema
 O corretor do navegador já funciona, mas ninguém sabe que ele segue o idioma do manual nem como ensinar uma palavra a ele.

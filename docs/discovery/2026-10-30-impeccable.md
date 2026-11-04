@@ -95,4 +95,4 @@ Não verificado: o que cada comando acharia de fato (nenhum foi rodado, por regr
 
 ## Decisões tomadas (2026-10-30)
 - `document` e `audit` agora. → [T-037](../tickets/T-037-design-md-e-audit.md)
-- `harden` antes da versão pública. → [T-038](../tickets/T-038-harden-antes-do-npm.md)
+- `harden` antes da versão pública. → [T-038](../tickets/fechados/T-038-harden-antes-do-npm.md)

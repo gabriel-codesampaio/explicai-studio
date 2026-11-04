@@ -67,7 +67,7 @@ Hipótese, não evidência: nenhum usuário real pediu isso ainda (PRODUCT.md, "
 
 ## O que existe hoje
 
-**MCP: nada.** Nenhuma tool, resource ou prompt. Todo o desenho abaixo é novo. O que a spec (`docs/spec-v1.md:44-47`) já promete: listar manuais e páginas, criar e editar páginas, inserir imagem, adicionar marcadores e áreas clicáveis, exportar, parâmetro de tom, e funcionar sem o Studio aberto.
+**MCP: nada.** Nenhuma tool, resource ou prompt. Todo o desenho abaixo é novo. O que a spec (`docs/discovery/archives/spec-v1.md:44-47`) já promete: listar manuais e páginas, criar e editar páginas, inserir imagem, adicionar marcadores e áreas clicáveis, exportar, parâmetro de tom, e funcionar sem o Studio aberto.
 
 **Core (`src/core/index.ts`) já cobre quase tudo, sem HTTP:**
 

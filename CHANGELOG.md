@@ -16,11 +16,13 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Alterado
 
+- Exportar HTML: destaque em "Resultado:" e "Result:", print largo abre no tamanho original, sumário com as seções e recolhível no celular, navegação entre páginas e capa com tempo de leitura e por onde começar.
 - Marcador de imagem: disco numerado de 24 px com cauda apontando o alvo, no Studio e no HTML e PDF exportados. A posição gravada continua sendo o alvo; manuais antigos abrem sem perder marcador.
 - Marcador sem descrição não gera mais a linha "Sem descrição" na legenda (HTML, PDF e Markdown). O Studio avisa na lista de marcações e `checkManual` aponta o marcador sem descrição.
 
 ### Corrigido
 
+- Exportar HTML e PDF: o passo depois de um print segue a numeração, em vez de voltar ao 1.
 - Exportar HTML: imagens com `width` e `height`, para a página não pular enquanto carrega.
 
 ## [0.2.1] - 2026-11-03

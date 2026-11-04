@@ -1,6 +1,6 @@
 # Discovery: mini tutorial guiado para o cliente (2026-10-30)
 
-Complementa o ticket [T-018](../tickets/T-018-primeiro-print.md) (página vazia que ensina o primeiro print).
+Complementa o ticket [T-018](../tickets/fechados/T-018-primeiro-print.md) (página vazia que ensina o primeiro print).
 
 Ideia do caderno: "um mini tutorial pro cliente, utilizando o driverjs.com ou alguma solução parecida, ensinando ele como fazer um manual e exportar".
 
@@ -73,3 +73,6 @@ Não verificado: peso real e acessibilidade dos popovers do Shepherd, Intro.js e
 ## Decisões tomadas (2026-10-30)
 - Sem biblioteca: o T-018 foi ampliado para mostrar também onde exportar.
 - Público: quem monta o manual no Studio.
+
+## Decisão da pessoa (2026-11-04)
+Virou ticket a opção B, com driver.js e o teste de acessibilidade antes: [T-148](../tickets/T-148-passeio-guiado-no-studio.md).
