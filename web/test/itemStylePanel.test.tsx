@@ -24,7 +24,7 @@ describe("updateItemStyle", () => {
 });
 
 const panel = (kind: "marker" | "highlight" | "hotspot", style: object | undefined, onChange = vi.fn(), imageStyle?: object) => (
-  <ItemStylePanel kind={kind} name="Item" style={style} imageStyle={imageStyle} onChange={onChange} />
+  <ItemStylePanel kind={kind} name="Item" style={style} imageStyle={imageStyle} onChange={onChange} onDelete={() => {}} />
 );
 
 describe("ItemStylePanel", () => {

@@ -1,7 +1,8 @@
 // @vitest-environment happy-dom
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { AnnotationList } from "../src/features/annotations/AnnotationList";
+import { ItemStylePanel } from "../src/features/annotations/ItemStylePanel";
 import { addMarker, emptyAnnotations, updateMarker } from "../src/lib/annotations";
 
 afterEach(cleanup);
@@ -20,5 +21,42 @@ describe("AnnotationList: aviso de marcador sem descrição", () => {
     ann = updateMarker(ann, ann.markers[0]?.id ?? "", "Botão");
     render(<AnnotationList annotations={ann} pages={[]} selectedId={null} onSelect={() => {}} onChange={() => {}} />);
     expect(screen.queryByText(NOTE)).toBeNull();
+  });
+});
+
+describe("AnnotationList: Enter no item abre o painel Estilo", () => {
+  it("Enter no campo do marcador chama onOpenStyle", () => {
+    const ann = addMarker(emptyAnnotations(), { x: 0.1, y: 0.5 });
+    const open = vi.fn();
+    render(
+      <AnnotationList
+        annotations={ann}
+        pages={[]}
+        selectedId={null}
+        onSelect={() => {}}
+        onChange={() => {}}
+        onOpenStyle={open}
+      />,
+    );
+    fireEvent.keyDown(screen.getByRole("textbox"), { key: "Enter" });
+    expect(open).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("ItemStylePanel: excluir e Esc", () => {
+  it("o botão Excluir chama onDelete", () => {
+    const del = vi.fn();
+    render(
+      <ItemStylePanel
+        kind="marker"
+        name="Marcador 1"
+        style={undefined}
+        imageStyle={undefined}
+        onChange={() => {}}
+        onDelete={del}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: /Excluir marcador 1/i }));
+    expect(del).toHaveBeenCalledTimes(1);
   });
 });
