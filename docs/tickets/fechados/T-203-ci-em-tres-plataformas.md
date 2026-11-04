@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: fechado
 - Agente: qa
 - Marco: 0.9
 - Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 7 (2026-11-04)
@@ -20,4 +20,6 @@ Decidido (pessoa, 2026-11-04): um Node só no CI, o 22, com `engines` em `>=22.1
 Conforme a discovery; evidência no Registro.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Commit: branch ci/t-203-tres-plataformas (ci: matriz de plataformas).
+- Feito: job `plataformas` em `.github/workflows/ci.yml` roda `typecheck` e `npm test` em windows-latest e macos-latest, Node 22, `fail-fast: false`. O job `check` ("Lint, tipos e testes", ubuntu) ficou intacto, então o check exigido mantém o nome. YAML validado localmente; o CI real não rodou.
+- Fora: lint e cobertura só no Linux; e2e só no Linux. Os checks novos ("Testes (windows-latest)", "Testes (macos-latest)") não são exigidos até a pessoa decidir. Falha real em Windows/macOS só aparece no primeiro run.
