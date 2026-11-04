@@ -107,7 +107,7 @@ Campos do frontmatter que o Studio não conhece (`sources:`, `owner:` ou qualque
 
 ### Público
 
-O campo opcional `audience` do frontmatter lista os perfis que veem a página, como `audience: [admin, operador]` (um texto solto vale uma lista de um). Sem o campo, a página vale para todos. A subpágina herda a restrição da mãe: quem não vê a mãe não vê as filhas, e uma filha com `audience` próprio exige as duas condições. O `manual.json` pode ter `audiences`, a lista dos perfis conhecidos (o Studio e o MCP a mantêm a partir das páginas); sem ela, o manual abre e exporta como antes.
+O campo opcional `audience` do frontmatter lista os perfis que veem a página, como `audience: [admin, operador]` (um texto solto vale uma lista de um). Sem o campo, a página vale para todos. A subpágina herda a restrição da mãe: quem não vê a mãe não vê as filhas, e uma filha com `audience` próprio exige as duas condições. O `manual.json` pode ter `audiences`, a lista dos perfis conhecidos (o Studio e o MCP a mantêm a partir das páginas); sem ela, o manual abre e exporta como antes. A lista pode ter um público que nenhuma página cita. Criar, renomear e remover público são ações do Studio (`addAudience`, `renameAudience` e `removeAudience` em `explicai/core`): renomear reescreve a lista e todas as páginas que citam o nome, lixeira incluída, e remover tira o nome de ambas (a página que só tinha esse nome volta a valer para todos). Nomes têm de 1 a 40 caracteres e não repetem outro, ignorando maiúsculas. O formato do `manual.json` e do frontmatter não muda.
 
 Exportar com um público (`exportManual(dir, formato, { audience })`) gera só as páginas que ele vê, em HTML, PDF e Markdown: sem o texto, as imagens, o item do sumário nem o arquivo em `assets/` das páginas de fora. Link ou área clicável para uma página de fora vira texto simples e gera um aviso. Público que nenhuma página cita exporta só as páginas sem restrição, com aviso.
 
@@ -166,6 +166,17 @@ No Studio cada tipo tem cor fixa e um ícone; a Nota usa a cor de destaque do ma
 | `border` | `none`, `s` (1 px), `m` (2 px), `l` (3 px) | Borda de todas as marcações da imagem: anel branco do marcador, halo branco da seta e contorno de destaque e área. `none` tira. O destaque ganha contorno de cor própria, mais escura que o marca-texto, para a espessura aparecer. Sem o campo vale o de sempre. |
 
 Sem `style` a imagem aparece como sempre e o HTML exportado não muda. Número, ponta cheia, moldura e tracejado não dependem da cor. No HTML e no PDF o `style` vira variáveis CSS no `.shot` (`--anotacao`, `--sobre-anotacao`, `--disco`, `--marca-espessura`, `--borda`). `version` continua 1. Quem regrava o JSON (Studio, `annotate_image`) deve manter o campo.
+
+`style` também vale em cada marcador, seta, destaque e área clicável (`markers[].style` etc.) e sobrepõe o da imagem só nos campos que escolheu: item > imagem > tema do manual. Cada tipo guarda só os campos dele; o resto é ignorado e valor fora da lista também (sem nenhum válido, o campo some):
+
+| Tipo | Campos |
+|---|---|
+| marcador | `color`, `size`, `border` |
+| seta | `color`, `stroke`, `border` |
+| destaque | `border` (cor e preenchimento do destaque: T-195) |
+| área clicável | `color`, `border`, `fill` (`solid`, `soft` padrão, `none`) |
+
+`fill: "none"` junto com `border: "none"` deixaria a área invisível: `border` volta a `s` ao ler. No HTML e no PDF o `style` do item vira as mesmas variáveis CSS no próprio elemento (mais `--preenchimento`), sem JavaScript; o chip da legenda usa a cor do marcador. Sem `style` nos itens o HTML exportado não muda e `version` continua 1. Leitor antigo descarta o `style` do item e mostra a marcação com o estilo da imagem.
 
 Destinos de área clicável: `page` (outra página), `anchor` (seção de uma página) e `url` (só `http`, `https` ou `mailto`).
 

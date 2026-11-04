@@ -11,6 +11,8 @@ import {
   nudge,
   rectFrom,
   removeAnnotation,
+  updateHotspot,
+  updateMarker,
   warnsSmall,
 } from "../src/lib/annotations";
 
@@ -147,5 +149,56 @@ describe("draftChanged", () => {
     expect(draftChanged({ ann: addMarker(saved, { x: 0.5, y: 0.5 }), redact: [], crop: [] }, saved)).toBe(true);
     expect(draftChanged({ ann: base, redact: [], crop: [] }, saved)).toBe(true);
     expect(draftChanged({ ann: saved, redact: [{}], crop: [] }, saved)).toBe(true);
+  });
+});
+
+describe("style de cada marcação sobrevive às edições do editor", () => {
+  const ann: Annotations = {
+    ...emptyAnnotations(),
+    markers: [
+      { id: "m1", n: 1, x: 0.2, y: 0.2, style: { color: "red", size: "l" } },
+      { id: "m2", n: 2, x: 0.6, y: 0.6, style: { border: "none" } },
+    ],
+    highlights: [{ id: "h1", x: 0.1, y: 0.1, w: 0.2, h: 0.2, style: { border: "l" } }],
+    arrows: [{ id: "a1", from: { x: 0.1, y: 0.1 }, to: { x: 0.5, y: 0.5 }, style: { stroke: "s" } }],
+    hotspots: [
+      {
+        id: "t1",
+        x: 0.5,
+        y: 0.5,
+        w: 0.2,
+        h: 0.2,
+        target: { type: "url", href: "https://a.com" },
+        style: { fill: "none", border: "s" },
+      },
+    ],
+  };
+
+  it("mover e redimensionar", () => {
+    for (const [id, handle] of [
+      ["m1", "move"],
+      ["h1", "se"],
+      ["a1", "to"],
+      ["t1", "move"],
+    ] as const) {
+      const out = moveAnnotation(ann, id, handle, 0.02, 0.02);
+      const all = [...out.markers, ...out.highlights, ...out.arrows, ...out.hotspots];
+      expect(all.find((i) => i.id === id)?.style).toEqual(
+        [...ann.markers, ...ann.highlights, ...ann.arrows, ...ann.hotspots].find((i) => i.id === id)?.style,
+      );
+    }
+    expect(nudge(ann, "a1", "ArrowRight", false)?.arrows[0]?.style).toEqual({ stroke: "s" });
+  });
+
+  it("excluir um renumera os outros sem perder o estilo deles", () => {
+    expect(removeAnnotation(ann, "m1").markers[0]).toMatchObject({ id: "m2", n: 1, style: { border: "none" } });
+  });
+
+  it("legenda e legenda editada", () => {
+    expect(updateMarker(ann, "m1", "Botão").markers[0]?.style).toEqual({ color: "red", size: "l" });
+    expect(updateHotspot(ann, "t1", { type: "url", href: "https://b.com" }).hotspots[0]?.style).toEqual({
+      fill: "none",
+      border: "s",
+    });
   });
 });

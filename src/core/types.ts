@@ -93,16 +93,19 @@ export interface Marker extends Point {
   /** Número exibido no marcador e na legenda. */
   n: number;
   label?: string;
+  style?: AnnotationStyle;
 }
 
 export interface Highlight extends Rect {
   id: string;
+  style?: AnnotationStyle;
 }
 
 export interface Arrow {
   id: string;
   from: Point;
   to: Point;
+  style?: AnnotationStyle;
 }
 
 export type HotspotTarget =
@@ -113,6 +116,7 @@ export type HotspotTarget =
 export interface Hotspot extends Rect {
   id: string;
   target: HotspotTarget;
+  style?: AnnotationStyle;
 }
 
 /** Tamanho de exibição da imagem: pequena, média ou larga. Sem o campo, a imagem aparece como sempre. */

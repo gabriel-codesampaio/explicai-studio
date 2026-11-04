@@ -47,17 +47,20 @@ describe("campo desconhecido: ida e volta", () => {
     expect(out.theme.novo).toBe(true);
   });
 
-  it("assets/*.json mantém campos novos na raiz e nas marcações", async () => {
+  it("assets/*.json mantém campos novos na raiz e em marcador, destaque, seta e área clicável", async () => {
+    const png = Buffer.alloc(33);
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(png, 0);
+    await writeFile(path.join(dir, "assets", "tela.png"), png);
     const file = path.join(dir, "assets", "tela.png.json");
     await writeFile(
       file,
       JSON.stringify({
         version: 1,
         futuro: { a: [1] },
-        markers: [{ id: "m1", n: 1, x: 0.1, y: 0.1, cor: "azul" }],
-        highlights: [],
-        arrows: [],
-        hotspots: [],
+        markers: [{ id: "m1", n: 1, x: 0.1, y: 0.1, nota: "m" }],
+        highlights: [{ id: "h1", x: 0.1, y: 0.1, w: 0.2, h: 0.2, nota: "h" }],
+        arrows: [{ id: "a1", from: { x: 0, y: 0 }, to: { x: 0.5, y: 0.5 }, nota: "a" }],
+        hotspots: [{ id: "s1", x: 0.1, y: 0.1, w: 0.2, h: 0.2, target: { type: "url", href: "https://x.dev" }, nota: "s" }],
       }),
     );
     const read = await readAnnotations(dir, "assets/tela.png");
@@ -66,7 +69,25 @@ describe("campo desconhecido: ida e volta", () => {
 
     const out = await json("assets/tela.png.json");
     expect(out.futuro).toEqual({ a: [1] });
-    expect(out.markers[0].cor).toBe("azul");
-    expect(out.highlights).toHaveLength(1);
+    expect(out.markers[0].nota).toBe("m");
+    expect(out.highlights[0].nota).toBe("h");
+    expect(out.arrows[0].nota).toBe("a");
+    expect(out.hotspots[0].nota).toBe("s");
+    expect(out.highlights).toHaveLength(2);
+  });
+
+  it("style inválido de item não passa como campo desconhecido", async () => {
+    const out = await writeAnnotations(dir, "assets/tela.png", {
+      version: 1,
+      markers: [{ id: "m1", n: 1, x: 0.1, y: 0.1, style: { color: "magenta", size: "xl" } }],
+      highlights: [{ id: "h1", x: 0.1, y: 0.1, w: 0.2, h: 0.2, style: "vermelho" }],
+      arrows: [{ id: "a1", from: { x: 0, y: 0 }, to: { x: 0.5, y: 0.5 }, style: { stroke: 9 } }],
+      hotspots: [{ id: "s1", x: 0.1, y: 0.1, w: 0.2, h: 0.2, target: { type: "url", href: "https://x.dev" }, style: [] }],
+    });
+    const raw = JSON.stringify(out);
+    expect(raw).not.toContain("magenta");
+    expect(raw).not.toContain("vermelho");
+    for (const item of [...out.markers, ...out.highlights, ...out.arrows, ...out.hotspots])
+      expect(item).not.toHaveProperty("style");
   });
 });

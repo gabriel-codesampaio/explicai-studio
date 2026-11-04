@@ -65,4 +65,29 @@ describe("cropAnnotations", () => {
     expect(annotations).toEqual(a);
     expect(removed).toEqual({ markers: 0, highlights: 0, arrows: 0, hotspots: 0 });
   });
+
+  it("o recorte (CropPanel) mantém o style de cada marcação", () => {
+    const a = {
+      ...emptyAnnotations(),
+      markers: [{ id: "m", n: 1, x: 0.5, y: 0.6, style: { color: "red" as const, size: "s" as const } }],
+      highlights: [{ id: "h", x: 0.3, y: 0.55, w: 0.2, h: 0.1, style: { border: "none" as const } }],
+      arrows: [{ id: "a", from: { x: 0.3, y: 0.55 }, to: { x: 0.6, y: 0.7 }, style: { stroke: "l" as const } }],
+      hotspots: [
+        {
+          id: "t",
+          x: 0.3,
+          y: 0.55,
+          w: 0.2,
+          h: 0.1,
+          target: { type: "url" as const, href: "https://a.com" },
+          style: { fill: "soft" as const },
+        },
+      ],
+    };
+    const { annotations } = cropAnnotations(a, crop);
+    expect(annotations.markers[0]?.style).toEqual({ color: "red", size: "s" });
+    expect(annotations.highlights[0]?.style).toEqual({ border: "none" });
+    expect(annotations.arrows[0]?.style).toEqual({ stroke: "l" });
+    expect(annotations.hotspots[0]?.style).toEqual({ fill: "soft" });
+  });
 });

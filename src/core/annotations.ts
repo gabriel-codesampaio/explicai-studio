@@ -1,4 +1,4 @@
-import { parseStyle } from "./annotationStyle.js";
+import { parseItemStyle, parseStyle } from "./annotationStyle.js";
 import { type Annotations, FORMAT_VERSION, type HotspotTarget, type Point, type Rect } from "./types.js";
 
 export function emptyAnnotations(): Annotations {
@@ -22,6 +22,11 @@ export function parseAnnotations(input: unknown): Annotations {
   };
 
   const style = parseStyle(obj.style);
+  // Campo novo de item entra aqui e no tipo juntos: o item é reconstruído só com o que é conhecido.
+  const own = (kind: Parameters<typeof parseItemStyle>[0], r: Record<string, unknown>) => {
+    const s = parseItemStyle(kind, r.style);
+    return s ? { style: s } : {};
+  };
   return {
     ...unknownFields(obj, ["version", "display", "style", "markers", "highlights", "arrows", "hotspots"]),
     version: FORMAT_VERSION,
@@ -33,37 +38,41 @@ export function parseAnnotations(input: unknown): Annotations {
       const n = r.n;
       if (!Number.isInteger(n) || (n as number) < 1) throw new Error(`markers[${i}].n: inteiro a partir de 1`);
       return {
-        ...unknownFields(r, ["id", "n", "x", "y", "label"]),
+        ...unknownFields(r, ["id", "n", "x", "y", "label", "style"]),
         id: id(r.id, `markers[${i}].id`),
         n: n as number,
         ...point(r, `markers[${i}]`),
         ...(r.label === undefined ? {} : { label: text(r.label, `markers[${i}].label`, true) }),
+        ...own("marker", r),
       };
     }),
     highlights: list(obj.highlights, "highlights").map((h, i) => {
       const r = record(h, `highlights[${i}]`);
       return {
-        ...unknownFields(r, ["id", "x", "y", "w", "h"]),
+        ...unknownFields(r, ["id", "x", "y", "w", "h", "style"]),
         id: id(r.id, `highlights[${i}].id`),
         ...rect(r, `highlights[${i}]`),
+        ...own("highlight", r),
       };
     }),
     arrows: list(obj.arrows, "arrows").map((a, i) => {
       const r = record(a, `arrows[${i}]`);
       return {
-        ...unknownFields(r, ["id", "from", "to"]),
+        ...unknownFields(r, ["id", "from", "to", "style"]),
         id: id(r.id, `arrows[${i}].id`),
         from: point(record(r.from, `arrows[${i}].from`), `arrows[${i}].from`),
         to: point(record(r.to, `arrows[${i}].to`), `arrows[${i}].to`),
+        ...own("arrow", r),
       };
     }),
     hotspots: list(obj.hotspots, "hotspots").map((h, i) => {
       const r = record(h, `hotspots[${i}]`);
       return {
-        ...unknownFields(r, ["id", "x", "y", "w", "h", "target"]),
+        ...unknownFields(r, ["id", "x", "y", "w", "h", "target", "style"]),
         id: id(r.id, `hotspots[${i}].id`),
         ...rect(r, `hotspots[${i}]`),
         target: target(r.target, `hotspots[${i}].target`),
+        ...own("hotspot", r),
       };
     }),
   };
