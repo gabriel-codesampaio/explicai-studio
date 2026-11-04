@@ -4,6 +4,61 @@ Pedido da pessoa, literal: "Quero que ele seja um MCP que consiga ter algumas fu
 
 Complementa `2026-10-30-voz-do-manual.md` (tom) e `2026-10-30-checagem-do-manual.md` (roteiro de checagem). Não cria ticket: aguarda aprovação.
 
+## Revisão: MCP funcional (vale sobre o resto do documento)
+
+Pedido novo da pessoa: "precisamos fazer um mcp funcional, ou seja, ele precisa ter algumas features envolvendo automatização do manual, dar sugestões de como fazer o manual, ter níveis de segregações, etc". Perguntada sobre segregação, ela marcou os quatro sentidos: por público, por autonomia do agente, por estrutura e por cliente ou projeto.
+
+Isso substitui a recomendação "opção 1" e o rascunho de spec no fim deste documento. Tools, riscos e referências abaixo continuam valendo.
+
+### Automatizar
+
+Atualizar e capturar deixam de ser "depois". São prompts sobre as mesmas tools, então custam pouco. Atualizar precisa do `rev`, que já estava no corte. Capturar precisa do `annotate_image` em pixels, que também já estava.
+
+### Sugerir
+
+O MCP segue sem LLM. O texto vem do modelo da pessoa. O MCP entrega o que dá para calcular:
+
+- `check_manual`: página sem print, passo sem resultado, link morto, hotspot para página apagada, imagem sem marcador. Sobe da fase 2 para o começo.
+- Modelos de estrutura (abaixo), que dizem ao agente como organizar o manual.
+- Prompts `build_manual_guided` e `review_manual`.
+
+### Os quatro níveis de segregação
+
+| Sentido | Como funciona | Onde mexe | Tamanho |
+|---|---|---|---|
+| **Autonomia do agente** | `--level read\|draft\|update`. `read`: lê, checa e sugere. `draft`: também cria manual novo, grava rascunho e importa imagem, sem tocar em página que já passou de `rascunho`. `update`: também edita página existente, com `rev` e versão. A tool fora do nível nem é registrada, então o modelo não a vê. Padrão: `draft`. Apagar e aprovar não existem em nível nenhum | Só MCP | P |
+| **Cliente ou projeto** | Um servidor por workspace, via `.mcp.json` de cada projeto. `--manual <slug>` (repetível) restringe ainda mais. O workspace já vem da linha de comando, nunca de argumento da tool | Só MCP | P |
+| **Estrutura do conteúdo** | Resource `explicai://templates/{tipo}` com a árvore sugerida (`modulo > funcionalidade > tarefa`, onboarding, administração) e o molde de cada nível. Os prompts mandam escolher um modelo e propor a árvore. A árvore de páginas já existe; não há campo novo | Só MCP | P |
+| **Público do manual** | `audiences` no `manual.json` e `audience: [admin, operador]` opcional no frontmatter da página. `exportManual(dir, formato, { audience })` gera um manual por perfil. Sem o campo, a página vale para todos. Filho herda a restrição do pai | Formato, core, export, Studio, MCP | G |
+
+**Limite que precisa ficar escrito na documentação.** Autonomia e cliente valem para o que passa pelo MCP. Um agente com Read, Write e Bash próprios lê e grava qualquer arquivo do disco sem passar pelo MCP, então esses níveis evitam engano e não servem de barreira de segurança. Isolamento de verdade depende das permissões do próprio cliente. Público também não é controle de acesso: os arquivos-fonte guardam tudo, e só o export sai separado.
+
+**Riscos do público, o mais caro dos quatro:**
+
+- `writePageFile` só grava `id`, `title` e `status` (lacuna 4), então hoje apagaria `audience` ao salvar. Corrigir isso preservando campos desconhecidos também libera o `sources:` do modo atualizar.
+- Muda o formato de dados: `docs/manual-format.md`, `.claude/rules/manual-format.md` e teste de ida e volta entram juntos.
+- Vazamento: o export do cliente não pode conter texto, imagem nem entrada de índice de página de `admin`. Se os assets são copiados por inteiro no export: não verificado. Critério de aceite: procurar o texto da página filtrada no arquivo gerado.
+- Link ou hotspot para página filtrada vira texto simples e gera `warning`, em vez de link morto.
+- Studio precisa de campo na página, filtro na prévia e escolha no diálogo de exportar.
+
+### Atualizações desde o texto original
+
+- Lacuna 8 e pergunta 8 caíram em parte: o T-108 fez o Studio detectar edição feita fora dele antes de sobrescrever.
+- O core ganhou `redactAsset` (T-116). Entra a tool `redact_image`, para o agente ocultar dado sensível no print, e o `capture_walkthrough` passa a mandar usá-la.
+- Continuam faltando no core: `appendAnnotations`, `checkManual`, `rev` e exportar `imageSize` e `ThemePatch` (confirmado por busca em `src/core/index.ts`).
+
+### Fases recomendadas
+
+| Fase | Entrega | Tamanho |
+|---|---|---|
+| **1. Funciona** | Core: `imageSize`, `ThemePatch`, `appendAnnotations`, `rev`. MCP: tools de leitura e escrita, `--level`, `--manual`, `add_image` com lista de pastas, `annotate_image`, `export_manual`, `explicai://format`, `explicai://writing-guide`. Prompts autônomo e guiado | G |
+| **2. Sugere e automatiza** | `checkManual` e `check_manual`, modelos de estrutura, `redact_image`, prompts `review_manual`, `update_manual` e `capture_walkthrough` | M |
+| **3. Público** | Preservar campos do frontmatter, `audience` no formato, filtro no export, Studio, tool e prompts com `audience` | G |
+
+A fase 3 fica separada porque é a única que muda o formato e o Studio. As fases 1 e 2 não dependem dela.
+
+Hipótese ainda sem evidência: nenhum usuário real pediu isso. Depois da fase 1, vale gerar um manual de verdade e medir quanto do texto precisou ser reescrito.
+
 ## Problema
 
 Dev solo, software house ou redator técnico (PRODUCT.md) já tem um agente de IA aberto ao lado do código e não quer escrever o manual à mão. Hoje esse agente não tem como gravar no formato do Explicaí: o `explicai-mcp` está vazio (só `LICENSE` e `README.md` de uma linha, um commit inicial) e a pessoa só consegue o manual colando conteúdo no Studio. O que faz hoje sem isso: escreve Markdown solto, perde marcadores e árvore, ou não documenta.
@@ -164,7 +219,7 @@ SDK (verificado em [github.com/modelcontextprotocol/typescript-sdk](https://gith
 | 2. Mais os modos que fecham o ciclo | 1 + atualizar + capturar + revisar + tema/logo/mover | **G** | 1 + `checkManual` no core; frontmatter com campo extra preservado (`sources:`); `rev` no core | Formato muda (campo novo); depende da voz e do discovery da checagem | Importar de outras ferramentas, SaaS/hospedado |
 | 3. Mais Studio ao vivo | 2 + Studio relê o disco e mostra "o agente editou" | **G** | 2 + servidor e web | Mexe no autosave (T-085, T-087, T-095); área sensível a perda de conteúdo | – |
 
-### Recomendação: opção 1, com dois cuidados já dentro
+### Recomendação original: opção 1, com dois cuidados já dentro (substituída pela Revisão no topo)
 
 O problema real é "meu agente não consegue gravar no Explicaí". A opção 1 resolve isso com a menor superfície e ainda entrega os dois modos que a pessoa pediu (autônomo e guiado), porque os modos são prompts sobre as mesmas tools. Entram na opção 1, mesmo pequenos:
 
