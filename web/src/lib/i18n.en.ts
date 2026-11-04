@@ -142,8 +142,7 @@ export const EN: Record<string, string> = {
   "Arraste sobre o que merece atenção": "Drag over what deserves attention",
   "As páginas excluídas ficam na pasta .lixeira do manual até você restaurar.":
     "Deleted pages stay in the manual's .lixeira folder until you restore them.",
-  Atalhos: "Shortcuts",
-  "Atalhos de teclado": "Keyboard shortcuts",
+  Ajuda: "Help",
   "Bloco de código": "Code block",
   Divisor: "Divider",
   "Linha que separa partes da página": "Line that separates parts of the page",
