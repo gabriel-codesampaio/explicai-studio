@@ -28,7 +28,7 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
         >
           <span className="rotulo text-muted-foreground">{t("Manual")}</span>
           <span className="flex w-full items-center gap-2">
-            <span className="min-w-0 flex-1 truncate font-display text-lg font-semibold leading-tight [font-stretch:105%]">
+            <span className="line-clamp-2 min-w-0 flex-1 break-words font-display text-lg font-semibold leading-tight [font-stretch:105%]">
               {current?.title ?? t("Escolha um manual")}
             </span>
             <ChevronsUpDown
@@ -38,11 +38,14 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
           </span>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-(--radix-dropdown-menu-trigger-width) min-w-56">
+      <DropdownMenuContent
+        align="start"
+        className="w-max min-w-(--radix-dropdown-menu-trigger-width) max-w-[min(24rem,calc(100vw-2rem))]"
+      >
         <DropdownMenuLabel className="text-muted-foreground">{t("Manuais nesta pasta")}</DropdownMenuLabel>
         {manuals.map((m) => (
           <DropdownMenuItem key={m.slug} onSelect={() => onOpen(m.slug)}>
-            <span className="min-w-0 flex-1 truncate">{m.title}</span>
+            <span className="line-clamp-2 min-w-0 flex-1 break-words">{m.title}</span>
             {m.slug === current?.slug && <Check className="text-primary" />}
           </DropdownMenuItem>
         ))}
