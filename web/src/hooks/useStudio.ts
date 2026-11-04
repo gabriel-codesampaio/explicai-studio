@@ -14,10 +14,12 @@ import {
   type ThemePatch,
   type TreeItem,
 } from "../lib/api";
+import { conflictDiff } from "../lib/conflictDiff";
 import { readLocation, writeLocation } from "../lib/hashRoute";
 import { locale, t, tn } from "../lib/i18n";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
 import { useAutosave } from "./useAutosave";
+import { useOnFocus } from "./useOnFocus";
 import { useReconnect } from "./useReconnect";
 
 /** Tempo sem gravar o título até o arquivo da página mudar de nome. */
@@ -52,12 +54,19 @@ export function useStudio() {
 
   /** Página com conflito à espera da escolha: a faixa (DiskConflictBanner) só aparece nela. */
   const [conflictId, setConflictId] = useState<string | null>(null);
+  const [conflictDisk, setConflictDisk] = useState<Page | null>(null);
   /** Escolha da pessoa na faixa; a implementação fica abaixo, onde as ações de página já existem. */
   const resolveRef = useRef<(choice: "reload" | "keep") => void>(() => {});
   /** Faixa fixa até a pessoa escolher: nada é gravado nesta página enquanto isso. */
   const showConflict = useCallback((slug: string, id: string) => {
     conflict.current = { slug, id };
     setConflictId(id);
+    setConflictDisk(null);
+    // A página como está no disco, para a faixa mostrar o que mudou; sem ela a faixa só não mostra a diferença.
+    api.getPage(slug, id).then(
+      (disk) => conflict.current?.id === id && setConflictDisk(disk),
+      () => {},
+    );
   }, []);
 
   /** Títulos já gravados cujo arquivo ainda tem o nome antigo: renomeia ao sair da página ou 5 s depois. */
@@ -211,6 +220,37 @@ export function useStudio() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, [openFromLocation]);
+
+  /**
+   * A aba voltou ao foco: o que mudou no disco (MCP, outro editor) entra na tela. Lista de manuais e árvore são
+   * rebuscadas; a página aberta é gravada se tinha fila (o servidor acusa edição externa e a faixa de conflito
+   * aparece) e, sem conflito e sem fila, é trocada pela versão do disco.
+   */
+  const pageRef = useRef(page);
+  pageRef.current = page;
+  const syncRef = useRef<() => Promise<void>>(async () => {});
+  syncRef.current = async () => {
+    if (!manuals || down) return;
+    try {
+      const list = await api.listManuals();
+      setManuals(list);
+      if (!manual) return void (notFound && (await openFromLocation(list)));
+      const ok = await flush();
+      await refreshManual(manual.slug);
+      if (!page || !ok || conflict.current) return;
+      const fresh = await api.getPage(manual.slug, page.id);
+      // Trocou de página ou digitou durante a leitura: não joga o editor de volta nem apaga o texto novo.
+      if (pageRef.current?.id !== fresh.id || autosave.pendingPatch(fresh.id)) return;
+      if (fresh.version && fresh.version !== versions.current.get(page.id)) {
+        remember(fresh);
+        setPage(fresh);
+        setRevision((r) => r + 1);
+      }
+    } catch (err) {
+      if (isOffline(err)) setServerDown(true); // outro erro (página apagada por fora etc.): a próxima ação mostra
+    }
+  };
+  useOnFocus(() => void syncRef.current());
 
   // Servidor fora: confere com espera crescente; ao voltar, termina a abertura ou regrava o que ficou na fila.
   const down = serverDown || (manuals === null && isOffline(bootError));
@@ -434,6 +474,8 @@ export function useStudio() {
     setCreatingManual,
     revision,
     diskConflict: page !== null && conflictId === page.id,
+    conflictDiff:
+      conflictDisk && conflictDisk.id === conflictId ? conflictDiff(autosave.pendingPatch(conflictDisk.id), conflictDisk) : null,
     resolveConflict: (choice: "reload" | "keep") => resolveRef.current(choice),
     flush,
     save: {
