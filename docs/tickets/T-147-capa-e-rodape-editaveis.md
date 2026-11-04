@@ -1,6 +1,7 @@
 # T-147: Editar a capa e o rodapé do manual
 
 - Prioridade: P2
+- Marco: 0.5 (antes da 1.0, decisão da pessoa 2026-11-04; depois do T-188)
 - Tamanho: G
 - Status: aberto
 - Agente: frontend
