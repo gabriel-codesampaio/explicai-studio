@@ -1,5 +1,5 @@
 import path from "node:path";
-import { createManual, listManuals, type Manual, readManual, readPageTree } from "../../core/index.js";
+import { createManual, listManuals, type Manual, readManual, readPageTree, renameManual } from "../../core/index.js";
 import { json, readJson } from "../http.js";
 import type { Route } from "../router.js";
 import { manualDir, optionalString } from "../workspace.js";
@@ -22,6 +22,16 @@ export const manualRoutes: Route[] = [
         language: optionalString(body.language) ?? "pt-BR",
       });
       return json(summary(manual), 201);
+    },
+  },
+  {
+    method: "PUT",
+    path: "/api/manuals/:slug",
+    handle: async (ctx) => {
+      const dir = manualDir(ctx);
+      const body = await readJson(ctx.req);
+      await readManual(dir); // manual inexistente: 404 antes de validar o título
+      return json({ slug: ctx.params.slug, title: await renameManual(dir, optionalString(body.title) ?? "") });
     },
   },
   {

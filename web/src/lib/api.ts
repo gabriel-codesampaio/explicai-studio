@@ -165,6 +165,7 @@ const pageUrl = (slug: string, id: string) => `${manualUrl(slug)}/pages/${encode
 export const api = {
   listManuals: () => call<ManualSummary[]>("/api/manuals"),
   createManual: (title: string, language: string) => call<ManualSummary>("/api/manuals", send("POST", { title, language })),
+  renameManual: (slug: string, title: string) => call<{ slug: string; title: string }>(manualUrl(slug), send("PUT", { title })),
   getManual: (slug: string) => call<ManualDetail>(manualUrl(slug)),
 
   addPage: (slug: string, title: string, parentId: string | null) =>

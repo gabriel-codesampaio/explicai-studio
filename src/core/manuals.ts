@@ -18,6 +18,15 @@ export async function createManual(workspace: string, opts: { title: string; lan
   return { dir, meta };
 }
 
+/** Muda só o título em manual.json: pasta, slug, ids e demais campos ficam como estão. */
+export async function renameManual(dir: string, title: string): Promise<string> {
+  const clean = required(title, "título do manual");
+  return updateManual(dir, (meta) => {
+    meta.title = clean;
+    return clean;
+  });
+}
+
 /**
  * Manuais são as subpastas diretas do workspace que têm manual.json.
  * Manual com manual.json ilegível fica de fora da lista, para um manual estragado não impedir
