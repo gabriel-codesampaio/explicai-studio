@@ -88,7 +88,6 @@ export function CropPanel({ slug, asset, src, annotations, crop, hasRedactions, 
 
   return (
     <section className="grid gap-2 rounded-md border border-border p-3" aria-label={t("Recortar imagem")}>
-      <h3 className="rotulo">{t("Recortar imagem")}</h3>
       <p className="text-sm">
         {rect ? t("Para ajustar o retângulo, use Selecionar (V). Depois aplique.") : t("Arraste sobre a parte que deve ficar.")}
       </p>
