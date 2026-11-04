@@ -17,3 +17,12 @@ it("botão desabilitado tem o motivo ligado por aria-describedby; some ao preenc
   expect(button.getAttribute("aria-describedby")).toBeNull();
   expect(screen.queryByText("Dê um nome ao manual.")).toBeNull();
 });
+
+it("primeiro uso mostra a marca no topo; criar outro manual não repete a marca da barra lateral", () => {
+  const { unmount } = render(<CreateManual firstRun onCreate={async () => {}} onCancel={() => {}} />);
+  expect(screen.getByRole("img", { name: "Explicaí Studio" })).toBeTruthy();
+  unmount();
+
+  render(<CreateManual firstRun={false} onCreate={async () => {}} onCancel={() => {}} />);
+  expect(screen.queryByRole("img", { name: "Explicaí Studio" })).toBeNull();
+});
