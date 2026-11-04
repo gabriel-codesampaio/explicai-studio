@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, readdir, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
+import type { AnnotationStyle } from "./annotationStyle.js";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
 import { ExplicaiError } from "./errors.js";
 import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
@@ -45,12 +46,12 @@ export async function writeAnnotations(dir: string, assetPath: string, input: un
   return annotations;
 }
 
-/** O que o agente acrescenta; `id` e `n` são do core. Coordenadas de 0 a 1. */
+/** O que o agente acrescenta; `id` e `n` são do core. Coordenadas de 0 a 1. `style` é opcional por item (inválido é ignorado). */
 export interface AnnotationsPatch {
-  markers?: (Point & { label?: string })[];
-  highlights?: Rect[];
-  arrows?: { from: Point; to: Point }[];
-  hotspots?: (Rect & { target: HotspotTarget })[];
+  markers?: (Point & { label?: string; style?: AnnotationStyle })[];
+  highlights?: (Rect & { style?: AnnotationStyle })[];
+  arrows?: { from: Point; to: Point; style?: AnnotationStyle }[];
+  hotspots?: (Rect & { target: HotspotTarget; style?: AnnotationStyle })[];
 }
 
 /** Acrescenta marcações às que já existem, atribui `id` e `n` e valida tudo com `parseAnnotations`. */

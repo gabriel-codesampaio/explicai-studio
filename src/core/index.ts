@@ -1,3 +1,4 @@
+export type { AnnotationStyle, HighlightColor, StyleBorder, StyleColor, StyleFill, StyleStep } from "./annotationStyle.js";
 export { emptyAnnotations, parseAnnotations } from "./annotations.js";
 export {
   type AnnotationsPatch,
