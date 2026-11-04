@@ -8,6 +8,7 @@ export {
   saveAsset,
   writeAnnotations,
 } from "./assets.js";
+export { type CheckFinding, type CheckKind, checkManual } from "./check.js";
 export { ExplicaiError } from "./errors.js";
 export { FONTS, FONTS_DIR, type FontSpec, fontFiles } from "./export/fonts.js";
 export { imageSize } from "./export/imageSize.js";
