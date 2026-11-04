@@ -4,7 +4,9 @@ import {
   exportManual,
   logoSizeError,
   setManualLogo,
+  readManual,
   setManualTheme,
+  themeCss,
 } from "../../core/index.js";
 import { HttpError, json, readBody, readJson } from "../http.js";
 import type { Route } from "../router.js";
@@ -37,6 +39,12 @@ export const exportRoutes: Route[] = [
       await setManualTheme(manualDir(ctx), await readJson(ctx.req));
       return json({ ok: true });
     },
+  },
+  {
+    // As variáveis do tema no escopo `.amostra-manual`: a mesma `themeCss` do export, para a amostra da Aparência.
+    method: "GET",
+    path: "/api/manuals/:slug/theme/css",
+    handle: async (ctx) => json({ css: themeCss((await readManual(manualDir(ctx))).theme, ".amostra-manual") }),
   },
   {
     // Corpo = o arquivo do logo (PNG, JPG ou SVG, até 1 MB), nome em ?name=. Guarda em assets/ e põe no tema.

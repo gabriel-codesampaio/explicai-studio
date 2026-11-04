@@ -25,6 +25,7 @@ export {
   setManualTheme,
 } from "./export/index.js";
 export type { ThemePatch } from "./export/theme.js";
+export { themeCss } from "./export/theme.js";
 export { resolveInside, resolveInsideReal } from "./fs.js";
 export { createManual, listManuals, readManual, renameManual } from "./manuals.js";
 export { addPage, movePage, type PageTreeNode, readPage, readPageTree, updatePage } from "./pages.js";
