@@ -511,6 +511,7 @@ test.describe("marcações", () => {
     const disc = dialog.locator("[data-n='1']");
     const box = () => disc.evaluate((el) => ({ w: (el as HTMLElement).offsetWidth, bg: getComputedStyle(el).backgroundColor }));
 
+    await dialog.getByText("Padrão da imagem").click(); // painel recolhido por padrão
     expect(await box()).toEqual({ w: 24, bg: "rgb(43, 79, 224)" }); // sem style: o de sempre
     await expect(dialog.getByRole("button", { name: "Cobalto" })).toHaveAttribute("aria-pressed", "true");
 
@@ -533,10 +534,49 @@ test.describe("marcações", () => {
     await page.reload();
     await openImage(page);
     await page.getByRole("button", { name: "Editar imagem" }).click();
+    await dialog.getByText("Padrão da imagem").click();
     await dialog.getByRole("button", { name: "Voltar ao padrão" }).click();
     await dialog.getByRole("button", { name: "Salvar marcações" }).click();
     await expect(dialog).toBeHidden();
     expect(await annotations(request, slug)).not.toHaveProperty("style");
+  });
+});
+
+test.describe("estilo do item", () => {
+  test("trocar cor e tamanho do marcador 2 muda só ele, grava e sai no HTML", async ({ page, request }) => {
+    const { slug, id } = await withImage(request, "Imagem Estilo Item");
+    await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, {
+      data: {
+        version: 1,
+        markers: [
+          { id: "m1", n: 1, x: 0.3, y: 0.3 },
+          { id: "m2", n: 2, x: 0.6, y: 0.6 },
+        ],
+        highlights: [],
+        arrows: [],
+        hotspots: [],
+      },
+    });
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    const dialog = markDialog(page);
+    await dialog.getByRole("button", { name: "Selecionar" }).click();
+    await dialog.locator("[data-n='2']").click();
+    const panel = dialog.getByRole("region", { name: "Estilo do item" });
+    await expect(panel).toContainText("Marcador 2");
+    await expect(panel).toContainText("Herdando da imagem");
+    await panel.getByRole("button", { name: "Vermelho" }).click();
+    await panel.getByRole("button", { name: "Grande" }).click();
+    await expect(dialog.locator("[data-n='2']")).toHaveCSS("background-color", "rgb(196, 38, 29)");
+    await expect(dialog.locator("[data-n='1']")).toHaveCSS("background-color", "rgb(43, 79, 224)");
+    await dialog.getByRole("button", { name: "Salvar marcações" }).click();
+    await expect(dialog).toBeHidden();
+    const a = await annotations(request, slug);
+    expect(a.markers[1].style).toEqual({ color: "red", size: "l" });
+    expect(a.markers[0]).not.toHaveProperty("style");
+    const html = await (await request.get((await exportApi(request, slug, "html")).url)).text();
+    expect(html).toContain("#c4261d");
   });
 });
 

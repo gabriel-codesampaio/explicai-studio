@@ -185,6 +185,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 24px;
   margin-left: -6px;
   padding: 2px 6px;
   border-radius: var(--radius);
@@ -215,6 +216,9 @@
   border-radius: 8px;
   border: 1px solid var(--linha);
   display: block;
+}
+.tiptap[contenteditable="true"] img {
+  cursor: pointer;
 }
 .tiptap img.ProseMirror-selectednode {
   outline: 3px solid var(--cobalto);
@@ -275,4 +279,30 @@
   .tiptap .callout-type {
     min-height: 44px;
   }
+}
+
+/* Fonte do trecho (marca textFont): a família de prévia que useFontPreview registra no navegador. */
+.tiptap [data-font="atkinson-hyperlegible-next"] {
+  font-family: "Explicaí prévia Atkinson Hyperlegible Next", sans-serif;
+}
+.tiptap [data-font="inter"] {
+  font-family: "Explicaí prévia Inter", sans-serif;
+}
+.tiptap [data-font="source-sans-3"] {
+  font-family: "Explicaí prévia Source Sans 3", sans-serif;
+}
+.tiptap [data-font="source-serif-4"] {
+  font-family: "Explicaí prévia Source Serif 4", serif;
+}
+.tiptap [data-font="lora"] {
+  font-family: "Explicaí prévia Lora", serif;
+}
+.tiptap [data-font="archivo"] {
+  font-family: "Explicaí prévia Archivo", sans-serif;
+}
+.tiptap [data-font="montserrat"] {
+  font-family: "Explicaí prévia Montserrat", sans-serif;
+}
+.tiptap [data-font="playfair-display"] {
+  font-family: "Explicaí prévia Playfair Display", serif;
 }

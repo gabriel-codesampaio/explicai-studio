@@ -13,6 +13,15 @@ async function setup(request: APIRequestContext, title: string, pages: string[] 
   return { slug: manual.slug as string, pages: created };
 }
 
+/** Abre "Aparência do manual" pelo menu Ajustes. */
+async function openManualAppearance(page: Page) {
+  await page.getByRole("button", { name: "Ajustes" }).click();
+  await page.getByRole("menuitem", { name: "Aparência do manual" }).click();
+  const dialog = page.getByRole("dialog", { name: "Aparência do manual" });
+  await expect(dialog).toBeVisible();
+  return dialog;
+}
+
 const editor = (page: Page) => page.getByRole("textbox", { name: "Conteúdo da página" });
 const treePage = (page: Page, title: string) =>
   page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: title, exact: true });
@@ -465,7 +474,7 @@ test("Aparência mostra só o Tema, e o Studio fica no cobalto mesmo com cor ant
   await expect(page.locator("html")).not.toHaveAttribute("data-accent", /.*/);
 
   await page.getByRole("button", { name: "Ajustes" }).click();
-  await page.getByRole("menuitem", { name: "Aparência" }).click();
+  await page.getByRole("menuitem", { name: "Tema do Studio" }).click();
   await expect(page.getByRole("group", { name: "Tema" })).toBeVisible();
   await expect(page.getByRole("group", { name: "Idioma da interface" })).toHaveCount(0);
   await expect(page.getByText("Cor de destaque")).toHaveCount(0);
@@ -481,13 +490,10 @@ test("Aparência mostra só o Tema, e o Studio fica no cobalto mesmo com cor ant
   expect(errors).toEqual([]);
 });
 
-test("exportação mostra o nome de cada cor do manual", async ({ page, request }) => {
+test("Aparência do manual mostra o nome de cada cor e a exportação segue com a cor escolhida", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Cores", ["Início"]);
   await page.goto(`/#/${slug}`);
-  await page.getByRole("button", { name: "Exportar manual" }).click();
-  // As cores ficam dentro de "Cores do manual", fechado por padrão.
-  await page.getByRole("dialog").getByText("Cores do manual").click();
-  const colors = page.getByRole("dialog");
+  const colors = await openManualAppearance(page);
   // O botão não tem aria-label: o nome acessível é o texto visível ao lado da bolinha.
   for (const name of ["Cobalto", "Esmeralda", "Ameixa", "Grafite"])
     await expect(colors.getByRole("button", { name, exact: true })).toBeVisible();
@@ -496,6 +502,10 @@ test("exportação mostra o nome de cada cor do manual", async ({ page, request 
   await colors.getByRole("button", { name: "Ameixa" }).click();
   await expect(colors.getByRole("button", { name: "Ameixa" })).toHaveAttribute("aria-pressed", "true");
   await expect(colors.getByRole("button", { name: "Cobalto" })).toHaveAttribute("aria-pressed", "false");
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  // O diálogo de exportação já não tem as cores, só o ponteiro para a tela nova.
+  await expect(page.getByRole("dialog").getByText("Cor do texto")).toHaveCount(0);
 
   await page.getByRole("dialog").getByRole("button", { name: "Exportar", exact: true }).click();
   const link = page.getByRole("dialog").getByRole("link", { name: "Abrir o arquivo" });
@@ -569,7 +579,8 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência, Idioma e Atalhos
   const more = page.getByRole("button", { name: "Ajustes" });
   for (const [item, title] of [
     ["Lixeira", "Lixeira deste manual"],
-    ["Aparência", "Aparência"],
+    ["Aparência do manual", "Aparência do manual"],
+    ["Tema do Studio", "Tema do Studio"],
     ["Idioma", "Idioma"],
     ["Atalhos", "Atalhos de teclado"],
   ] as const) {
@@ -617,7 +628,8 @@ test("tela estreita: painéis de Ajustes abrem sobre a gaveta, Esc fecha só o p
   const more = drawer.getByRole("button", { name: "Ajustes" });
   for (const [item, title] of [
     ["Lixeira", "Lixeira deste manual"],
-    ["Aparência", "Aparência"],
+    ["Aparência do manual", "Aparência do manual"],
+    ["Tema do Studio", "Tema do Studio"],
     ["Idioma", "Idioma"],
     ["Atalhos", "Atalhos de teclado"],
   ] as const) {
@@ -764,7 +776,7 @@ test.describe("toque", () => {
     expect(await height(page.getByRole("button", { name: "Cor do texto" }))).toBeGreaterThanOrEqual(44);
     await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
     await page.getByRole("dialog", { name: "Páginas do manual" }).getByRole("button", { name: "Ajustes" }).click();
-    for (const name of ["Lixeira", "Aparência", "Idioma", "Atalhos"])
+    for (const name of ["Lixeira", "Aparência do manual", "Tema do Studio", "Idioma", "Atalhos"])
       expect(await height(page.getByRole("menuitem", { name }))).toBeGreaterThanOrEqual(44);
   });
 });
@@ -773,9 +785,7 @@ test("exportação no escuro: a borda da amostra de cor se distingue do fundo (3
   await page.addInitScript(() => localStorage.setItem("explicai:aparencia", JSON.stringify({ mode: "dark" })));
   const { slug } = await setup(request, "Manual Escuro", ["Início"]);
   await page.goto(`/#/${slug}`);
-  await page.getByRole("button", { name: "Exportar manual" }).click();
-  const dialog = page.getByRole("dialog");
-  await dialog.getByText("Cores do manual").click();
+  const dialog = await openManualAppearance(page);
   const ratio = await dialog.getByLabel("Cor do texto", { exact: true }).evaluate((swatch) => {
     const rgb = (el: Element, prop: "borderTopColor" | "backgroundColor") =>
       (getComputedStyle(el)[prop].match(/\d+/g) ?? []).slice(0, 3).map(Number);
@@ -1043,43 +1053,42 @@ for (const mode of ["light", "dark"] as const) {
       .getByRole("button", { name: "Sair e descartar" })
       .click();
 
-    await page.getByRole("button", { name: "Exportar manual" }).click();
-    const exportDialog = page.getByRole("dialog");
-    await exportDialog.getByText("Cores do manual").click();
+    const exportDialog = await openManualAppearance(page);
     expect(await borderContrast(exportDialog.getByLabel("Cor do texto: código da cor"))).toBeGreaterThanOrEqual(3);
   });
 }
 
-test("fonte do manual pela barra: editor, diálogo Exportar e recarga mostram a mesma fonte", async ({ page, request }) => {
+test("fonte do manual na Aparência do manual: editor ao vivo e recarga mostram a mesma fonte, e a barra não tem seletor", async ({
+  page,
+  request,
+}) => {
   const { slug } = await setup(request, "Manual Fonte Barra", ["Início"]);
   await page.goto(`/#/${slug}`);
   const toolbar = page.getByRole("toolbar", { name: "Formatação" });
-  const trigger = toolbar.getByRole("button", { name: /^Fonte do manual:/ });
-  await expect(trigger).toHaveAccessibleName("Fonte do manual: Atkinson Hyperlegible Next");
-  const family = () => editor(page).evaluate((el) => getComputedStyle(el).fontFamily);
+  await expect(toolbar.getByRole("button", { name: /^Fonte do manual:/ })).toHaveCount(0);
+  // Com o diálogo aberto o editor sai da árvore de acessibilidade: mede pelo seletor CSS.
+  const family = () =>
+    page
+      .locator(".ProseMirror")
+      .first()
+      .evaluate((el) => getComputedStyle(el).fontFamily);
   expect(await family()).toContain("Atkinson");
 
-  await trigger.focus();
-  await page.keyboard.press("Enter");
+  const dialog = await openManualAppearance(page);
+  const group = dialog.getByRole("group", { name: "Fonte do texto" });
+  await expect(group.getByRole("button", { name: "Atkinson Hyperlegible Next" })).toHaveAttribute("aria-pressed", "true");
   // Fonte sem itálico não serve para o texto: não aparece na lista.
-  await expect(page.getByRole("menuitem", { name: "Montserrat" })).toHaveCount(0);
-  await page.getByRole("menuitem", { name: "Lora" }).click();
-  await expect(trigger).toHaveAccessibleName("Fonte do manual: Lora");
+  await expect(group.getByRole("button", { name: "Montserrat" })).toHaveCount(0);
+  await group.getByRole("button", { name: "Lora" }).click();
   await expect.poll(family).toContain("Lora");
   // O resto do Studio fica na fonte da marca.
   expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toContain("Atkinson");
-
-  await page.getByRole("button", { name: "Exportar manual" }).click();
-  const dialog = page.getByRole("dialog");
-  await dialog.getByText("Cores do manual").click();
-  await expect(dialog.getByRole("group", { name: "Fonte do texto" }).getByRole("button", { name: "Lora" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
+  // Nome da fonte inteiro, sem corte.
+  for (const b of await group.getByRole("button").all())
+    expect(await b.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
   await page.keyboard.press("Escape");
 
   await page.reload();
-  await expect(toolbar.getByRole("button", { name: "Fonte do manual: Lora" })).toBeVisible();
   await expect.poll(family).toContain("Lora");
 });
 
@@ -1224,7 +1233,7 @@ for (const theme of ["light", "dark"] as const) {
       });
 
     for (const [item, group] of [
-      ["Aparência", "Tema"],
+      ["Tema do Studio", "Tema"],
       ["Idioma", "Idioma da interface"],
     ] as const) {
       await page
@@ -1245,15 +1254,14 @@ for (const theme of ["light", "dark"] as const) {
   });
 }
 
-test("exportação: logo do cliente entra na capa do HTML, a recusa diz o motivo e tirar o logo mantém a cor", async ({
+test("Aparência do manual: logo do cliente entra na capa do HTML, a recusa diz o motivo e tirar o logo mantém a cor", async ({
   page,
   request,
 }) => {
   const { slug } = await setup(request, "Manual Logo", ["Início"]);
   await request.put(`/api/manuals/${slug}/theme`, { data: { accent: "#7a3fc4" } });
   await page.goto(`/#/${slug}`);
-  await page.getByRole("button", { name: "Exportar manual" }).click();
-  const dialog = page.getByRole("dialog");
+  const dialog = await openManualAppearance(page);
 
   const file = dialog.getByLabel("Logo do cliente", { exact: true });
   await file.setInputFiles({ name: "gif.gif", mimeType: "image/gif", buffer: Buffer.from("GIF89a") });
@@ -1265,13 +1273,18 @@ test("exportação: logo do cliente entra na capa do HTML, a recusa diz o motivo
   await expect(dialog.getByRole("img", { name: "Logo do manual" })).toBeVisible();
   await expect(dialog.getByRole("alert")).toHaveCount(0);
 
-  await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
-  const href = (await dialog.getByRole("link", { name: "Abrir o arquivo" }).getAttribute("href")) ?? "";
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const exportDialog = page.getByRole("dialog", { name: "Exportar manual" });
+  await exportDialog.getByRole("button", { name: "Exportar", exact: true }).click();
+  const href = (await exportDialog.getByRole("link", { name: "Abrir o arquivo" }).getAttribute("href")) ?? "";
   const html = await (await request.get(href)).text();
   const logo = /<header class="cover">\s*<img class="logo" src="([^"]+)"/.exec(html)?.[1];
   expect(logo).toMatch(/^assets\/tela.*\.png$/);
   expect((await request.get(href.replace("index.html", logo ?? ""))).status()).toBe(200);
 
+  await page.keyboard.press("Escape");
+  await openManualAppearance(page);
   await dialog.getByRole("button", { name: "Tirar logo" }).click();
   await expect(dialog.getByRole("img", { name: "Logo do manual" })).toHaveCount(0);
   const detail = await (await request.get(`/api/manuals/${slug}`)).json();

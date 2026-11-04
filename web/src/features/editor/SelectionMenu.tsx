@@ -4,6 +4,7 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { Bold, Code, Highlighter, Italic, Link2 } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { BlockTypeMenu } from "./BlockTypeMenu";
+import { FontMenu } from "./FontMenu";
 import { TextColorMenu } from "./TextColorMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
 
@@ -54,7 +55,7 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
         state.doc.textBetween(from, to).trim().length > 0 &&
         !editor.isActive("codeBlock")
       }
-      className="z-20 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
+      className="z-20 rounded-md bg-popover p-0.5 text-popover-foreground shadow-sm ring-1 ring-border/60"
     >
       <div role="toolbar" aria-label={t("Formatar seleção")} className="flex items-center gap-0.5">
         <BlockTypeMenu editor={editor} pickImage={pickImage} className="w-auto" floating />
@@ -84,6 +85,7 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
         />
         <Divider />
         <TextColorMenu editor={editor} />
+        <FontMenu editor={editor} />
       </div>
     </BubbleMenu>
   );

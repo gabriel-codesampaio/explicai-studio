@@ -6,10 +6,10 @@ import { useScrollEdges } from "@/hooks/useScrollEdges";
 import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { BlockTypeMenu } from "./BlockTypeMenu";
-import { FontMenu } from "./FontMenu";
 import { TableToolbarMenu } from "./TableToolbarMenu";
 import { TextColorMenu } from "./TextColorMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
+import { insertNewTable } from "./tableCommands";
 
 interface Props {
   editor: Editor;
@@ -60,7 +60,6 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
       >
         <BlockTypeMenu editor={editor} pickImage={onPickImage} />
         <Btn icon={ImageIcon} label={t("Imagem")} hint={t("Colar print")} shortcut="Ctrl+V" showLabel onClick={onPickImage} />
-        <FontMenu />
         <Divider />
         <Btn icon={Bold} label={t("Negrito")} shortcut="Ctrl+B" active={s.bold} onClick={() => chain().toggleBold().run()} />
         <Btn
@@ -94,11 +93,7 @@ export function Toolbar({ editor, onPickImage, onEditLink }: Props) {
             <TableToolbarMenu editor={editor} />
           </>
         ) : (
-          <Btn
-            icon={Table}
-            label={t("Tabela")}
-            onClick={() => chain().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
-          />
+          <Btn icon={Table} label={t("Tabela")} onClick={() => insertNewTable(editor)} />
         )}
       </div>
       <Fade show={edges.start} side="left" />

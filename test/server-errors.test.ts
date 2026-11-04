@@ -50,3 +50,16 @@ it("EISDIR vira 404, e EACCES vira frase fixa sem o caminho", () => {
   expect(publicMessage(eacces)).toBe("Sem permissão para acessar o arquivo.");
   expect(publicMessage(new Error("Outro erro"))).toBe("Outro erro");
 });
+
+it("PUT cover e footer com corpo null, array ou texto dão 400, não 500", async () => {
+  for (const route of ["cover", "footer"]) {
+    for (const body of ["null", "[]", '"x"', "3"]) {
+      const res = await fetch(`${base}/api/manuals/m/${route}`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body,
+      });
+      expect(res.status, `${route} ${body}`).toBe(400);
+    }
+  }
+});

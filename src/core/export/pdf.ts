@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { ExplicaiError } from "../errors.js";
 import { exists } from "../fs.js";
+import type { ManualFooter } from "../types.js";
 
 const run = promisify(execFile);
 
@@ -73,4 +74,26 @@ export async function printPdf(htmlFile: string, pdfFile: string): Promise<void>
     await rm(profile, { recursive: true, force: true }).catch(() => {});
   }
   if (!(await exists(pdfFile))) throw new Error("O navegador terminou sem gerar o PDF.");
+}
+
+/** Versão principal do Chrome/Edge, ou `null` se não der para saber. */
+async function browserMajor(): Promise<number | null> {
+  const browser = await findBrowser();
+  if (!browser) return null;
+  try {
+    const { stdout } = await run(browser, ["--version"], { timeout: 15_000 });
+    const m = /(\d+)\.\d+\.\d+\.\d+/.exec(String(stdout));
+    return m ? Number(m[1]) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Rodapé por página precisa de Chrome 131 ou mais novo (margens de página por CSS). Antes disso o PDF sai sem ele: aviso, não erro. */
+export async function chromeWarning(footer: ManualFooter | undefined): Promise<string | null> {
+  if (!footer?.text?.trim() && !footer?.pageNumbers) return null;
+  const major = await browserMajor();
+  return major !== null && major < 131
+    ? `O navegador instalado é o ${major}; o rodapé e o número de página do PDF pedem a versão 131 ou mais nova. O PDF saiu sem eles.`
+    : null;
 }

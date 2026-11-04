@@ -1,57 +1,70 @@
-import { Check, ChevronDown, Type } from "lucide-react";
+import { type Editor, useEditorState } from "@tiptap/react";
+import { CaseSensitive, Check } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Kbd } from "@/components/ui/kbd";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useFontPreview } from "@/features/export/useFontPreview";
-import { useStudioContext } from "@/hooks/StudioContext";
-import { errorMessage } from "@/lib/api";
 import { t } from "@/lib/i18n";
-import { previewFamily } from "@/lib/manualFont";
+import { TEXT_FONTS, type TextFontId } from "./textFont";
 
-/** Fonte da marca para o texto, usada quando o manual não escolhe outra (o mesmo valor do diálogo Exportar). */
-const DEFAULT_TEXT = "atkinson-hyperlegible-next";
+export const FONT_SHORTCUT = "Ctrl+Shift+F";
 
-/** Seletor "Fonte ▾" da barra: a fonte do texto do manual inteiro (`theme.fonts.text`), a mesma do diálogo Exportar. */
-export function FontMenu() {
-  const studio = useStudioContext();
-  const fonts = useFontPreview(true).filter((f) => f.italic);
-  const currentId = studio.manual?.theme.fonts?.text ?? DEFAULT_TEXT;
-  const current = fonts.find((f) => f.id === currentId);
-  if (!current) return null;
-  const pick = (id: string) =>
-    void studio
-      .setManualTheme({ fonts: { text: id === DEFAULT_TEXT ? null : id } })
-      .catch((err: unknown) => studio.reportError(errorMessage(err)));
+/**
+ * Fonte só do trecho selecionado (a do manual inteiro fica na Aparência). Menu na barra da seleção; cada item
+ * aparece na própria fonte. Ctrl+Shift+F abre o menu. Não rouba o foco do editor; ao escolher, o foco volta a ele.
+ */
+export function FontMenu({ editor }: { editor: Editor }) {
+  const font = useEditorState({
+    editor,
+    selector: ({ editor: e }) => (e.getAttributes("textFont").font as TextFontId | undefined) ?? null,
+  });
+  const trigger = useRef<HTMLButtonElement>(null);
+  const [open, setOpen] = useState(false); // re-renderiza ao abrir: o contêiner só existe com a barra montada
+  const pick = (id: TextFontId | null) =>
+    (id ? editor.chain().focus().setTextFont(id) : editor.chain().focus().unsetTextFont()).run();
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "f" && editor.isFocused) {
+        e.preventDefault();
+        setOpen(true);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [editor]);
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              data-roving
-              tabIndex={-1}
-              aria-label={t("Fonte do manual: {fonte}", { fonte: current.family })}
+              ref={trigger}
+              aria-label={t("Fonte do trecho")}
               onMouseDown={(e) => e.preventDefault()}
-              className="inline-flex h-8 w-40 shrink-0 items-center gap-2 rounded-md px-2.5 text-sm [@media(pointer:coarse)]:h-11 hover:bg-secondary data-[state=open]:bg-secondary"
+              className="inline-flex h-8 items-center rounded-md px-2 [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:min-w-11 [@media(pointer:coarse)]:justify-center text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary"
             >
-              <Type className="size-4 shrink-0 text-primary" aria-hidden />
-              <span className="flex-1 truncate text-left">{current.family}</span>
-              <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              <CaseSensitive className="size-4" aria-hidden />
             </button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent>{t("Fonte do manual inteiro")}</TooltipContent>
+        <TooltipContent>
+          {t("Fonte do trecho")}
+          <Kbd className="ml-2 border-background/30 bg-background/10 text-background">{FONT_SHORTCUT}</Kbd>
+        </TooltipContent>
       </Tooltip>
-      <DropdownMenuContent align="start" className="w-56" onCloseAutoFocus={(e) => e.preventDefault()}>
-        {fonts.map((f) => (
-          <DropdownMenuItem
-            key={f.id}
-            onSelect={() => pick(f.id)}
-            style={{ fontFamily: `${previewFamily(f.family)}, ${f.kind === "serif" ? "serif" : "sans-serif"}` }}
-          >
-            <span className="flex-1">{f.family}</span>
-            {f.id === currentId && <Check className="size-4 text-primary" aria-hidden />}
+      <DropdownMenuContent
+        align="start"
+        className="w-60"
+        container={trigger.current?.closest<HTMLElement>("[role=toolbar]")}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
+        {[null, ...TEXT_FONTS].map((f) => (
+          <DropdownMenuItem key={f?.id ?? "default"} aria-current={font === (f?.id ?? null)} onSelect={() => pick(f?.id ?? null)}>
+            <span style={f ? { fontFamily: `"Explicaí prévia ${f.label}"` } : undefined}>{f ? f.label : t("Fonte padrão")}</span>
+            {font === (f?.id ?? null) && <Check className="ml-auto" aria-hidden />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

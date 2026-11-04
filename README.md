@@ -15,7 +15,7 @@ Construtor de manuais open source e gratuito. Do print ao manual pronto em PDF, 
 
 ### Como usar
 
-Precisa do Node 20.12 ou mais novo. Para exportar em PDF, precisa também do Chrome, do Edge ou do Chromium instalado na máquina.
+Precisa do Node 22.12 ou mais novo. Para exportar em PDF, precisa também do Chrome, do Edge ou do Chromium instalado na máquina.
 
 ```bash
 npx explicai manuais
@@ -89,7 +89,7 @@ Contribuições são bem-vindas. Abra uma [issue](https://github.com/gabriel-cod
 
 ### Usage
 
-Needs Node 20.12 or newer. PDF export also needs Chrome, Edge or Chromium installed on the machine.
+Needs Node 22.12 or newer. PDF export also needs Chrome, Edge or Chromium installed on the machine.
 
 ```bash
 npx explicai manuals

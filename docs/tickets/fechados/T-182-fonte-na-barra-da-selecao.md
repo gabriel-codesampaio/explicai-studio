@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: pedido da pessoa, 2026-11-04 (lote 1.0)
 
@@ -26,4 +26,6 @@ Decidido (pessoa, 2026-11-04): troca a fonte **só do trecho selecionado**. A fo
 Selecionar texto, trocar a fonte, conferir no editor e no export.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Commits: f900972, 2964f59, abd1ff3 (+ correção da revisão)
+- Feito: marca `<span data-font>` no Markdown (só ids da lista), menu de fonte na barra da seleção, export HTML/PDF, atalho Ctrl+Shift+F (só com o editor em foco).
+- Fora: botão "limpar formatação" não existe na main (unsetAllMarks já remove a fonte); sem e2e, sem conferência em 375 nem no escuro.
