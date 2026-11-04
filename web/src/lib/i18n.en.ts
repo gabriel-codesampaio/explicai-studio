@@ -9,6 +9,8 @@ export const EN: Record<string, string> = {
   "Confirmar limpeza": "Confirm cleanup",
   Recortar: "Crop",
   "Recortar imagem": "Crop image",
+  "Recorte pendente": "Crop pending",
+  "Sem recorte": "No crop",
   "Ferramenta Recortar": "Crop tool",
   "Arraste sobre a parte da imagem que deve ficar": "Drag over the part of the image to keep",
   "Arraste sobre a parte que deve ficar.": "Drag over the part to keep.",

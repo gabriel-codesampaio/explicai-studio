@@ -1,12 +1,12 @@
 import { ArrowUpRight, Crop, EyeOff, Hash, Highlighter, Link2, type LucideIcon, MousePointer2, Undo2 } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
 import { draftChanged, type HotspotTarget, nudge, removeAnnotation, type Tool } from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
-import { t } from "@/lib/i18n";
+import { t, tn } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
 import { TOOL_KEYS, toolForKey } from "@/lib/toolShortcuts";
 import { flattenItems } from "@/lib/tree";
@@ -15,21 +15,9 @@ import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
 import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
+import { Pending } from "./Pending";
 import { RedactPanel } from "./RedactPanel";
 import { ReducePanel } from "./ReducePanel";
-
-/** Painel de operação pendente: aberto só com a ferramenta dele ativa; nas outras vira uma linha, para não empurrar a Legenda. */
-function Pending({ open, title, count, children }: { open: boolean; title: string; count: number; children: ReactNode }) {
-  return (
-    <details open={open} className="group">
-      <summary className="flex min-h-9 cursor-pointer items-center justify-between rounded-md border border-border px-3 text-sm group-open:hidden [@media(pointer:coarse)]:min-h-11">
-        <span className="font-bold">{title}</span>
-        <span className="text-muted-foreground">{count}</span>
-      </summary>
-      {children}
-    </details>
-  );
-}
 
 interface Props {
   slug: string;
@@ -198,7 +186,12 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
             </div>
             <div className="grid content-start gap-4">
               {(tool === "redact" || draft.redact.length > 0) && (
-                <Pending open={tool === "redact"} title={t("Ocultar dados")} count={draft.redact.length}>
+                <Pending
+                  open={tool === "redact"}
+                  title={t("Ocultar dados")}
+                  status={tn(draft.redact.length, "{n} área a ocultar", "{n} áreas a ocultar")}
+                  onToggle={() => setTool(tool === "redact" ? "select" : "redact")}
+                >
                   <RedactPanel
                     slug={slug}
                     asset={asset}
@@ -224,7 +217,12 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 </Pending>
               )}
               {(tool === "crop" || draft.crop.length > 0) && (
-                <Pending open={tool === "crop"} title={t("Recortar imagem")} count={draft.crop.length}>
+                <Pending
+                  open={tool === "crop"}
+                  title={t("Recortar imagem")}
+                  status={draft.crop.length > 0 ? t("Recorte pendente") : t("Sem recorte")}
+                  onToggle={() => setTool(tool === "crop" ? "select" : "crop")}
+                >
                   <CropPanel
                     slug={slug}
                     asset={asset}
