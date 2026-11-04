@@ -36,7 +36,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
 | [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
 | [T-183](T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | aberto | frontend |
-| [T-184](T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | aberto | frontend |
 | [T-221](T-221-numero-do-disco-em-posicao-fracionaria.md) | Número do disco desvia até 1 px em posição fracionária | P3 | aberto | frontend |
 | [T-220](T-220-publicar-studio-0-3-0-e-mcp-0-1-0.md) | Publicar Studio 0.3.0 e explicai-mcp 0.1.0 | P1 | aberto | supervisor |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
@@ -217,3 +216,4 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-190](fechados/T-190-borda-do-destaque-e-nenhuma-borda.md) | Borda do destaque visível e opção "nenhuma borda" | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
 | [T-191](fechados/T-191-setas-sem-defeito.md) | Setas sem defeito | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
 | [T-192](fechados/T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | feito | branch feat/t-190-191-192-estilo-marcacoes |
+| [T-184](fechados/T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | feito | `122fe06` |
