@@ -7,6 +7,7 @@ import type { Collected, ExportPage } from "./collect.js";
 import { exportLevels } from "./headings.js";
 import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
+import { liftResult } from "./resultado.js";
 import { colorSpanOpen, TEXT_COLORS } from "./textColors.js";
 import { fontFacesCss, themeCss } from "./theme.js";
 
@@ -18,16 +19,26 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
   const { meta, pages } = collected;
   const L = labelsFor(meta.language);
   const toc = pages
-    .map(
-      (p) =>
+    .flatMap((p) => {
+      const heads = pageHeadings(p.body);
+      const top = Math.min(...heads.map((h) => h.depth));
+      return [
         `<li style="--d:${p.depth}"><a href="#${pageAnchor(p.id)}"><span class="num">${p.number}</span> ${esc(p.title)}</a></li>`,
-    )
+        ...heads.map(
+          (h) =>
+            `<li class="sec" style="--d:${p.depth + 1 + Math.min(h.depth - top, 2)}"><a href="#${headingAnchor(p.id, h.text)}">${esc(plain(h.text))}</a></li>`,
+        ),
+      ];
+    })
     .join("\n");
+  const minutes = Math.max(1, Math.round(pages.reduce((n, p) => n + p.body.split(/\s+/).length, 0) / 200));
+  const first = pages[0];
+  const start = first ? `<p class="start">${L.start} <a href="#${pageAnchor(first.id)}">${esc(first.title)}</a></p>\n` : "";
   const logoImg = logo
     ? `<img class="logo" src="${esc(logo)}" alt="">
 `
     : "";
-  const sections = pages.map((p) => renderPage(p, pages, images, L)).join("\n");
+  const sections = pages.map((p, i) => renderPage(p, pages, images, L, pages[i - 1], pages[i + 1])).join("\n");
 
   return `<!doctype html>
 <html lang="${esc(meta.language)}">
@@ -41,17 +52,20 @@ ${CSS}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
-<nav class="toc" aria-label="${L.toc}">
+<nav class="toc" id="sumario" aria-label="${L.toc}">
 ${logoImg}<p class="toc-title">${esc(meta.title)}</p>
+<details open>
+<summary>${L.toc}</summary>
 <ol>
 ${toc}
 </ol>
+</details>
 </nav>
 <main>
 <header class="cover">
 ${logoImg}<h1>${esc(meta.title)}</h1>
-<p>${L.pages(pages.length)}</p>
-</header>
+<p>${pages.length ? L.readTime(pages.length, minutes) : L.pages(0)}</p>
+${start}</header>
 ${sections}
 ${meta.theme?.hideColophon ? "" : `<footer class="colophon">${L.colophon}</footer>`}
 </main>
@@ -61,22 +75,43 @@ ${meta.theme?.hideColophon ? "" : `<footer class="colophon">${L.colophon}</foote
 `;
 }
 
-function renderPage(page: ExportPage, pages: ExportPage[], images: Map<string, ImageInfo>, L: Labels): string {
-  const titleLevel = Math.min(page.depth + 2, 3);
-  const depths: number[] = [];
+/** Títulos do texto da página, na ordem. */
+function pageHeadings(body: string): { depth: number; text: string }[] {
+  const out: { depth: number; text: string }[] = [];
   const lexer = new Marked({ gfm: true });
-  lexer.walkTokens(lexer.lexer(page.body), (t) => {
-    if (t.type === "heading") depths.push((t as Tokens.Heading).depth);
+  lexer.walkTokens(lexer.lexer(body), (t) => {
+    if (t.type === "heading") out.push({ depth: (t as Tokens.Heading).depth, text: (t as Tokens.Heading).text });
   });
-  const levels = exportLevels(depths, titleLevel);
-  let next = 0;
+  return out;
+}
+
+/** Texto do título sem as marcas do Markdown, para o sumário. */
+const plain = (md: string) => md.replace(/[*_`]/g, "");
+
+function renderPage(
+  page: ExportPage,
+  pages: ExportPage[],
+  images: Map<string, ImageInfo>,
+  L: Labels,
+  prev?: ExportPage,
+  next?: ExportPage,
+): string {
+  const titleLevel = Math.min(page.depth + 2, 3);
+  const levels = exportLevels(
+    pageHeadings(page.body).map((h) => h.depth),
+    titleLevel,
+  );
+  let seen = 0;
   let openSpans = 0;
   const marked = new Marked({
     gfm: true,
+    walkTokens(t) {
+      if (t.type === "list_item") liftResult(t as Tokens.ListItem);
+    },
     renderer: {
       // Os títulos ficam abaixo do título da página, sem pular nível (ver exportLevels).
       heading({ tokens, text, depth }: Tokens.Heading) {
-        const level = levels[next++] ?? 6;
+        const level = levels[seen++] ?? 6;
         return `<h${level} class="t${Math.min(depth, 3)}" id="${headingAnchor(page.id, text)}">${this.parser.parseInline(tokens)}</h${level}>\n`;
       },
       link({ href, tokens }: Tokens.Link) {
@@ -123,6 +158,9 @@ ${this.parser.parse(callout.body)}</div>
   return `<section class="page" id="${pageAnchor(page.id)}">
 <h${titleLevel} class="page-title"><span class="num">${page.number}</span> ${esc(page.title)}</h${titleLevel}>
 <div class="page-body">${body}</div>
+<nav class="page-nav" aria-label="${L.pageNav}">
+${prev ? `<a rel="prev" href="#${pageAnchor(prev.id)}">← ${L.prev}: ${esc(prev.title)}</a>` : ""}<a class="back" href="#sumario">${L.backToToc}</a>${next ? `<a rel="next" href="#${pageAnchor(next.id)}">${L.next}: ${esc(next.title)} →</a>` : ""}
+</nav>
 </section>`;
 }
 
@@ -136,6 +174,13 @@ function hotspotHref(target: HotspotTarget, pages: ExportPage[]): { href: string
   const href = target.type === "anchor" ? `#${headingAnchor(page.id, target.anchor)}` : `#${pageAnchor(page.id)}`;
   return { href, label: page.title };
 }
+
+/** Print mais largo que uma tela de celular leva um link para o original (sem JavaScript; o teclado alcança). */
+const ZOOM_MIN_WIDTH = 600;
+const zoom = (img: string, info: ImageInfo, L: Labels) =>
+  info.size && info.size.w > ZOOM_MIN_WIDTH
+    ? `<a class="zoom" href="${esc(info.asset)}" target="_blank" rel="noopener">${img}<span class="sr">${L.openOriginal}</span></a>`
+    : img;
 
 /** O print com as marcações por cima (posições em %, acompanham o tamanho) e a legenda embaixo. */
 function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels): string {
@@ -179,7 +224,8 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     })
     .join("");
 
-  return `<span class="shot${a.display ? ` shot-${a.display}` : ""}"><span class="frame" style="aspect-ratio:${w} / ${h}"><img src="${esc(info.asset)}" alt="${esc(alt)}"${info.size ? ` width="${w}" height="${h}"` : ""} loading="lazy">${highlights}${arrows}${hotspots}${markers}</span>${
+  const img = `<img src="${esc(info.asset)}" alt="${esc(alt)}"${info.size ? ` width="${w}" height="${h}"` : ""} loading="lazy">`;
+  return `<span class="shot${a.display ? ` shot-${a.display}` : ""}"><span class="frame" style="aspect-ratio:${w} / ${h}">${zoom(img, info, L)}${highlights}${arrows}${hotspots}${markers}</span>${
     legend ? `<span class="legend" role="list" aria-label="${L.legend}">${legend}</span>` : ""
   }</span>`;
 }
@@ -191,11 +237,20 @@ const CSS = `
 body{margin:0;background:#fff;color:var(--tinta);font:16px/1.65 var(--texto);-webkit-font-smoothing:antialiased}
 .layout{display:grid;grid-template-columns:17rem minmax(0,1fr)}
 .toc{position:sticky;top:0;height:100vh;overflow:auto;padding:24px 16px;background:var(--papel);border-right:1px solid var(--linha)}
+.toc summary{display:none}
 .toc-title{margin:0 0 12px;font:800 18px/1.2 var(--display)}
 .toc ol{list-style:none;margin:0;padding:0}
 .toc li{padding-left:calc(var(--d) * 14px)}
 .toc a{display:block;padding:4px 6px;border-radius:6px;color:var(--tinta);text-decoration:none;font-size:14px}
 .toc a:hover{background:#e9ecf5}
+.toc li.sec a{font-size:13px;color:var(--grafite)}
+a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cover .start{font-size:18px}
+.cover .start a{color:var(--accent)}
+.page-nav{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;margin-top:32px;padding-top:12px;border-top:1px solid var(--linha);font-size:15px}
+.page-nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--accent)}
+.page-nav .back{display:none}
+a.zoom{display:block;cursor:zoom-in}
 .num{font-family:var(--mono);font-size:.8em;color:var(--accent);margin-right:4px}
 main{max-width:52rem;padding:32px 40px 96px;margin:0 auto;width:100%}
 .cover{padding:48px 0 32px;border-bottom:3px solid var(--marca);margin-bottom:24px}
@@ -240,11 +295,14 @@ ${Object.entries(TEXT_COLORS)
   .join("")}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .colophon{margin-top:64px;padding-top:16px;border-top:1px solid var(--linha);color:var(--grafite);font-size:13px}
-@media (max-width:800px){.layout{display:block}.toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--linha)}main{padding:24px 20px 64px}}
+@media (max-width:800px){.layout{display:block}.toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--linha)}main{padding:24px 20px 64px}
+.toc summary{display:flex;align-items:center;min-height:44px;font-weight:700;cursor:pointer}
+.toc a{padding:10px 6px}
+.page-nav .back{display:inline-flex}}
 @media print{
 @page{margin:18mm 16mm}
 body{font-size:11.5pt}
-.layout{display:block}.toc{display:none}main{max-width:none;padding:0}
+.layout{display:block}.toc,.page-nav{display:none}main{max-width:none;padding:0}
 .cover{padding:30vh 0 0;border:0;break-after:page}
 .page{break-before:page;padding-top:0}
 .shot,.callout,.page-body table,.page-body pre,.page-body li{break-inside:avoid}
