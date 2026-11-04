@@ -220,3 +220,24 @@ Os títulos do corpo da página saem logo abaixo do título dela, sem pular nív
 - Os ids são únicos dentro de cada arquivo de anotações.
 - Nenhum caminho pode sair da pasta do manual.
 - As gravações são atômicas: o conteúdo vai para um arquivo temporário, que depois é renomeado.
+
+## Compatibilidade
+
+Esta seção vale a partir da 1.0 do Studio (pacote `explicai`). O MCP (`explicai-mcp`) segue na 0.x, com semver próprio, e declara a faixa de `explicai` que aceita.
+
+**O que é contrato.** Mudanças nestes pontos seguem semver: só crescem na versão menor, e qualquer quebra exige versão maior.
+
+- O formato em disco descrito neste arquivo: `manual.json`, páginas, `assets/*.json` e `.versoes/`.
+- Os exports de `explicai/core`.
+- As flags do comando `explicai` (`--port`, `--no-open`, `--version`).
+- Os nomes e os schemas das tools e dos prompts do MCP.
+
+**O que é interno.** A API HTTP local do Studio serve só ao editor que vem no mesmo pacote. Ela pode mudar em qualquer versão, e quem a chama por fora não tem garantia.
+
+**Política de acréscimo.** A versão 1 do formato cresce só por acréscimo: campo opcional novo, ou valor novo numa lista. Nenhum campo some e nenhum muda de sentido. Enquanto for assim, `version` em `manual.json` continua 1. Todo manual criado a partir da 0.1 deve abrir, editar e exportar em qualquer 1.x.
+
+**Migração.** A 1.0 não tem migração, porque não existe versão 2. Se ela vier, entra só com o comando `explicai migrate`, com cópia de segurança antes de qualquer mudança, e a leitura da versão 1 continua em toda a série 1.x.
+
+**Manual de formato mais novo (meta).** O objetivo é que um manual com `version` maior que a suportada abra com a mensagem "atualize o Studio" e não seja regravado. Hoje isso ainda não está implementado: `readManual` rejeita a versão diferente com um erro (`versão de formato não suportada`). O ticket T-198 só registra a política; a abertura em modo leitura fica para uma fatia de código.
+
+**Campos desconhecidos.** Ler e regravar sem perder campos que o Studio não conhece está documentado só para o frontmatter das páginas. Para `manual.json` e `assets/*.json`, a garantia ainda não foi verificada por teste.

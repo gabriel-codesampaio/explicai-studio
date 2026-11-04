@@ -65,6 +65,10 @@ manuais/
 
 O formato completo está em [docs/manual-format.md](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md).
 
+#### Compatibilidade
+
+A partir da 1.0 do Studio, o formato da pasta só cresce por acréscimo: campo opcional novo, nunca um campo que some ou muda de sentido. Manuais criados desde a 0.1 devem abrir na 1.x. Seguem semver o formato em disco, os exports de `explicai/core`, as flags do comando `explicai` e os nomes e schemas das tools e prompts do MCP. A API HTTP local do Studio é interna e pode mudar a qualquer versão. O MCP segue na 0.x, com versão própria. A política completa está em [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade).
+
 ### Usar como biblioteca
 
 O mesmo código que o Studio usa para ler, gravar e exportar manuais está em `explicai/core`. É assim que o [Explicaí Agent](https://github.com/gabriel-codesampaio/explicai-mcp) monta manuais pelo MCP.
@@ -104,6 +108,10 @@ Explicaí Studio opens in your browser, and the manuals live in the `manuals` fo
 ### Folder format
 
 Each manual is a folder of Markdown files you can keep in git next to your code: a `manual.json` with the page tree, one `.md` per page under `pages/`, images and their annotations under `assets/`, and the exports under `exportacao/`. Details (in Portuguese) in [docs/manual-format.md](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md).
+
+#### Compatibility
+
+From Studio 1.0 on, the folder format only grows by addition: a new optional field, never one that disappears or changes meaning. Manuals created since 0.1 should open on any 1.x. Semver covers the on-disk format, the `explicai/core` exports, the `explicai` CLI flags, and the names and schemas of the MCP tools and prompts. The Studio's local HTTP API is internal and may change in any release. The MCP stays on 0.x with its own version. The full policy is in [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade) (in Portuguese).
 
 ### Library
 
