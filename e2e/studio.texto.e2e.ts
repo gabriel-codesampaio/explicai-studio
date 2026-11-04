@@ -257,3 +257,22 @@ test.describe("link", () => {
     expect(html).not.toMatch(/href="javascript:/i);
   });
 });
+
+// T-140: o menu "Texto ▾" da barra sobre a seleção abre ancorado no botão, não no canto da tela.
+test("menu de tipo de bloco da barra da seleção abre junto do botão", async ({ page, request }) => {
+  await open(page, request, "Manual Menu Bloco", "Texto com alvo");
+  await editor(page).click();
+  await selectWord(page, "Texto com alvo");
+  const bar = page.getByRole("toolbar", { name: "Formatar seleção" });
+  const trigger = bar.getByRole("button", { name: /Tipo de bloco/ });
+  await expect(trigger).toBeVisible();
+  const b = await trigger.boundingBox();
+  await trigger.click();
+  const menu = page.getByRole("menu");
+  await expect(menu).toBeVisible();
+  const m = await menu.boundingBox();
+  expect(Math.abs((m?.x ?? 0) - (b?.x ?? 0))).toBeLessThan(40);
+  expect(Math.abs((m?.y ?? 0) - ((b?.y ?? 0) + (b?.height ?? 0)))).toBeLessThan(40);
+  await menu.getByRole("menuitem", { name: "Título 1" }).click();
+  await expect(editor(page).locator("h1")).toHaveText("Texto com alvo");
+});

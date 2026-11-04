@@ -56,7 +56,7 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
       className="z-20 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
     >
       <div role="toolbar" aria-label={t("Formatar seleção")} className="flex items-center gap-0.5">
-        <BlockTypeMenu editor={editor} pickImage={pickImage} className="w-auto" />
+        <BlockTypeMenu editor={editor} pickImage={pickImage} className="w-auto" floating />
         <Divider />
         <Btn icon={Bold} label={t("Negrito")} shortcut="Ctrl+B" active={s.bold} onClick={() => chain().toggleBold().run()} />
         <Btn

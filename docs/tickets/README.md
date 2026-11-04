@@ -12,7 +12,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-140](T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | aberto | frontend |
 | [T-141](T-141-sidebar-corta-titulos-cedo.md) | Sidebar corta títulos e o seletor do manual cedo demais | P2 | aberto | frontend |
 | [T-142](T-142-status-so-bolinha-na-arvore.md) | Status da página vira só a bolinha na árvore | P2 | aberto | frontend |
 | [T-143](T-143-renomear-o-manual.md) | Renomear o manual | P2 | aberto | frontend |
@@ -45,6 +44,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 |----|--------|------------|--------|--------|
 | [T-125](fechados/T-125-manual-de-app-real-pelo-mcp.md) | Manual de um app real feito com o MCP | P1 | feito | codelab #2, #3, #4 |
 | [T-133](fechados/T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | feito | #30 |
+| [T-140](fechados/T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | feito | #34 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
