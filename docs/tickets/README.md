@@ -39,7 +39,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
 | [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
 | [T-183](T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | aberto | frontend |
-| [T-184](T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | aberto | frontend |
 | [T-220](T-220-publicar-studio-0-3-0-e-mcp-0-1-0.md) | Publicar Studio 0.3.0 e explicai-mcp 0.1.0 | P1 | aberto | supervisor |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
 | [T-151](T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | aberto | frontend |
@@ -218,3 +217,4 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
 | [T-168](fechados/T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | descartado | decisão da pessoa |
 | [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
+| [T-184](fechados/T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | feito | `122fe06` |
