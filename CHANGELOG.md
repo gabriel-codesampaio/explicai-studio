@@ -8,7 +8,11 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Adicionado
 
+<<<<<<< HEAD
 - Versões: botão "Remover" em cada versão guardada, com confirmação no diálogo. A versão marcada como "Usar no manual" não se remove (botão desligado, dica "Escolha outra versão antes"). Rota `DELETE /api/manuals/:slug/pages/:id/versions/:versionId` (409 para a marcada).
+=======
+- Renomear o manual pelo seletor do Studio (`PUT /api/manuals/:slug`): muda só o `title` em `manual.json`; pasta, endereço e ids ficam iguais.
+>>>>>>> origin/main
 - Público: `audience` na página e `audiences` no manual; exportar HTML, PDF e Markdown por perfil, sem texto, imagem nem sumário das páginas de fora. Link para página de fora vira texto, com aviso. Público não é controle de acesso.
 - Salvar uma página preserva os campos do frontmatter que o Studio não conhece (`sources:` etc.).
 - Exportar: opção "Sem o rodapé do Explicaí" no HTML e no PDF (`theme.hideColophon`).

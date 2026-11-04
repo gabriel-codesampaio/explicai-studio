@@ -30,6 +30,15 @@ const json = (method: string, body?: unknown) => ({
 });
 
 describe("API do Studio", () => {
+  it("renomeia o manual sem mudar a pasta, valida o título e dá 404 se não existe", async () => {
+    await fetch(`${base}/api/manuals`, json("POST", { title: "Financeiro" }));
+    const ok = await fetch(`${base}/api/manuals/financeiro`, json("PUT", { title: " Contas " }));
+    expect(await ok.json()).toEqual({ slug: "financeiro", title: "Contas" });
+    expect((await (await fetch(`${base}/api/manuals`)).json())[0]).toMatchObject({ slug: "financeiro", title: "Contas" });
+    expect((await fetch(`${base}/api/manuals/financeiro`, json("PUT", { title: "  " }))).status).toBe(400);
+    expect((await fetch(`${base}/api/manuals/nada`, json("PUT", { title: "X" }))).status).toBe(404);
+  });
+
   it("cria manual, páginas e devolve a árvore com títulos", async () => {
     const manual = await (await fetch(`${base}/api/manuals`, json("POST", { title: "Financeiro" }))).json();
     expect(manual).toMatchObject({ slug: "financeiro", language: "pt-BR" });

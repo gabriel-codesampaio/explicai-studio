@@ -2,6 +2,7 @@ import { PanelLeftClose, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { Brand } from "@/components/Brand";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
+import { RenameManualDialog } from "@/features/manuals/RenameManualDialog";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
 import { useStudioContext } from "@/hooks/StudioContext";
@@ -23,6 +24,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   const { manuals, manual, page } = studio;
   // "Ver como": a árvore mostra só o que o perfil vê no export. Não muda nada no disco.
   const [viewAs, setViewAs] = useState("");
+  const [renaming, setRenaming] = useState(false);
   const profile = manual?.audiences.includes(viewAs) ? viewAs : null;
   const current = manuals?.find((m) => m.slug === manual?.slug) ?? null;
 
@@ -57,7 +59,11 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
           current={current}
           onOpen={(slug) => void studio.openManual(slug)}
           onCreate={() => studio.setCreatingManual(true)}
+          onRename={() => setRenaming(true)}
         />
+      )}
+      {renaming && current && (
+        <RenameManualDialog title={current.title} onRename={studio.renameManual} onClose={() => setRenaming(false)} />
       )}
 
       {manual && (

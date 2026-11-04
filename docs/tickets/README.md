@@ -12,8 +12,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-143](T-143-renomear-o-manual.md) | Renomear o manual | P2 | aberto | frontend |
-| [T-144](T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | aberto | frontend |
 | [T-145](T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | aberto | frontend |
 | [T-146](T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | aberto | frontend |
 | [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
@@ -45,6 +43,8 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-141](fechados/T-141-sidebar-corta-titulos-cedo.md) | Sidebar corta títulos e o seletor do manual cedo demais | P2 | feito | #36 |
 | [T-142](fechados/T-142-status-so-bolinha-na-arvore.md) | Status da página vira só a bolinha na árvore | P2 | feito | #36 |
 | [T-140](fechados/T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | feito | #34 |
+| [T-143](fechados/T-143-renomear-o-manual.md) | Renomear o manual | P2 | feito | #37 |
+| [T-144](fechados/T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | feito | #38 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
