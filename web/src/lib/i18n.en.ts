@@ -76,6 +76,9 @@ export const EN: Record<string, string> = {
   "Não dá para ocultar dados em SVG ou GIF. Use um print em PNG, JPEG ou WebP.":
     "Hiding data does not work on SVG or GIF. Use a PNG, JPEG or WebP screenshot.",
   "Não foi possível ocultar as áreas. A imagem não foi alterada.": "Could not hide the areas. The image was not changed.",
+  "Descartar as alterações?": "Discard your changes?",
+  "Você mudou as marcações e não salvou. Se sair, as mudanças se perdem.":
+    "You changed the annotations and have not saved. If you leave, the changes are lost.",
   "Sair sem ocultar?": "Leave without hiding?",
   "Sair e descartar": "Leave and discard",
   "Continuar editando": "Keep editing",

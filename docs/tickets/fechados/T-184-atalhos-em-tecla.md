@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: pedido da pessoa, 2026-11-04 (lote 1.0)
 
@@ -21,4 +21,4 @@ Na barra da marcação (Selecionar V, Marcador M...) a letra do atalho é texto 
 Print da barra da marcação e da sidebar, 1280 claro e escuro.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commit `122fe06`. `components/ui/kbd.tsx` (borda, muted, mono 11 px, aria-hidden) usado na busca da sidebar, ToolbarButton (variante clara no tooltip escuro) e ShortcutsDialog (visível ao leitor, é o conteúdo). Conferido 1280 claro. Fica: AnnotationEditor.tsx:152 (arquivo do outro supervisor, T-196 cuida) e escuro sem print.

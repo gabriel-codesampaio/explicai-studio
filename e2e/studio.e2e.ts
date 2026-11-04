@@ -1038,6 +1038,10 @@ for (const mode of ["light", "dark"] as const) {
     await page.mouse.up();
     expect(await borderContrast(dialog.getByRole("combobox", { name: "Destino da área 1" }))).toBeGreaterThanOrEqual(3);
     await page.keyboard.press("Escape");
+    await page
+      .getByRole("dialog", { name: "Descartar as alterações?" })
+      .getByRole("button", { name: "Sair e descartar" })
+      .click();
 
     await page.getByRole("button", { name: "Exportar manual" }).click();
     const exportDialog = page.getByRole("dialog");
