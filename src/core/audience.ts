@@ -80,7 +80,8 @@ async function pageFiles(dir: string, meta: ManualMeta): Promise<PageFile[]> {
   for (const trashId of ids) {
     try {
       const entry = JSON.parse(await readText(path.join(trash, trashId, "entry.json"))) as { node: PageNode };
-      for (const n of flatten([entry.node])) files.push({ abs: path.join(trash, trashId, n.file) });
+      const root = path.join(trash, trashId);
+      files.push(...flatten([entry.node]).map((n) => ({ abs: resolveInside(root, n.file) })));
     } catch {
       // entrada da lixeira ilegível: fica como está
     }

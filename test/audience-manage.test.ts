@@ -1,4 +1,4 @@
-import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -64,6 +64,22 @@ describe("renameAudience", () => {
     const inTrash = await readFile(path.join(dir, ".lixeira", trashId, b.file), "utf8");
     expect(inTrash).toContain("Administrador");
     expect((await readdir(path.join(dir, ".lixeira"))).length).toBe(1);
+  });
+
+  it("ignora entrada da lixeira com caminho fora da pasta", async () => {
+    await addAudience(dir, "admin");
+    const b = await addPage(dir, { title: "B", audience: ["admin"] });
+    const { trashId } = await removePage(dir, b.id);
+    const entryPath = path.join(dir, ".lixeira", trashId, "entry.json");
+    const entry = JSON.parse(await readFile(entryPath, "utf8"));
+    entry.node.file = "../../fora.md";
+    await writeFile(entryPath, JSON.stringify(entry));
+    await writeFile(path.join(dir, "fora.md"), "---
+audience: [admin]
+---
+x");
+    await renameAudience(dir, "admin", "novo");
+    expect(await readFile(path.join(dir, "fora.md"), "utf8")).toContain("admin");
   });
 
   it("recusa nome existente (sem maiúscula), vazio ou longo e não grava nada", async () => {
