@@ -1,24 +1,45 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { createStudioServer } from "./server/index.js";
 
-const { values, positionals } = parseArgs({
-  allowPositionals: true,
-  options: {
-    port: { type: "string", short: "p", default: "4321" },
-    "no-open": { type: "boolean", default: false },
-    help: { type: "boolean", short: "h", default: false },
-  },
-});
+const USAGE = `Uso: explicai [pasta] [--port 4321] [--no-open] [--version]
+
+Abre o Explicaí Studio no navegador. Os manuais ficam em [pasta] (padrão: pasta atual).`;
+
+function parseCliArgs() {
+  try {
+    return parseArgs({
+      allowPositionals: true,
+      options: {
+        port: { type: "string", short: "p", default: "4321" },
+        "no-open": { type: "boolean", default: false },
+        help: { type: "boolean", short: "h", default: false },
+        version: { type: "boolean", short: "v", default: false },
+      },
+    });
+  } catch {
+    console.error(`Opção inválida.
+
+${USAGE}`);
+    process.exit(1);
+  }
+}
+
+const { values, positionals } = parseCliArgs();
 
 if (values.help) {
-  console.log(`Uso: explicai [pasta] [--port 4321] [--no-open]
+  console.log(USAGE);
+  process.exit(0);
+}
 
-Abre o Explicaí Studio no navegador. Os manuais ficam em [pasta] (padrão: pasta atual).`);
+if (values.version) {
+  const pkg = new URL("../package.json", import.meta.url);
+  console.log(JSON.parse(readFileSync(pkg, "utf8")).version);
   process.exit(0);
 }
 

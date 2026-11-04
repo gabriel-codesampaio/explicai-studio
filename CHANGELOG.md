@@ -6,6 +6,10 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+### Corrigido
+
+- CLI: `--version` mostra a versão, e opção desconhecida mostra o uso em vez de um erro do Node.
+
 ## [0.2.0] - 2026-11-03
 
 A 0.1.0 foi a primeira versão do Studio; este bloco reúne o que entrou desde a tag `v0.1.0`.
