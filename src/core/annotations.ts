@@ -28,6 +28,7 @@ export function parseAnnotations(input: unknown): Annotations {
     return s ? { style: s } : {};
   };
   return {
+    ...unknownFields(obj, ["version", "display", "style", "markers", "highlights", "arrows", "hotspots"]),
     version: FORMAT_VERSION,
     // Valor desconhecido é ignorado (imagem aparece como sempre), não derruba o arquivo.
     ...(obj.display === "s" || obj.display === "m" || obj.display === "full" ? { display: obj.display } : {}),
@@ -37,6 +38,7 @@ export function parseAnnotations(input: unknown): Annotations {
       const n = r.n;
       if (!Number.isInteger(n) || (n as number) < 1) throw new Error(`markers[${i}].n: inteiro a partir de 1`);
       return {
+        ...unknownFields(r, ["id", "n", "x", "y", "label", "style"]),
         id: id(r.id, `markers[${i}].id`),
         n: n as number,
         ...point(r, `markers[${i}]`),
@@ -46,11 +48,17 @@ export function parseAnnotations(input: unknown): Annotations {
     }),
     highlights: list(obj.highlights, "highlights").map((h, i) => {
       const r = record(h, `highlights[${i}]`);
-      return { id: id(r.id, `highlights[${i}].id`), ...rect(r, `highlights[${i}]`), ...own("highlight", r) };
+      return {
+        ...unknownFields(r, ["id", "x", "y", "w", "h", "style"]),
+        id: id(r.id, `highlights[${i}].id`),
+        ...rect(r, `highlights[${i}]`),
+        ...own("highlight", r),
+      };
     }),
     arrows: list(obj.arrows, "arrows").map((a, i) => {
       const r = record(a, `arrows[${i}]`);
       return {
+        ...unknownFields(r, ["id", "from", "to", "style"]),
         id: id(r.id, `arrows[${i}].id`),
         from: point(record(r.from, `arrows[${i}].from`), `arrows[${i}].from`),
         to: point(record(r.to, `arrows[${i}].to`), `arrows[${i}].to`),
@@ -60,6 +68,7 @@ export function parseAnnotations(input: unknown): Annotations {
     hotspots: list(obj.hotspots, "hotspots").map((h, i) => {
       const r = record(h, `hotspots[${i}]`);
       return {
+        ...unknownFields(r, ["id", "x", "y", "w", "h", "target", "style"]),
         id: id(r.id, `hotspots[${i}].id`),
         ...rect(r, `hotspots[${i}]`),
         target: target(r.target, `hotspots[${i}].target`),
@@ -67,6 +76,11 @@ export function parseAnnotations(input: unknown): Annotations {
       };
     }),
   };
+}
+
+/** Campos que este Studio não conhece (de uma versão mais nova do formato): voltam intactos ao regravar. */
+function unknownFields(r: Record<string, unknown>, known: string[]): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(r).filter(([k]) => !known.includes(k)));
 }
 
 function target(v: unknown, path: string): HotspotTarget {
