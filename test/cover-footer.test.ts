@@ -15,8 +15,7 @@ beforeEach(async () => {
 });
 afterEach(() => rm(workspace, { recursive: true, force: true }));
 
-const html = async (audience?: string) =>
-  readFile(path.join(dir, (await exportManual(dir, "html", { audience })).file), "utf8");
+const html = async (audience?: string) => readFile(path.join(dir, (await exportManual(dir, "html", { audience })).file), "utf8");
 
 describe("capa e rodapé: formato", () => {
   it("grava, aceita mudança parcial e apaga com null sem subir a version", async () => {
@@ -36,7 +35,9 @@ describe("capa e rodapé: formato", () => {
 
   it("recusa texto acima do limite com o motivo e não grava nada", async () => {
     await setManualCover(dir, { author: "Time" });
-    await expect(setManualCover(dir, { subtitle: "x".repeat(121), author: "Outro" })).rejects.toThrow(/subtítulo tem 121.*máximo é 120/);
+    await expect(setManualCover(dir, { subtitle: "x".repeat(121), author: "Outro" })).rejects.toThrow(
+      /subtítulo tem 121.*máximo é 120/,
+    );
     await expect(setManualFooter(dir, { text: "y".repeat(101) })).rejects.toThrow(/rodapé tem 101.*máximo é 100/);
     await expect(setManualCover(dir, { date: 5 as unknown as string })).rejects.toThrow(/só texto/);
     const meta = await readManual(dir);
@@ -61,10 +62,10 @@ describe("capa e rodapé: HTML", () => {
     const doc = await html();
     const lines = [...doc.matchAll(/<p class="cover-line">([^<]*)<\/p>/g)].map((m) => m[1]);
     expect(lines).toEqual(["Para: Acme", "Versão 2.1", "outubro de 2026"]);
-    expect(doc.indexOf("cover-line\">Para")).toBeGreaterThan(doc.indexOf("<h1>"));
+    expect(doc.indexOf('cover-line">Para')).toBeGreaterThan(doc.indexOf("<h1>"));
   });
 
-  it("texto com < \" ' \ e quebra de linha sai literal no HTML e no CSS do PDF", async () => {
+  it("texto com < \" '  e quebra de linha sai literal no HTML e no CSS do PDF", async () => {
     const nasty = `</style><script>x</script> "a" 'b' c\\d\ne`;
     await setManualCover(dir, { subtitle: nasty });
     await setManualFooter(dir, { text: nasty, pageNumbers: true });
@@ -82,7 +83,7 @@ describe("capa e rodapé: HTML", () => {
     await setManualFooter(dir, { pageNumbers: true });
     let doc = await html();
     expect(doc).toContain("@bottom-right");
-    expect(doc).not.toContain("@bottom-left{content:\"");
+    expect(doc).not.toContain('@bottom-left{content:"');
     expect(doc).not.toContain('class="foot-text"');
     await setManualFooter(dir, { text: "Confidencial", pageNumbers: null });
     doc = await html();

@@ -7,8 +7,8 @@ import { atomicWrite, relativePosix, resolveInside, resolveInsideReal } from "..
 import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
 import type { ManualTheme } from "../types.js";
-import { type CoverPatch, mergeCover } from "./cover.js";
 import { type CollectOptions, collectPages } from "./collect.js";
+import { type CoverPatch, mergeCover } from "./cover.js";
 import { FONTS_DIR, fontFiles } from "./fonts.js";
 import { type FooterPatch, mergeFooter } from "./footer.js";
 import { renderHtml } from "./html.js";

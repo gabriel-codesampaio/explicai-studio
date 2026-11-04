@@ -11,7 +11,9 @@ export {
 export { addAudience, removeAudience, renameAudience } from "./audience.js";
 export { type CheckFinding, type CheckKind, checkManual } from "./check.js";
 export { ExplicaiError } from "./errors.js";
+export { COVER_MAX, type CoverPatch, coverLines } from "./export/cover.js";
 export { FONTS, FONTS_DIR, type FontSpec, fontFiles } from "./export/fonts.js";
+export { FOOTER_MAX, type FooterPatch } from "./export/footer.js";
 export { imageSize } from "./export/imageSize.js";
 export {
   EXPORT_DIR,
@@ -26,8 +28,6 @@ export {
   setManualLogo,
   setManualTheme,
 } from "./export/index.js";
-export { COVER_MAX, type CoverPatch, coverLines } from "./export/cover.js";
-export { FOOTER_MAX, type FooterPatch } from "./export/footer.js";
 export type { ThemePatch } from "./export/theme.js";
 export { resolveInside, resolveInsideReal } from "./fs.js";
 export { createManual, listManuals, readManual, renameManual } from "./manuals.js";

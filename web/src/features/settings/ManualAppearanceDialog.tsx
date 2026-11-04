@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/compone
 import { useStudioContext } from "@/hooks/StudioContext";
 import { errorMessage } from "@/lib/api";
 import { t } from "@/lib/i18n";
+import { CoverFooterFields } from "./CoverFooterFields";
 import { FontFields } from "./FontFields";
 import { LogoField } from "./LogoField";
 import { ThemeFields } from "./ThemeFields";
@@ -21,7 +22,6 @@ export function ManualAppearanceDialog({ open, onOpenChange }: { open: boolean; 
             {t("Vale para o HTML, o PDF e o texto do editor. O tema do Studio fica à parte.")}
           </DialogDescription>
         </div>
-        {/* Seções em sequência: capa e rodapé editáveis (T-147) entram aqui como mais uma <section>. */}
         <div className="grid min-h-0 flex-1 gap-6 overflow-y-auto px-6 pb-6">
           <ThemeFields theme={manual.theme} />
           <FontFields theme={manual.theme} />
@@ -31,9 +31,10 @@ export function ManualAppearanceDialog({ open, onOpenChange }: { open: boolean; 
             </h3>
             <LogoField slug={manual.slug} logo={manual.theme.logo} />
           </section>
+          <CoverFooterFields />
           <section className="grid gap-3" aria-labelledby="aparencia-rodape">
             <h3 id="aparencia-rodape" className="rotulo">
-              {t("Rodapé")}
+              {t("Rodapé do Explicaí")}
             </h3>
             <label className="flex items-start gap-2.5 text-sm">
               <input

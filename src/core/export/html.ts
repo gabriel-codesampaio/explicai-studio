@@ -90,8 +90,10 @@ function extraCss(meta: Collected["meta"]): string {
     footerPageCss(meta.footer, muted(meta.theme?.text ?? DEFAULT_TEXT)),
   ].join("");
   // No papel o texto do rodapé vai na margem de cada página; a linha do fim só aparece na tela.
-  return css ? `${css}@media print{.foot-text{display:none}}
-` : "";
+  return css
+    ? `${css}@media print{.foot-text{display:none}}
+`
+    : "";
 }
 
 /** Títulos do texto da página, na ordem. */

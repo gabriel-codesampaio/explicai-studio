@@ -17,7 +17,8 @@ export function mergeFooter(current: ManualFooter | undefined, patch: FooterPatc
     else next.text = text;
   }
   if (patch.pageNumbers !== undefined) {
-    if (patch.pageNumbers !== null && typeof patch.pageNumbers !== "boolean") throw new Error("pageNumbers aceita true, false ou null.");
+    if (patch.pageNumbers !== null && typeof patch.pageNumbers !== "boolean")
+      throw new Error("pageNumbers aceita true, false ou null.");
     if (patch.pageNumbers) next.pageNumbers = true;
     else delete next.pageNumbers;
   }
