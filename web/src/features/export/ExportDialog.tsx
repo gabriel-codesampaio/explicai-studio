@@ -40,6 +40,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
   const [audience, setAudience] = useState("");
   const audienceOn = audiences.includes(audience) ? audience : "";
   const [appearanceOpen, setAppearanceOpen] = useState(false);
+  const appearanceBtn = useRef<HTMLButtonElement>(null);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<ExportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -175,6 +176,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
             <p className="text-xs text-muted-foreground">
               {t("Cores, fontes, capa e rodapé:")}{" "}
               <button
+                ref={appearanceBtn}
                 type="button"
                 disabled={busy}
                 onClick={() => setAppearanceOpen(true)}
@@ -184,7 +186,14 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
               </button>
             </p>
           )}
-          <ManualAppearanceDialog open={appearanceOpen} onOpenChange={setAppearanceOpen} />
+          <ManualAppearanceDialog
+            open={appearanceOpen}
+            onOpenChange={(open) => {
+              setAppearanceOpen(open);
+              // O diálogo de dentro não tem gatilho próprio: devolve o foco ao ponteiro depois que o Radix terminar.
+              if (!open) setTimeout(() => appearanceBtn.current?.focus(), 0);
+            }}
+          />
         </div>
 
         {/* Rodapé fixo: o botão e o resultado ficam à vista; só o miolo acima rola. */}
