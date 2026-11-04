@@ -1,7 +1,7 @@
 import { Lexer, type Token, type Tokens } from "marked";
 
-/** "Resultado:" no começo de uma linha ou depois de uma frase, com ou sem negrito. */
-const MARK = /(?:^|\n|(?<=[.!?:;)] ))[ \t]*(?:\*\*Resultado:\*\*|\*\*Resultado\*\*:|Resultado:)[ \t]*/i;
+/** "Resultado:" ou "Result:" no começo de uma linha ou depois de uma frase, com ou sem negrito. */
+const MARK = /(?:^|\n|(?<=[.!?:;)] ))[ \t]*(?:\*\*)?(Resultado|Results?)(?::\*\*|\*\*:|:)[ \t]*/i;
 
 /**
  * "Resultado:" dentro de um passo vira citação (`li>blockquote`), o formato que o CSS do export destaca.
@@ -16,7 +16,7 @@ export function liftResult(item: Tokens.ListItem): void {
     const rest = text.slice(m.index + m[0].length).trim();
     if (!rest) return;
     const before = text.slice(0, m.index).trimEnd();
-    const body = `**Resultado:** ${rest}`;
+    const body = `**${m[1]}:** ${rest}`;
     const quote: Tokens.Blockquote = {
       type: "blockquote",
       raw: `> ${body}`,

@@ -51,6 +51,32 @@ describe("leitura do HTML exportado", () => {
     expect(out).toContain("<p>Resultado: fora de passo fica como texto.</p>");
   });
 
+  it('"Result:" em manual em inglês também vira o destaque, com o rótulo como foi escrito', async () => {
+    await addPage(dir, {
+      title: "Steps",
+      body: "1. Open the menu. Result: the menu appears.\n2. Save.\n   **Result:** it saves.",
+    });
+    const out = await html();
+    expect(out).toContain("<blockquote>\n<p><strong>Result:</strong> the menu appears.");
+    expect(out).toContain("<blockquote>\n<p><strong>Result:</strong> it saves.");
+  });
+
+  it("texto depois de Resultado: passa pelo mesmo filtro de HTML e mantém a cor e o link", async () => {
+    await addPage(dir, {
+      title: "Filtro",
+      body: [
+        '1. Abra. Resultado: <img src=x onerror="alert(1)"> fim.',
+        '2. Abra. Resultado: <span data-color="red">vermelho</span> e [site](https://exemplo.com).',
+        "3. Abra. <script>alert(2)</script> Resultado: [ruim](javascript:alert(3)).",
+      ].join("\n"),
+    });
+    const out = await html();
+    const passos = out.slice(out.indexOf("<p><strong>Resultado:"), out.lastIndexOf("</ol>"));
+    expect(passos).not.toMatch(/<img src=x|<script>alert|href="javascript/i);
+    expect(out).toContain('href="https://exemplo.com"');
+    expect(out).toMatch(/<span[^>]*color[^>]*>vermelho<\/span>/);
+  });
+
   it("passo sem texto depois de Resultado: não vira citação, e o Markdown segue igual", async () => {
     await addPage(dir, { title: "Passos", body: "1. Clique.\n   Resultado:\n" });
     expect(await html()).not.toMatch(QUOTE);
