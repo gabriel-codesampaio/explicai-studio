@@ -25,14 +25,14 @@ export function FontMenu({ editor }: { editor: Editor }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "f") {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "f" && editor.isFocused) {
         e.preventDefault();
         setOpen(true);
       }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, []);
+  }, [editor]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>

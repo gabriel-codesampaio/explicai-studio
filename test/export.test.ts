@@ -291,6 +291,15 @@ describe("exportação: fonte do trecho", () => {
     await access(path.join(path.dirname(path.join(dir, out.file)), "fonts", "lora-latin-wght-normal.woff2"));
   });
 
+  it("HTML: fonte aninhada dentro de cor fecha os dois spans", async () => {
+    await addPage(dir, {
+      title: "Fontes",
+      body: '<span data-color="red">vermelho <span data-font="lora">serifa</span> fim</span>',
+    });
+    const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    expect(html).toContain('<span data-color="red">vermelho <span data-font="lora">serifa</span> fim</span>');
+  });
+
   it("Markdown: sai só o texto, sem o span", async () => {
     await addPage(dir, { title: "Fontes", body });
     const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
