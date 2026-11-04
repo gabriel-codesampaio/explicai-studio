@@ -326,6 +326,35 @@ test("versões: guarda, edita, restaura e o texto anterior vira versão", async 
   await expect(dialog.getByText("Antes de restaurar")).toBeVisible();
 });
 
+test("versões: remover pede confirmação, cancelar mantém e a marcada no manual não se remove", async ({ page, request }) => {
+  const { slug, pages } = await setup(request, "Manual Remover Versão", ["Cadastro"]);
+  const url = `/api/manuals/${slug}/pages/${pages[0]?.id}`;
+  const a = await (await request.post(`${url}/versions`, { data: { note: "Antiga" } })).json();
+  const b = await (await request.post(`${url}/versions`, { data: { note: "Final" } })).json();
+  await request.put(`${url}/published`, { data: { versionId: b.id } });
+  await page.goto(`/#/${slug}/${pages[0]?.id}`);
+
+  await page.getByRole("button", { name: /^Versões/ }).click();
+  const dialog = page.getByRole("dialog", { name: "Versões desta página" });
+  const marked = dialog.getByRole("button", { name: "Remover versão Final" });
+  await expect(marked).toBeDisabled();
+  await expect(marked.locator("..")).toHaveAttribute("title", "Escolha outra versão antes");
+
+  const trigger = dialog.getByRole("button", { name: "Remover versão Antiga" });
+  await trigger.click();
+  await expect(dialog.getByRole("button", { name: "Cancelar" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(trigger).toBeFocused();
+  expect((await (await request.get(`${url}/versions`)).json()).length).toBe(2);
+
+  await trigger.click();
+  await dialog.getByRole("button", { name: "Remover", exact: true }).click();
+  await expect(dialog.getByText("Antiga")).toHaveCount(0);
+  await expect(dialog.getByText("Final", { exact: true })).toBeVisible();
+  expect((await (await request.get(`${url}/versions`)).json()).map((v: { id: string }) => v.id)).toEqual([b.id]);
+  expect(a.id).not.toBe(b.id);
+});
+
 test("Ctrl+P busca a página pelo título, sem acento, e abre com Enter", async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Busca", ["Início", "Relatórios de vendas"]);
   await page.goto(`/#/${slug}`);

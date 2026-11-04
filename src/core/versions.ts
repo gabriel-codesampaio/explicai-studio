@@ -1,5 +1,6 @@
-import { mkdir, readdir } from "node:fs/promises";
+import { mkdir, readdir, rm } from "node:fs/promises";
 import path from "node:path";
+import { ExplicaiError } from "./errors.js";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, exists, readText, resolveInside, uniquePath } from "./fs.js";
 import { readManual, updateManual } from "./manuals.js";
@@ -81,6 +82,18 @@ export async function publishVersion(dir: string, pageId: string, versionId: str
     if (versionId === null) delete node.published;
     else node.published = versionId;
   });
+}
+
+/**
+ * Apaga uma versão guardada (não volta). Recusa a escolhida para o manual: tire a marca antes.
+ * A página atual não é uma versão guardada, então sempre sobra o texto atual.
+ */
+export async function deleteVersion(dir: string, pageId: string, versionId: string): Promise<void> {
+  const version = await readVersion(dir, pageId, versionId);
+  if (version.published) {
+    throw new ExplicaiError("version-published", "A versão do manual não pode ser removida. Escolha outra versão antes.");
+  }
+  await rm(versionFile(dir, pageId, versionId));
 }
 
 async function readVersionFile(file: string, published: string | undefined): Promise<Version> {

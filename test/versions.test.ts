@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   addPage,
   createManual,
+  deleteVersion,
   listVersions,
   publishVersion,
   readManual,
@@ -69,6 +70,20 @@ describe("versões da página", () => {
 
     await publishVersion(dir, page.id, null);
     expect((await readManual(dir)).pages[0]).not.toHaveProperty("published");
+  });
+
+  it("remove só o arquivo da versão pedida e recusa a marcada para o manual", async () => {
+    const page = await addPage(dir, { title: "Cadastro" });
+    const v1 = await saveVersion(dir, page.id, "A");
+    const v2 = await saveVersion(dir, page.id, "B");
+    await publishVersion(dir, page.id, v2.id);
+
+    await expect(deleteVersion(dir, page.id, v2.id)).rejects.toMatchObject({ code: "version-published" });
+    await deleteVersion(dir, page.id, v1.id);
+    expect((await listVersions(dir, page.id)).map((v) => v.id)).toEqual([v2.id]);
+    await expect(deleteVersion(dir, page.id, v1.id)).rejects.toThrow(/Versão não encontrada/);
+    await expect(deleteVersion(dir, page.id, "../../manual")).rejects.toThrow();
+    expect((await readManual(dir)).pages[0]?.published).toBe(v2.id);
   });
 
   it("recusa versão que não existe e caminho para fora da pasta", async () => {
