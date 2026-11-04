@@ -18,6 +18,7 @@ import { t } from "../../lib/i18n";
 import { fold } from "../../lib/text";
 import { CALLOUT_TYPES, type CalloutType } from "./callout";
 import { CALLOUT_ICONS } from "./calloutIcons";
+import { insertNewTable } from "./tableCommands";
 
 export interface BlockContext {
   editor: Editor;
@@ -228,7 +229,7 @@ export const BLOCKS: Block[] = [
     icon: Table,
     keywords: ["tabela", "colunas", "campos", "table", "columns", "grid"],
     isTextType: false,
-    run: ({ editor }) => chain(editor).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+    run: ({ editor }) => insertNewTable(editor),
   },
 ];
 

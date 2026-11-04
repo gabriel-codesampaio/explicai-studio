@@ -286,6 +286,9 @@ export const EN: Record<string, string> = {
   "Há alterações sem salvar. Salve antes de limpar as imagens.": "There are unsaved changes. Save before cleaning up images.",
   "Nenhuma versão guardada ainda.": "No saved versions yet.",
   "Nesta página": "On this page",
+  "Pular para o conteúdo": "Skip to content",
+  "Índice da página": "Page index",
+  "Barra lateral": "Sidebar",
   "No Mac, use Cmd no lugar de Ctrl.": "On a Mac, use Cmd instead of Ctrl.",
   "Nome da página ou https://…": "Page name or https://…",
   "Nome da versão (opcional)": "Version name (optional)",
@@ -371,6 +374,7 @@ export const EN: Record<string, string> = {
   "Status da página: {status}": "Page status: {status}",
   Subseção: "Subsection",
   Tabela: "Table",
+  Coluna: "Column",
   Tema: "Theme",
   "Tentar de novo": "Try again",
   "Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão.":

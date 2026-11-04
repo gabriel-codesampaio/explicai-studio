@@ -185,6 +185,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  min-height: 24px;
   margin-left: -6px;
   padding: 2px 6px;
   border-radius: var(--radius);
