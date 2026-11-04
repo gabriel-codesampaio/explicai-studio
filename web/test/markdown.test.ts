@@ -24,6 +24,11 @@ function expectStable(md: string): string {
 }
 
 describe("Markdown do editor", () => {
+  it("mantém o divisor `---` entre dois parágrafos", () => {
+    const out = expectStable("Antes.\n\n---\n\nDepois.");
+    expect(out).toContain("Antes.\n\n---\n\nDepois.");
+  });
+
   it("não perde a imagem dentro de um item de lista", () => {
     const md = "1. Clique em Novo cliente.\n2. Preencha o CPF.\n   ![Tela](../assets/tela.png)\n\nPronto.";
     const out = expectStable(md);
