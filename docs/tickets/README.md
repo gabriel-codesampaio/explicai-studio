@@ -12,6 +12,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
 | [T-146](T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | aberto | frontend |
 | [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
