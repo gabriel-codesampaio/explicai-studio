@@ -20,8 +20,7 @@ export const ANNOTATION_CSS = `
 .mk .tail polygon{fill:var(--anotacao);stroke:#fff;stroke-width:2;stroke-linejoin:round;paint-order:stroke}
 .mk .disc{position:absolute;left:-12px;top:-12px;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--anotacao);box-shadow:0 0 0 2px #fff;print-color-adjust:exact;-webkit-print-color-adjust:exact}
 .mk .disc::before{content:attr(data-n);color:var(--sobre-anotacao);font:600 13px/1 var(--mono)}
-.legend{display:grid;gap:2px;margin-top:12px;font-size:15px;line-height:1.4}
-.legend .row{display:flex;align-items:center;gap:4px;break-inside:avoid}
+.legend{display:grid;gap:6px;margin-top:16px;font-size:15px;line-height:1.4}
+.legend .row{display:flex;align-items:center;gap:10px;break-inside:avoid}
 .legend .n{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 4px;border-radius:12px;background:var(--anotacao);color:var(--sobre-anotacao);font:600 13px var(--mono);print-color-adjust:exact;-webkit-print-color-adjust:exact}
-.legend .n+span{margin-left:2px}
 `;

@@ -7,13 +7,13 @@ export function AnnotationLegend({ markers }: { markers: Marker[] }) {
   const rows = legendRows(markers);
   if (rows.length === 0) return null;
   return (
-    <ol className="mt-3 grid gap-0.5 text-[15px] leading-[1.4]" aria-label={t("Legenda da imagem")}>
+    <ol className="mt-4 grid gap-1.5 text-[15px] leading-[1.4]" aria-label={t("Legenda da imagem")}>
       {rows.map((r) => (
-        <li key={r.n} className="flex items-center gap-1">
+        <li key={r.n} className="flex items-center gap-2.5">
           <span className="inline-grid h-6 min-w-6 place-items-center px-1 rounded-full bg-anotacao font-mono text-[13px] font-semibold text-sobre-anotacao">
             {r.n}
           </span>
-          <span className="ml-0.5">{r.label}</span>
+          <span>{r.label}</span>
         </li>
       ))}
     </ol>
