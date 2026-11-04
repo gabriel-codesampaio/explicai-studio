@@ -12,7 +12,7 @@ Decisão da pessoa (03/11/2026): bug (comportamento errado, perda de dado, falha
 
 Feitos no lote 1: T-107, T-088, T-092. Ordem do resto: T-093, T-094 (P2); T-098, T-099, T-100, T-101, T-102, T-103, T-024, T-076, T-077, T-078, T-081, T-080 (P3).
 
-Em espera (sugestão): T-021, T-031, T-035, T-037, T-038, T-064, T-079, T-090, T-091, T-104, T-105, T-106.
+Em espera (sugestão): T-021, T-031, T-037, T-038, T-064, T-079, T-090, T-091, T-104, T-105, T-106.
 
 ## Preparação da versão de produção (03/11/2026)
 
@@ -30,14 +30,12 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
-| [T-131](T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | aberto | frontend |
 | [T-132](T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | aberto | frontend |
 | [T-133](T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | aberto | design |
 | [T-125](T-125-manual-de-app-real-pelo-mcp.md) | Manual de um app real feito com o MCP | P1 | aberto | supervisor |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
-| [T-035](T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | aberto | frontend |
 | [T-104](T-104-separar-css-de-html-ts-e-acoes-de-usestudio.md) | Separar CSS de `html.ts` e ações de `useStudio` | P3 | aberto | frontend |
 | [T-105](T-105-verificar-pdf-com-100-imagens-lazy-maxbuffer.md) | Verificar PDF com 100 imagens (`lazy`, `maxBuffer`) | P3 | aberto | qa |
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
@@ -46,6 +44,8 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
+| [T-035](fechados/T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | feito | #27 |
 | [T-124](fechados/T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | feito | #25, explicai-mcp #6 |
 | [T-123](fechados/T-123-mcp-fase-2-sugere-e-automatiza.md) | MCP fase 2, sugerir e automatizar | P1 | feito | #23, explicai-mcp #5 |
 | [T-122](fechados/T-122-mcp-fase-1-funciona.md) | MCP fase 1, o agente cria e exporta um manual | P1 | feito | #18, #21 |
