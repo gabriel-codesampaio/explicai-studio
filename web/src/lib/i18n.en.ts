@@ -418,7 +418,7 @@ export const EN: Record<string, string> = {
   "Um risco que não dá para desfazer": "A risk that cannot be undone",
   "Uma informação a mais": "Extra information",
   "Tirar da página do manual": "Remove page from manual",
-  Remover: "Delete",
+  Remover: "Remove",
   "Remover a versão {nome}?": "Delete version {nome}?",
   "Remover versão {nome}": "Delete version {nome}",
   "Apagar não tem volta.": "This cannot be undone.",
