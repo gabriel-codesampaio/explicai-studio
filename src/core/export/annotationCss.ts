@@ -31,6 +31,7 @@ export const ANNOTATION_STYLE_CSS = `
 .hl,.hot{border-width:calc(2px*var(--marca-espessura,1))}
 .mk .disc{left:calc(var(--disco,24px)/-2);top:calc(var(--disco,24px)/-2);width:var(--disco,24px);height:var(--disco,24px)}
 .mk .disc::before{font-size:var(--disco-fonte,13px)}
+.hot{background:var(--preenchimento,var(--anotacao-fundo))}
 `;
 
 /** Só entra quando alguma imagem tem `style.border`; as variáveis vêm do `.shot` (styleVars). */

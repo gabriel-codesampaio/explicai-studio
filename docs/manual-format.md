@@ -163,6 +163,17 @@ No Studio cada tipo tem cor fixa e um ícone; a Nota usa a cor de destaque do ma
 
 Sem `style` a imagem aparece como sempre e o HTML exportado não muda. Número, ponta cheia, moldura e tracejado não dependem da cor. No HTML e no PDF o `style` vira variáveis CSS no `.shot` (`--anotacao`, `--sobre-anotacao`, `--disco`, `--marca-espessura`, `--borda`). `version` continua 1. Quem regrava o JSON (Studio, `annotate_image`) deve manter o campo.
 
+`style` também vale em cada marcador, seta, destaque e área clicável (`markers[].style` etc.) e sobrepõe o da imagem só nos campos que escolheu: item > imagem > tema do manual. Cada tipo guarda só os campos dele; o resto é ignorado e valor fora da lista também (sem nenhum válido, o campo some):
+
+| Tipo | Campos |
+|---|---|
+| marcador | `color`, `size`, `border` |
+| seta | `color`, `stroke`, `border` |
+| destaque | `border` (cor e preenchimento do destaque: T-195) |
+| área clicável | `color`, `border`, `fill` (`solid`, `soft` padrão, `none`) |
+
+`fill: "none"` junto com `border: "none"` deixaria a área invisível: `border` volta a `s` ao ler. No HTML e no PDF o `style` do item vira as mesmas variáveis CSS no próprio elemento (mais `--preenchimento`), sem JavaScript; o chip da legenda usa a cor do marcador. Sem `style` nos itens o HTML exportado não muda e `version` continua 1. Leitor antigo descarta o `style` do item e mostra a marcação com o estilo da imagem.
+
 Destinos de área clicável: `page` (outra página), `anchor` (seção de uma página) e `url` (só `http`, `https` ou `mailto`).
 
 ## Lixeira
