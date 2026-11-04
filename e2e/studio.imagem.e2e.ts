@@ -496,7 +496,7 @@ test.describe("marcações", () => {
     await dialog.getByRole("button", { name: "Vermelho" }).focus();
     await page.keyboard.press("Enter"); // pelo teclado
     await dialog.getByRole("button", { name: "Grande" }).click();
-    await dialog.getByRole("button", { name: "Grossa" }).click();
+    await dialog.getByRole("group", { name: "Espessura da seta" }).getByRole("button", { name: "Grossa" }).click();
     expect(await box()).toEqual({ w: 32, bg: "rgb(196, 38, 29)" });
 
     await dialog.getByRole("button", { name: "Salvar marcações" }).click();

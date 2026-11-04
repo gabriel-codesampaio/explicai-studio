@@ -1,7 +1,7 @@
 import { Marked, type Tokens } from "marked";
-import { MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
+import { arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
-import { ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
+import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
 import { arrowShape, legendRows, placeMarkers } from "./annotationShapes.js";
 import { CALLOUT_COLORS, readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
@@ -50,7 +50,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
 <style>${fontFacesCss(meta.theme)}
-${CSS}${[...images.values()].some((i) => i.annotations.style) ? ANNOTATION_STYLE_CSS : ""}${themeCss(meta.theme)}</style>
+${CSS}${[...images.values()].some((i) => i.annotations.style) ? ANNOTATION_STYLE_CSS : ""}${[...images.values()].some((i) => i.annotations.style?.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
@@ -212,7 +212,11 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
           const { shaft: s, head } = arrowShape(px(from), px(to), t);
           const line = `x1="${f1(s.x1)}" y1="${f1(s.y1)}" x2="${f1(s.x2)}" y2="${f1(s.y2)}"`;
           const pts = head.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ");
-          return `<line class="halo" ${line} stroke-width="${f1(t * 2.2)}"/><polygon class="halo" points="${pts}" stroke-width="${f1(t * 1.2)}"/><line ${line} stroke-width="${f1(t)}"/><polygon points="${pts}"/>`;
+          const halo = arrowHalo(t, a.style?.border);
+          const under = halo
+            ? `<line class="halo" ${line} stroke-width="${f1(halo.shaft)}"/><polygon class="halo" points="${pts}" stroke-width="${f1(halo.head)}"/>`
+            : "";
+          return `${under}<line ${line} stroke-width="${f1(t)}"/><polygon points="${pts}"/>`;
         })
         .join("")}</svg>`
     : "";
