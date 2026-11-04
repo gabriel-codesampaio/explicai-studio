@@ -119,7 +119,7 @@ Recomendo A: resolve "de quem, qual versão, para quem" e numera o PDF. Observar
 
 A pessoa respondeu: "Edição na capa direta, crie uma etapa pra isso"; "sim prévia"; "texto livre, somente dê a sugestão"; "por manual"; "por enquanto sem imagem de fundo"; e "ok" para PDF sem número em Chrome antigo, com aviso.
 
-O escopo fica na opção B, mais uma etapa de edição direta na capa. Ver T-147.
+Depois ela detalhou: "quando passar o mouse em cima, ter um botão com ícone de edição e abrir a edição da capa em uma modal". O escopo fica na opção B, mais essa etapa. Ver T-147.
 
 ## Rascunho de spec da opção A
 

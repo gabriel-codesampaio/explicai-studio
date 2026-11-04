@@ -10,7 +10,7 @@
 Quem entrega o manual ao cliente não consegue dizer na capa de quem é, qual a versão e a data. O PDF não tem rodapé nem número de página: o único rodapé é a frase fixa no fim do documento.
 
 ## Decisão da pessoa (2026-11-04)
-- Edição direta na capa, numa etapa própria.
+- Edição numa etapa própria: botão com ícone que abre um modal.
 - Com prévia.
 - Data e versão em texto livre. O Studio só sugere; nunca preenche sozinho.
 - Por manual, não por perfil.
@@ -31,13 +31,16 @@ Quem entrega o manual ao cliente não consegue dizer na capa de quem é, qual a 
 - [ ] 375 e 1280: sem rolagem horizontal, rodapé quebra linha, contraste da cor secundária de pelo menos 4,5:1. Textos em pt e en.
 - [ ] `docs/manual-format.md` documenta os campos. O Markdown exportado não muda.
 
-## Etapa 2: edição direta na capa
-Depende da etapa 1. A pessoa clica no texto da capa, na prévia, e edita ali, gravando nos mesmos campos.
+## Etapa 2: botão de edição na tela do manual
+Depende da etapa 1. Ideia da pessoa (2026-11-04): "quando passar o mouse em cima, ter um botão com ícone de edição e abrir a edição da capa em uma modal, ou algo do tipo". O print dela marca o espaço logo depois do título, no cabeçalho da página do Studio.
 
-- [ ] Clicar em subtítulo, autor, versão ou data edita no lugar. Campo vazio aparece só na edição, com o exemplo, e nunca no export.
-- [ ] Funciona só com o teclado e é anunciado por leitor de tela; o formulário da etapa 1 continua disponível.
-- [ ] Mesmos limites e mesma gravação da etapa 1, sem caminho paralelo no core.
-- [ ] Rodapé também editável no lugar, se não complicar. Se complicar, registre e deixe só o formulário.
+- [ ] Ao passar o mouse no cabeçalho, um botão com ícone de edição aparece logo depois do título, sem deslocar o layout.
+- [ ] O botão abre um modal com os campos da capa e do rodapé e a prévia, com os mesmos componentes da etapa 1, sem caminho paralelo no core.
+- [ ] O botão também aparece com foco de teclado e fica sempre visível em tela de toque. Tem nome para leitor de tela e alvo de 44 px no toque.
+- [ ] O modal fecha com Esc e devolve o foco ao botão. O que foi digitado não se perde sem aviso.
+- [ ] Título longo quebra linha sem esconder o botão, em 375 e 1280.
+
+O botão edita a capa do manual, não o título da página: o nome e a dica dele deixam isso claro. Se ficar confuso ao lado do título de uma página, teste a mesma posição junto ao nome do manual e registre a escolha.
 
 ## Fora
 Imagem de fundo, valores por perfil, definir pelo MCP (`create_manual`, `export_manual`). Viram ticket só se o uso pedir.
