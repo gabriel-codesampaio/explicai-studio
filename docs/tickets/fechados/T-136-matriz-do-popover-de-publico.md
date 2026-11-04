@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: descartado
 - Agente: qa
 - Origem: sobra do T-124 (2026-11-04)
 
@@ -20,4 +20,4 @@ O Popover de público foi conferido só na fatia. Falta a matriz completa, com t
 Relatório com a evidência de cada combinação. Defeito vira ticket.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+2026-11-04: absorvido pelo critério do T-187 (matriz de tela do diálogo e do popover).
