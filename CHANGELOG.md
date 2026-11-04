@@ -6,6 +6,10 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+### Alterado
+
+- O Studio agora pede Node 22.12 ou mais novo (antes, 20.12), a única versão testada no CI. / Studio now needs Node 22.12 or newer (was 20.12), the only version tested in CI.
+
 ### Adicionado
 
 - Estilo por marcação (`style` em cada marcador, seta, destaque e área clicável de `assets/<imagem>.json`): cor, tamanho, espessura, borda e preenchimento (área) valem só para o item e sobrepõem o estilo da imagem. Vale no Studio, no HTML e no PDF; sem `style`, tudo sai como antes. Recorte, edição no Studio e `annotate_image` preservam o campo. A tela para escolher o estilo vem em seguida (T-194).
