@@ -400,6 +400,10 @@ export const EN: Record<string, string> = {
   "Tentar de novo": "Try again",
   "Esta página foi alterada fora do Studio depois que você a abriu. Recarregue do disco ou mantenha a sua versão.":
     "This page was changed outside Studio after you opened it. Reload it from disk or keep your version.",
+  "Este manual usa o formato {version}, mais novo que o deste Studio. Ele está aberto só para leitura e não será alterado. Atualize o Studio (npx explicai@latest) para editar.":
+    "This manual uses format {version}, newer than this Studio supports. It is open read-only and will not be changed. Update Studio (npx explicai@latest) to edit it.",
+  "Este manual usa o formato {version}, mais novo que o deste Studio. Atualize o Studio (npx explicai@latest) para editar. Nada foi alterado.":
+    "This manual uses format {version}, newer than this Studio supports. Update Studio (npx explicai@latest) to edit it. Nothing was changed.",
   "Esta página mudou fora do Studio.": "This page changed outside Studio.",
   "Manter a minha versão grava o seu texto por cima do arquivo. Recarregar do disco descarta o que você escreveu aqui.":
     "Keep my version writes your text over the file. Reload from disk discards what you wrote here.",

@@ -5,7 +5,7 @@ import { assetFile } from "./assets.js";
 import { ExplicaiError } from "./errors.js";
 import { imageSize } from "./export/imageSize.js";
 import { exists } from "./fs.js";
-import { ASSETS_DIR } from "./manuals.js";
+import { ASSETS_DIR, readManual } from "./manuals.js";
 
 const FORMATS: Record<string, "png" | "jpeg" | "webp"> = { ".png": "png", ".jpg": "jpeg", ".jpeg": "jpeg", ".webp": "webp" };
 const PNG_SIGNATURE = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
@@ -57,6 +57,7 @@ function cleanWebp(b: Buffer): Buffer {
  * qualquer cópia idêntica dele na pasta de imagens sem uso.
  */
 export async function redactAsset(dir: string, assetPath: string, data: Uint8Array): Promise<void> {
+  await readManual(dir);
   const target = assetFile(dir, assetPath);
   const format = FORMATS[path.extname(target).toLowerCase()];
   if (!format) throw new ExplicaiError("redact-type", "Só dá para ocultar dados em PNG, JPEG ou WebP.");

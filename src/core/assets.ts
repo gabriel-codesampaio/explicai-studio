@@ -12,6 +12,7 @@ const IMAGE_EXT = /^\.(png|jpe?g|gif|webp|svg)$/;
 
 /** Grava a imagem em `assets/` com nome único e devolve o caminho relativo ao manual. */
 export async function saveAsset(dir: string, fileName: string, data: Uint8Array): Promise<string> {
+  await readManual(dir); // formato mais novo: recusa antes de gravar
   const ext = path.extname(fileName).toLowerCase();
   if (!IMAGE_EXT.test(ext)) throw new Error(`Formato de imagem não suportado: ${ext || "sem extensão"}`);
   const base = slugify(path.basename(fileName).slice(0, -ext.length));
@@ -45,6 +46,7 @@ export async function readAnnotations(dir: string, assetPath: string): Promise<A
 }
 
 export async function writeAnnotations(dir: string, assetPath: string, input: unknown): Promise<Annotations> {
+  await readManual(dir); // também protege appendAnnotations, que grava por aqui
   const annotations = parseAnnotations(input);
   await atomicWrite(annotationsFile(dir, assetPath), `${JSON.stringify(annotations, null, 2)}\n`);
   return annotations;

@@ -36,7 +36,7 @@ export const pageRoutes: Route[] = [
   {
     method: "GET",
     path: PAGE,
-    handle: async (ctx) => json(await readPage(manualDir(ctx), ctx.params.id ?? "")),
+    handle: async (ctx) => json(await readPage(manualDir(ctx), ctx.params.id ?? "", { allowNewer: true })),
   },
   {
     method: "PUT",

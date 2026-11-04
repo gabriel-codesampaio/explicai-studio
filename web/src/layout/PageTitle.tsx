@@ -6,13 +6,14 @@ interface Props {
   onChange: (title: string) => void;
   /** Enter não quebra linha no título: leva o cursor para o texto da página. */
   onEnter: () => void;
+  readOnly?: boolean;
 }
 
 /**
  * Título da página como campo de várias linhas que cresce com o texto, para títulos longos
  * ("Como emitir a segunda via do boleto…") não serem cortados.
  */
-export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
+export function PageTitle({ initialTitle, onChange, onEnter, readOnly }: Props) {
   const ref = useRef<HTMLTextAreaElement>(null);
 
   const resize = useCallback(() => {
@@ -44,6 +45,7 @@ export function PageTitle({ initialTitle, onChange, onEnter }: Props) {
       name="title"
       ref={ref}
       rows={1}
+      readOnly={readOnly}
       aria-label={t("Título da página")}
       defaultValue={initialTitle}
       placeholder={t("Sem título")}

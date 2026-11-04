@@ -43,8 +43,11 @@ export async function addPage(
   return page;
 }
 
-export async function readPage(dir: string, id: string): Promise<Page> {
-  const { node } = findNode((await readManual(dir)).pages, id);
+/** `allowNewer`: leitura de manual de formato mais novo (ver readManual). */
+type ReadOpts = { allowNewer?: boolean };
+
+export async function readPage(dir: string, id: string, opts?: ReadOpts): Promise<Page> {
+  const { node } = findNode((await readManual(dir, opts)).pages, id);
   const { rev, ...rest } = await readPageFile(dir, node.file);
   return { id, ...rest, file: node.file, version: await fileVersion(dir, node.file), rev };
 }
@@ -82,7 +85,7 @@ export interface PageTreeNode {
  * Árvore do manual com o título de cada página (que fica no frontmatter). Lê o manual.json uma vez.
  * Uma página com problema não derruba a árvore: ela vem com `problem` e o resto continua.
  */
-export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
+export async function readPageTree(dir: string, opts?: ReadOpts): Promise<PageTreeNode[]> {
   const walk = (nodes: PageNode[]): Promise<PageTreeNode[]> =>
     Promise.all(
       nodes.map(async (n) => {
@@ -100,7 +103,7 @@ export async function readPageTree(dir: string): Promise<PageTreeNode[]> {
         }
       }),
     );
-  return walk((await readManual(dir)).pages);
+  return walk((await readManual(dir, opts)).pages);
 }
 
 /** Lê título e corpo de um arquivo de página, com mensagem clara quando ele foi apagado ou estragado. */

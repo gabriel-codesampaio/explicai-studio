@@ -15,6 +15,7 @@ import { useStudioContext } from "@/hooks/StudioContext";
 import type { ManualDetail, Page } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { ancestorsOf, findItem } from "@/lib/tree";
+import { FormatNewerNotice } from "./FormatNewerNotice";
 import { PageTitle } from "./PageTitle";
 import { StatusBar } from "./StatusBar";
 
@@ -40,6 +41,7 @@ export function PageView({ manual, page }: Props) {
   const [coverOpen, setCoverOpen] = useState(false);
   const coverBtn = useRef<HTMLButtonElement>(null);
   const headings = useHeadings(editor);
+  const readOnly = manual.newerFormat !== undefined;
   const pinned = Boolean(findItem(manual.pages, page.id)?.published);
   const trail = [
     { key: manual.slug, name: manual.title },
@@ -67,26 +69,31 @@ export function PageView({ manual, page }: Props) {
             </nav>
             {/* Abaixo de sm o caminho ocupa a linha inteira e o grupo desce alinhado à esquerda. */}
             <div className="flex flex-wrap items-center gap-1 sm:ml-auto sm:justify-end">
-              <VersionsPanel
-                slug={manual.slug}
-                pageId={page.id}
-                pinned={pinned}
-                onSave={studio.saveVersion}
-                onRestore={studio.restoreVersion}
-                onPublish={studio.publishVersion}
-              />
-              <AudienceMenu
-                key={page.id}
-                audience={page.audience ?? []}
-                known={manual.audiences}
-                onChange={(a) => studio.setPageAudience(a)}
-              />
-              <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
+              {!readOnly && (
+                <>
+                  <VersionsPanel
+                    slug={manual.slug}
+                    pageId={page.id}
+                    pinned={pinned}
+                    onSave={studio.saveVersion}
+                    onRestore={studio.restoreVersion}
+                    onPublish={studio.publishVersion}
+                  />
+                  <AudienceMenu
+                    key={page.id}
+                    audience={page.audience ?? []}
+                    known={manual.audiences}
+                    onChange={(a) => studio.setPageAudience(a)}
+                  />
+                  <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
+                </>
+              )}
               {editor && headings.length > 0 && <PageOutlineButton editor={editor} headings={headings} />}
-              {manual.pages.length > 0 && <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />}
+              {!readOnly && manual.pages.length > 0 && <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />}
             </div>
           </div>
 
+          {manual.newerFormat !== undefined && <FormatNewerNotice version={manual.newerFormat} />}
           {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
 
           {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
@@ -95,6 +102,7 @@ export function PageView({ manual, page }: Props) {
             <div className="min-w-0 flex-1">
               <PageTitle
                 initialTitle={page.title}
+                readOnly={readOnly}
                 onChange={(next) => {
                   setTitle(next);
                   studio.editPage({ title: next });
@@ -102,29 +110,33 @@ export function PageView({ manual, page }: Props) {
                 onEnter={() => editor?.commands.focus("start")}
               />
             </div>
-            {/* Edita a capa do manual, não o título da página. Sempre ocupa o lugar: aparecer não desloca nada. */}
-            <button
-              ref={coverBtn}
-              type="button"
-              aria-label={t("Editar a capa e o rodapé do manual")}
-              title={t("Editar a capa e o rodapé do manual")}
-              onClick={() => setCoverOpen(true)}
-              className="mt-1.5 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted hover:text-foreground focus-visible:opacity-100 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:opacity-100"
-            >
-              <Pencil className="size-4" aria-hidden />
-            </button>
-            <ManualAppearanceDialog
-              section="cover"
-              open={coverOpen}
-              onOpenChange={(open) => {
-                setCoverOpen(open);
-                // Sem gatilho dentro do Dialog: devolve o foco ao botão depois que o Radix terminar.
-                if (!open) setTimeout(() => coverBtn.current?.focus(), 0);
-              }}
-            />
+            {!readOnly && (
+              <>
+                {/* Edita a capa do manual, não o título da página. Sempre ocupa o lugar: aparecer não desloca nada. */}
+                <button
+                  ref={coverBtn}
+                  type="button"
+                  aria-label={t("Editar a capa e o rodapé do manual")}
+                  title={t("Editar a capa e o rodapé do manual")}
+                  onClick={() => setCoverOpen(true)}
+                  className="mt-1.5 inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:bg-muted hover:text-foreground focus-visible:opacity-100 [@media(pointer:coarse)]:size-11 [@media(pointer:coarse)]:opacity-100"
+                >
+                  <Pencil className="size-4" aria-hidden />
+                </button>
+                <ManualAppearanceDialog
+                  section="cover"
+                  open={coverOpen}
+                  onOpenChange={(open) => {
+                    setCoverOpen(open);
+                    // Sem gatilho dentro do Dialog: devolve o foco ao botão depois que o Radix terminar.
+                    if (!open) setTimeout(() => coverBtn.current?.focus(), 0);
+                  }}
+                />
+              </>
+            )}
           </div>
 
-          {empty && <FirstStepHint onExport={() => setExportOpen(true)} />}
+          {empty && !readOnly && <FirstStepHint onExport={() => setExportOpen(true)} />}
 
           <Editor
             slug={manual.slug}
@@ -136,6 +148,7 @@ export function PageView({ manual, page }: Props) {
             }}
             onError={studio.reportError}
             onReady={setEditor}
+            readOnly={readOnly}
           />
         </article>
         {editor && headings.length > 0 && (
