@@ -12,9 +12,9 @@ import {
   readManual,
   readPage,
   removePage,
+  renameManual,
   saveAsset,
   slugify,
-  renameManual,
   updatePage,
   writeAnnotations,
 } from "../src/core/index.js";
@@ -192,12 +192,12 @@ describe("renameManual", () => {
   it("muda só o título e mantém pasta e os outros campos", async () => {
     const m = await createManual(workspace, { title: "Financeiro", language: "pt-BR" });
     await updateManual(m.dir, (meta) => {
-      meta.theme = { primary: "#123456" };
+      meta.theme = { accent: "#123456" };
       meta.audiences = ["admin"];
     });
     await renameManual(m.dir, "  Contas a pagar  ");
     const meta = await readManual(m.dir);
-    expect(meta).toMatchObject({ title: "Contas a pagar", theme: { primary: "#123456" }, audiences: ["admin"] });
+    expect(meta).toMatchObject({ title: "Contas a pagar", theme: { accent: "#123456" }, audiences: ["admin"] });
     expect((await listManuals(workspace))[0]?.dir).toBe(m.dir);
   });
 
