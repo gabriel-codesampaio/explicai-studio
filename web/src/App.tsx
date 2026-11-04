@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SkipLink } from "@/components/SkipLink";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ConnectionBanner } from "@/features/errors/ConnectionBanner";
@@ -73,9 +74,10 @@ function Shell() {
 
   return (
     <TooltipProvider delayDuration={400}>
+      <SkipLink />
       <div className="flex h-full">
         {!firstRun && <Navigation sidebar={sidebar} onSearch={() => setSearchOpen(true)} />}
-        <main className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto">
+        <main id="conteudo" tabIndex={-1} className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto outline-none">
           {!firstRun && (
             <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} drawerOpen={sidebar.drawerOpen} />
           )}

@@ -120,7 +120,13 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
   return (
     <div
       ref={box}
-      className={cn("relative inline-block max-w-full touch-none select-none", drawing ? "cursor-crosshair" : "cursor-default")}
+      data-annotation-canvas
+      // Foco no canvas ao clicar: Delete e setas valem ali (o teclado do editor escuta a janela toda).
+      tabIndex={-1}
+      className={cn(
+        "relative inline-block max-w-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 touch-none select-none",
+        drawing ? "cursor-crosshair" : "cursor-default",
+      )}
       onPointerDown={(e) => {
         if (!box.current) return;
         if (!drawing) return onSelect(null);

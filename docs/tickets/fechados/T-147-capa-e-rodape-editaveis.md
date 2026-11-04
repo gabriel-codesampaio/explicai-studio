@@ -3,7 +3,7 @@
 - Prioridade: P2
 - Marco: 0.5 (antes da 1.0, decisão da pessoa 2026-11-04; depois do T-188)
 - Tamanho: G
-- Status: aberto
+- Status: concluído
 - Agente: frontend
 - Origem: pedido da pessoa (2026-11-04) e [discovery](../discovery/capa-e-rodape.md)
 
@@ -50,4 +50,8 @@ Imagem de fundo, valores por perfil, definir pelo MCP (`create_manual`, `export_
 Exportar HTML e PDF de manual antigo e de manual novo. Print em 375 e 1280, uma vez por etapa. `/impeccable audit` na tela nova.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Commits: b2c994c (core e rotas), e9e487f (HTML e CSS de página do PDF), c1c51e3 (aviso Chrome < 131), e63a9c5 (manual-format), d3134c3 (seção na Aparência), dd7460e (botão no cabeçalho), e o commit das correções da revisão.
+
+O que foi feito: `cover` (subtítulo, autor, versão, data) e `footer` (texto, numeração) no `manual.json`, com validação e rotas PUT `/cover` e `/footer`; capa e rodapé no HTML e no PDF; seção "Capa e rodapé" com prévia e sugestões; botão no cabeçalho da página que abre o modal. Correções da revisão: `coverLines` só trata valor string, chave da prévia por índice, teste de corpo inválido (null, array, texto) nas rotas, que já dão 400.
+
+Ficou de fora: "n / total" conferido em PDF real de 7 páginas, com a capa sem rodapé; sem print nem e2e da tela; Markdown para IA sem subtítulo e autor.

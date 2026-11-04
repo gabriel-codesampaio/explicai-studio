@@ -23,7 +23,7 @@ describe("parseItemStyle", () => {
     const all = { color: "red", size: "l", stroke: "s", border: "m", fill: "soft" };
     expect(parseItemStyle("marker", all)).toEqual({ color: "red", size: "l", border: "m" });
     expect(parseItemStyle("arrow", all)).toEqual({ color: "red", stroke: "s", border: "m" });
-    expect(parseItemStyle("highlight", all)).toEqual({ border: "m" });
+    expect(parseItemStyle("highlight", all)).toEqual({ border: "m", fill: "soft" });
     expect(parseItemStyle("hotspot", all)).toEqual({ color: "red", border: "m", fill: "soft" });
   });
 

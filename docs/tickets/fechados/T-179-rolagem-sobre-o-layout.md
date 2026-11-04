@@ -22,3 +22,5 @@ Manual com 30+ páginas, 1280 e 375, claro e escuro: print da sidebar rolada e d
 
 ## Registro
 Commit `2d9f6e0`. `base.css`: barra fina na cor da marca; `aside, main { scrollbar-gutter: stable }`. Medido 1280 claro/escuro e 375: sem estouro. Diálogos sem gutter de propósito (ficam assimétricos). Barra não aparece no Chrome headless: conferir a olho.
+
+2026-11-04, reaberto pela pessoa: a barra ainda passava pelo rodapé "Ajustes". Só o miolo da sidebar rola agora; medido 1280x520: fim da área de rolagem = topo do rodapé (472 px).

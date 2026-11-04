@@ -15,6 +15,8 @@ const GROUPS: { title: string; keys: [string, string][] }[] = [
       ["Ctrl+K", "Link para outra página ou endereço"],
       ["Ctrl+Shift+F", "Fonte do trecho selecionado"],
       ["Ctrl+Z", "Desfazer"],
+      ["Ctrl+Shift+Z", "Refazer"],
+      ["Ctrl+Y", "Refazer"],
       ["Enter no título", "Ir para o texto da página"],
     ],
   },
