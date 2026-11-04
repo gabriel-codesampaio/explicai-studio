@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, Pencil, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,20 +10,25 @@ import {
 import type { ManualSummary } from "@/lib/api";
 import { t } from "@/lib/i18n";
 
+/** O diálogo de renomear devolve o foco a este botão ao fechar. */
+export const MANUAL_SWITCHER_ID = "manual-switcher";
+
 interface Props {
   manuals: ManualSummary[];
   current: ManualSummary | null;
   onOpen: (slug: string) => void;
   onCreate: () => void;
+  onRename: () => void;
 }
 
 /** Troca de manual e atalho para criar um novo. O nome do manual aberto fica sempre à vista. */
-export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
+export function ManualSwitcher({ manuals, current, onOpen, onCreate, onRename }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
           type="button"
+          id={MANUAL_SWITCHER_ID}
           className="group -mx-1 flex w-[calc(100%+0.5rem)] flex-col items-start gap-0.5 rounded-md px-1 py-1 text-left outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-muted"
         >
           <span className="rotulo text-muted-foreground">{t("Manual")}</span>
@@ -50,6 +55,11 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate }: Props) {
         <DropdownMenuItem onSelect={onCreate}>
           <Plus /> {t("Novo manual")}
         </DropdownMenuItem>
+        {current && (
+          <DropdownMenuItem onSelect={onRename}>
+            <Pencil /> {t("Renomear manual")}
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

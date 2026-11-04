@@ -380,6 +380,14 @@ export function useStudio() {
       await openManual(created.slug);
     });
 
+  /** Muda só o título. Sem `run`: o erro volta ao diálogo, que o mostra ao lado do campo. */
+  const renameManual = async (title: string) => {
+    if (!manual) return;
+    await api.renameManual(manual.slug, title);
+    setManuals(await api.listManuals());
+    await refreshManual(manual.slug);
+  };
+
   resolveRef.current = (choice) =>
     run(async () => {
       const c = conflict.current;
@@ -448,6 +456,7 @@ export function useStudio() {
     setPageStatus,
     setPageAudience,
     createManual,
+    renameManual,
     editPage,
     reportError: (message: string) => toast.error(message),
   };
