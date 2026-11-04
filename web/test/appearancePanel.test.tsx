@@ -31,6 +31,20 @@ describe("AppearancePanel: uma só opção marcada", () => {
   });
 });
 
+describe("AppearancePanel: tema valendo no modo Sistema", () => {
+  it("diz o tema resolvido só com Sistema marcado", () => {
+    document.documentElement.dataset.theme = "dark";
+    localStorage.setItem(KEY, JSON.stringify({ mode: "system" }));
+    render(<AppearancePanel open onOpenChange={() => {}} />);
+    expect(screen.getByText("Agora está escuro, como no seu sistema.")).toBeTruthy();
+    cleanup();
+    localStorage.setItem(KEY, JSON.stringify({ mode: "dark" }));
+    render(<AppearancePanel open onOpenChange={() => {}} />);
+    expect(screen.queryByText(/como no seu sistema/)).toBeNull();
+    delete document.documentElement.dataset.theme;
+  });
+});
+
 describe("AppearancePanel: foco", () => {
   it("abre com o foco na opção marcada, não na primeira", async () => {
     localStorage.setItem(KEY, JSON.stringify({ mode: "dark" }));
