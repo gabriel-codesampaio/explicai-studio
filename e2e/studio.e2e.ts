@@ -508,6 +508,30 @@ test("exportação mostra o nome de cada cor do manual", async ({ page, request 
   );
 });
 
+for (const height of [600, 720, 800]) {
+  test(`exportação em 1280x${height}: Exportar, X e resultado ficam à vista`, async ({ page, request }) => {
+    const { slug } = await setup(request, `Manual Export ${height}`, ["Início"]);
+    await page.setViewportSize({ width: 1280, height });
+    await page.goto(`/#/${slug}`);
+    await page.getByRole("button", { name: "Exportar manual" }).click();
+    const dialog = page.getByRole("dialog");
+    const inView = (loc: ReturnType<typeof page.locator>) =>
+      loc.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top >= 0 && r.bottom <= innerHeight;
+      });
+    await expect(dialog.getByRole("heading", { name: "Exportar manual" })).toBeInViewport();
+    expect(await inView(dialog.getByRole("button", { name: "Fechar" }))).toBe(true);
+    expect(await inView(dialog.getByRole("button", { name: "Exportar", exact: true }))).toBe(true);
+    await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+    const link = dialog.getByRole("link", { name: "Abrir o arquivo" });
+    await expect(link).toBeVisible();
+    expect(await inView(link)).toBe(true);
+    expect(await inView(dialog.getByRole("button", { name: "Fechar" }))).toBe(true);
+    await expect(dialog.locator('div[tabindex="-1"]').last()).toBeFocused();
+  });
+}
+
 test('exportação: "Só páginas aprovadas" fica desabilitado sem página aprovada', async ({ page, request }) => {
   const { slug } = await setup(request, "Manual Sem Aprovadas", ["Início"]);
   await page.goto(`/#/${slug}`);
