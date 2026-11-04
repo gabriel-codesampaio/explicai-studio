@@ -44,7 +44,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-151](T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | aberto | frontend |
 | [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
-| [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
