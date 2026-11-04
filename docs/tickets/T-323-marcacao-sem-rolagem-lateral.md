@@ -20,3 +20,4 @@ O painel Estilo (T-194) não cabe na coluna de 20rem: "Grande", "Normal" e as bo
 
 ## Registro
 <!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Medida (2026-11-04, Chrome headless, destaque selecionado, painel Estilo aberto; scrollWidth/clientWidth do diálogo): 375 = 358/358, 768 = 735/735, 1280 = 1227/1227, 1920 = 1278/1278. Nenhum controle fora do diálogo, nenhum filho com rolagem interna. O 68b225c já resolveu; sem mudança de código.
