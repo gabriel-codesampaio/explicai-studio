@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: relatório UX 2026-11-04, achado A11 (avaliado no commit 60a0e3d)
 
@@ -22,4 +22,4 @@ Achado A11. A lixeira abre com o foco em "Mover para a lixeira". Enter executa s
 Abrir a lixeira e apertar Enter logo de cara: nada é apagado. Clicar Limpar imagens sem uso: confirmação aparece. Teste de componente com foco inicial.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito: foco inicial no painel (`onOpenAutoFocus`), confirmação em dois passos, ação renomeada, texto sem "apagar". Testes em `web/test/trashPanel.test.tsx`.
