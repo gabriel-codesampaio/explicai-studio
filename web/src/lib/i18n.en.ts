@@ -341,6 +341,9 @@ export const EN: Record<string, string> = {
   "Agora está claro, como no seu sistema.": "Light right now, following your system.",
   "Site (HTML)": "Website (HTML)",
   "Só páginas aprovadas": "Approved pages only",
+  "Sem o rodapé do Explicaí": "Without the Explicaí footer",
+  'Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.':
+    'Removes the "Manual made with Explicaí Studio" line from the HTML and PDF.',
   "Status da página: {status}": "Page status: {status}",
   Subseção: "Subsection",
   Tabela: "Table",

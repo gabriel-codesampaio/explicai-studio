@@ -179,7 +179,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     })
     .join("");
 
-  return `<span class="shot${a.display ? ` shot-${a.display}` : ""}"><span class="frame" style="aspect-ratio:${w} / ${h}"><img src="${esc(info.asset)}" alt="${esc(alt)}" loading="lazy">${highlights}${arrows}${hotspots}${markers}</span>${
+  return `<span class="shot${a.display ? ` shot-${a.display}` : ""}"><span class="frame" style="aspect-ratio:${w} / ${h}"><img src="${esc(info.asset)}" alt="${esc(alt)}"${info.size ? ` width="${w}" height="${h}"` : ""} loading="lazy">${highlights}${arrows}${hotspots}${markers}</span>${
     legend ? `<span class="legend" role="list" aria-label="${L.legend}">${legend}</span>` : ""
   }</span>`;
 }

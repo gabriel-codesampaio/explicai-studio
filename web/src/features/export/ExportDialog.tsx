@@ -131,6 +131,25 @@ export function ExportDialog() {
           <>
             <LogoField slug={studio.manual.slug} logo={studio.manual.theme.logo} disabled={busy} />
             <ThemeFields theme={studio.manual.theme} />
+            <label className="flex items-start gap-2.5 text-sm">
+              <input
+                type="checkbox"
+                checked={studio.manual.theme.hideColophon === true}
+                disabled={busy}
+                onChange={(e) =>
+                  void studio
+                    .setManualTheme({ hideColophon: e.target.checked ? true : null })
+                    .catch((err: unknown) => studio.reportError(errorMessage(err)))
+                }
+                className="mt-0.5 size-4 accent-[var(--primary)]"
+              />
+              <span className="grid leading-tight">
+                <span className="font-bold">{t("Sem o rodapé do Explicaí")}</span>
+                <span className="text-xs text-muted-foreground">
+                  {t('Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.')}
+                </span>
+              </span>
+            </label>
           </>
         )}
 

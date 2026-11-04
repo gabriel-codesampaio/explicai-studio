@@ -116,6 +116,16 @@ describe("exportação", () => {
     expect(html).toContain(`alt="Tela de clientes" width="800" height="600" loading="lazy"`);
   });
 
+  it("HTML: rodapé aparece por padrão e some com hideColophon", async () => {
+    await seed();
+    const read = async () => readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    expect(await read()).toContain(`<footer class="colophon">`);
+    await setManualTheme(dir, { hideColophon: true });
+    expect(await read()).not.toContain(`<footer class="colophon">`);
+    await setManualTheme(dir, { hideColophon: null });
+    expect(await read()).toContain(`<footer class="colophon">`);
+  });
+
   it("HTML: leva as fontes da marca junto, sem depender de internet", async () => {
     await seed();
     const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");

@@ -33,6 +33,7 @@ export interface ManualTheme {
   fonts?: { text?: string; headings?: string };
   /** Logo do cliente: `assets/<arquivo>`. */
   logo?: string;
+  hideColophon?: true;
 }
 
 /** Só os campos enviados mudam; `null` volta o campo ao padrão. */
@@ -40,6 +41,7 @@ export type ThemePatch = Partial<Record<"accent" | "text" | "highlight", string 
   headings?: Partial<Record<HeadingSlot, string | null>>;
   fonts?: Partial<Record<"text" | "headings", string | null>>;
   logo?: string | null;
+  hideColophon?: true | null;
 };
 
 /** Fonte empacotada para o manual exportado. */
