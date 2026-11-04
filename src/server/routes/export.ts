@@ -3,8 +3,8 @@ import {
   type ExportFormat,
   exportManual,
   logoSizeError,
-  setManualLogo,
   readManual,
+  setManualLogo,
   setManualTheme,
   themeCss,
 } from "../../core/index.js";
