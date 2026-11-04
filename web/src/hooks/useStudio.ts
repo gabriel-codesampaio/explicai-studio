@@ -14,6 +14,7 @@ import {
   type ThemePatch,
   type TreeItem,
 } from "../lib/api";
+import { conflictDiff } from "../lib/conflictDiff";
 import { readLocation, writeLocation } from "../lib/hashRoute";
 import { locale, t, tn } from "../lib/i18n";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
@@ -53,12 +54,19 @@ export function useStudio() {
 
   /** Página com conflito à espera da escolha: a faixa (DiskConflictBanner) só aparece nela. */
   const [conflictId, setConflictId] = useState<string | null>(null);
+  const [conflictDisk, setConflictDisk] = useState<Page | null>(null);
   /** Escolha da pessoa na faixa; a implementação fica abaixo, onde as ações de página já existem. */
   const resolveRef = useRef<(choice: "reload" | "keep") => void>(() => {});
   /** Faixa fixa até a pessoa escolher: nada é gravado nesta página enquanto isso. */
   const showConflict = useCallback((slug: string, id: string) => {
     conflict.current = { slug, id };
     setConflictId(id);
+    setConflictDisk(null);
+    // A página como está no disco, para a faixa mostrar o que mudou; sem ela a faixa só não mostra a diferença.
+    api.getPage(slug, id).then(
+      (disk) => conflict.current?.id === id && setConflictDisk(disk),
+      () => {},
+    );
   }, []);
 
   /** Títulos já gravados cujo arquivo ainda tem o nome antigo: renomeia ao sair da página ou 5 s depois. */
@@ -466,6 +474,8 @@ export function useStudio() {
     setCreatingManual,
     revision,
     diskConflict: page !== null && conflictId === page.id,
+    conflictDiff:
+      conflictDisk && conflictDisk.id === conflictId ? conflictDiff(autosave.pendingPatch(conflictDisk.id), conflictDisk) : null,
     resolveConflict: (choice: "reload" | "keep") => resolveRef.current(choice),
     flush,
     save: {

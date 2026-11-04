@@ -55,7 +55,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-158](T-158-um-nome-para-publico.md) | Usar um nome só para o público da página | P2 | aberto | frontend |
 | [T-159](T-159-versao-da-pagina-com-nome-certo.md) | Deixar claro que "Versão" vale para a página, não para o manual | P2 | aberto | frontend |
 | [T-162](T-162-lixeira-e-ajuda-com-lugar-proprio.md) | Dar à lixeira e à ajuda um lugar próprio no menu | P2 | aberto | design |
-| [T-163](T-163-aviso-de-conflito-mostra-diferenca.md) | Mostrar o que mudou no aviso de conflito, sem empurrar o texto | P2 | aberto | frontend |
 | [T-173](T-173-foco-preso-em-menus-com-aria-hidden.md) | Conferir o foco nos menus abertos com fundo aria-hidden | P2 | aberto | qa |
 | [T-174](T-174-alvos-pequenos-abaixo-de-24-px.md) | Levar alvos de toque abaixo de 24 px a 24 px | P2 | aberto | frontend |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
