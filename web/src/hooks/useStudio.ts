@@ -20,6 +20,7 @@ import { conflictDiff } from "../lib/conflictDiff";
 import { readLocation, writeLocation } from "../lib/hashRoute";
 import { locale, t, tn } from "../lib/i18n";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
+import { withTransition } from "../lib/withTransition";
 import { useAutosave } from "./useAutosave";
 import { useOnFocus } from "./useOnFocus";
 import { useReconnect } from "./useReconnect";
@@ -287,7 +288,7 @@ export function useStudio() {
     run(async () => {
       if (!manual || id === page?.id) return;
       await flush();
-      await showPage(manual.slug, id);
+      await withTransition(() => showPage(manual.slug, id));
     });
 
   /** Página nova nasce sem título, com o cursor no campo de título (ver PageView). */
