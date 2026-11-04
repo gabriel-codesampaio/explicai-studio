@@ -7,12 +7,14 @@ import { atomicWrite, relativePosix, resolveInside, resolveInsideReal } from "..
 import { updateManual } from "../manuals.js";
 import { slugify } from "../text.js";
 import type { ManualTheme } from "../types.js";
+import { type CoverPatch, mergeCover } from "./cover.js";
 import { type CollectOptions, collectPages } from "./collect.js";
 import { FONTS_DIR, fontFiles } from "./fonts.js";
+import { type FooterPatch, mergeFooter } from "./footer.js";
 import { renderHtml } from "./html.js";
 import { checkLogoFile, checkLogoPath, LOGO_EXT, LOGO_MAX_BYTES, logoSizeError, logoTypeError } from "./logo.js";
 import { renderMarkdown } from "./markdown.js";
-import { printPdf } from "./pdf.js";
+import { chromeWarning, printPdf } from "./pdf.js";
 import { hiddenLinkWarnings, type ImageInfo, loadImages } from "./refs.js";
 import { mergeTheme, type ThemePatch, usedFonts } from "./theme.js";
 
@@ -94,6 +96,8 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
   const pdf = path.join(root, `${slugify(collected.meta.title) || "manual"}${profile}.pdf`);
   await rm(pdf, { force: true });
   await printPdf(html, pdf);
+  const old = await chromeWarning(collected.meta.footer);
+  if (old) warnings.push(old);
   return result(pdf);
 }
 
@@ -107,6 +111,24 @@ export async function setManualTheme(dir: string, patch: ThemePatch): Promise<vo
     const theme = mergeTheme(meta.theme, patch);
     if (Object.keys(theme).length) meta.theme = theme;
     else delete meta.theme;
+  });
+}
+
+/** Muda a capa (subtítulo, autor, versão, data). Texto acima de 120 caracteres é recusado e nada é gravado; `null` apaga o campo. */
+export async function setManualCover(dir: string, patch: CoverPatch): Promise<void> {
+  await updateManual(dir, (meta) => {
+    const cover = mergeCover(meta.cover, patch);
+    if (Object.keys(cover).length) meta.cover = cover;
+    else delete meta.cover;
+  });
+}
+
+/** Muda o rodapé (texto até 100 caracteres e numeração de páginas do PDF). Mesma regra da capa. */
+export async function setManualFooter(dir: string, patch: FooterPatch): Promise<void> {
+  await updateManual(dir, (meta) => {
+    const footer = mergeFooter(meta.footer, patch);
+    if (Object.keys(footer).length) meta.footer = footer;
+    else delete meta.footer;
   });
 }
 

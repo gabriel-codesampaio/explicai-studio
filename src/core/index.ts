@@ -21,9 +21,13 @@ export {
   exportManual,
   findBrowser,
   logoSizeError,
+  setManualCover,
+  setManualFooter,
   setManualLogo,
   setManualTheme,
 } from "./export/index.js";
+export { COVER_MAX, type CoverPatch, coverLines } from "./export/cover.js";
+export { FOOTER_MAX, type FooterPatch } from "./export/footer.js";
 export type { ThemePatch } from "./export/theme.js";
 export { resolveInside, resolveInsideReal } from "./fs.js";
 export { createManual, listManuals, readManual, renameManual } from "./manuals.js";
