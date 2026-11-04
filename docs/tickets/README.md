@@ -35,7 +35,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-172](T-172-nome-acessivel-do-painel-de-publico.md) | Dar nome acessível ao painel de público da página | P2 | aberto | frontend |
 | [T-173](T-173-foco-preso-em-menus-com-aria-hidden.md) | Conferir o foco nos menus abertos com fundo aria-hidden | P2 | aberto | qa |
 | [T-174](T-174-alvos-pequenos-abaixo-de-24-px.md) | Levar alvos de toque abaixo de 24 px a 24 px | P2 | aberto | frontend |
-| [T-175](T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | aberto | frontend |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
 | [T-104](T-104-separar-css-de-html-ts-e-acoes-de-usestudio.md) | Separar CSS de `html.ts` e ações de `useStudio` | P3 | aberto | frontend |
 | [T-105](T-105-verificar-pdf-com-100-imagens-lazy-maxbuffer.md) | Verificar PDF com 100 imagens (`lazy`, `maxBuffer`) | P3 | aberto | qa |
@@ -191,3 +190,4 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-003](fechados/T-003-rotulos-mono.md) | Usar rótulos de seção em mono maiúsculo, como no brand book | P1 | feito | 77a41f9 |
 | [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
+| [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
