@@ -114,3 +114,12 @@ describe("tema do manual", () => {
     );
   });
 });
+
+describe("themeCss com manual.json de fora", () => {
+  it("ignora valor que não é cor, sem deixar escapar do <style>", () => {
+    const bad = "red}</style><script>alert(1)</script>";
+    const css = themeCss({ accent: bad, text: bad, highlight: bad, headings: { h1: bad } } as never);
+    expect(css).toBe("");
+    expect(themeCss({ accent: "#2b4fe0", text: bad } as never)).toContain("--accent:#2b4fe0");
+  });
+});
