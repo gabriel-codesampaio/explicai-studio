@@ -190,6 +190,9 @@ export const api = {
   /** Troca o texto da página pelo da versão; o texto anterior vira a versão "Antes de restaurar". */
   restoreVersion: (slug: string, id: string, versionId: string) =>
     call<Page>(`${pageUrl(slug, id)}/versions/${encodeURIComponent(versionId)}/restore`, { method: "POST" }),
+  /** Apaga a versão (não volta). A escolhida para o manual é recusada (409). */
+  deleteVersion: (slug: string, id: string, versionId: string) =>
+    call<{ ok: true }>(`${pageUrl(slug, id)}/versions/${encodeURIComponent(versionId)}`, { method: "DELETE" }),
   /** `null` volta a usar o texto atual no manual final. */
   publishVersion: (slug: string, id: string, versionId: string | null) =>
     call<{ ok: true }>(`${pageUrl(slug, id)}/published`, send("PUT", { versionId })),
