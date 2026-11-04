@@ -44,7 +44,10 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   };
 
   return (
-    <aside className="flex h-full flex-col gap-5 overflow-y-auto border-r border-border bg-card px-3 pt-4">
+    <aside
+      aria-label={t("Barra lateral")}
+      className="flex h-full flex-col gap-5 overflow-y-auto border-r border-border bg-card px-3 pt-4"
+    >
       <div className="flex items-center justify-between gap-2">
         <Brand />
         <button

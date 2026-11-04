@@ -114,7 +114,10 @@ export function PageView({ manual, page }: Props) {
           />
         </article>
         {editor && headings.length > 0 && (
-          <aside className="sticky top-0 hidden max-h-svh w-56 self-start overflow-y-auto pt-24 pr-6 xl:block">
+          <aside
+            aria-label={t("Índice da página")}
+            className="sticky top-0 hidden max-h-svh w-56 self-start overflow-y-auto pt-24 pr-6 xl:block"
+          >
             <PageOutline editor={editor} headings={headings} />
           </aside>
         )}
