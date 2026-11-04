@@ -5,12 +5,17 @@
 export type StyleColor = "cobalt" | "ink" | "red" | "green" | "purple" | "orange";
 export type StyleStep = "s" | "m" | "l";
 export type StyleBorder = StyleStep | "none";
+/** Preenchimento da área clicável (só por item). */
+export type StyleFill = "solid" | "soft" | "none";
+export type StyleItemKind = "marker" | "arrow" | "highlight" | "hotspot";
 
 export interface AnnotationStyle {
   color?: StyleColor;
   size?: StyleStep;
   stroke?: StyleStep;
   border?: StyleBorder;
+  /** Só vale em item (área clicável); a imagem não tem preenchimento. */
+  fill?: StyleFill;
 }
 
 /**
@@ -65,6 +70,32 @@ export function parseStyle(v: unknown): AnnotationStyle | undefined {
   return Object.keys(style).length ? style : undefined;
 }
 
+/** Campos que cada tipo de item aceita; o resto é ignorado. Cor e preenchimento do destaque ficam para o T-195. */
+const ITEM_FIELDS: Record<StyleItemKind, (keyof AnnotationStyle)[]> = {
+  marker: ["color", "size", "border"],
+  arrow: ["color", "stroke", "border"],
+  highlight: ["border"],
+  hotspot: ["color", "border", "fill"],
+};
+
+/**
+ * `style` de um marcador, seta, destaque ou área: só os campos do tipo, inválido ignorado, vazio some.
+ * Preenchimento e borda ambos `none` deixariam a área invisível: a borda volta a `s`.
+ */
+export function parseItemStyle(kind: StyleItemKind, v: unknown): AnnotationStyle | undefined {
+  const all: AnnotationStyle = {
+    ...parseStyle(v),
+    ...(typeof v === "object" && v !== null && ["solid", "soft", "none"].includes((v as { fill?: string }).fill as string)
+      ? { fill: (v as { fill: StyleFill }).fill }
+      : {}),
+  };
+  const style = Object.fromEntries(
+    Object.entries(all).filter(([k]) => ITEM_FIELDS[kind].includes(k as keyof AnnotationStyle)),
+  ) as AnnotationStyle;
+  if (style.fill === "none" && style.border === "none") style.border = "s";
+  return Object.keys(style).length ? style : undefined;
+}
+
 const alpha = (hex: string, a: number) =>
   `rgba(${[1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16)).join(",")},${a})`;
 
@@ -89,6 +120,10 @@ export function styleVars(style: AnnotationStyle | undefined, adaptive = false):
     vars["--borda"] = style.border === "none" ? "0px" : `${BORDER_PX[style.border]}px`;
     // Destaque: contorno da própria cor, mais escuro, para a espessura aparecer.
     if (style.border !== "none") vars["--borda-destaque"] = "color-mix(in srgb,var(--marca) 55%,#000)";
+  }
+  if (style?.fill) {
+    const pct = { solid: "25%", soft: "8%", none: "0%" }[style.fill];
+    vars["--preenchimento"] = `color-mix(in srgb,var(--anotacao) ${pct},transparent)`;
   }
   return vars;
 }

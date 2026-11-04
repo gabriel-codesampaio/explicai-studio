@@ -165,4 +165,16 @@ describe("posição do marcador (disco com cauda)", () => {
     ];
     expect(placeWeb(pts, W, H)).toEqual(placeMarkers(pts, W, H));
   });
+
+  it("tamanho por marcador: lista igual ao número único quando todos têm o mesmo; discos de tamanhos diferentes não se tocam", () => {
+    const pts = [
+      { x: 300, y: 300 },
+      { x: 330, y: 300 },
+    ];
+    expect(placeMarkers(pts, W, H, [24, 24])).toEqual(placeMarkers(pts, W, H, 24));
+    const mixed = placeMarkers(pts, W, H, [32, 20]);
+    const [a, b] = mixed.map((m, i) => ({ x: (pts[i]?.x ?? 0) + m.disc.x, y: (pts[i]?.y ?? 0) + m.disc.y }));
+    expect(Math.hypot((a?.x ?? 0) - (b?.x ?? 0), (a?.y ?? 0) - (b?.y ?? 0))).toBeGreaterThanOrEqual((32 + 20) / 2);
+    expect(placeWeb(pts, W, H, [32, 20])).toEqual(mixed);
+  });
 });

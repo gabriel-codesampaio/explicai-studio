@@ -1,5 +1,5 @@
 import { Marked, type Tokens } from "marked";
-import { arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
+import { type AnnotationStyle, arrowHalo, MARKER_SIZES, STROKE_SCALE, styleVars } from "../annotationStyle.js";
 import type { Annotations, HotspotTarget, Point } from "../types.js";
 import { ANNOTATION_BORDER_CSS, ANNOTATION_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js";
 import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
@@ -40,6 +40,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
     ? `<img class="logo" src="${esc(logo)}" alt="">
 `
     : "";
+  const styles = [...images.values()].flatMap((i) => styleOf(i.annotations));
   const sections = pages.map((p, i) => renderPage(p, pages, images, L, pages[i - 1], pages[i + 1])).join("\n");
 
   return `<!doctype html>
@@ -50,7 +51,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
 <style>${fontFacesCss(meta.theme)}
-${CSS}${[...images.values()].some((i) => i.annotations.style) ? ANNOTATION_STYLE_CSS : ""}${[...images.values()].some((i) => i.annotations.style?.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}</style>
+${CSS}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}</style>
 </head>
 <body>
 <div class="layout">
@@ -178,6 +179,18 @@ function hotspotHref(target: HotspotTarget, pages: ExportPage[]): { href: string
   return { href, label: page.title };
 }
 
+/** Todos os `style` de uma imagem: o dela e o de cada marcação. */
+export const styleOf = (a: Annotations): AnnotationStyle[] =>
+  [a.style, ...[...a.markers, ...a.highlights, ...a.arrows, ...a.hotspots].map((i) => i.style)].filter(
+    (st): st is AnnotationStyle => Boolean(st),
+  );
+
+/** Variáveis CSS do estilo como atributo `style=""` (com `;` na frente, para juntar a outro). */
+const varsAttr = (st: AnnotationStyle | undefined) =>
+  Object.entries(styleVars(st))
+    .map(([k, v]) => `;${k}:${v}`)
+    .join("");
+
 /** Print mais largo que uma tela de celular leva um link para o original (sem JavaScript; o teclado alcança). */
 const ZOOM_MIN_WIDTH = 600;
 const zoom = (img: string, info: ImageInfo, L: Labels) =>
@@ -193,12 +206,12 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
   const box = (r: { x: number; y: number; w: number; h: number }) =>
     `left:${pct(r.x)};top:${pct(r.y)};width:${pct(r.w)};height:${pct(r.h)}`;
 
-  const highlights = a.highlights.map((r) => `<span class="hl" style="${box(r)}"></span>`).join("");
+  const highlights = a.highlights.map((r) => `<span class="hl" style="${box(r)}${varsAttr(r.style)}"></span>`).join("");
   const hotspots = a.hotspots
     .map((r) => {
       const link = hotspotHref(r.target, pages);
       return link
-        ? `<a class="hot" href="${esc(link.href)}" style="${box(r)}"><span class="sr">${L.goTo} ${esc(link.label)}</span></a>`
+        ? `<a class="hot" href="${esc(link.href)}" style="${box(r)}${varsAttr(r.style)}"><span class="sr">${L.goTo} ${esc(link.label)}</span></a>`
         : "";
     })
     .join("");
@@ -207,16 +220,19 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
   const f1 = (n: number) => n.toFixed(1);
   const arrows = a.arrows.length
     ? `<svg class="arrows" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">${a.arrows
-        .map(({ from, to }) => {
-          const t = arrowThickness(unit, STROKE_SCALE[a.style?.stroke ?? "m"]);
+        .map(({ from, to, style }) => {
+          const eff = { ...a.style, ...style };
+          const t = arrowThickness(unit, STROKE_SCALE[eff.stroke ?? "m"]);
           const { shaft: s, head } = arrowShape(px(from), px(to), t);
           const line = `x1="${f1(s.x1)}" y1="${f1(s.y1)}" x2="${f1(s.x2)}" y2="${f1(s.y2)}"`;
           const pts = head.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ");
-          const halo = arrowHalo(t, a.style?.border);
+          const halo = arrowHalo(t, eff.border);
           const under = halo
             ? `<line class="halo" ${line} stroke-width="${f1(halo.shaft)}"/><polygon class="halo" points="${pts}" stroke-width="${f1(halo.head)}"/>`
             : "";
-          return `${under}<line ${line} stroke-width="${f1(t)}"/><polygon points="${pts}"/>`;
+          const body = `${under}<line ${line} stroke-width="${f1(t)}"/><polygon points="${pts}"/>`;
+          const vars = varsAttr(style).slice(1);
+          return vars ? `<g style="${vars}">${body}</g>` : body;
         })
         .join("")}</svg>`
     : "";
@@ -226,7 +242,7 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
     a.markers.map((m) => ({ x: m.x * w * ref, y: m.y * h * ref })),
     w * ref,
     h * ref,
-    MARKER_SIZES[a.style?.size ?? "m"].disc,
+    a.markers.map((m) => MARKER_SIZES[m.style?.size ?? a.style?.size ?? "m"].disc),
   );
   const markers = a.markers
     .map((m, i) => {
@@ -234,11 +250,14 @@ function renderShot(info: ImageInfo, alt: string, pages: ExportPage[], L: Labels
       const svg = tail
         ? `<svg class="tail" width="1" height="1" aria-hidden="true"><polygon points="${tail.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ")}"/></svg>`
         : "";
-      return `<span class="mk" style="left:${pct(m.x)};top:${pct(m.y)}" aria-hidden="true">${svg}<span class="disc" style="transform:translate(${f1(disc.x)}px,${f1(disc.y)}px)" data-n="${m.n}"></span></span>`;
+      return `<span class="mk" style="left:${pct(m.x)};top:${pct(m.y)}${varsAttr(m.style)}" aria-hidden="true">${svg}<span class="disc" style="transform:translate(${f1(disc.x)}px,${f1(disc.y)}px)" data-n="${m.n}"></span></span>`;
     })
     .join("");
   const legend = legendRows(a.markers)
-    .map((r) => `<span class="row" role="listitem"><span class="n">${r.n}</span><span>${esc(r.label)}</span></span>`)
+    .map(
+      (r) =>
+        `<span class="row" role="listitem"${r.style?.color ? ` style="${varsAttr({ color: r.style.color }).slice(1)}"` : ""}><span class="n">${r.n}</span><span>${esc(r.label)}</span></span>`,
+    )
     .join("");
 
   const img = `<img src="${esc(info.asset)}" alt="${esc(alt)}"${info.size ? ` width="${w}" height="${h}"` : ""} loading="lazy">`;
