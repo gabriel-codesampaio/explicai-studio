@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: supervisor
 - Origem: decisão da pessoa (2026-11-03)
 - Depende de: correção dos achados da revisão do T-122
@@ -26,4 +26,12 @@ O MCP só passou por testes com dados de exemplo. Antes de gastar nas fases 2 e 
 Abrir o resultado no Studio. A avaliação da equipe conhece o projeto e não substitui a de um usuário de fora.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Aprovado, em 2026-11-04. Sessão separada (`claude -p`, Sonnet, só Read, Grep, Glob e as tools do MCP), prompt guiado vindo do servidor, 5 páginas e export HTML e Markdown. Abre no Studio sem erro. Gasto das duas etapas: 148 mil tokens novos, 1,6 milhão lidos de cache, 19,5 mil de saída.
+
+- Organização: pelas tarefas do aluno (entrar, comprar, assistir, comentar, ranking). Passou.
+- Fidelidade: 30 textos de tela conferidos por busca, todos no código (um com erro de digitação lá: "asssitido"). Os passos não foram conferidos rodando o sistema. Passou.
+- Honestidade: parou antes de gravar, percebeu que 3 dos 4 prints são só de administrador, e avisou que o formulário de depoimento não existe no código. Passou.
+- Público: linguagem de aluno, com um deslize (rota `/platform`). Passou.
+- Reescrita: estimativa da equipe, bem abaixo de metade. Falta a opinião de quem usa.
+
+Defeitos corrigidos nos prompts (explicai-mcp #4): importou print de administrador com nomes reais e sem avisar; "A confirmar" dentro da página; rota no texto; marcação estimada fora do relatório; rótulo dado como incerto, embora estivesse no código. Vários passos saíram sem "Resultado:": entra no `check_manual` do T-123. Não avaliado: marcadores vindos da tela real (T-123) e o modo autônomo.

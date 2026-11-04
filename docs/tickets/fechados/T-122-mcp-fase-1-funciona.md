@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: G
-- Status: em andamento
+- Status: feito
 - Agente: frontend
 - Origem: [Discovery do MCP, Revisão](../discovery/mcp.md) (2026-11-03)
 
@@ -41,3 +41,4 @@ Servidor (repo `explicai-mcp`, branch `feat/t-122-servidor`): SDK `@modelcontext
 
 Ficou de fora: `annotate_image` só acrescenta (sem `mode: replace`), `set_theme`, `set_logo`, `move_page`; npm; teste no Claude Code (a pessoa roda o fluxo guiado). Depois do merge e da versão nova do `explicai`: trocar o `peerDependencies.explicai` do MCP para a versão publicada e gerar o `package-lock.json` (hoje fora do git porque depende do core não publicado).
 
+Correções da revisão: PRs explicai-studio #21 e explicai-mcp #2 e #3. `rev` conferido dentro da fila, `beforeWrite` para a versão "Antes do agente", caminho absoluto fora das mensagens, `annotate_image` respeita o nível `draft`, página aprovada editada volta a `revisao`. Fluxo guiado de ponta a ponta no Claude Code: feito no T-126. Cursor não testado. Publicação no npm fica para depois do T-124, com o ok da pessoa; o peer `explicai` precisa da versão com `beforeWrite`.

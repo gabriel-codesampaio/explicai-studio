@@ -22,8 +22,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
-| [T-122](T-122-mcp-fase-1-funciona.md) | MCP fase 1, o agente cria e exporta um manual | P1 | aberto | frontend |
-| [T-126](T-126-piloto-do-mcp-no-codelab.md) | Piloto do MCP no CodeLab | P1 | aberto | supervisor |
+| [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
 | [T-123](T-123-mcp-fase-2-sugere-e-automatiza.md) | MCP fase 2, sugerir e automatizar | P1 | aberto | frontend |
@@ -41,6 +40,8 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-122](fechados/T-122-mcp-fase-1-funciona.md) | MCP fase 1, o agente cria e exporta um manual | P1 | feito | #18, #21 |
+| [T-126](fechados/T-126-piloto-do-mcp-no-codelab.md) | Piloto do MCP no CodeLab | P1 | feito | explicai-mcp #4 |
 | [T-020](fechados/T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | feito | `a8f670b` |
 | [T-033](fechados/T-033-exportar-sem-rodape.md) | Exportar o manual sem o rodapé do Explicaí | P3 | feito | `e59a29e` |
 | [T-036](fechados/T-036-corretor-do-navegador.md) | Deixar o corretor do navegador explícito no editor e explicar na ajuda | P3 | feito | `9f84f65` |
