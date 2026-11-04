@@ -31,7 +31,7 @@ meu-workspace/
 }
 ```
 
-A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado (ver abaixo). O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões).
+A ordem do array é a ordem das páginas. O título de cada página fica só no frontmatter dela. O campo opcional `theme` guarda a aparência do manual exportado (ver abaixo). O campo opcional `published` aponta a versão escolhida para o manual final (ver Versões). O campo opcional `audiences` lista os perfis do manual (ver Público).
 
 ### theme
 
@@ -98,6 +98,16 @@ title: Cadastrar cliente
 O nome do arquivo acompanha o título: quando o título muda, o arquivo é renomeado e o `manual.json` é atualizado. O `id` do frontmatter nunca muda, e é ele que as áreas clicáveis usam como destino.
 
 O frontmatter pode ter `status`, a etapa da página no fluxo de aprovação: `revisao`, `aprovado` ou `publicado`. Sem ele, a página é rascunho, e por isso página escrita à mão continua válida. A exportação pode levar só as páginas aprovadas ou publicadas.
+
+Campos do frontmatter que o Studio não conhece (`sources:`, `owner:` ou qualquer outro) voltam intactos quando a página é salva. Comentários YAML não sobrevivem, porque o arquivo é regravado.
+
+### Público
+
+O campo opcional `audience` do frontmatter lista os perfis que veem a página, como `audience: [admin, operador]` (um texto solto vale uma lista de um). Sem o campo, a página vale para todos. A subpágina herda a restrição da mãe: quem não vê a mãe não vê as filhas, e uma filha com `audience` próprio exige as duas condições. O `manual.json` pode ter `audiences`, a lista dos perfis conhecidos (o Studio e o MCP a mantêm a partir das páginas); sem ela, o manual abre e exporta como antes.
+
+Exportar com um público (`exportManual(dir, formato, { audience })`) gera só as páginas que ele vê, em HTML, PDF e Markdown: sem o texto, as imagens, o item do sumário nem o arquivo em `assets/` das páginas de fora. Link ou área clicável para uma página de fora vira texto simples e gera um aviso. Público que nenhuma página cita exporta só as páginas sem restrição, com aviso.
+
+**Público não é controle de acesso.** Os arquivos-fonte (`pages/`, `assets/`, `.versoes/`, `manual.json`) guardam tudo, e quem tem a pasta lê tudo. Só o arquivo exportado é filtrado: entregue ao cliente o export do perfil dele, nunca a pasta do manual.
 
 ## Links entre páginas
 
@@ -171,7 +181,7 @@ A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do
 - `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
 - `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
 
-Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a Versão do manual (a versão apontada por `published`) ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. HTML colado no texto sai como texto (só a cor do texto passa, ver acima), e links só passam se forem `http`, `https`, `mailto` ou âncora.
+Os títulos do corpo da página saem logo abaixo do título dela, sem pular nível (h2, h3, h4…), tanto no HTML quanto no Markdown. Cada página entra com a Versão do manual (a versão apontada por `published`) ou, sem ela, com o texto atual. Página com arquivo apagado fica de fora e aparece como aviso. Com `audience`, só entram as páginas do perfil (ver Público). HTML colado no texto sai como texto (só a cor do texto passa, ver acima), e links só passam se forem `http`, `https`, `mailto` ou âncora.
 
 ## Regras
 

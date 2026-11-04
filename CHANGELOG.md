@@ -8,6 +8,8 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Adicionado
 
+- Público: `audience` na página e `audiences` no manual; exportar HTML, PDF e Markdown por perfil, sem texto, imagem nem sumário das páginas de fora. Link para página de fora vira texto, com aviso. Público não é controle de acesso.
+- Salvar uma página preserva os campos do frontmatter que o Studio não conhece (`sources:` etc.).
 - Exportar: opção "Sem o rodapé do Explicaí" no HTML e no PDF (`theme.hideColophon`).
 - Página vazia: passo a passo do primeiro print, com atalho para Exportar; o mesmo texto está na ajuda.
 - Editor: corretor ortográfico explícito no idioma do manual e, na ajuda, como adicionar uma palavra ao dicionário.

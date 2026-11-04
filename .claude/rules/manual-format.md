@@ -11,3 +11,5 @@ paths:
 - Todo caminho recebido de fora passa por `resolveInside` antes de tocar no disco.
 - Gravações usam `atomicWrite`. Nunca `writeFile` direto num arquivo existente.
 - URL de área clicável aceita só `http`, `https` e `mailto`, porque o HTML exportado vira site.
+- `writePageFile` preserva campos desconhecidos do frontmatter (`Page.extra`). Campo novo de página entra no tipo e no ida e volta, não em gravação à parte.
+- `audiences` (manual) e `audience` (página) são opcionais; sem eles o manual é de todos. Público filtra o export, não protege os arquivos-fonte: não prometa isso em doc nem na interface.
