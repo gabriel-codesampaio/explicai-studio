@@ -200,6 +200,8 @@ export const EN: Record<string, string> = {
   "Ex.: Tela de clientes com o botão Novo cliente": "E.g.: Customers screen with the New customer button",
   "excluída {quando}": "deleted {quando}",
   "Excluir {nome}": "Delete {nome}",
+  Excluir: "Delete",
+  "Altera a imagem": "Changes the image",
   "Excluir a marcação selecionada": "Delete the selected markup",
   "Excluir área {n}": "Delete area {n}",
   "Excluir marcador {n}": "Delete marker {n}",

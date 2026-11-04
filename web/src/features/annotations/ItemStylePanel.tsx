@@ -1,4 +1,5 @@
-import { Check } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
+import { Kbd } from "@/components/ui/kbd";
 import {
   type AnnotationStyle,
   HIGHLIGHT_PALETTE,
@@ -31,10 +32,11 @@ interface Props {
   imageStyle: AnnotationStyle | undefined;
   /** `undefined` apaga o `style` do item. */
   onChange: (style: AnnotationStyle | undefined) => void;
+  onDelete: () => void;
 }
 
 /** Estilo do item selecionado. Cada campo mostra o valor que vale (do item, da imagem ou o padrão de sempre). */
-export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Props) {
+export function ItemStylePanel({ kind, name, style, imageStyle, onChange, onDelete }: Props) {
   const fields = FIELDS[kind];
   // Sem preenchimento e sem borda a área some: resolveItemStyle devolve a borda a `s`.
   const set = (patch: AnnotationStyle) => onChange(resolveItemStyle({ ...style, ...patch }, imageStyle));
@@ -81,7 +83,12 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
   );
 
   return (
-    <section className="grid gap-2.5 rounded-md border border-border p-3" aria-label={t("Estilo do item")}>
+    <section
+      data-style-panel
+      tabIndex={-1}
+      className="grid gap-2.5 rounded-md border border-border p-3 focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+      aria-label={t("Estilo do item")}
+    >
       <div className="flex items-center justify-between gap-2">
         <h3 className="rotulo">
           {t("Estilo")} · {name}
@@ -132,6 +139,16 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
           (id) => id === "none" && (kind === "hotspot" || hl) && fill === "none",
           t("Sem preenchimento precisa de borda"),
         )}
+      <button
+        type="button"
+        onClick={onDelete}
+        aria-label={t("Excluir {nome}", { nome: name.toLowerCase() })}
+        className="flex min-h-8 items-center gap-1.5 justify-self-start rounded-md border border-border px-2 text-sm text-destructive hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 [@media(pointer:coarse)]:min-h-11"
+      >
+        <Trash2 className="size-4" aria-hidden />
+        {t("Excluir")}
+        <Kbd>Del</Kbd>
+      </button>
       {!style && <p className="text-xs text-muted-foreground">{t("Herdando da imagem")}</p>}
     </section>
   );
