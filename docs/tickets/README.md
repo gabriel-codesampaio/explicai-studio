@@ -12,7 +12,7 @@ Decisão da pessoa (03/11/2026): bug (comportamento errado, perda de dado, falha
 
 Feitos no lote 1: T-107, T-088, T-092. Ordem do resto: T-093, T-094 (P2); T-098, T-099, T-100, T-101, T-102, T-103, T-024, T-076, T-077, T-078, T-081, T-080 (P3).
 
-Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T-038, T-064, T-079, T-090, T-091, T-095, T-096, T-097, T-104, T-105, T-106.
+Em espera (sugestão): T-018, T-020, T-021, T-031, T-033, T-035, T-036, T-037, T-038, T-064, T-079, T-090, T-091, T-104, T-105, T-106.
 
 ## Preparação da versão de produção (03/11/2026)
 
@@ -24,16 +24,12 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 |----|--------|------------|--------|--------|
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-097](T-097-testes-de-concorrencia-usestudio-e-fluxo-de-i.md) | Testes de concorrência, `useStudio` e fluxo de imagem | P2 | aberto | qa |
 | [T-018](T-018-primeiro-print.md) | Página vazia que ensina o primeiro passo e onde exportar | P3 | aberto | design |
 | [T-020](T-020-dimensoes-das-imagens.md) | Dimensões das imagens no HTML exportado | P3 | aberto | core |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
 | [T-033](T-033-exportar-sem-rodape.md) | Exportar o manual sem o rodapé do Explicaí | P3 | aberto | frontend |
 | [T-035](T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | aberto | frontend |
 | [T-036](T-036-corretor-do-navegador.md) | Deixar o corretor do navegador explícito no editor e explicar na ajuda | P3 | aberto | frontend |
-| [T-095](T-095-serializar-o-markdown-so-no-flush-do-autosave.md) | Serializar o Markdown só no flush do autosave | P3 | aberto | frontend |
-| [T-096](T-096-readpagetree-le-so-o-frontmatter.md) | `readPageTree` lê só o frontmatter | P3 | aberto | frontend |
-| [T-099](T-099-posicao-da-imagem-colada-acompanha-edicao-dur.md) | Posição da imagem colada acompanha edição durante o envio | P3 | aberto | frontend |
 | [T-104](T-104-separar-css-de-html-ts-e-acoes-de-usestudio.md) | Separar CSS de `html.ts` e ações de `useStudio` | P3 | aberto | frontend |
 | [T-105](T-105-verificar-pdf-com-100-imagens-lazy-maxbuffer.md) | Verificar PDF com 100 imagens (`lazy`, `maxBuffer`) | P3 | aberto | qa |
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
@@ -52,6 +48,10 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-113](fechados/T-113-foco-do-painel-aparencia-sem-fallback.md) | Painel Aparência: foco sem fallback | P3 | feito | — |
 | [T-114](fechados/T-114-linha-de-status-mente-durante-conflito-de-disco.md) | Rodapé diz "Não foi possível salvar" durante conflito de disco | P3 | feito | — |
 | [T-115](fechados/T-115-rodape-em-tela-estreita-esconde-o-caminho.md) | Rodapé em tela estreita esconde o caminho | P3 | feito | — |
+| [T-099](fechados/T-099-posicao-da-imagem-colada-acompanha-edicao-dur.md) | Posição da imagem colada acompanha edição durante o envio | P3 | feito | 1164a5a |
+| [T-097](fechados/T-097-testes-de-concorrencia-usestudio-e-fluxo-de-i.md) | Testes de concorrência, `useStudio` e fluxo de imagem | P2 | feito | 50422fa |
+| [T-096](fechados/T-096-readpagetree-le-so-o-frontmatter.md) | `readPageTree` lê só o frontmatter | P3 | descartado | medido, sem ganho |
+| [T-095](fechados/T-095-serializar-o-markdown-so-no-flush-do-autosave.md) | Serializar o Markdown só no flush do autosave | P3 | descartado | medido, sem ganho |
 | [T-120](fechados/T-120-sync-de-rename-corre-com-o-autosave.md) | `settleRenames` corre com o autosave e mostra conflito falso | P2 | feito | — |
 | [T-090](fechados/T-090-contagem-de-imagens-sem-uso-so-sob-demanda.md) | Contagem de imagens sem uso só sob demanda | P2 | feito | — |
 | [T-091](fechados/T-091-imagesize-le-so-o-cabecalho-do-arquivo.md) | `imageSize` lê só o cabeçalho do arquivo | P2 | feito | — |
