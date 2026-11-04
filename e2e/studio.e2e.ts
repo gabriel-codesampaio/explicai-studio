@@ -1,5 +1,9 @@
+import { mkdtemp, rm } from "node:fs/promises";
+import type { AddressInfo } from "node:net";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { type APIRequestContext, expect, type Locator, type Page, test } from "@playwright/test";
+import { createStudioServer } from "../src/server/index.js";
 import { settleEditor } from "./editor-sync.js";
 
 const IMAGE = path.join(import.meta.dirname, "fixtures", "tela.png");
@@ -26,8 +30,23 @@ const editor = (page: Page) => page.getByRole("textbox", { name: "Conteúdo da p
 const treePage = (page: Page, title: string) =>
   page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: title, exact: true });
 
+// T-127: o estado vazio depende de a pasta de manuais estar vazia. No servidor compartilhado, outro teste em paralelo
+// criava manual e a tela inicial mudava. Aqui o teste sobe o próprio servidor, numa pasta nova.
 test("primeiro uso: cria manual e página, escreve e o texto continua lá depois de recarregar", async ({ page }) => {
-  await page.goto("/");
+  const workspace = await mkdtemp(path.join(tmpdir(), "explicai-e2e-primeiro-uso-"));
+  const server = createStudioServer({ workspace, webDir: path.join(import.meta.dirname, "..", "dist", "web") });
+  await new Promise<void>((ok) => server.listen(0, "127.0.0.1", ok));
+  try {
+    await primeiroUso(page, `http://localhost:${(server.address() as AddressInfo).port}/`);
+  } finally {
+    server.closeAllConnections();
+    await new Promise((ok) => server.close(ok));
+    await rm(workspace, { recursive: true, force: true });
+  }
+});
+
+async function primeiroUso(page: Page, url: string) {
+  await page.goto(url);
   await expect(page.getByRole("heading", { name: "Qual sistema você vai explicar?" })).toBeVisible();
   await page.getByLabel("Nome do manual").fill("Manual do Primeiro Uso");
   await page.getByRole("button", { name: "Criar manual" }).click();
@@ -46,7 +65,7 @@ test("primeiro uso: cria manual e página, escreve e o texto continua lá depois
   await page.reload();
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Cadastrar cliente");
   await expect(editor(page)).toContainText("Clique em Novo cliente.");
-});
+}
 
 // T-146: divisor pelo menu "/".
 test("menu / insere o divisor", async ({ page, request }) => {
