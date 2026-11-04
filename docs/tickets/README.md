@@ -27,7 +27,6 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
 | [T-125](T-125-manual-do-codelab-pelo-mcp.md) | Manual do CodeLab feito com o MCP | P1 | aberto | supervisor |
-| [T-124](T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
@@ -40,6 +39,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
+| [T-124](fechados/T-124-manual-por-publico.md) | Manual por público, um export para cada perfil | P2 | feito | #24, explicai-mcp #6 |
 | [T-123](fechados/T-123-mcp-fase-2-sugere-e-automatiza.md) | MCP fase 2, sugerir e automatizar | P1 | feito | #23, explicai-mcp #5 |
 | [T-122](fechados/T-122-mcp-fase-1-funciona.md) | MCP fase 1, o agente cria e exporta um manual | P1 | feito | #18, #21 |
 | [T-126](fechados/T-126-piloto-do-mcp-no-codelab.md) | Piloto do MCP no CodeLab | P1 | feito | explicai-mcp #4 |
