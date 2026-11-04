@@ -218,6 +218,8 @@ export function useStudio() {
    * rebuscadas; a página aberta é gravada se tinha fila (o servidor acusa edição externa e a faixa de conflito
    * aparece) e, sem conflito e sem fila, é trocada pela versão do disco.
    */
+  const pageRef = useRef(page);
+  pageRef.current = page;
   const syncRef = useRef<() => Promise<void>>(async () => {});
   syncRef.current = async () => {
     if (!manuals || down) return;
@@ -229,6 +231,8 @@ export function useStudio() {
       await refreshManual(manual.slug);
       if (!page || !ok || conflict.current) return;
       const fresh = await api.getPage(manual.slug, page.id);
+      // Trocou de página ou digitou durante a leitura: não joga o editor de volta nem apaga o texto novo.
+      if (pageRef.current?.id !== fresh.id || autosave.pendingPatch(fresh.id)) return;
       if (fresh.version && fresh.version !== versions.current.get(page.id)) {
         remember(fresh);
         setPage(fresh);
