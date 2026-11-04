@@ -5,7 +5,7 @@ import { t } from "@/lib/i18n";
 
 /** Legenda numerada da imagem: uma linha por marcador com descrição. Mesmo desenho do export (.legend). */
 export function AnnotationLegend({ markers, style }: { markers: Marker[]; style?: AnnotationStyle }) {
-  const rows = legendRows(markers);
+  const rows = legendRows<AnnotationStyle>(markers);
   if (rows.length === 0) return null;
   return (
     <ol
@@ -14,7 +14,7 @@ export function AnnotationLegend({ markers, style }: { markers: Marker[]; style?
       aria-label={t("Legenda da imagem")}
     >
       {rows.map((r) => (
-        <li key={r.n} className="flex items-center gap-2.5">
+        <li key={r.n} className="flex items-center gap-2.5" style={styleVars(r.style && { color: r.style.color }, true)}>
           <span className="num-chip bg-anotacao text-sobre-anotacao">{r.n}</span>
           <span>{r.label}</span>
         </li>
