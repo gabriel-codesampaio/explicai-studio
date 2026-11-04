@@ -30,6 +30,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
+| [T-138](T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | aberto | frontend |
 | [T-125](T-125-manual-de-app-real-pelo-mcp.md) | Manual de um app real feito com o MCP | P1 | aberto | supervisor |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
@@ -43,6 +44,7 @@ Feitos: T-038, T-093, T-094, T-098, T-100, T-101, T-102, T-103, T-108, T-109, T-
 | ID | Título | Prioridade | Status | Commit |
 |----|--------|------------|--------|--------|
 | [T-133](fechados/T-133-decisoes-da-marcacao-de-imagem.md) | Decisões da marcação de imagem | P2 | feito | #30 |
+| [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
 | [T-035](fechados/T-035-guia-de-contribuicao.md) | Guia de contribuição e código de conduta | P3 | feito | #27 |

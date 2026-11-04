@@ -52,24 +52,22 @@
 /*
  * Passos: número num círculo azul (o mesmo dos marcadores do print, que não muda com o tema),
  * o print dentro do passo e o "Resultado:" em marca-texto. No arquivo continua lista numerada.
- * shortcut: lista que começa em outro número (start) recomeça no 1 aqui; resolver quando aparecer.
+ * O número vem do contador nativo `list-item`, que respeita `start` (1., imagem, 2. continua em 2).
  */
 /* Só as listas do texto: a legenda da imagem também é uma <ol>, com o próprio número. */
 .tiptap > ol,
 .tiptap li > ol {
   list-style: none;
-  counter-reset: passo;
   padding-left: 2.25em;
 }
 :is(.tiptap > ol, .tiptap li > ol) > li {
-  counter-increment: passo;
   position: relative;
 }
 :is(.tiptap > ol, .tiptap li > ol) > li + li {
   margin-top: 0.6em;
 }
 :is(.tiptap > ol, .tiptap li > ol) > li::before {
-  content: counter(passo);
+  content: counter(list-item);
   position: absolute;
   left: -2.25em;
   top: 0.12em;
