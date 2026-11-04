@@ -26,7 +26,7 @@ const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] 
 ];
 
 /** Botão "Exportar manual" do topo da página: escolhe o formato e a cor, exporta e mostra onde ficou. */
-export function ExportDialog() {
+export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const studio = useStudioContext();
   const [format, setFormat] = useState<ExportFormat>("html");
   const [onlyApproved, setOnlyApproved] = useState(false);
@@ -52,9 +52,12 @@ export function ExportDialog() {
 
   return (
     <Dialog
-      onOpenChange={(open) => {
+      open={open}
+      onOpenChange={(next) => {
         // Fechar no meio da exportação esconderia o resultado; o botão e o Esc esperam o fim.
-        if (!open || busy) return;
+        if (!next && busy) return;
+        onOpenChange?.(next);
+        if (next) return;
         setResult(null);
         setError(null);
       }}

@@ -5,6 +5,7 @@ import { Editor } from "@/features/editor/Editor";
 import { useHeadings } from "@/features/editor/headings";
 import { PageOutline, PageOutlineButton } from "@/features/editor/PageOutline";
 import { ExportDialog } from "@/features/export/ExportDialog";
+import { FirstStepHint } from "@/features/pages/FirstStepHint";
 import { StatusMenu } from "@/features/pages/StatusMenu";
 import { PinnedNotice } from "@/features/versions/PinnedNotice";
 import { VersionsPanel } from "@/features/versions/VersionsPanel";
@@ -32,6 +33,8 @@ export function PageView({ manual, page }: Props) {
   const studio = useStudioContext();
   const [editor, setEditor] = useState<TiptapEditor | null>(null);
   const [title, setTitle] = useState(page.title);
+  const [empty, setEmpty] = useState(!page.body.trim());
+  const [exportOpen, setExportOpen] = useState(false);
   const headings = useHeadings(editor);
   const pinned = Boolean(findItem(manual.pages, page.id)?.published);
   const trail = [
@@ -70,7 +73,7 @@ export function PageView({ manual, page }: Props) {
               />
               <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
               {editor && headings.length > 0 && <PageOutlineButton editor={editor} headings={headings} />}
-              {manual.pages.length > 0 && <ExportDialog />}
+              {manual.pages.length > 0 && <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />}
             </div>
           </div>
 
@@ -89,11 +92,16 @@ export function PageView({ manual, page }: Props) {
             />
           </div>
 
+          {empty && <FirstStepHint onExport={() => setExportOpen(true)} />}
+
           <Editor
             slug={manual.slug}
             initialMarkdown={page.body}
             pages={manual.pages}
-            onChange={(body) => studio.editPage({ body })}
+            onChange={(body) => {
+              setEmpty(!body.trim());
+              studio.editPage({ body });
+            }}
             onError={studio.reportError}
             onReady={setEditor}
           />

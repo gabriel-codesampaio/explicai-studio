@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { t } from "@/lib/i18n";
+import { FIRST_STEP } from "./firstStep";
 
 /** Mude aqui quando um atalho novo entrar no Studio: esta lista é a única ajuda de teclado. */
 const GROUPS: { title: string; keys: [string, string][] }[] = [
@@ -70,6 +71,17 @@ export function ShortcutsDialog({ open, onOpenChange }: { open: boolean; onOpenC
             </dl>
           </section>
         ))}
+        <section className="grid gap-1.5">
+          <h3 className="rotulo">{t(FIRST_STEP.title)}</h3>
+          <ol className="list-decimal pl-5 text-sm text-muted-foreground">
+            {FIRST_STEP.steps.map((step) => (
+              <li key={step}>{t(step)}</li>
+            ))}
+          </ol>
+          <p className="text-sm text-muted-foreground">
+            {t(FIRST_STEP.exportLine)} {t("Use o botão Exportar manual, no topo da página.")}
+          </p>
+        </section>
         <section className="grid gap-1.5">
           <h3 className="rotulo">{t("Corretor ortográfico")}</h3>
           <p className="text-sm text-muted-foreground">{t(SPELLCHECK_HELP)}</p>

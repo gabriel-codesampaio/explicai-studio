@@ -29,3 +29,9 @@ it("todo texto passado para t() e tn() tem tradução em inglês", () => {
   }
   expect(missing).toEqual([]);
 });
+
+it("o passo a passo do primeiro print tem tradução em inglês", async () => {
+  const { FIRST_STEP } = await import("../src/features/help/firstStep");
+  const texts = [FIRST_STEP.title, ...FIRST_STEP.steps, FIRST_STEP.exportLine, FIRST_STEP.exportButton];
+  expect(texts.filter((text) => !(text in EN))).toEqual([]);
+});
