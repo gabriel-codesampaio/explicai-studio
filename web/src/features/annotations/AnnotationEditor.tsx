@@ -137,7 +137,6 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               key={id}
               type="button"
               aria-pressed={tool === id}
-              aria-label={label}
               aria-keyshortcuts={TOOL_KEYS[id]}
               title={`${label} (${TOOL_KEYS[id]})`}
               onClick={() => setTool(id)}
@@ -147,9 +146,8 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               )}
             >
               <Icon className="size-4" aria-hidden />
-              <span className="hidden sm:inline [@media(pointer:coarse)]:inline" aria-hidden>
-                {label}
-              </span>
+              {/* O nome vem deste texto; a letra é só dica, anunciada por aria-keyshortcuts (WCAG 2.5.3). */}
+              <span className="sr-only sm:not-sr-only [@media(pointer:coarse)]:not-sr-only">{label}</span>
               <kbd className="font-mono text-xs" aria-hidden>
                 {TOOL_KEYS[id]}
               </kbd>
