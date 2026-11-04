@@ -82,6 +82,10 @@ No export o arquivo é copiado para `assets/` ao lado do `index.html` e entra po
 
 O core recusa, ao gravar (Studio e MCP), `text`, `accent` e cada cor de `headings` com contraste menor que 4,5:1 com o branco, e um `highlight` que deixe o texto por cima com menos de 4,5:1. A mensagem diz o contraste atual e o mínimo. Editar um campo mantém os outros.
 
+## Campos desconhecidos
+
+`manual.json` e `assets/*.json` são lidos e regravados inteiros: campo que o Studio não conhece (de uma versão mais nova ou de uma ferramenta externa) volta intacto ao salvar, na raiz, em `theme`, nos nós da árvore de páginas e em cada marcação, destaque, seta e área clicável. Vale para o Studio e para o MCP, que regrava pelo `explicai/core`. Exceção: dentro de `style` (anotações), só os quatro campos conhecidos ficam; valor fora da lista já é descartado. Coberto por `test/unknown-fields.test.ts`. O frontmatter das páginas segue a mesma regra (`extra`).
+
 ## Página
 
 ```markdown
