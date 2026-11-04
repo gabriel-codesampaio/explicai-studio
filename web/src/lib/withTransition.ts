@@ -15,6 +15,9 @@ export function withTransition<T>(update: () => Promise<T>): Promise<T> {
   const transition = doc.startViewTransition(async () => {
     result = await update();
   });
+  // ready/finished rejeitam junto com o update; o erro segue por updateCallbackDone.
+  transition.ready?.catch(() => {});
+  transition.finished?.catch(() => {});
   // O callback assíncrono espera o update; a promessa devolve o mesmo valor ou o mesmo erro.
   return transition.updateCallbackDone.then(() => result as T);
 }
