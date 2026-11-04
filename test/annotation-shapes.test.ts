@@ -1,6 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { arrowShape, legendRows, MARKER_DISC, placeMarkers } from "../src/core/export/annotationShapes.js";
-import { arrowShape as arrowWeb, placeMarkers as placeWeb, legendRows as rowsWeb } from "../web/src/lib/annotationShapes.js";
+import {
+  ARROW_MIN_DRAG,
+  arrowShape,
+  arrowThickness,
+  legendRows,
+  MARKER_DISC,
+  placeMarkers,
+} from "../src/core/export/annotationShapes.js";
+import {
+  arrowShape as arrowWeb,
+  placeMarkers as placeWeb,
+  legendRows as rowsWeb,
+  arrowThickness as thicknessWeb,
+} from "../web/src/lib/annotationShapes.js";
 
 const dist = (a: { x: number; y: number }, b: { x: number; y: number }) => Math.hypot(a.x - b.x, a.y - b.y);
 
@@ -13,24 +25,25 @@ describe("geometria da seta", () => {
       const to = { x: 100 + 200 * Math.cos(a), y: 100 + 200 * Math.sin(a) };
       const { head, shaft } = arrowShape(from, to, 4);
       expect(head[0]).toEqual(to);
-      expect(dist(head[1], head[2])).toBeCloseTo(2 * 18 * 0.45); // 4,5 x espessura de comprimento
+      expect(dist(head[1], head[2])).toBeCloseTo(5 * 4); // largura de 5 x a espessura
       const base = { x: (head[1].x + head[2].x) / 2, y: (head[1].y + head[2].y) / 2 };
-      expect(dist(base, to)).toBeCloseTo(18);
+      expect(dist(base, to)).toBeCloseTo(22);
       // a base é perpendicular à direção da seta e o eixo passa pelo meio dela
       const ux = (to.x - from.x) / 200;
       const uy = (to.y - from.y) / 200;
       expect((head[1].x - head[2].x) * ux + (head[1].y - head[2].y) * uy).toBeCloseTo(0);
       expect((to.x - base.x) * uy - (to.y - base.y) * ux).toBeCloseTo(0);
       // a haste termina dentro da ponta
-      expect(dist({ x: shaft.x2, y: shaft.y2 }, to)).toBeLessThan(18);
+      expect(dist({ x: shaft.x2, y: shaft.y2 }, to)).toBeLessThan(22);
       expect(shaft).toMatchObject({ x1: 100, y1: 100 });
     }
   });
 
   it("seta curta encolhe a ponta e continua com a haste dentro dela", () => {
     const { head, shaft } = arrowShape({ x: 0, y: 0 }, { x: 10, y: 0 }, 4);
-    expect(dist(head[0], { x: (head[1].x + head[2].x) / 2, y: (head[1].y + head[2].y) / 2 })).toBeCloseTo(7);
-    expect(shaft.x2).toBeGreaterThan(0);
+    expect(dist(head[0], { x: (head[1].x + head[2].x) / 2, y: (head[1].y + head[2].y) / 2 })).toBeCloseTo(4); // no máximo 40% do comprimento
+    expect(shaft.x2).toBeGreaterThan(5); // a haste aparece além da ponta
+    expect(dist({ x: shaft.x1, y: shaft.y1 }, { x: head[1].x, y: head[1].y })).toBeGreaterThan(5);
     expect(shaft.x2).toBeLessThanOrEqual(10);
   });
 
@@ -44,6 +57,18 @@ describe("geometria da seta", () => {
       const to = { x: 50 + 90 * Math.cos(a), y: 50 + 90 * Math.sin(a) };
       expect(arrowWeb({ x: 50, y: 50 }, to, 3.5)).toEqual(arrowShape({ x: 50, y: 50 }, to, 3.5));
     }
+  });
+});
+
+describe("espessura da seta", () => {
+  it("um só cálculo: meio por cento do lado maior vezes a escala, igual nas duas cópias", () => {
+    expect(arrowThickness(1000, 1)).toBeCloseTo(5);
+    expect(arrowThickness(600, 1.5)).toBeCloseTo(4.5);
+    expect(thicknessWeb(777, 0.75)).toBe(arrowThickness(777, 0.75));
+  });
+
+  it("arraste mínimo de 3% da imagem", () => {
+    expect(ARROW_MIN_DRAG).toBe(0.03);
   });
 });
 
