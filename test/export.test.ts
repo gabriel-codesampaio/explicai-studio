@@ -96,6 +96,11 @@ describe("exportação", () => {
       /class="mk" style="left:25\.000%;top:50\.000%" aria-hidden="true"><svg class="tail"[^>]*><polygon points="0\.0,0\.0 [\d.,\- ]+"\/><\/svg><span class="disc" style="transform:translate\(-?[\d.]+px,-?[\d.]+px\)" data-n="1">/,
     );
     expect(html).toContain('<span class="n">1</span><span>Botão Novo cliente</span>');
+    // número centrado pela altura das maiúsculas onde o navegador sabe aparar a caixa; line-height:1 é o piso
+    expect(html).toMatch(
+      /@supports\(text-box:trim-both cap alphabetic\)\{[^}]*\.mk \.disc::before[^}]*text-box:trim-both cap alphabetic/,
+    );
+    expect(html).toContain("font:600 13px/1 var(--mono)");
     // seta com ponta fechada: haste, triângulo de 3 vértices e o mesmo par com contorno branco
     expect(html.match(/<svg class="arrows".*?<\/svg>/s)?.[0].match(/<polygon points="[\d.,\- ]+"\/>/g)).toHaveLength(1);
     expect(html.match(/<polygon class="halo" points="(?:[\d.-]+,[\d.-]+ ?){3}"/g)).toHaveLength(1);
