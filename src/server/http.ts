@@ -123,7 +123,11 @@ export async function readJson(req: IncomingMessage): Promise<Record<string, unk
 /** Status HTTP para um erro vindo do core: "não encontrado" e arquivo inexistente viram 404, o resto 400. */
 export function statusOf(err: unknown): number {
   if (err instanceof HttpError) return err.status;
-  if (err instanceof ExplicaiError && ["disk-conflict", "version-published", "audience-duplicate"].includes(err.code)) return 409;
+  if (
+    err instanceof ExplicaiError &&
+    ["disk-conflict", "version-published", "audience-duplicate", "format-newer"].includes(err.code)
+  )
+    return 409;
   const missing =
     (err instanceof Error && /não encontrad/i.test(err.message)) ||
     ["ENOENT", "EISDIR"].includes((err as { code?: string } | null)?.code ?? "");

@@ -1,5 +1,6 @@
 import { mkdir, readdir } from "node:fs/promises";
 import path from "node:path";
+import { ExplicaiError } from "./errors.js";
 import { atomicWrite, exists, readText, uniquePath } from "./fs.js";
 import { required, slugify } from "./text.js";
 import { FORMAT_VERSION, type Manual, type ManualMeta } from "./types.js";
@@ -40,7 +41,7 @@ export async function listManuals(workspace: string): Promise<Manual[]> {
     const dir = path.join(workspace, e.name);
     if (!(await exists(path.join(dir, META_FILE)))) continue;
     try {
-      manuals.push({ dir, meta: await readManual(dir) });
+      manuals.push({ dir, meta: await readManual(dir, { allowNewer: true }) });
     } catch {
       // manual.json corrompido: os outros manuais continuam abrindo.
     }
@@ -48,7 +49,11 @@ export async function listManuals(workspace: string): Promise<Manual[]> {
   return manuals.sort((a, b) => a.meta.title.localeCompare(b.meta.title));
 }
 
-export async function readManual(dir: string): Promise<ManualMeta> {
+/**
+ * `allowNewer`: só para leitura (Studio mostra o manual sem editar). Sem ele, formato mais novo
+ * dá erro, e é assim que toda gravação do núcleo (Studio, CLI, MCP) recusa regravar o manual.
+ */
+export async function readManual(dir: string, opts: { allowNewer?: boolean } = {}): Promise<ManualMeta> {
   let meta: Partial<ManualMeta> | null;
   try {
     meta = JSON.parse(await readText(path.join(dir, META_FILE))) as Partial<ManualMeta> | null;
@@ -56,6 +61,15 @@ export async function readManual(dir: string): Promise<ManualMeta> {
     if (err instanceof SyntaxError)
       throw new Error(`O ${META_FILE} do manual "${path.basename(dir)}" não é um JSON válido: ${err.message}`);
     throw err;
+  }
+  const version = meta?.version as unknown;
+  if (typeof version === "number" && version > FORMAT_VERSION) {
+    if (opts.allowNewer) return meta as ManualMeta;
+    throw new ExplicaiError(
+      "format-newer",
+      `Este manual usa o formato ${version}, mais novo que o ${FORMAT_VERSION} deste Studio. Atualize o Studio (npx explicai@latest) para editar. Nada foi alterado.`,
+      { version, supported: FORMAT_VERSION },
+    );
   }
   if (meta?.version !== FORMAT_VERSION) {
     throw new Error(`${META_FILE}: versão de formato não suportada (${String(meta?.version)})`);
