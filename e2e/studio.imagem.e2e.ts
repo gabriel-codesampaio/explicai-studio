@@ -484,7 +484,7 @@ test.describe("marcações", () => {
     await page.getByRole("button", { name: "Editar imagem" }).click();
     const dialog = markDialog(page);
     const disc = dialog.locator("[data-n='1']");
-    const box = () => disc.evaluate((el) => ({ w: el.offsetWidth, bg: getComputedStyle(el).backgroundColor }));
+    const box = () => disc.evaluate((el) => ({ w: (el as HTMLElement).offsetWidth, bg: getComputedStyle(el).backgroundColor }));
 
     expect(await box()).toEqual({ w: 24, bg: "rgb(43, 79, 224)" }); // sem style: o de sempre
     await expect(dialog.getByRole("button", { name: "Cobalto" })).toHaveAttribute("aria-pressed", "true");
