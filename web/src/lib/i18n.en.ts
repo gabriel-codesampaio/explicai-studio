@@ -499,7 +499,7 @@ export const EN: Record<string, string> = {
   "Público da página: {publico}": "Page audience: {publico}",
   "Quem vê esta página": "Who sees this page",
   "Novo perfil": "New profile",
-  "Novo perfil, como admin": "New profile, like admin",
+  "Ex.: admin": "E.g. admin",
   Adicionar: "Add",
   "Sem nenhum perfil marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.":
     "With no profile checked, the page is for everyone. It only filters what you export: the manual's files keep everything.",

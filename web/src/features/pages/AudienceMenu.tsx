@@ -37,7 +37,7 @@ export function AudienceMenu({
           <ChevronDown className="size-3 shrink-0 text-muted-foreground" aria-hidden />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-72 gap-3">
+      <PopoverContent align="end" collisionPadding={8} className="w-72 gap-3">
         <fieldset className="grid gap-1">
           <legend className="mb-1 rotulo">{t("Quem vê esta página")}</legend>
           {options.map((name) => (
@@ -55,13 +55,13 @@ export function AudienceMenu({
             </label>
           ))}
         </fieldset>
-        <form onSubmit={add} className="flex gap-2">
+        <form onSubmit={add} className="mt-2 flex gap-2">
           <input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             maxLength={40}
             aria-label={t("Novo perfil")}
-            placeholder={t("Novo perfil, como admin")}
+            placeholder={t("Ex.: admin")}
             className="min-w-0 flex-1 rounded-md border border-input bg-background px-2 py-1.5 text-sm [@media(pointer:coarse)]:min-h-11"
           />
           <button
