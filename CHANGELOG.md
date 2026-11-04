@@ -18,7 +18,7 @@ A 0.1.0 foi a primeira versão do Studio; este bloco reúne o que entrou desde a
 ### Adicionado
 
 - Exportação: fontes empacotadas (Archivo, Atkinson Hyperlegible Next, Inter, Source Sans 3, Source Serif 4, Lora, Montserrat, Playfair Display e JetBrains Mono, todas OFL) que vão junto do HTML exportado, e escolha da fonte do texto e dos títulos no diálogo e pela barra do editor.
-- Exportação: tema do manual com cor do texto, dos títulos por nível, de realce e de destaque, com o nome de cada cor, e logo do cliente na capa (enviado e retirado no diálogo de exportação, limite de 2 MB).
+- Exportação: tema do manual com cor do texto, dos títulos por nível, de realce e de destaque, com o nome de cada cor, e logo do cliente na capa (enviado e retirado no diálogo de exportação, limite de 1 MB).
 - Exportação: o diálogo mostra a etapa, o resultado e o erro com nova tentativa; "Exportar manual" foi para o fim do topo, à direita.
 - Editor: cor do texto com paleta fixa e nome de cada cor, também pelo teclado e na barra fixa; barra flutuante na seleção com o tipo do bloco, formatação e cor.
 - Editor: bloco de alerta (salvo como alerta GFM, exportado com rótulo em texto e cor por tipo), menu `/` com blocos agrupados e prévia, controles de linha e coluna direto na tabela, botão "Colar print" com Ctrl+V visível, barra de formatação rolável no celular.
