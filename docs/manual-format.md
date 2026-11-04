@@ -173,7 +173,7 @@ Sem `style` a imagem aparece como sempre e o HTML exportado não muda. Número, 
 |---|---|
 | marcador | `color`, `size`, `border` |
 | seta | `color`, `stroke`, `border` |
-| destaque | `border` (cor e preenchimento do destaque: T-195) |
+| destaque | `color` (marca-texto: `yellow` padrão, `green`, `pink`, `blue`, `orange`, cada uma com borda derivada mais escura), `border`, `fill` (`solid` padrão, `soft`, `none` = só contorno; opacidade 55%, 25% e 0, sem mistura multiplicativa) |
 | área clicável | `color`, `border`, `fill` (`solid`, `soft` padrão, `none`) |
 
 `fill: "none"` junto com `border: "none"` deixaria a área invisível: `border` volta a `s` ao ler. No HTML e no PDF o `style` do item vira as mesmas variáveis CSS no próprio elemento (mais `--preenchimento`), sem JavaScript; o chip da legenda usa a cor do marcador. Sem `style` nos itens o HTML exportado não muda e `version` continua 1. Leitor antigo descarta o `style` do item e mostra a marcação com o estilo da imagem.
