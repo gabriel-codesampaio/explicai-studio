@@ -25,6 +25,6 @@ Commits: 490df93 (numera as páginas com a mesma regra do sumário exportado), c
 
 O que foi feito: `numberPages` em `web/src/lib/tree.ts` espelha `collectPages` (ordem da árvore, um nível por profundidade, página com problema sem número e filhos no lugar dela); `searchPages` devolve `number`. Número em mono cobalto, `tabular-nums`, `aria-hidden`, antes do título na árvore e na busca; a busca ganhou o rótulo do status.
 
-Verificação: testes em `web/test/tree.test.ts`; e2e "a árvore e a busca mostram a numeração do sumário, como 2.1 numa subpágina"; `npm run check` 99 testes. Design aprovou a árvore no claro a 1440 (print em `C:/Users/PC/explicai-prints/p1/T-004/`). Revisão sem achados que bloqueiem.
+Verificação: testes em `web/test/tree.test.ts`; e2e "a árvore e a busca mostram a numeração do sumário, como 2.1 numa subpágina"; `npm run check` 99 testes. Design aprovou a árvore no claro a 1440 (print em `~/explicai-prints/p1/T-004/`). Revisão sem achados que bloqueiem.
 
 Ficou de fora: exportando só as aprovadas, o sumário renumera e pode diferir da árvore. Leitor de tela não ouve o número (decisão: `aria-hidden`). Busca Ctrl+P não vista pelo design (coberta pelo e2e).

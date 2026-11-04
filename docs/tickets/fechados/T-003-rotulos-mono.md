@@ -26,6 +26,6 @@ Commit: 77a41f9 (style(ui): usa rótulo mono maiúsculo nas seções, como no br
 
 O que foi feito: utilitário `rotulo` em `web/src/styles/base.css` (mono 11px, maiúsculo só no CSS, `--muted-foreground`), aplicado em Sidebar, PageOutline, ExportDialog, AnnotationList, AppearancePanel e ShortcutsDialog. Contraste medido: 5,53:1 a 6,41:1 no claro, 6,99:1 a 8,13:1 no escuro.
 
-Verificação: design aprovou o escuro a 1440 (lote 1) e o claro a 1440 (lote 2: JetBrains Mono 11px, maiúsculo, rgb(87,94,120) em "Manual", "Páginas", Aparência e Atalhos). Prints em `C:/Users/PC/explicai-prints/p1/T-003/`. Revisão sem achados.
+Verificação: design aprovou o escuro a 1440 (lote 1) e o claro a 1440 (lote 2: JetBrains Mono 11px, maiúsculo, rgb(87,94,120) em "Manual", "Páginas", Aparência e Atalhos). Prints em `~/explicai-prints/p1/T-003/`. Revisão sem achados.
 
 Ficou de fora: "Nesta página", exportação e legendas não foram vistos no claro (mesmo utilitário).

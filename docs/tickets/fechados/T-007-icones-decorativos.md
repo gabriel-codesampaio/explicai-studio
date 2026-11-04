@@ -25,6 +25,6 @@ Commits: 205d9c4 (style(ui): tira ícones decorativos e mostra a extensão na ex
 
 O que foi feito: saíram BookOpen (ManualSwitcher), FileText (StatusBar), BookCheck (PinnedNotice) e Globe/FileText/Bot (formatos). Os formatos mostram `.html`, `.pdf` e `.md` em mono `text-lg`, `aria-hidden` (o nome do radio vem do rótulo e da dica). Coluna `w-14` porque o `.html` media 54 px e estourava `w-12`. Snapshot de acessibilidade sem botão sem nome. Revisão sem achados.
 
-Lote 2: 41f51f8/9e78b09 alinhou a coluna de descrição do ShortcutsDialog; 25453de tirou os ícones do botão Exportar, de Versões e do ⋯. Atalhos aprovado no escuro (print em `C:/Users/PC/explicai-prints/p1/T-007/`).
+Lote 2: 41f51f8/9e78b09 alinhou a coluna de descrição do ShortcutsDialog; 25453de tirou os ícones do botão Exportar, de Versões e do ⋯. Atalhos aprovado no escuro (print em `~/explicai-prints/p1/T-007/`).
 
 Verificado no navegador (claro e escuro, 1280 e 375 px): `.html`, `.pdf` e `.md` cabem sem corte nem rolagem lateral na exportação; PinnedNotice só com texto. Fechado.
