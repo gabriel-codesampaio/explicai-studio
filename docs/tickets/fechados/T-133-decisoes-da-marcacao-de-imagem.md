@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: design
-- Origem: [Discovery de marcação de imagem](../discovery/marcacao-de-imagem.md), perguntas para a pessoa
+- Origem: [Discovery de marcação de imagem](../../discovery/archives/marcacao-de-imagem.md), perguntas para a pessoa
 
 ## Decisão da pessoa (2026-11-04)
 "Sem preferências": valem as recomendações do discovery.

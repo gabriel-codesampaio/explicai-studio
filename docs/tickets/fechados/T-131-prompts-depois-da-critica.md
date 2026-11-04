@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: [Crítica do manual do piloto](../discovery/2026-11-04-critique-manual-piloto.md) (2026-11-04)
+- Origem: [Crítica do manual do piloto](../../discovery/archives/2026-11-04-critique-manual-piloto.md) (2026-11-04)
 - Bloqueia: T-125
 
 ## Problema

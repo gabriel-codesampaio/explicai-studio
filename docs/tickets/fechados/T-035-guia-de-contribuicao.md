@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: [Discovery de contribuição](../discovery/2026-10-30-contribuicao.md) (2026-10-30)
+- Origem: [Discovery de contribuição](../../discovery/archives/2026-10-30-contribuicao.md) (2026-10-30)
 
 ## Problema
 O projeto é open source, mas não diz como contribuir. Só o README tem uma frase sobre isso.
