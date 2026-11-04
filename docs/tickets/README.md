@@ -215,6 +215,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
 | [T-168](fechados/T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | descartado | decisão da pessoa |
 | [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
+| [T-241](fechados/T-241-ponto-do-item-de-radio-no-menu.md) | Ponto do item de rádio colide com o marcador próprio do item | P3 | feito | `b1947f6` |
 | [T-152](fechados/T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | feito | `b13e292` |
 | [T-183](fechados/T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | feito | `b13e292` |
 | [T-184](fechados/T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | feito | `122fe06` |
