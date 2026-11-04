@@ -5,7 +5,7 @@
  */
 
 import { ARROW_MIN_DRAG } from "./annotationShapes";
-import type { AnnotationStyle } from "./annotationStyle";
+import type { AnnotationStyle, StyleItemKind } from "./annotationStyle";
 import { decodeComponent } from "./text";
 
 export interface Point {
@@ -147,6 +147,35 @@ export function updateMarker(ann: Annotations, id: string, label: string): Annot
 
 export function updateHotspot(ann: Annotations, id: string, target: HotspotTarget): Annotations {
   return { ...ann, hotspots: ann.hotspots.map((h) => (h.id === id ? { ...h, target } : h)) };
+}
+
+/** Item (marcador, seta, destaque ou área) pelo id, com o tipo que o estilo usa. */
+export function findItem(ann: Annotations, id: string): { kind: StyleItemKind; style?: AnnotationStyle; n?: number } | null {
+  const m = ann.markers.find((x) => x.id === id);
+  if (m) return { kind: "marker", style: m.style, n: m.n };
+  const a = ann.arrows.find((x) => x.id === id);
+  if (a) return { kind: "arrow", style: a.style };
+  const h = ann.highlights.find((x) => x.id === id);
+  if (h) return { kind: "highlight", style: h.style };
+  const s = ann.hotspots.find((x) => x.id === id);
+  return s ? { kind: "hotspot", style: s.style } : null;
+}
+
+/** Troca o `style` de um item; `undefined` remove o campo (volta ao padrão da imagem). */
+export function updateItemStyle(ann: Annotations, id: string, style: AnnotationStyle | undefined): Annotations {
+  const put = <T extends { id: string; style?: AnnotationStyle }>(list: T[]): T[] =>
+    list.map((it) => {
+      if (it.id !== id) return it;
+      const { style: _old, ...rest } = it;
+      return (style ? { ...rest, style } : rest) as T;
+    });
+  return {
+    ...ann,
+    markers: put(ann.markers),
+    arrows: put(ann.arrows),
+    highlights: put(ann.highlights),
+    hotspots: put(ann.hotspots),
+  };
 }
 
 const KEY_STEP: Record<string, [number, number]> = {
