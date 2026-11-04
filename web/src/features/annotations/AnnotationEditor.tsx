@@ -13,6 +13,7 @@ import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
+import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
 import { RedactPanel } from "./RedactPanel";
 import { ReducePanel } from "./ReducePanel";
@@ -233,6 +234,13 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 selectedId={selectedId}
                 onSelect={setSelectedId}
                 onChange={(ann) => change({ ...draft, ann })}
+              />
+              <AppearancePanel
+                style={draft.ann.style}
+                onChange={(style) => {
+                  const { style: _old, ...rest } = draft.ann;
+                  change({ ...draft, ann: style ? { ...rest, style } : rest });
+                }}
               />
             </div>
           </div>

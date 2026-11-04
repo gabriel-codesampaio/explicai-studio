@@ -26,7 +26,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
-| [T-138](T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
 | [T-154](T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | aberto | frontend |
@@ -70,6 +69,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-146](fechados/T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | feito | #40 |
 | [T-134](fechados/T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | feito | #44 |
 | [T-137](fechados/T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | feito | #44 |
+| [T-138](fechados/T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | feito | #45 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |

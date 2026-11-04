@@ -1,6 +1,7 @@
 import { Link2 } from "lucide-react";
 import { useLayoutEffect, useRef, useState } from "react";
 import { arrowShape, placeMarkers } from "@/lib/annotationShapes";
+import { MARKER_SIZES, STROKE_SCALE, styleVars } from "@/lib/annotationStyle";
 import type { Annotations, Handle, Highlight, Point, Rect } from "@/lib/annotations";
 import { REDACT_CSS, type RedactStyle } from "@/lib/redact";
 import { cn } from "@/lib/utils";
@@ -43,7 +44,10 @@ function useSize() {
 export function AnnotationOverlay({ annotations, redactions = [], redactStyle = "bar", crops = [], selectedId, onGrab }: Props) {
   const { ref, size } = useSize();
   const px = (p: Point) => ({ x: p.x * size.w, y: p.y * size.h });
-  const shapes = placeMarkers(annotations.markers.map(px), size.w, size.h);
+  const stroke = STROKE_SCALE[annotations.style?.stroke ?? "m"];
+  const shapes = placeMarkers(annotations.markers.map(px), size.w, size.h, MARKER_SIZES[annotations.style?.size ?? "m"].disc);
+  // Contorno do destaque e da área: os 2 px de sempre vezes a espessura escolhida (igual ao .hl/.hot do export).
+  const border = { borderWidth: "calc(2px * var(--marca-espessura, 1))" };
   const interactive = Boolean(onGrab);
   const pick =
     (id: string, handle: Handle = "move") =>
@@ -69,7 +73,12 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
   const ring = (id: string) => (id === selectedId ? "outline-2 outline-offset-2 outline-primary" : "");
 
   return (
-    <span ref={ref} className={cn("absolute inset-0 block", !interactive && "pointer-events-none")} aria-hidden>
+    <span
+      ref={ref}
+      className={cn("absolute inset-0 block", !interactive && "pointer-events-none")}
+      style={styleVars(annotations.style, true)}
+      aria-hidden
+    >
       {crops.map((r) => {
         const [x0, y0, x1, y1] = [r.x * 100, r.y * 100, (r.x + r.w) * 100, (r.y + r.h) * 100];
         return (
@@ -120,7 +129,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
             ring(h.id),
             interactive && "cursor-move",
           )}
-          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%` }}
+          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%`, ...border }}
         />
       ))}
       {annotations.hotspots.map((h) => (
@@ -132,7 +141,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
             ring(h.id),
             interactive && "cursor-move",
           )}
-          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%` }}
+          style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%`, width: `${h.w * 100}%`, height: `${h.h * 100}%`, ...border }}
         >
           <Link2 className="absolute -top-2.5 -right-2.5 size-5 rounded-full bg-anotacao p-0.5 text-white" />
         </span>
@@ -140,7 +149,7 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
       {size.w > 0 && annotations.arrows.length > 0 && (
         <svg className="absolute inset-0 overflow-visible" width={size.w} height={size.h} role="presentation">
           {annotations.arrows.map((a) => {
-            const thickness = a.id === selectedId ? 5 : 3.5;
+            const thickness = (a.id === selectedId ? 5 : 3.5) * stroke;
             const { shaft, head } = arrowShape(px(a.from), px(a.to), thickness);
             const pts = head.map((p) => `${p.x},${p.y}`).join(" ");
             return (
@@ -194,11 +203,18 @@ export function AnnotationOverlay({ annotations, redactions = [], redactStyle = 
               <span
                 onPointerDown={pick(m.id)}
                 className={cn(
-                  "absolute -top-3 -left-3 grid size-6 place-items-center rounded-full bg-anotacao font-mono text-[13px] leading-none font-semibold text-sobre-anotacao shadow-[0_0_0_2px_#fff] before:content-[attr(data-n)]",
+                  // O after amplia o alvo de clique para 24 px mesmo no disco pequeno (20 px).
+                  "absolute grid place-items-center rounded-full bg-anotacao font-mono leading-none font-semibold text-sobre-anotacao shadow-[0_0_0_2px_#fff] before:content-[attr(data-n)] after:absolute after:-inset-0.5 after:content-['']",
                   ring(m.id),
                   interactive && "cursor-move",
                 )}
-                style={{ transform: `translate(${disc.x}px, ${disc.y}px)` }}
+                style={{
+                  width: "var(--disco, 24px)",
+                  height: "var(--disco, 24px)",
+                  margin: "calc(var(--disco, 24px) / -2) 0 0 calc(var(--disco, 24px) / -2)",
+                  fontSize: "var(--disco-fonte, 13px)",
+                  transform: `translate(${disc.x}px, ${disc.y}px)`,
+                }}
                 // O número vem do CSS: dentro do editor, um texto aqui entraria no conteúdo lido pelo leitor de tela.
                 data-n={m.n}
               />
