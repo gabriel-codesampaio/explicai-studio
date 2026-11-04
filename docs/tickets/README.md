@@ -35,13 +35,10 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-188](T-188-aparencia-do-manual-nos-ajustes.md) | "Aparência do manual" nos Ajustes, fora da exportação | P2 | aberto | frontend |
 | [T-189](T-189-amostra-ao-vivo-da-aparencia.md) | Amostra ao vivo na tela de Aparência do manual | P3 | aberto | frontend |
 | [T-182](T-182-fonte-na-barra-da-selecao.md) | Pôr a troca de fonte na barra da seleção, discreta | P2 | aberto | frontend |
-| [T-183](T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | aberto | frontend |
 | [T-221](T-221-numero-do-disco-em-posicao-fracionaria.md) | Número do disco desvia até 1 px em posição fracionária | P3 | aberto | frontend |
 | [T-220](T-220-publicar-studio-0-3-0-e-mcp-0-1-0.md) | Publicar Studio 0.3.0 e explicai-mcp 0.1.0 | P1 | aberto | supervisor |
 | [T-178](T-178-importar-manual-no-mcp.md) | Importar manual de fora e de versão antiga pelo MCP | P2 | aberto | supervisor |
-| [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
-| [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
@@ -216,4 +213,8 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-190](fechados/T-190-borda-do-destaque-e-nenhuma-borda.md) | Borda do destaque visível e opção "nenhuma borda" | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
 | [T-191](fechados/T-191-setas-sem-defeito.md) | Setas sem defeito | P1 | feito | branch feat/t-190-191-192-estilo-marcacoes |
 | [T-192](fechados/T-192-numero-centrado-no-marcador.md) | Número centrado no marcador e na legenda | P2 | feito | branch feat/t-190-191-192-estilo-marcacoes |
+| [T-151](fechados/T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | feito | `51a386c` |
+| [T-154](fechados/T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | feito | `45c8c2c` |
+| [T-152](fechados/T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | feito | `b13e292` |
+| [T-183](fechados/T-183-rolar-ate-o-aviso-de-exportacao.md) | Rolar até o aviso depois de exportar | P2 | feito | `b13e292` |
 | [T-184](fechados/T-184-atalhos-em-tecla.md) | Mostrar os atalhos da marcação como tecla | P3 | feito | `122fe06` |

@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -44,6 +44,15 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
   const [result, setResult] = useState<ExportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const feedback = useRef<HTMLDivElement>(null);
+  // Resultado ou erro novo: leva o foco ao aviso (anunciado pelo role=status/alert) e o põe à vista.
+  useEffect(() => {
+    if (!result && !error) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    feedback.current?.focus({ preventScroll: true });
+    feedback.current?.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+  }, [result, error]);
+
   const run = async () => {
     setBusy(true);
     setError(null);
@@ -74,133 +83,137 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
         <Button className="font-semibold [@media(pointer:coarse)]:h-11">{t("Exportar manual")}</Button>
       </DialogTrigger>
       <DialogContent
-        className="max-h-[90vh] overflow-y-auto sm:max-w-lg"
+        className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg"
         aria-busy={busy}
         showCloseButton={!busy}
         onEscapeKeyDown={(e) => busy && e.preventDefault()}
         onPointerDownOutside={(e) => busy && e.preventDefault()}
         onInteractOutside={(e) => busy && e.preventDefault()}
       >
-        <DialogHeader>
+        <DialogHeader className="px-6 pt-6 pr-12 pb-4">
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
           <DialogDescription>{t('Cada página entra com a "Versão do manual" ou, sem ela, com o texto atual.')}</DialogDescription>
         </DialogHeader>
 
-        <fieldset className="grid gap-2" disabled={busy}>
-          <legend className="mb-2 rotulo">{t("Formato")}</legend>
-          {FORMATS.map(({ id, label, hint, ext }) => (
-            <label
-              key={id}
-              className={cn(
-                "flex cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 has-focus-visible:outline-2 has-focus-visible:outline-ring",
-                format === id ? "border-primary bg-accent" : "border-border hover:bg-muted",
-              )}
-            >
-              <input
-                type="radio"
-                name="formato"
-                value={id}
-                checked={format === id}
-                onChange={() => setFormat(id)}
-                className="sr-only"
-              />
-              <span className="w-14 shrink-0 font-mono text-lg leading-tight font-medium text-primary" aria-hidden>
-                {ext}
-              </span>
-              <span className="grid leading-tight">
-                <span className="text-sm font-bold">{label}</span>
-                <span className="text-xs text-muted-foreground">{hint}</span>
-              </span>
-            </label>
-          ))}
-        </fieldset>
+        <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto px-6 pb-4">
+          <fieldset className="grid gap-2" disabled={busy}>
+            <legend className="mb-2 rotulo">{t("Formato")}</legend>
+            {FORMATS.map(({ id, label, hint, ext }) => (
+              <label
+                key={id}
+                className={cn(
+                  "flex cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5 has-focus-visible:outline-2 has-focus-visible:outline-ring",
+                  format === id ? "border-primary bg-accent" : "border-border hover:bg-muted",
+                )}
+              >
+                <input
+                  type="radio"
+                  name="formato"
+                  value={id}
+                  checked={format === id}
+                  onChange={() => setFormat(id)}
+                  className="sr-only"
+                />
+                <span className="w-14 shrink-0 font-mono text-lg leading-tight font-medium text-primary" aria-hidden>
+                  {ext}
+                </span>
+                <span className="grid leading-tight">
+                  <span className="text-sm font-bold">{label}</span>
+                  <span className="text-xs text-muted-foreground">{hint}</span>
+                </span>
+              </label>
+            ))}
+          </fieldset>
 
-        <label className={cn("flex items-start gap-2.5 text-sm", approved === 0 && "opacity-60")}>
-          <input
-            type="checkbox"
-            checked={onlyApprovedOn}
-            disabled={approved === 0}
-            onChange={(e) => setOnlyApproved(e.target.checked)}
-            className="mt-0.5 size-4 accent-[var(--primary)]"
-          />
-          <span className="grid leading-tight">
-            <span className="font-bold">{t("Só páginas aprovadas")}</span>
-            <span className="text-xs text-muted-foreground">
-              {approved === 0
-                ? t("Nenhuma página está aprovada ou publicada. Aprove uma página para usar esta opção.")
-                : tn(
-                    approved,
-                    "{n} página aprovada ou publicada neste manual. As outras ficam de fora.",
-                    "{n} páginas aprovadas ou publicadas neste manual. As outras ficam de fora.",
-                  )}
-            </span>
-          </span>
-        </label>
-
-        {audiences.length > 0 && (
-          <label htmlFor="para-quem" className="grid gap-1.5 text-sm">
-            <span className="font-bold">{t("Para quem exportar")}</span>
-            <Select value={audienceOn || TODOS} onValueChange={(v) => setAudience(v === TODOS ? "" : v)} disabled={busy}>
-              <SelectTrigger id="para-quem">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={TODOS}>{t("Todos (o manual inteiro)")}</SelectItem>
-                {audiences.map((a) => (
-                  <SelectItem key={a} value={a}>
-                    {a}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <span className="text-xs text-muted-foreground">
-              {t(
-                "Só entram as páginas desse perfil e as sem restrição. Links para as outras viram texto. Não é controle de acesso.",
-              )}
+          <label className={cn("flex items-start gap-2.5 text-sm", approved === 0 && "opacity-60")}>
+            <input
+              type="checkbox"
+              checked={onlyApprovedOn}
+              disabled={approved === 0}
+              onChange={(e) => setOnlyApproved(e.target.checked)}
+              className="mt-0.5 size-4 accent-[var(--primary)]"
+            />
+            <span className="grid leading-tight">
+              <span className="font-bold">{t("Só páginas aprovadas")}</span>
+              <span className="text-xs text-muted-foreground">
+                {approved === 0
+                  ? t("Nenhuma página está aprovada ou publicada. Aprove uma página para usar esta opção.")
+                  : tn(
+                      approved,
+                      "{n} página aprovada ou publicada neste manual. As outras ficam de fora.",
+                      "{n} páginas aprovadas ou publicadas neste manual. As outras ficam de fora.",
+                    )}
+              </span>
             </span>
           </label>
-        )}
 
-        {format !== "markdown" && studio.manual && (
-          <>
-            <LogoField slug={studio.manual.slug} logo={studio.manual.theme.logo} disabled={busy} />
-            <ThemeFields theme={studio.manual.theme} />
-            <label className="flex items-start gap-2.5 text-sm">
-              <input
-                type="checkbox"
-                checked={studio.manual.theme.hideColophon === true}
-                disabled={busy}
-                onChange={(e) =>
-                  void studio
-                    .setManualTheme({ hideColophon: e.target.checked ? true : null })
-                    .catch((err: unknown) => studio.reportError(errorMessage(err)))
-                }
-                className="mt-0.5 size-4 accent-[var(--primary)]"
-              />
-              <span className="grid leading-tight">
-                <span className="font-bold">{t("Sem o rodapé do Explicaí")}</span>
-                <span className="text-xs text-muted-foreground">
-                  {t('Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.')}
-                </span>
+          {audiences.length > 0 && (
+            <label htmlFor="para-quem" className="grid gap-1.5 text-sm">
+              <span className="font-bold">{t("Para quem exportar")}</span>
+              <Select value={audienceOn || TODOS} onValueChange={(v) => setAudience(v === TODOS ? "" : v)} disabled={busy}>
+                <SelectTrigger id="para-quem">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={TODOS}>{t("Todos (o manual inteiro)")}</SelectItem>
+                  {audiences.map((a) => (
+                    <SelectItem key={a} value={a}>
+                      {a}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-xs text-muted-foreground">
+                {t(
+                  "Só entram as páginas desse perfil e as sem restrição. Links para as outras viram texto. Não é controle de acesso.",
+                )}
               </span>
             </label>
-          </>
-        )}
+          )}
 
-        {error && (
-          <p role="alert" className="text-sm text-destructive">
-            {error}
-          </p>
-        )}
-        <ExportStatus
-          busy={busy}
-          format={format}
-          formatLabel={FORMATS.find((f) => f.id === (result?.format ?? format))?.label ?? format}
-          result={result}
-        />
+          {format !== "markdown" && studio.manual && (
+            <>
+              <LogoField slug={studio.manual.slug} logo={studio.manual.theme.logo} disabled={busy} />
+              <ThemeFields theme={studio.manual.theme} />
+              <label className="flex items-start gap-2.5 text-sm">
+                <input
+                  type="checkbox"
+                  checked={studio.manual.theme.hideColophon === true}
+                  disabled={busy}
+                  onChange={(e) =>
+                    void studio
+                      .setManualTheme({ hideColophon: e.target.checked ? true : null })
+                      .catch((err: unknown) => studio.reportError(errorMessage(err)))
+                  }
+                  className="mt-0.5 size-4 accent-[var(--primary)]"
+                />
+                <span className="grid leading-tight">
+                  <span className="font-bold">{t("Sem o rodapé do Explicaí")}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {t('Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.')}
+                  </span>
+                </span>
+              </label>
+            </>
+          )}
+        </div>
 
-        <DialogFooter>
-          <Button onClick={() => void run()} disabled={busy} className="[@media(pointer:coarse)]:h-11">
+        {/* Rodapé fixo: o botão e o resultado ficam à vista; só o miolo acima rola. */}
+        <DialogFooter className="max-h-[45vh] flex-col overflow-y-auto border-t px-6 py-4 sm:justify-start">
+          <div ref={feedback} tabIndex={-1} className="grid gap-2 outline-none empty:hidden">
+            {error && (
+              <p role="alert" className="text-sm text-destructive">
+                {error}
+              </p>
+            )}
+            <ExportStatus
+              busy={busy}
+              format={format}
+              formatLabel={FORMATS.find((f) => f.id === (result?.format ?? format))?.label ?? format}
+              result={result}
+            />
+          </div>
+          <Button onClick={() => void run()} disabled={busy} className="[@media(pointer:coarse)]:h-11 sm:self-end">
             {busy && <Loader2 className="animate-spin motion-reduce:animate-none" aria-hidden />}
             {busy ? busyLabel(format) : error ? t("Tentar de novo") : t("Exportar")}
           </Button>
