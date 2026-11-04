@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: M
-- Status: em revisão
+- Status: feito
 - Agente: frontend
 - Origem: [Discovery do MCP, Revisão](../discovery/mcp.md) (2026-11-03)
 - Depende de: T-122
@@ -36,3 +36,5 @@ Servidor (explicai-mcp, branch `feat/t-123-servidor`): tools `check_manual` (rea
 Tamanho (caracteres, nível update; main -> branch): descrições+schemas de todas as tools 7459 -> 9870 (3 tools novas e `section`; as descrições das tools antigas ficaram menores); prompt autônomo 4050 -> 4818; guiado 4140 -> 4973 (regras novas de redact, template, exploração e lote). O ganho esperado vem de menos chamadas por manual, não do texto estático; a medida real sai no T-125.
 
 Ficou de fora: títulos de seção em `get_manual` (obrigaria ler todas as páginas; `read_page` com `section` errada já lista os títulos). `add_pages` parando no meio devolve o que já criou, sem desfazer (o MCP não apaga). `no-image` só vale para página com passos.
+
+PRs: core #23 (Studio), servidor explicai-mcp #5.
