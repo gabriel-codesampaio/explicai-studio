@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: M
-- Status: aberto
+- Status: fechado
 - Agente: qa
 - Marco: 0.4
 - Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 2 (2026-11-04)
@@ -18,4 +18,6 @@ Fixtures congeladas de manual 0.1, 0.2 e 0.3 + teste "abre, edita, salva, export
 Conforme a discovery; evidência no Registro.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Commit: test/t-199-fixtures-antigos (test(compat), chore(lint), docs(tests), docs(tickets)).
+- Feito: `test/fixtures/manuais-antigos/{0.1,0.2,0.3}` reconstruídas pelo `manual-format.md` de cada tag; `test/old-manuals.test.ts` (abre, edita, salva, exporta HTML e Markdown; confere versão publicada, manual.json e anotações intactos; 0.3 exporta por público). Passou de primeira: nenhuma perda de dado achada. Biome ignora a pasta. README na pasta documenta a regra de congelar.
+- Fora: rodar nas três plataformas (depende do CI); fixture 0.1 mínima reconstruída do doc, não de manual real de usuário.
