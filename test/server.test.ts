@@ -246,8 +246,15 @@ describe("API de versões", () => {
     expect((await fetch(`${url}/published`, json("PUT", {}))).status).toBe(400);
     expect((await fetch(`${url}/published`, json("PUT", { versionId: "nao-existe" }))).status).toBe(404);
 
-    const restored = await (await fetch(`${url}/versions/${v1.id}/restore`, json("POST"))).json();
-    expect(restored.body).toBe("um");
+    expect((await fetch(`${url}/versions/${v1.id}`, { method: "DELETE" })).status).toBe(409);
+    await fetch(`${url}/published`, json("PUT", { versionId: null }));
+    expect((await fetch(`${url}/versions/${v1.id}`, { method: "DELETE" })).status).toBe(200);
+    expect((await fetch(`${url}/versions/${v1.id}`, { method: "DELETE" })).status).toBe(404);
+    expect(await (await fetch(`${url}/versions`)).json()).toEqual([]);
+
+    const v2 = await (await fetch(`${url}/versions`, json("POST", {}))).json();
+    const restored = await (await fetch(`${url}/versions/${v2.id}/restore`, json("POST"))).json();
+    expect(restored.body).toBe("dois");
   });
 });
 

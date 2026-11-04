@@ -1,5 +1,5 @@
-import { ArrowLeft, BookCheck, Eye, RotateCcw } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { ArrowLeft, BookCheck, Eye, RotateCcw, Trash2 } from "lucide-react";
+import { type FormEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -21,6 +21,8 @@ interface Props {
 /** Nome da versão. "Antes de restaurar" é gravado pelo Studio em português e aparece traduzido. */
 const noteLabel = (note: string) => (note ? t(note) : t("Versão sem nome"));
 
+const TOUCH = "[@media(pointer:coarse)]:min-h-11";
+
 const when = (iso: string) => new Date(iso).toLocaleString(locale, { dateStyle: "short", timeStyle: "short" });
 
 /**
@@ -33,6 +35,8 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [preview, setPreview] = useState<Version | null>(null);
+  const [removing, setRemoving] = useState<string | null>(null);
+  const list = useRef<HTMLUListElement>(null);
 
   const load = () => {
     setError(null);
@@ -51,6 +55,29 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
     setOpen(false);
   };
   const publish = (id: string | null) => onPublish(id).then(load);
+  // Foco volta para um botão "Remover" da lista (o da própria linha ao cancelar, o primeiro ao apagar).
+  const focusRemove = (id?: string) =>
+    requestAnimationFrame(() =>
+      (id
+        ? list.current?.querySelector<HTMLElement>(`[data-remove="${CSS.escape(id)}"]`)
+        : list.current?.querySelector<HTMLElement>("[data-remove]:not(:disabled)")
+      )?.focus(),
+    );
+  const cancelRemove = () => {
+    const id = removing;
+    setRemoving(null);
+    if (id) focusRemove(id);
+  };
+  const remove = async (id: string) => {
+    try {
+      await api.deleteVersion(slug, pageId, id);
+    } catch (err) {
+      fail(err);
+    }
+    setRemoving(null);
+    load();
+    focusRemove();
+  };
   const view = (id: string) => api.getVersion(slug, pageId, id).then(setPreview, fail);
 
   return (
@@ -114,7 +141,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           ) : items.length === 0 ? (
             <p className="text-sm text-muted-foreground">{t("Nenhuma versão guardada ainda.")}</p>
           ) : (
-            <ul className="grid gap-1">
+            <ul ref={list} className="grid gap-1">
               {items.map((v) => (
                 <li key={v.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md px-2 py-2 hover:bg-muted">
                   <span className="grid min-w-0 flex-1 leading-tight">
@@ -130,15 +157,43 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                       {ago(v.savedAt)} · {v.title || t("Sem título")}
                     </span>
                   </span>
-                  <Button variant="ghost" size="sm" onClick={() => void view(v.id)}>
-                    <Eye aria-hidden /> {t("Ver")}
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => void restore(v.id)}>
-                    <RotateCcw aria-hidden /> {t("Restaurar")}
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => void publish(v.published ? null : v.id)}>
-                    <BookCheck aria-hidden /> {v.published ? t("Tirar do manual") : t("Usar no manual")}
-                  </Button>
+                  {removing === v.id ? (
+                    <fieldset className="flex flex-wrap items-center gap-2">
+                      <legend className="sr-only">{t("Remover a versão {nome}?", { nome: noteLabel(v.note) })}</legend>
+                      <span className="text-sm">{t("Apagar não tem volta.")}</span>
+                      <Button variant="destructive" size="sm" className={TOUCH} onClick={() => void remove(v.id)}>
+                        {t("Remover")}
+                      </Button>
+                      <Button variant="outline" size="sm" className={TOUCH} autoFocus onClick={cancelRemove}>
+                        {t("Cancelar")}
+                      </Button>
+                    </fieldset>
+                  ) : (
+                    <>
+                      <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void view(v.id)}>
+                        <Eye aria-hidden /> {t("Ver")}
+                      </Button>
+                      <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void restore(v.id)}>
+                        <RotateCcw aria-hidden /> {t("Restaurar")}
+                      </Button>
+                      <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void publish(v.published ? null : v.id)}>
+                        <BookCheck aria-hidden /> {v.published ? t("Tirar do manual") : t("Usar no manual")}
+                      </Button>
+                      <span title={v.published ? t("Escolha outra versão antes") : undefined}>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className={TOUCH}
+                          data-remove={v.id}
+                          disabled={v.published}
+                          aria-label={t("Remover versão {nome}", { nome: noteLabel(v.note) })}
+                          onClick={() => setRemoving(v.id)}
+                        >
+                          <Trash2 aria-hidden /> {t("Remover")}
+                        </Button>
+                      </span>
+                    </>
+                  )}
                 </li>
               ))}
             </ul>
