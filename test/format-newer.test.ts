@@ -56,3 +56,21 @@ describe("manual de formato mais novo", () => {
     await expect(readManual(dir, { allowNewer: true })).rejects.toThrow(/não suportada/);
   });
 });
+
+describe("manual de formato mais novo: imagens e marcações", () => {
+  it("upload, marcações (PUT e append) e redact recusam e não deixam arquivo", async () => {
+    const { saveAsset, writeAnnotations, appendAnnotations, redactAsset, emptyAnnotations } = await import(
+      "../src/core/index.js"
+    );
+    const png = Uint8Array.from([137, 80, 78, 71]);
+    await expect(saveAsset(dir, "a.png", png)).rejects.toMatchObject({ code: "format-newer" });
+    await expect(writeAnnotations(dir, "assets/a.png", emptyAnnotations())).rejects.toMatchObject({ code: "format-newer" });
+    await expect(appendAnnotations(dir, "assets/a.png", { markers: [{ x: 0.1, y: 0.1 }] })).rejects.toMatchObject({
+      code: "format-newer",
+    });
+    await expect(redactAsset(dir, "assets/a.png", png)).rejects.toMatchObject({ code: "format-newer" });
+    const { readdir } = await import("node:fs/promises");
+    expect(await readdir(path.join(dir, "assets"))).toEqual([]);
+    expect(await readFile(path.join(dir, "manual.json"), "utf8")).toBe(before);
+  });
+});
