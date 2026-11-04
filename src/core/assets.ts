@@ -63,7 +63,7 @@ export function appendAnnotations(dir: string, assetPath: string, patch: Annotat
   return inQueue(dir, async () => {
     const cur = await readAnnotations(dir, assetPath);
     let n = cur.markers.reduce((max, m) => Math.max(max, m.n), 0);
-    const withId = <T extends object>(items: T[] | undefined) => (items ?? []).map((i) => ({ id: randomUUID(), ...i }));
+    const withId = <T extends object>(items: T[] | undefined) => (items ?? []).map((i) => ({ ...i, id: randomUUID() }));
     return writeAnnotations(dir, assetPath, {
       ...cur,
       markers: [...cur.markers, ...withId(patch.markers).map((m) => ({ ...m, n: ++n }))],

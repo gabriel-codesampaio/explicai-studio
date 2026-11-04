@@ -49,4 +49,25 @@ describe("rev", () => {
     await expect(updatePage(dir, p.id, { body: "z" }, { ifRev: rev })).rejects.toBeInstanceOf(ExplicaiError);
     expect((await readPage(dir, p.id)).body).toBe("y");
   });
+
+  it("duas gravações com o mesmo rev ao mesmo tempo: só uma passa", async () => {
+    const { dir } = await setup();
+    const p = await addPage(dir, { title: "A", body: "x" });
+    const r = await Promise.allSettled([
+      updatePage(dir, p.id, { body: "y" }, { ifRev: p.rev }),
+      updatePage(dir, p.id, { body: "z" }, { ifRev: p.rev }),
+    ]);
+    expect(r.map((x) => x.status).sort()).toEqual(["fulfilled", "rejected"]);
+  });
+
+  it("beforeWrite roda só depois do rev conferido", async () => {
+    const { dir } = await setup();
+    const p = await addPage(dir, { title: "A", body: "x" });
+    let calls = 0;
+    const beforeWrite = async () => void calls++;
+    await expect(updatePage(dir, p.id, { body: "y" }, { ifRev: "velho", beforeWrite })).rejects.toBeInstanceOf(ExplicaiError);
+    expect(calls).toBe(0);
+    await updatePage(dir, p.id, { body: "y" }, { ifRev: p.rev, beforeWrite });
+    expect(calls).toBe(1);
+  });
 });
