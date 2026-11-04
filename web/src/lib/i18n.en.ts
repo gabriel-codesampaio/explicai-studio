@@ -465,6 +465,8 @@ export const EN: Record<string, string> = {
   Azul: "Blue",
   Cinza: "Gray",
   Laranja: "Orange",
+  Amarelo: "Yellow",
+  Rosa: "Pink",
   Roxo: "Purple",
   Verde: "Green",
   Vermelho: "Red",

@@ -42,11 +42,15 @@ describe("ItemStylePanel", () => {
     expect(onChange).toHaveBeenLastCalledWith(undefined);
   });
 
-  it("destaque só tem borda", () => {
-    render(panel("highlight", undefined));
+  it("destaque tem paleta de marca-texto, preenchimento e borda; sem preenchimento trava Nenhuma", () => {
+    const onChange = vi.fn();
+    const { rerender } = render(panel("highlight", undefined, onChange));
     expect(screen.queryByRole("button", { name: "Vermelho" })).toBeNull();
-    expect(screen.queryByText("Preenchimento")).toBeNull();
-    expect(screen.getByRole("button", { name: "Grossa" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Rosa" }));
+    expect(onChange).toHaveBeenLastCalledWith({ color: "pink" });
+    expect(screen.getByRole("button", { name: "Cheio" })).toBeTruthy();
+    rerender(panel("highlight", { fill: "none" }, onChange));
+    expect((screen.getByRole("button", { name: "Nenhuma" }) as HTMLButtonElement).disabled).toBe(true);
   });
 
   it("área sem preenchimento não aceita borda Nenhuma", () => {

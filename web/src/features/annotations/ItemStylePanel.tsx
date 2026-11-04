@@ -1,6 +1,8 @@
 import { Check } from "lucide-react";
 import {
   type AnnotationStyle,
+  HIGHLIGHT_PALETTE,
+  type HighlightColor,
   resolveItemStyle,
   STYLE_PALETTE,
   type StyleBorder,
@@ -9,14 +11,14 @@ import {
 } from "@/lib/annotationStyle";
 import { t } from "@/lib/i18n";
 import { option } from "./AppearancePanel";
-import { BORDERS, COLORS, FILLS, SIZES, STROKES } from "./styleOptions";
+import { BORDERS, COLORS, FILLS, HIGHLIGHT_COLORS, SIZES, STROKES } from "./styleOptions";
 
 type Field = keyof AnnotationStyle;
-/** Campos do tipo; espelha o que o formato aceita por item (cor e preenchimento do destaque são do T-195). */
+/** Campos do tipo; espelha o que o formato aceita por item. */
 const FIELDS: Record<StyleItemKind, Field[]> = {
   marker: ["color", "size", "border"],
   arrow: ["color", "stroke", "border"],
-  highlight: ["border"],
+  highlight: ["color", "border", "fill"],
   hotspot: ["color", "border", "fill"],
 };
 
@@ -36,9 +38,15 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
   const fields = FIELDS[kind];
   // Sem preenchimento e sem borda a área some: resolveItemStyle devolve a borda a `s`.
   const set = (patch: AnnotationStyle) => onChange(resolveItemStyle({ ...style, ...patch }, imageStyle));
-  const color: StyleColor = style?.color ?? imageStyle?.color ?? "cobalt";
+  const hl = kind === "highlight";
+  const colors = hl ? HIGHLIGHT_COLORS : COLORS;
+  const swatch = (id: StyleColor | HighlightColor) =>
+    hl
+      ? { background: HIGHLIGHT_PALETTE[id as HighlightColor].fill, color: "#151a33" }
+      : { background: STYLE_PALETTE[id as StyleColor].claro, color: STYLE_PALETTE[id as StyleColor].sobre };
+  const color: StyleColor | HighlightColor = hl ? (style?.color ?? "yellow") : (style?.color ?? imageStyle?.color ?? "cobalt");
   const border: StyleBorder = style?.border ?? imageStyle?.border ?? "m";
-  const fill = style?.fill ?? "soft";
+  const fill = style?.fill ?? (hl ? "solid" : "soft");
 
   const steps = (
     key: "size" | "stroke" | "border" | "fill",
@@ -92,7 +100,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
             {t("Cor")}
           </span>
           <div className="flex gap-1.5">
-            {COLORS.map((c) => (
+            {colors.map((c) => (
               <button
                 key={c.id}
                 type="button"
@@ -100,7 +108,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
                 aria-label={c.label()}
                 aria-pressed={color === c.id}
                 onClick={() => set({ color: c.id })}
-                style={{ background: STYLE_PALETTE[c.id].claro, color: STYLE_PALETTE[c.id].sobre }}
+                style={swatch(c.id)}
                 className="grid size-7 shrink-0 place-items-center rounded-full border border-border focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:ring-2 aria-pressed:ring-primary aria-pressed:ring-offset-2 [@media(pointer:coarse)]:size-11"
               >
                 {color === c.id && <Check className="size-4" aria-hidden />}
@@ -113,7 +121,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange }: Prop
       {fields.includes("stroke") && steps("stroke", t("Espessura"), STROKES, style?.stroke ?? "m")}
       {fields.includes("fill") && steps("fill", t("Preenchimento"), FILLS, fill)}
       {fields.includes("border") &&
-        steps("border", t("Borda"), BORDERS, border, (id) => id === "none" && kind === "hotspot" && fill === "none")}
+        steps("border", t("Borda"), BORDERS, border, (id) => id === "none" && (kind === "hotspot" || hl) && fill === "none")}
       {!style && <p className="text-xs text-muted-foreground">{t("Herdando da imagem")}</p>}
     </section>
   );
