@@ -3,10 +3,12 @@ import {
   type ExportFormat,
   exportManual,
   logoSizeError,
+  readManual,
   setManualCover,
   setManualFooter,
   setManualLogo,
   setManualTheme,
+  themeCss,
 } from "../../core/index.js";
 import { HttpError, json, readBody, readJson } from "../http.js";
 import type { Route } from "../router.js";
@@ -39,6 +41,12 @@ export const exportRoutes: Route[] = [
       await setManualTheme(manualDir(ctx), await readJson(ctx.req));
       return json({ ok: true });
     },
+  },
+  {
+    // As variáveis do tema no escopo `.amostra-manual`: a mesma `themeCss` do export, para a amostra da Aparência.
+    method: "GET",
+    path: "/api/manuals/:slug/theme/css",
+    handle: async (ctx) => json({ css: themeCss((await readManual(manualDir(ctx))).theme, ".amostra-manual") }),
   },
   {
     // Muda só os campos enviados: { subtitle?, author?, version?, date? } (até 120 caracteres; null apaga). Texto longo: 400 e nada é gravado.

@@ -622,4 +622,14 @@ export const EN: Record<string, string> = {
   "Só entram as páginas desse público e as sem restrição. Links para as outras viram texto. Não é controle de acesso.":
     "Only this audience's pages and the unrestricted ones are included. Links to the others become plain text. This is not access control.",
   "Ver como público": "View as audience",
+  Amostra: "Preview",
+  "Como o manual fica com estas cores e fontes.": "How the manual looks with these colors and fonts.",
+  "Um título de página": "A page heading",
+  "Uma seção do manual": "A manual section",
+  "O texto corrido usa a fonte e a cor escolhidas.": "Body text uses the chosen font and color.",
+  "Um link para outra página": "A link to another page",
+  "Um trecho com realce": "A highlighted passage",
+  "Abra o menu Ajustes": "Open the Settings menu",
+  "Resultado: a tela abre sem erro.": "Result: the screen opens without errors.",
+  "Marcador no print": "Marker on the screenshot",
 };

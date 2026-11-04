@@ -225,6 +225,8 @@ export const api = {
   listFonts: () => call<FontInfo[]>("/api/fonts"),
   exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean, audience?: string) =>
     call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved, ...(audience ? { audience } : {}) })),
+  /** Variáveis do tema (o `themeCss` do export) no escopo `.amostra-manual`. */
+  themeCss: (slug: string) => call<{ css: string }>(`${manualUrl(slug)}/theme/css`),
   setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),
   setCover: (slug: string, patch: CoverPatch) => call<{ ok: true }>(`${manualUrl(slug)}/cover`, send("PUT", patch)),
   setFooter: (slug: string, patch: FooterPatch) => call<{ ok: true }>(`${manualUrl(slug)}/footer`, send("PUT", patch)),

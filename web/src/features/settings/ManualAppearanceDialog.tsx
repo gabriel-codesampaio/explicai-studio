@@ -6,6 +6,7 @@ import { CoverFooterFields } from "./CoverFooterFields";
 import { FontFields } from "./FontFields";
 import { LogoField } from "./LogoField";
 import { ThemeFields } from "./ThemeFields";
+import { ThemeSample } from "./ThemeSample";
 
 /** Diálogo "Aparência do manual" (Ajustes): cores, fontes, logo e rodapé do HTML e do PDF. Cada campo salva sozinho. */
 export function ManualAppearanceDialog({
@@ -32,7 +33,7 @@ export function ManualAppearanceDialog({
       }}
     >
       <DialogContent
-        className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg"
+        className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl"
         onOpenAutoFocus={(e) => {
           const first = section === "cover" ? document.querySelector<HTMLElement>("#aparencia-capa input") : null;
           if (!first) return;
@@ -46,39 +47,45 @@ export function ManualAppearanceDialog({
             {t("Vale para o HTML, o PDF e o texto do editor. O tema do Studio fica à parte.")}
           </DialogDescription>
         </div>
-        <div className="grid min-h-0 flex-1 gap-6 overflow-y-auto px-6 pb-6">
-          <ThemeFields theme={manual.theme} />
-          <FontFields theme={manual.theme} />
-          <section className="grid gap-3" aria-labelledby="aparencia-logo">
-            <h3 id="aparencia-logo" className="rotulo">
-              {t("Logo")}
-            </h3>
-            <LogoField slug={manual.slug} logo={manual.theme.logo} />
-          </section>
-          <CoverFooterFields />
-          <section className="grid gap-3" aria-labelledby="aparencia-rodape">
-            <h3 id="aparencia-rodape" className="rotulo">
-              {t("Rodapé do Explicaí")}
-            </h3>
-            <label className="flex items-start gap-2.5 text-sm">
-              <input
-                type="checkbox"
-                checked={manual.theme.hideColophon === true}
-                onChange={(e) =>
-                  void studio
-                    .setManualTheme({ hideColophon: e.target.checked ? true : null })
-                    .catch((err: unknown) => studio.reportError(errorMessage(err)))
-                }
-                className="mt-0.5 size-4 accent-[var(--primary)]"
-              />
-              <span className="grid leading-tight">
-                <span className="font-bold">{t("Sem o rodapé do Explicaí")}</span>
-                <span className="text-xs text-muted-foreground">
-                  {t('Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.')}
+        <div className="grid min-h-0 flex-1 content-start gap-6 overflow-y-auto px-6 pb-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          {/* Em telas largas a amostra fica na 2ª coluna; abaixo disso, depois das seções (sem sticky). */}
+          <div className="grid content-start gap-6 lg:col-start-1 lg:row-start-1">
+            <ThemeFields theme={manual.theme} />
+            <FontFields theme={manual.theme} />
+            <section className="grid gap-3" aria-labelledby="aparencia-logo">
+              <h3 id="aparencia-logo" className="rotulo">
+                {t("Logo")}
+              </h3>
+              <LogoField slug={manual.slug} logo={manual.theme.logo} />
+            </section>
+            <CoverFooterFields />
+            <section className="grid gap-3" aria-labelledby="aparencia-rodape">
+              <h3 id="aparencia-rodape" className="rotulo">
+                {t("Rodapé do Explicaí")}
+              </h3>
+              <label className="flex items-start gap-2.5 text-sm">
+                <input
+                  type="checkbox"
+                  checked={manual.theme.hideColophon === true}
+                  onChange={(e) =>
+                    void studio
+                      .setManualTheme({ hideColophon: e.target.checked ? true : null })
+                      .catch((err: unknown) => studio.reportError(errorMessage(err)))
+                  }
+                  className="mt-0.5 size-4 accent-[var(--primary)]"
+                />
+                <span className="grid leading-tight">
+                  <span className="font-bold">{t("Sem o rodapé do Explicaí")}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {t('Tira a linha "Manual feito com o Explicaí Studio" do HTML e do PDF.')}
+                  </span>
                 </span>
-              </span>
-            </label>
-          </section>
+              </label>
+            </section>
+          </div>
+          <div className="lg:col-start-2 lg:row-start-1">
+            <ThemeSample slug={manual.slug} theme={manual.theme} />
+          </div>
         </div>
       </DialogContent>
     </Dialog>

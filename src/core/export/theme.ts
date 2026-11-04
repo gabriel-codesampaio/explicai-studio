@@ -134,8 +134,8 @@ export function mergeTheme(current: ManualTheme | undefined, patch: ThemePatch):
   return next;
 }
 
-/** Variáveis CSS do tema, só as que mudam. Vazio quando o manual usa as cores da marca. */
-export function themeCss(theme: ManualTheme | undefined): string {
+/** Variáveis CSS do tema, só as que mudam. Vazio quando o manual usa as cores da marca. `scope` troca o `:root` (amostra do Studio). */
+export function themeCss(theme: ManualTheme | undefined, scope = ":root"): string {
   if (!theme) return "";
   const v: string[] = [];
   if (theme.accent)
@@ -152,7 +152,7 @@ export function themeCss(theme: ManualTheme | undefined): string {
   const fonts = themeFonts(theme);
   if (theme.fonts?.text) v.push(`--texto:${fontStack(fonts.text)}`);
   if (theme.fonts?.headings) v.push(`--display:${fontStack(fonts.headings)}`);
-  return v.length ? `:root{${v.join(";")}}` : "";
+  return v.length ? `${scope}{${v.join(";")}}` : "";
 }
 
 /** As fontes que vão no export: texto, títulos (sem repetir) e a de código. */
