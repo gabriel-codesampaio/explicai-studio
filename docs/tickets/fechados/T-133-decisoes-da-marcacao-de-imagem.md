@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: design
 - Origem: [Discovery de marcação de imagem](../discovery/marcacao-de-imagem.md), perguntas para a pessoa
 
@@ -44,4 +44,4 @@ Como a cauda escolhe o lado: o disco sobe e vai para o lado com mais espaço; se
 Print em 375 e 1280, claro e escuro. `/impeccable audit`. E2e de marcação.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito no PR #30. Marcador com cauda (`placeMarkers`, disco 24 px fixo, ângulo decidido num quadro de 320 px), "Sem descrição" fora da legenda em HTML, PDF e Markdown, aviso `marker-without-label` em `checkManual` e no Studio. Legenda com mais respiro (16 px do print, 10 px entre disco e texto, 6 px entre linhas; antes 12, 6 e 2), pedido da pessoa em print de 380 px; medido no export do manual do CodeLab em 375 e 1280, igual nos dois (o PDF sai do mesmo CSS; não medido à parte). Fora: tema escuro e `/impeccable audit` não rodados; alvo de toque de 24 px abaixo de 44 px (marcador é alvo de leitura e arraste; design decide); export abaixo de 320 px ou imagem `shot-s` no celular pode encostar o disco na borda.
