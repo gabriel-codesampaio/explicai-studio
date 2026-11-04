@@ -31,15 +31,18 @@ test("público: marca a página, vê como o perfil e exporta só o que ele vê",
   await page.getByRole("textbox", { name: "Novo perfil" }).fill("cliente");
   await page.getByRole("button", { name: "Adicionar" }).click();
   await page.keyboard.press("Escape");
-  await tree.getByLabel("Ver como").selectOption("admin");
+  await tree.getByRole("combobox", { name: "Ver como" }).click();
+  await page.getByRole("option", { name: "admin" }).click();
   await expect(tree.getByRole("button", { name: "Financeiro", exact: true })).toBeVisible();
   await expect(tree.getByRole("button", { name: "Geral", exact: true })).toHaveCount(0);
-  await tree.getByLabel("Ver como").selectOption("");
+  await tree.getByRole("combobox", { name: "Ver como" }).click();
+  await page.getByRole("option", { name: "Todos" }).click();
 
   // Exportar para "cliente": só a página dele.
   await page.getByRole("button", { name: "Exportar manual" }).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("Para quem exportar").selectOption("cliente");
+  await dialog.getByRole("combobox", { name: "Para quem exportar" }).click();
+  await page.getByRole("option", { name: "cliente" }).click();
   await dialog.getByText("Markdown para IA").click();
   await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
   const link = dialog.getByRole("link", { name: "Abrir o arquivo" });

@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
@@ -26,6 +27,9 @@ const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] 
 ];
 
 /** Botão "Exportar manual" do topo da página: escolhe o formato e a cor, exporta e mostra onde ficou. */
+// O Radix não aceita value "" em item: esta sentinela fica só aqui; o valor de fora segue "".
+const TODOS = "__todos__";
+
 export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const studio = useStudioContext();
   const [format, setFormat] = useState<ExportFormat>("html");
@@ -134,21 +138,21 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
         </label>
 
         {audiences.length > 0 && (
-          <label className="grid gap-1.5 text-sm">
+          <label htmlFor="para-quem" className="grid gap-1.5 text-sm">
             <span className="font-bold">{t("Para quem exportar")}</span>
-            <select
-              value={audienceOn}
-              disabled={busy}
-              onChange={(e) => setAudience(e.target.value)}
-              className="rounded-md border border-input bg-background px-2 py-2 [@media(pointer:coarse)]:min-h-11"
-            >
-              <option value="">{t("Todos (o manual inteiro)")}</option>
-              {audiences.map((a) => (
-                <option key={a} value={a}>
-                  {a}
-                </option>
-              ))}
-            </select>
+            <Select value={audienceOn || TODOS} onValueChange={(v) => setAudience(v === TODOS ? "" : v)} disabled={busy}>
+              <SelectTrigger id="para-quem">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={TODOS}>{t("Todos (o manual inteiro)")}</SelectItem>
+                {audiences.map((a) => (
+                  <SelectItem key={a} value={a}>
+                    {a}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <span className="text-xs text-muted-foreground">
               {t(
                 "Só entram as páginas desse perfil e as sem restrição. Links para as outras viram texto. Não é controle de acesso.",

@@ -30,10 +30,21 @@
   [contenteditable] {
     caret-color: var(--cobalto);
   }
-  /* O Tailwind 4 deixa botão com a seta comum; aqui volta a mãozinha de "dá para clicar". */
+  /* O Tailwind 4 deixa controle com a seta comum; aqui volta a mãozinha de "dá para clicar". Desabilitado não entra. */
   button:not(:disabled),
-  [role="button"]:not([aria-disabled="true"]) {
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  label:has(input:not(:disabled), select:not(:disabled), button:not(:disabled), [role="combobox"]:not(:disabled)),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="option"]:not([aria-disabled="true"]),
+  [role^="menuitem"]:not([aria-disabled="true"]) {
     cursor: pointer;
+  }
+  :disabled,
+  [aria-disabled="true"],
+  [data-disabled] {
+    cursor: not-allowed;
   }
 }
 
