@@ -8,6 +8,7 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Adicionado
 
+- Aparência das marcações por imagem (`style` em `assets/<imagem>.json`): cor de uma paleta de 6 (cobalto, tinta, vermelho, verde, roxo, laranja, todas com contraste de 4,5:1 ou mais), tamanho do marcador (20, 24 ou 32 px) e espessura da seta e do contorno (3 degraus). Painel "Aparência" no editor de marcação; vale no Studio, no HTML e no PDF. Sem `style`, tudo sai como antes; o `annotate_image` do MCP preserva o campo ao regravar.
 - Marca-texto no editor (botão nas duas barras e Ctrl+Shift+H), salvo como `==texto==`. No HTML e no PDF vira `<mark>` amarelo; o Markdown exportado mantém `==texto==`.
 - Versões: botão "Remover" em cada versão guardada, com confirmação no diálogo. A versão marcada como "Usar no manual" não se remove (botão desligado, dica "Escolha outra versão antes"). Rota `DELETE /api/manuals/:slug/pages/:id/versions/:versionId` (409 para a marcada).
 - Renomear o manual pelo seletor do Studio (`PUT /api/manuals/:slug`): muda só o `title` em `manual.json`; pasta, endereço e ids ficam iguais.
