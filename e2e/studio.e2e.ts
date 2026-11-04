@@ -1066,7 +1066,12 @@ test("fonte do manual na Aparência do manual: editor ao vivo e recarga mostram 
   await page.goto(`/#/${slug}`);
   const toolbar = page.getByRole("toolbar", { name: "Formatação" });
   await expect(toolbar.getByRole("button", { name: /^Fonte do manual:/ })).toHaveCount(0);
-  const family = () => editor(page).evaluate((el) => getComputedStyle(el).fontFamily);
+  // Com o diálogo aberto o editor sai da árvore de acessibilidade: mede pelo seletor CSS.
+  const family = () =>
+    page
+      .locator(".ProseMirror")
+      .first()
+      .evaluate((el) => getComputedStyle(el).fontFamily);
   expect(await family()).toContain("Atkinson");
 
   const dialog = await openManualAppearance(page);
