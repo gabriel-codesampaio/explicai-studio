@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,13 +70,20 @@ export function StatusMenu({ status, onChange }: { status: PageStatus; onChange:
         <DropdownMenuLabel className="text-xs text-muted-foreground">{t("Etapa da página")}</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={status} onValueChange={(v) => onChange(v as PageStatus)}>
           {STATUSES.map((s) => (
-            <DropdownMenuRadioItem key={s.id} value={s.id} className="items-start">
-              <span className="grid leading-tight">
-                <span className="flex items-center gap-2">
-                  <StatusLabel status={s.id} />
-                </span>
+            <DropdownMenuRadioItem
+              key={s.id}
+              value={s.id}
+              // O indicador padrão (ponto) sai: a bolinha da etapa é o único indicador; o atual ganha fundo e check.
+              className="group items-start gap-2.5 pl-2 data-[state=checked]:bg-muted [&>span:first-child]:hidden"
+            >
+              <span style={{ color: `var(--${s.token})` }} className="mt-1">
+                <StatusDot status={s.id} />
+              </span>
+              <span className="grid flex-1 leading-tight">
+                <span className="font-medium">{s.label}</span>
                 <span className="text-xs text-muted-foreground">{s.hint}</span>
               </span>
+              <Check className="mt-0.5 hidden size-4 text-muted-foreground group-data-[state=checked]:block" aria-hidden />
             </DropdownMenuRadioItem>
           ))}
         </DropdownMenuRadioGroup>
