@@ -16,32 +16,32 @@ test("público: marca a página, vê como o perfil e exporta só o que ele vê",
   const tree = page.getByRole("navigation", { name: "Páginas do manual" });
 
   // Sem perfil no manual, nada de filtro na tela.
-  await expect(tree.getByLabel("Ver como")).toHaveCount(0);
+  await expect(tree.getByLabel("Ver como público")).toHaveCount(0);
 
   await tree.getByRole("button", { name: "Financeiro", exact: true }).click();
   await page.getByRole("button", { name: /Público da página: Todos/ }).click();
-  await page.getByRole("textbox", { name: "Novo perfil" }).fill("admin");
+  await page.getByRole("textbox", { name: "Novo público" }).fill("admin");
   await page.getByRole("button", { name: "Adicionar" }).click();
   await expect(page.getByRole("button", { name: "Público da página: admin" })).toBeVisible();
   await page.keyboard.press("Escape");
 
-  // "Ver como" aparece e esconde a página de admin para outro perfil.
+  // "Ver como público" aparece e esconde a página de admin para outro perfil.
   await page.getByRole("button", { name: "Geral", exact: true }).click();
   await page.getByRole("button", { name: /Público da página: Todos/ }).click();
-  await page.getByRole("textbox", { name: "Novo perfil" }).fill("cliente");
+  await page.getByRole("textbox", { name: "Novo público" }).fill("cliente");
   await page.getByRole("button", { name: "Adicionar" }).click();
   await page.keyboard.press("Escape");
-  await tree.getByRole("combobox", { name: "Ver como" }).click();
+  await tree.getByRole("combobox", { name: "Ver como público" }).click();
   await page.getByRole("option", { name: "admin" }).click();
   await expect(tree.getByRole("button", { name: "Financeiro", exact: true })).toBeVisible();
   await expect(tree.getByRole("button", { name: "Geral", exact: true })).toHaveCount(0);
-  await tree.getByRole("combobox", { name: "Ver como" }).click();
+  await tree.getByRole("combobox", { name: "Ver como público" }).click();
   await page.getByRole("option", { name: "Todos" }).click();
 
   // Exportar para "cliente": só a página dele.
   await page.getByRole("button", { name: "Exportar manual" }).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByRole("combobox", { name: "Para quem exportar" }).click();
+  await dialog.getByRole("combobox", { name: "Público do export" }).click();
   await page.getByRole("option", { name: "cliente" }).click();
   await dialog.getByText("Markdown para IA").click();
   await dialog.getByRole("button", { name: "Exportar", exact: true }).click();

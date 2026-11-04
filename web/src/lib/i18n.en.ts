@@ -548,19 +548,17 @@ export const EN: Record<string, string> = {
     "If it keeps happening, stop the explicai command in the terminal and run it again.",
   Todos: "Everyone",
   "Público da página: {publico}": "Page audience: {publico}",
-  "Quem vê esta página": "Who sees this page",
-  "Novo perfil": "New profile",
+  "Público da página": "Page audience",
+  "Novo público": "New audience",
   "Ex.: admin": "E.g. admin",
   Adicionar: "Add",
   Público: "Audience",
   Públicos: "Audiences",
-  "Público da página": "Page audience",
   "Públicos do manual": "Manual audiences",
   "Gerenciar públicos…": "Manage audiences…",
   "Cada página pode valer só para alguns públicos. Sem nenhum marcado, vale para todos.":
     "Each page can apply to only some audiences. With none selected, it applies to everyone.",
   "Nenhum público ainda.": "No audiences yet.",
-  "Novo público": "New audience",
   "Dê um nome ao público.": "Give the audience a name.",
   "O nome do público tem no máximo {max} caracteres.": "The audience name can have at most {max} characters.",
   "Já existe um público chamado {name}.": "There is already an audience called {name}.",
@@ -579,11 +577,11 @@ export const EN: Record<string, string> = {
   "{n} delas só têm esse público e passam a aparecer para todos:":
     "{n} of them have only this audience and will show to everyone:",
   "e mais {n}": "and {n} more",
-  "Sem nenhum perfil marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.":
-    "With no profile checked, the page is for everyone. It only filters what you export: the manual's files keep everything.",
-  "Para quem exportar": "Who to export for",
+  "Sem nenhum público marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.":
+    "With no audience checked, the page is for everyone. It only filters what you export: the manual's files keep everything.",
+  "Público do export": "Export audience",
   "Todos (o manual inteiro)": "Everyone (the whole manual)",
-  "Só entram as páginas desse perfil e as sem restrição. Links para as outras viram texto. Não é controle de acesso.":
-    "Only this profile's pages and the unrestricted ones are included. Links to the others become plain text. This is not access control.",
-  "Ver como": "View as",
+  "Só entram as páginas desse público e as sem restrição. Links para as outras viram texto. Não é controle de acesso.":
+    "Only this audience's pages and the unrestricted ones are included. Links to the others become plain text. This is not access control.",
+  "Ver como público": "View as audience",
 };
