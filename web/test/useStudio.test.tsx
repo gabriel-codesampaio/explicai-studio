@@ -57,6 +57,30 @@ describe("useStudio", () => {
     expect(result.current.page?.id).toBe("b");
     expect(window.location.hash).toContain("/b");
   });
+
+  it("servidor fora ao trocar de página: acusa a queda e mantém a página aberta", async () => {
+    const { result } = await openFirstPage();
+    vi.mocked(api.getPage).mockRejectedValueOnce(new ApiError("x", "offline"));
+    await act(async () => {
+      await result.current.selectPage("a");
+    });
+    expect(result.current.page?.id).toBe("p0");
+    await waitFor(() => expect(result.current.serverDown).toBe(true));
+  });
+
+  it("servidor fora na gravação: acusa a queda e o texto continua na fila para o retry", async () => {
+    const { result } = await openFirstPage();
+    update.mockRejectedValueOnce(new ApiError("x", "offline"));
+    vi.useFakeTimers();
+    act(() => result.current.editPage({ body: "meu texto" }));
+    await act(() => vi.advanceTimersByTimeAsync(600));
+    expect(result.current.serverDown).toBe(true);
+    expect(result.current.save.state).toBe("error");
+    await act(async () => {
+      await result.current.flush();
+    });
+    expect(update).toHaveBeenLastCalledWith("m", "p0", { body: "meu texto" }, undefined);
+  });
 });
 
 describe("useStudio: título da página", () => {
