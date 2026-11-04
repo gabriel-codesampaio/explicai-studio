@@ -1,11 +1,12 @@
+import { randomUUID } from "node:crypto";
 import { mkdir, readdir, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { emptyAnnotations, parseAnnotations } from "./annotations.js";
 import { ExplicaiError } from "./errors.js";
 import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
-import { ASSETS_DIR, readManual } from "./manuals.js";
+import { ASSETS_DIR, inQueue, readManual } from "./manuals.js";
 import { decodeUri, slugify } from "./text.js";
-import type { Annotations } from "./types.js";
+import type { Annotations, HotspotTarget, Point, Rect } from "./types.js";
 
 const IMAGE_EXT = /^\.(png|jpe?g|gif|webp|svg)$/;
 
@@ -47,6 +48,30 @@ export async function writeAnnotations(dir: string, assetPath: string, input: un
   const annotations = parseAnnotations(input);
   await atomicWrite(annotationsFile(dir, assetPath), `${JSON.stringify(annotations, null, 2)}\n`);
   return annotations;
+}
+
+/** O que o agente acrescenta; `id` e `n` são do core. Coordenadas de 0 a 1. */
+export interface AnnotationsPatch {
+  markers?: (Point & { label?: string })[];
+  highlights?: Rect[];
+  arrows?: { from: Point; to: Point }[];
+  hotspots?: (Rect & { target: HotspotTarget })[];
+}
+
+/** Acrescenta marcações às que já existem, atribui `id` e `n` e valida tudo com `parseAnnotations`. */
+export function appendAnnotations(dir: string, assetPath: string, patch: AnnotationsPatch): Promise<Annotations> {
+  return inQueue(dir, async () => {
+    const cur = await readAnnotations(dir, assetPath);
+    let n = cur.markers.reduce((max, m) => Math.max(max, m.n), 0);
+    const withId = <T extends object>(items: T[] | undefined) => (items ?? []).map((i) => ({ id: randomUUID(), ...i }));
+    return writeAnnotations(dir, assetPath, {
+      ...cur,
+      markers: [...cur.markers, ...withId(patch.markers).map((m) => ({ ...m, n: ++n }))],
+      highlights: [...cur.highlights, ...withId(patch.highlights)],
+      arrows: [...cur.arrows, ...withId(patch.arrows)],
+      hotspots: [...cur.hotspots, ...withId(patch.hotspots)],
+    });
+  });
 }
 
 /** Caminho absoluto de uma imagem que está direto em assets/; qualquer outro lugar é recusado. */

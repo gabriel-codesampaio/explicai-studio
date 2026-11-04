@@ -1,7 +1,16 @@
 export { emptyAnnotations, parseAnnotations } from "./annotations.js";
-export { cleanUnusedAssets, findUnusedAssets, readAnnotations, saveAsset, writeAnnotations } from "./assets.js";
+export {
+  type AnnotationsPatch,
+  appendAnnotations,
+  cleanUnusedAssets,
+  findUnusedAssets,
+  readAnnotations,
+  saveAsset,
+  writeAnnotations,
+} from "./assets.js";
 export { ExplicaiError } from "./errors.js";
 export { FONTS, FONTS_DIR, type FontSpec, fontFiles } from "./export/fonts.js";
+export { imageSize } from "./export/imageSize.js";
 export {
   EXPORT_DIR,
   EXPORT_FORMATS,
@@ -13,6 +22,7 @@ export {
   setManualLogo,
   setManualTheme,
 } from "./export/index.js";
+export type { ThemePatch } from "./export/theme.js";
 export { resolveInside, resolveInsideReal } from "./fs.js";
 export { createManual, listManuals, readManual } from "./manuals.js";
 export { addPage, movePage, type PageTreeNode, readPage, readPageTree, updatePage } from "./pages.js";
