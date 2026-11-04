@@ -4,6 +4,7 @@
  * Coordenadas vão de 0 a 1, relativas à largura e à altura da imagem.
  */
 
+import type { AnnotationStyle } from "./annotationStyle";
 import { decodeComponent } from "./text";
 
 export interface Point {
@@ -36,6 +37,7 @@ export type ImageDisplay = "s" | "m" | "full";
 export interface Annotations {
   version: 1;
   display?: ImageDisplay;
+  style?: AnnotationStyle;
   markers: Marker[];
   highlights: Highlight[];
   arrows: Arrow[];

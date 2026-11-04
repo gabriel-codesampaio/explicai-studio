@@ -12,6 +12,10 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 
 | ID | Título | Prioridade | Status | Agente |
 |----|--------|------------|--------|--------|
+| [T-151](T-151-marcacao-fecha-sem-perguntar.md) | Perguntar antes de fechar a marcação com marcadores novos | P1 | aberto | frontend |
+| [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
+| [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
+| [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
 | [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
 | [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
 | [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
@@ -22,13 +26,33 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
 | [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
 | [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
-| [T-138](T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
+| [T-154](T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | aberto | frontend |
+| [T-155](T-155-botao-remover-imagem.md) | Adicionar botão Remover imagem no painel da imagem | P2 | aberto | frontend |
+| [T-156](T-156-foco-da-marcacao-na-legenda.md) | Levar o foco à legenda depois de marcar, sem quebrar os atalhos | P2 | aberto | frontend |
+| [T-157](T-157-painel-da-marcacao-apertado.md) | Dar espaço ao painel lateral da marcação | P2 | aberto | design |
+| [T-158](T-158-um-nome-para-publico.md) | Usar um nome só para o público da página | P2 | aberto | frontend |
+| [T-159](T-159-versao-da-pagina-com-nome-certo.md) | Deixar claro que "Versão" vale para a página, não para o manual | P2 | aberto | frontend |
+| [T-160](T-160-fonte-do-manual-no-lugar-certo.md) | Levar a fonte do manual para onde o alcance é claro | P2 | aberto | frontend |
+| [T-161](T-161-lixeira-com-foco-e-confirmacao.md) | Proteger a limpeza da lixeira e renomear a ação | P2 | aberto | frontend |
+| [T-162](T-162-lixeira-e-ajuda-com-lugar-proprio.md) | Dar à lixeira e à ajuda um lugar próprio no menu | P2 | aberto | design |
+| [T-163](T-163-aviso-de-conflito-mostra-diferenca.md) | Mostrar o que mudou no aviso de conflito, sem empurrar o texto | P2 | aberto | frontend |
+| [T-172](T-172-nome-acessivel-do-painel-de-publico.md) | Dar nome acessível ao painel de público da página | P2 | aberto | frontend |
+| [T-173](T-173-foco-preso-em-menus-com-aria-hidden.md) | Conferir o foco nos menus abertos com fundo aria-hidden | P2 | aberto | qa |
+| [T-174](T-174-alvos-pequenos-abaixo-de-24-px.md) | Levar alvos de toque abaixo de 24 px a 24 px | P2 | aberto | frontend |
 | [T-031](T-031-transicao-no-studio.md) | Transição curta ao trocar de página no Studio | P3 | aberto | frontend |
 | [T-104](T-104-separar-css-de-html-ts-e-acoes-de-usestudio.md) | Separar CSS de `html.ts` e ações de `useStudio` | P3 | aberto | frontend |
 | [T-105](T-105-verificar-pdf-com-100-imagens-lazy-maxbuffer.md) | Verificar PDF com 100 imagens (`lazy`, `maxBuffer`) | P3 | aberto | qa |
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
+| [T-164](T-164-criar-manual-sem-motivo.md) | Explicar por que o botão Criar manual está desabilitado | P3 | aberto | frontend |
+| [T-165](T-165-barra-da-selecao-cobre-linha.md) | Barra da seleção não cobrir a linha seguinte | P3 | aberto | design |
+| [T-166](T-166-status-com-generos-misturados.md) | Padronizar o gênero e o vocabulário dos status | P3 | aberto | frontend |
+| [T-167](T-167-refazer-na-lista-de-atalhos.md) | Listar o Refazer na lista de atalhos | P3 | aberto | frontend |
+| [T-169](T-169-primeiro-uso-sem-marca.md) | Pôr a marca na tela de primeiro uso, como nas telas de erro | P3 | aberto | design |
+| [T-170](T-170-arvore-aceita-busca-por-digitacao.md) | Deixar a árvore de páginas aceitar busca por digitação | P3 | aberto | frontend |
+| [T-176](T-176-paginas-de-erro-sem-main-e-sem-pular.md) | Dar main, nome às regiões e link para pular nas telas de erro | P3 | aberto | frontend |
+| [T-177](T-177-cabecalho-vazio-em-tabela-nova.md) | Dar texto ao cabeçalho de tabela nova | P3 | aberto | frontend |
 
 ## Fechados
 
@@ -45,6 +69,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-146](fechados/T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | feito | #40 |
 | [T-134](fechados/T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | feito | #44 |
 | [T-137](fechados/T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | feito | #44 |
+| [T-138](fechados/T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | feito | #45 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
@@ -164,3 +189,5 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-003](fechados/T-003-rotulos-mono.md) | Usar rótulos de seção em mono maiúsculo, como no brand book | P1 | feito | 77a41f9 |
 | [T-002](fechados/T-002-titulos-do-export.md) | Corrigir o pulo de nível de título no manual exportado | P2 | feito | afbfa87 |
 | [T-001](fechados/T-001-fontes-no-export.md) | Embutir as fontes da marca no manual exportado | P0 | feito | 1d34585 |
+| [T-168](fechados/T-168-controles-acima-do-titulo-no-celular.md) | Decidir a ordem dos controles acima do título no celular | P3 | descartado | decisão da pessoa |
+| [T-175](fechados/T-175-nome-visivel-das-ferramentas-de-marcacao.md) | Alinhar o nome das ferramentas de marcação ao texto visível | P2 | feito | `9f3f8a1` |
