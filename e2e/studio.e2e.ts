@@ -614,7 +614,7 @@ async function pageWithHeadings(request: APIRequestContext, title: string) {
 test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
   test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
-  test("é o último item, fica à esquerda abaixo de sm, tem 44 px e segue Versões, Status, Índice no Tab", async ({
+  test("é o último item, fica à esquerda abaixo de sm, tem 44 px e segue Versões, Público, Status, Índice no Tab", async ({
     page,
     request,
   }) => {
@@ -624,23 +624,24 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     const { buttons, rowRight, scrollW, innerW } = await topButtons(page);
     expect(buttons.map((b) => b.name.replace(/:.*/, "").replace(/\s+/g, " "))).toEqual([
       "Versões",
+      "Público da página",
       "Status da página",
       "Nesta página",
       "Exportar manual",
     ]);
-    const exportBtn = buttons[3];
+    const exportBtn = buttons[4];
     // Sem espaço na linha, o Exportar desce para uma linha própria; abaixo de sm o grupo fica à esquerda (T-078), nunca no meio.
-    const others = buttons.slice(0, 3);
+    const others = buttons.slice(0, 4);
     expect(exportBtn?.top ?? 0).toBeGreaterThanOrEqual(Math.max(...others.map((b) => b.top)) - 1);
-    if (exportBtn && Math.abs(exportBtn.top - (others[2]?.top ?? 0)) < 1)
-      expect(exportBtn.left).toBeGreaterThan(others[2]?.left ?? 0);
+    if (exportBtn && Math.abs(exportBtn.top - (others[3]?.top ?? 0)) < 1)
+      expect(exportBtn.left).toBeGreaterThan(others[3]?.left ?? 0);
     expect(exportBtn?.left ?? 0).toBeLessThan(rowRight / 2);
     // Alvo de toque: todos os itens do topo têm 44 px.
     for (const b of buttons) expect(b.height).toBeGreaterThanOrEqual(44);
     expect(scrollW).toBeLessThanOrEqual(innerW);
 
     await page.getByRole("button", { name: "Versões" }).focus();
-    for (const name of [/Status da página/, /Nesta página/, /Exportar manual/]) {
+    for (const name of [/Público da página/, /Status da página/, /Nesta página/, /Exportar manual/]) {
       await page.keyboard.press("Tab");
       await expect(page.getByRole("button", { name })).toBeFocused();
     }
