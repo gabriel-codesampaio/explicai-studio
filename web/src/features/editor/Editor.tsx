@@ -4,7 +4,7 @@ import { EditorContent, type Editor as TiptapEditor, useEditor } from "@tiptap/r
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnnotationEditor } from "@/features/annotations/AnnotationEditor";
 import { AnnotatedImage } from "@/features/annotations/annotatedImage";
-import { useFontPreview } from "@/features/export/useFontPreview";
+import { useFontPreview } from "@/features/settings/useFontPreview";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { assetPathFromSrc } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
