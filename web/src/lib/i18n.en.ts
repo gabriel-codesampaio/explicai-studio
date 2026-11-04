@@ -376,6 +376,11 @@ export const EN: Record<string, string> = {
   "Manter a minha versão grava o seu texto por cima do arquivo. Recarregar do disco descarta o que você escreveu aqui.":
     "Keep my version writes your text over the file. Reload from disk discards what you wrote here.",
   "Recarregar do disco": "Reload from disk",
+  "(vazio)": "(empty)",
+  "No disco": "On disk",
+  "O seu texto": "Your text",
+  "{n} linha difere.": "{n} line differs.",
+  "{n} linhas diferem.": "{n} lines differ.",
   "Manter a minha versão": "Keep my version",
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",

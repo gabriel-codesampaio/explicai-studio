@@ -81,7 +81,11 @@ function Shell() {
           )}
           {studio.serverDown && <ConnectionBanner checking={studio.reconnect.checking} onRetry={studio.reconnect.retryNow} />}
           {studio.diskConflict && (
-            <DiskConflictBanner onReload={() => studio.resolveConflict("reload")} onKeep={() => studio.resolveConflict("keep")} />
+            <DiskConflictBanner
+              diff={studio.conflictDiff}
+              onReload={() => studio.resolveConflict("reload")}
+              onKeep={() => studio.resolveConflict("keep")}
+            />
           )}
           {firstRun || studio.creatingManual ? (
             <CreateManual firstRun={firstRun} onCreate={studio.createManual} onCancel={() => studio.setCreatingManual(false)} />
