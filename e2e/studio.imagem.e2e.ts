@@ -464,6 +464,55 @@ test.describe("marcações", () => {
     await page.reload();
     await expect(page.getByRole("list", { name: "Legenda da imagem" })).toContainText("Menu Clientes");
   });
+
+  test("Aparência: cor, tamanho e espessura valem na prévia, gravam em style e chegam ao HTML exportado", async ({
+    page,
+    request,
+  }) => {
+    const { slug, id } = await withImage(request, "Imagem Aparencia");
+    await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, {
+      data: {
+        version: 1,
+        markers: [{ id: "m1", n: 1, x: 0.3, y: 0.3, label: "Menu" }],
+        highlights: [],
+        arrows: [],
+        hotspots: [],
+      },
+    });
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    const dialog = markDialog(page);
+    const disc = dialog.locator("[data-n='1']");
+    const box = () => disc.evaluate((el) => ({ w: el.offsetWidth, bg: getComputedStyle(el).backgroundColor }));
+
+    expect(await box()).toEqual({ w: 24, bg: "rgb(43, 79, 224)" }); // sem style: o de sempre
+    await expect(dialog.getByRole("button", { name: "Cobalto" })).toHaveAttribute("aria-pressed", "true");
+
+    await dialog.getByRole("button", { name: "Vermelho" }).focus();
+    await page.keyboard.press("Enter"); // pelo teclado
+    await dialog.getByRole("button", { name: "Grande" }).click();
+    await dialog.getByRole("button", { name: "Grossa" }).click();
+    expect(await box()).toEqual({ w: 32, bg: "rgb(196, 38, 29)" });
+
+    await dialog.getByRole("button", { name: "Salvar marcações" }).click();
+    await expect(dialog).toBeHidden();
+    expect((await annotations(request, slug)).style).toEqual({ color: "red", size: "l", stroke: "l" });
+    // Na página também (imagem no editor de texto).
+    await expect(page.locator(".node-image [data-n='1']")).toHaveCSS("background-color", "rgb(196, 38, 29)");
+
+    const html = await exportApi(request, slug, "html");
+    expect(await (await request.get(html.url)).text()).toContain("--anotacao:#c4261d");
+
+    // Voltar ao padrão tira o style do arquivo.
+    await page.reload();
+    await openImage(page);
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    await dialog.getByRole("button", { name: "Voltar ao padrão" }).click();
+    await dialog.getByRole("button", { name: "Salvar marcações" }).click();
+    await expect(dialog).toBeHidden();
+    expect(await annotations(request, slug)).not.toHaveProperty("style");
+  });
 });
 
 test.describe("tamanho da imagem", () => {
