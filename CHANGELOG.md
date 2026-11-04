@@ -6,6 +6,8 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-04
+
 ### Adicionado
 
 - Marca-texto no editor (botão nas duas barras e Ctrl+Shift+H), salvo como `==texto==`. No HTML e no PDF vira `<mark>` amarelo; o Markdown exportado mantém `==texto==`.
@@ -27,6 +29,10 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 - Exportar HTML e PDF: o passo depois de um print segue a numeração, em vez de voltar ao 1.
 - Exportar HTML: imagens com `width` e `height`, para a página não pular enquanto carrega.
+
+### English summary
+
+Audience: pages and manuals can declare who they are for, and HTML, PDF and Markdown exports can be limited to one profile (not access control). Highlighter in the editor (`==text==`, exported as `<mark>`), delete saved versions, rename a manual from the picker, optional "no Explicaí footer" on export, and a first-screenshot walkthrough on empty pages. Exports number steps correctly after an image, and image markers are numbered discs with a tail pointing at the target. Saving a page keeps unknown frontmatter fields. New `explicai/core` API used by the MCP server.
 
 ## [0.2.1] - 2026-11-03
 
@@ -102,6 +108,7 @@ A 0.1.0 foi a primeira versão do Studio; este bloco reúne o que entrou desde a
 
 New since 0.1.0: bundled OFL fonts and font choice for exports, manual theme colors and client logo, alert blocks, text colors with names, a floating selection toolbar, a richer `/` menu, table row and column controls, annotation shortcuts, full-screen error pages, translated errors, GitHub Actions CI and a much larger test suite. New: warning instead of overwrite when a page changed on disk outside the Studio. Image tools: hide sensitive data (solid bar or strong blur burned into the pixels), display size (small, medium, wide), crop with annotations remapped, and resolution/weight reduction. Fixes cover autosave races, per-folder write queue, atomic exports, unused-image cleanup and many editor and accessibility details. Security: symlinks that leave the manual folder are refused, CSP on `/files/`, same-port `Origin` check. The npm package no longer ships source maps.
 
-[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.1.0...v0.2.0
