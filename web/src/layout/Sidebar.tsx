@@ -1,6 +1,7 @@
 import { PanelLeftClose, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { Brand } from "@/components/Brand";
+import { Kbd } from "@/components/ui/kbd";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import { RenameManualDialog } from "@/features/manuals/RenameManualDialog";
@@ -78,7 +79,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             className="mb-1 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
-            <kbd className="ml-auto font-mono text-[11px] text-muted-foreground">Ctrl+P</kbd>
+            <Kbd className="ml-auto">Ctrl+P</Kbd>
           </button>
           <div className="flex items-center justify-between px-2 text-[13px] text-muted-foreground">
             <span className="rotulo">{t("Páginas")}</span>

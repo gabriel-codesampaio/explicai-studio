@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { Kbd } from "@/components/ui/kbd";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +45,7 @@ export function ToolbarButton({ label, shortcut, icon: Icon, onClick, active, sh
       <TooltipTrigger asChild>{button}</TooltipTrigger>
       <TooltipContent>
         {hint ?? label}
-        {shortcut && <kbd className="ml-2 font-mono text-[11px] opacity-70">{shortcut}</kbd>}
+        {shortcut && <Kbd className="ml-2 border-background/30 bg-background/10 text-background">{shortcut}</Kbd>}
       </TooltipContent>
     </Tooltip>
   );
