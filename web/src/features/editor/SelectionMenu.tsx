@@ -1,7 +1,7 @@
 import { TextSelection } from "@tiptap/pm/state";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
-import { Bold, Code, Italic, Link2 } from "lucide-react";
+import { Bold, Code, Highlighter, Italic, Link2 } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { BlockTypeMenu } from "./BlockTypeMenu";
 import { TextColorMenu } from "./TextColorMenu";
@@ -38,6 +38,7 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
       italic: e.isActive("italic"),
       code: e.isActive("code"),
       link: e.isActive("link"),
+      highlight: e.isActive("highlight"),
     }),
   });
   const chain = () => editor.chain().focus();
@@ -74,6 +75,13 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
           onClick={() => chain().toggleCode().run()}
         />
         <Btn icon={Link2} label={t("Link")} shortcut="Ctrl+K" active={s.link} onClick={onEditLink} />
+        <Btn
+          icon={Highlighter}
+          label={t("Marca-texto")}
+          shortcut="Ctrl+Shift+H"
+          active={s.highlight}
+          onClick={() => chain().toggleHighlight().run()}
+        />
         <Divider />
         <TextColorMenu editor={editor} />
       </div>

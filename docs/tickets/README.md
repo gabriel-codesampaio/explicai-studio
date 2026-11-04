@@ -16,12 +16,23 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-152](T-152-exportar-fora-da-area-visivel.md) | Deixar o botão Exportar visível no diálogo de exportação | P1 | aberto | frontend |
 | [T-153](T-153-mudanca-externa-nao-aparece.md) | Mostrar no Studio o que mudou fora dele, sem trocar de página | P1 | aberto | frontend |
 | [T-171](T-171-listbox-vazio-na-busca-e-no-menu.md) | Tirar o listbox vazio da busca e do menu "/" | P1 | aberto | frontend |
+| [T-146](T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | aberto | frontend |
+| [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
+| [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
+| [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
+| [T-137](T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | aberto | qa |
+| [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
+| [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
+| [T-149](T-149-sobras-da-revisao-de-desempenho.md) | Fila entre processos e tamanho do bundle | P3 | aberto | frontend |
+| [T-150](T-150-manual-do-app-de-terceiro-com-banco-local.md) | Prova do MCP em app de terceiro, com banco local | P3 | aberto | supervisor |
+| [T-130](T-130-menores-do-t-123.md) | Menores deixados pelo T-123 | P3 | aberto | frontend |
+| [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
+| [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
+| [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
+| [T-138](T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | aberto | frontend |
 | [T-037](T-037-design-md-e-audit.md) | Gerar o DESIGN.md e rodar o audit do impeccable | P2 | aberto | design |
 | [T-064](T-064-qa-da-imagem.md) | QA completo da feature de imagem do editor | P2 | em andamento | qa |
-| [T-138](T-138-personalizar-cor-das-marcacoes.md) | Personalizar a aparência das marcações de imagem | P2 | aberto | frontend |
 | [T-145](T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | aberto | frontend |
-| [T-146](T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | aberto | frontend |
-| [T-147](T-147-capa-e-rodape-editaveis.md) | Editar a capa e o rodapé do manual | P2 | aberto | frontend |
 | [T-154](T-154-imagem-nao-reabre-no-primeiro-clique.md) | Reabrir a imagem no primeiro clique depois de fechar a marcação | P2 | aberto | frontend |
 | [T-155](T-155-botao-remover-imagem.md) | Adicionar botão Remover imagem no painel da imagem | P2 | aberto | frontend |
 | [T-156](T-156-foco-da-marcacao-na-legenda.md) | Levar o foco à legenda depois de marcar, sem quebrar os atalhos | P2 | aberto | frontend |
@@ -39,17 +50,6 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-104](T-104-separar-css-de-html-ts-e-acoes-de-usestudio.md) | Separar CSS de `html.ts` e ações de `useStudio` | P3 | aberto | frontend |
 | [T-105](T-105-verificar-pdf-com-100-imagens-lazy-maxbuffer.md) | Verificar PDF com 100 imagens (`lazy`, `maxBuffer`) | P3 | aberto | qa |
 | [T-106](T-106-medir-arvore-com-500-paginas-e-memoizar-numer.md) | Medir árvore com 500 páginas e memoizar numeração | P3 | aberto | qa |
-| [T-127](T-127-e2e-primeiro-uso-fragil.md) | E2e "primeiro uso" falha em paralelo | P3 | aberto | qa |
-| [T-128](T-128-conferir-lote-6-na-tela.md) | Conferir na tela o que o lote 6 não viu | P3 | aberto | design |
-| [T-129](T-129-testes-instaveis.md) | Testes que falham às vezes: reduzir e unused-assets-race | P3 | aberto | qa |
-| [T-130](T-130-menores-do-t-123.md) | Menores deixados pelo T-123 | P3 | aberto | frontend |
-| [T-134](T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | aberto | frontend |
-| [T-135](T-135-menu-de-publico-dois-cliques.md) | Menu de público sem trava contra dois cliques | P3 | aberto | frontend |
-| [T-136](T-136-matriz-do-popover-de-publico.md) | Matriz de tela do Popover de público | P3 | aberto | qa |
-| [T-137](T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | aberto | qa |
-| [T-148](T-148-passeio-guiado-no-studio.md) | Passeio guiado no primeiro uso do Studio | P3 | aberto | frontend |
-| [T-149](T-149-sobras-da-revisao-de-desempenho.md) | Fila entre processos e tamanho do bundle | P3 | aberto | frontend |
-| [T-150](T-150-manual-do-app-de-terceiro-com-banco-local.md) | Prova do MCP em app de terceiro, com banco local | P3 | aberto | supervisor |
 | [T-164](T-164-criar-manual-sem-motivo.md) | Explicar por que o botão Criar manual está desabilitado | P3 | aberto | frontend |
 | [T-165](T-165-barra-da-selecao-cobre-linha.md) | Barra da seleção não cobrir a linha seguinte | P3 | aberto | design |
 | [T-166](T-166-status-com-generos-misturados.md) | Padronizar o gênero e o vocabulário dos status | P3 | aberto | frontend |
@@ -70,6 +70,7 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-140](fechados/T-140-menu-de-bloco-abre-no-canto.md) | Menu de tipo de bloco abre no canto da tela | P1 | feito | #34 |
 | [T-143](fechados/T-143-renomear-o-manual.md) | Renomear o manual | P2 | feito | #37 |
 | [T-144](fechados/T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | feito | #38 |
+| [T-145](fechados/T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | feito | #39 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |

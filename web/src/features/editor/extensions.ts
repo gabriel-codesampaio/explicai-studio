@@ -9,6 +9,7 @@ import { Markdown } from "@tiptap/markdown";
 import StarterKit from "@tiptap/starter-kit";
 import { t } from "../../lib/i18n";
 import { Callout } from "./callout";
+import { Highlight } from "./highlight";
 import { TextColor } from "./textColor";
 
 /**
@@ -70,6 +71,7 @@ export function contentExtensions(image: AnyExtension = Image, callout: AnyExten
     callout,
     // Depois do StarterKit: a cor fica por dentro do negrito no Markdown, onde o ** ainda é lido.
     TextColor,
+    Highlight,
     Placeholder.configure({ placeholder: t("Escreva aqui, ou digite / para inserir um bloco. Cole um print com Ctrl+V.") }),
     Markdown.configure({ markedOptions: { gfm: true } }),
   ];
