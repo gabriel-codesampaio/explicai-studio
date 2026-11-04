@@ -69,7 +69,7 @@ export async function checkManual(dir: string): Promise<CheckFinding[]> {
     const add = (kind: CheckKind, detail: string) => findings.push({ pageId: page.id, title: page.title, kind, detail });
     const steps = stepsWithoutResult(page.body);
     for (const s of steps) add("step-without-result", `Passo sem "Resultado:": ${s}`);
-    if (/bA confirmarb/.test(page.body)) add("to-confirm", 'A página contém "A confirmar".');
+    if (/\bA confirmar\b/.test(page.body)) add("to-confirm", 'A página contém "A confirmar".');
     const images = [...new Set([...page.body.matchAll(IMAGE)].map((m) => decode(m[1] as string).replace(/^(\.\.\/)+/, "")))];
     if (images.length === 0 && /^\s*\d+\.\s/m.test(page.body)) add("no-image", "A página tem passos e nenhum print.");
     for (const href of [...page.body.matchAll(LINK)].map((m) => m[1] as string)) {
