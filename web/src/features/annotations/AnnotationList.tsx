@@ -1,6 +1,7 @@
 import { ArrowUpRight, Highlighter, Link2, X } from "lucide-react";
 import { Fragment } from "react";
 import { Input } from "@/components/ui/input";
+import { styleVars } from "@/lib/annotationStyle";
 import { type Annotations, type HotspotTarget, removeAnnotation, updateHotspot, updateMarker } from "@/lib/annotations";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -50,7 +51,7 @@ export function AnnotationList({ annotations, pages, selectedId, onSelect, onCha
   }
 
   return (
-    <div className="grid content-start gap-4">
+    <div className="grid content-start gap-4" style={styleVars(annotations.style, true)}>
       {annotations.markers.length > 0 && (
         <section className="grid gap-1.5">
           <h3 className="rotulo">{t("Legenda")}</h3>

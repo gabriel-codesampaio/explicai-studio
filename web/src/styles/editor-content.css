@@ -39,7 +39,7 @@
   font-weight: 700;
 }
 .tiptap ul,
-.tiptap ol {
+.tiptap ol:not(.annotation-legend) {
   padding-left: 1.4em;
   margin: 0;
 }

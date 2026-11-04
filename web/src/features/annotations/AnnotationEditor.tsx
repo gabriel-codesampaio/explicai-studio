@@ -13,6 +13,7 @@ import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
+import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
 import { RedactPanel } from "./RedactPanel";
 import { ReducePanel } from "./ReducePanel";
@@ -137,7 +138,6 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               key={id}
               type="button"
               aria-pressed={tool === id}
-              aria-label={label}
               aria-keyshortcuts={TOOL_KEYS[id]}
               title={`${label} (${TOOL_KEYS[id]})`}
               onClick={() => setTool(id)}
@@ -147,9 +147,8 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
               )}
             >
               <Icon className="size-4" aria-hidden />
-              <span className="hidden sm:inline [@media(pointer:coarse)]:inline" aria-hidden>
-                {label}
-              </span>
+              {/* O nome vem deste texto; a letra é só dica, anunciada por aria-keyshortcuts (WCAG 2.5.3). */}
+              <span className="sr-only sm:not-sr-only [@media(pointer:coarse)]:not-sr-only">{label}</span>
               <kbd className="font-mono text-xs" aria-hidden>
                 {TOOL_KEYS[id]}
               </kbd>
@@ -235,6 +234,13 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
                 selectedId={selectedId}
                 onSelect={setSelectedId}
                 onChange={(ann) => change({ ...draft, ann })}
+              />
+              <AppearancePanel
+                style={draft.ann.style}
+                onChange={(style) => {
+                  const { style: _old, ...rest } = draft.ann;
+                  change({ ...draft, ann: style ? { ...rest, style } : rest });
+                }}
               />
             </div>
           </div>

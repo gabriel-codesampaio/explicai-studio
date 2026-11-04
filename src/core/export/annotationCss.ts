@@ -24,3 +24,10 @@ export const ANNOTATION_CSS = `
 .legend .row{display:flex;align-items:center;gap:10px;break-inside:avoid}
 .legend .n{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 4px;border-radius:12px;background:var(--anotacao);color:var(--sobre-anotacao);font:600 13px var(--mono);print-color-adjust:exact;-webkit-print-color-adjust:exact}
 `;
+
+/** Só entra no export quando alguma imagem tem `style`: manual sem ele sai byte a byte como sempre. */
+export const ANNOTATION_STYLE_CSS = `
+.hl,.hot{border-width:calc(2px*var(--marca-espessura,1))}
+.mk .disc{left:calc(var(--disco,24px)/-2);top:calc(var(--disco,24px)/-2);width:var(--disco,24px);height:var(--disco,24px)}
+.mk .disc::before{font-size:var(--disco-fonte,13px)}
+`;

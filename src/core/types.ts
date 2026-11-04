@@ -1,4 +1,5 @@
 /** Formato em disco de um manual. Ver docs/manual-format.md. */
+import type { AnnotationStyle } from "./annotationStyle.js";
 
 export const FORMAT_VERSION = 1;
 
@@ -121,6 +122,8 @@ export type ImageDisplay = "s" | "m" | "full";
 export interface Annotations {
   version: typeof FORMAT_VERSION;
   display?: ImageDisplay;
+  /** Aparência das marcações desta imagem. Sem o campo, vale a de sempre. */
+  style?: AnnotationStyle;
   markers: Marker[];
   highlights: Highlight[];
   arrows: Arrow[];

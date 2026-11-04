@@ -10,8 +10,8 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Adicionado
 
+- Aparência das marcações por imagem (`style` em `assets/<imagem>.json`): cor de uma paleta de 6 (cobalto, tinta, vermelho, verde, roxo, laranja, todas com contraste de 4,5:1 ou mais), tamanho do marcador (20, 24 ou 32 px) e espessura da seta e do contorno (3 degraus). Painel "Aparência" no editor de marcação; vale no Studio, no HTML e no PDF. Sem `style`, tudo sai como antes; o `annotate_image` do MCP preserva o campo ao regravar.
 - Divisor (linha divisória) no menu de blocos e no menu `/`; `---` no arquivo, `<hr>` no HTML e no PDF.
-
 - Marca-texto no editor (botão nas duas barras e Ctrl+Shift+H), salvo como `==texto==`. No HTML e no PDF vira `<mark>` amarelo; o Markdown exportado mantém `==texto==`.
 - Versões: botão "Remover" em cada versão guardada, com confirmação no diálogo. A versão marcada como "Usar no manual" não se remove (botão desligado, dica "Escolha outra versão antes"). Rota `DELETE /api/manuals/:slug/pages/:id/versions/:versionId` (409 para a marcada).
 - Renomear o manual pelo seletor do Studio (`PUT /api/manuals/:slug`): muda só o `title` em `manual.json`; pasta, endereço e ids ficam iguais.
@@ -31,12 +31,14 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Corrigido
 
+- Editor: a legenda da imagem fica afastada do print e sem recuo; o estilo das listas do texto anulava esse espaço.
+
 - Exportar HTML e PDF: o passo depois de um print segue a numeração, em vez de voltar ao 1.
 - Exportar HTML: imagens com `width` e `height`, para a página não pular enquanto carrega.
 
 ### English summary
 
-Audience: pages and manuals can declare who they are for, and HTML, PDF and Markdown exports can be limited to one profile (not access control). Highlighter in the editor (`==text==`, exported as `<mark>`), delete saved versions, rename a manual from the picker, optional "no Explicaí footer" on export, and a first-screenshot walkthrough on empty pages. Exports number steps correctly after an image, and image markers are numbered discs with a tail pointing at the target. Saving a page keeps unknown frontmatter fields. New `explicai/core` API used by the MCP server.
+Audience: pages and manuals can declare who they are for, and HTML, PDF and Markdown exports can be limited to one profile (not access control). Highlighter in the editor (`==text==`, exported as `<mark>`), divider block, per-image annotation appearance (color, marker size, stroke), delete saved versions, rename a manual from the picker, optional "no Explicaí footer" on export, and a first-screenshot walkthrough on empty pages. Exports number steps correctly after an image, and image markers are numbered discs with a tail pointing at the target. Saving a page keeps unknown frontmatter fields. New `explicai/core` API used by the MCP server.
 
 ## [0.2.1] - 2026-11-03
 
