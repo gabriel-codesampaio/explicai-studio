@@ -127,7 +127,8 @@ export async function findUnusedAssets(dir: string): Promise<string[]> {
     ),
   );
   const files = listed.filter((_, i) => stats[i]);
-  const recent = new Set(listed.filter((_, i) => stats[i] && Date.now() - stats[i].mtimeMs < grace));
+  // grace 0 desliga a poupança: mtimeMs tem fração e Date.now() é inteiro, então "agora - mtime < 0" daria verdadeiro para arquivo recém-gravado.
+  const recent = new Set(listed.filter((_, i) => grace > 0 && stats[i] && Date.now() - stats[i].mtimeMs < grace));
   return files
     .filter((f) => !recent.has(f))
     .filter((f) => (f.endsWith(".json") ? !names.has(f.slice(0, -".json".length)) : !used.has(f)))

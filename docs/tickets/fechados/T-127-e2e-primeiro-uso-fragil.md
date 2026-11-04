@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: fechado
 - Agente: qa
 - Origem: lote 6 (2026-11-03)
 
@@ -19,4 +19,6 @@ O e2e "primeiro uso" depende de workspace vazio. Falhou (143 de 144) quando outr
 `npx playwright test --workers=2`, duas rodadas seguidas.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Medido: com 6 processos de CPU e 2 workers, o teste falhou 9 de 10 (heading do estado vazio não aparece). Causa: o servidor e2e é compartilhado e outro teste em paralelo já criou manual.
+- Correção: o teste sobe o próprio servidor (porta livre, pasta temporária). Depois: 0 falhas em 10 sob a mesma carga.
+- Commit: 2e994fc.
