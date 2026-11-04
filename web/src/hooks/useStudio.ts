@@ -234,14 +234,26 @@ export function useStudio() {
   const pageGone = (gone: Page) => {
     const patch = autosave.pendingPatch(gone.id);
     const text = patch?.body ?? patch?.title;
+    const title = patch?.title ?? gone.title;
+    const body = patch?.body ?? gone.body;
+    const slug = manual?.slug;
     autosave.discard(gone.id);
     setPage(null);
-    if (manual) writeLocation({ slug: manual.slug, pageId: null });
+    if (slug) writeLocation({ slug, pageId: null });
     toast.warning(t("A página “{title}” foi apagada fora do Studio.", { title: gone.title }), {
       duration: Number.POSITIVE_INFINITY,
-      action: text ? { label: t("Copiar meu texto"), onClick: () => void navigator.clipboard?.writeText(text) } : undefined,
+      // Volta na raiz: o pai pode ter sumido junto.
+      action: slug ? { label: t("Recriar página"), onClick: () => void recreatePage(slug, title, body) } : undefined,
+      cancel: text ? { label: t("Copiar meu texto"), onClick: () => void navigator.clipboard?.writeText(text) } : undefined,
     });
   };
+  const recreatePage = (slug: string, title: string, body: string) =>
+    run(async () => {
+      const created = await api.addPage(slug, title, null);
+      if (body) await api.updatePage(slug, created.id, { body });
+      await refreshManual(slug);
+      await showPage(slug, created.id);
+    });
   const syncRef = useRef<() => Promise<void>>(async () => {});
   syncRef.current = async () => {
     if (!manuals || down) return;
