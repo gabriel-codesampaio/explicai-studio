@@ -91,10 +91,13 @@ describe("exportação", () => {
     expect(html).toContain('<span class="num">2.1</span> Editar');
     expect(html).toContain('<img src="assets/tela.png" alt="Tela de clientes"');
     expect(html).toContain("aspect-ratio:800 / 600");
-    expect(html).toMatch(/class="mk" style="left:25\.000%;top:50\.000%" data-n="1"/);
+    // marcador: o gancho fica no alvo (posição gravada); disco deslocado e cauda com a ponta em 0,0
+    expect(html).toMatch(
+      /class="mk" style="left:25\.000%;top:50\.000%" aria-hidden="true"><svg class="tail"[^>]*><polygon points="0\.0,0\.0 [\d.,\- ]+"\/><\/svg><span class="disc" style="transform:translate\(-?[\d.]+px,-?[\d.]+px\)" data-n="1">/,
+    );
     expect(html).toContain('<span class="n">1</span><span>Botão Novo cliente</span>');
     // seta com ponta fechada: haste, triângulo de 3 vértices e o mesmo par com contorno branco
-    expect(html.match(/<polygon points="[\d.,\- ]+"\/>/g)).toHaveLength(1);
+    expect(html.match(/<svg class="arrows".*?<\/svg>/s)?.[0].match(/<polygon points="[\d.,\- ]+"\/>/g)).toHaveLength(1);
     expect(html.match(/<polygon class="halo" points="(?:[\d.-]+,[\d.-]+ ?){3}"/g)).toHaveLength(1);
     expect(html).toContain(".hl::before{");
     expect(html).toContain("mix-blend-mode:multiply");
@@ -233,10 +236,13 @@ it("manual em inglês sai com os textos da exportação em inglês", async () =>
   const md = await readFile(path.join(en.dir, (await exportManual(en.dir, "markdown")).file), "utf8");
   expect(md).toContain("## Contents");
   expect(md).toContain("## 1 Untitled");
-  expect(md).toContain("> Image legend:\n> 1. (no description)");
+  expect(md).not.toContain("Image legend");
   const html = await readFile(path.join(en.dir, (await exportManual(en.dir, "html")).file), "utf8");
   expect(html).toContain('<nav class="toc" id="sumario" aria-label="Contents">');
   expect(html).toContain("Manual made with Explicaí Studio.");
+  expect(html).toContain('data-n="1"');
+  expect(html).not.toContain('class="legend"');
+  expect(html).not.toContain("no description");
 });
 
 describe("exportação: cor do texto", () => {

@@ -12,6 +12,7 @@ export type CheckKind =
   | "missing-image"
   | "hotspot-missing-page"
   | "image-without-markers"
+  | "marker-without-label"
   | "to-confirm";
 
 export interface CheckFinding {
@@ -85,6 +86,8 @@ export async function checkManual(dir: string): Promise<CheckFinding[]> {
       if (ann && !ann.markers.length && !ann.highlights.length && !ann.arrows.length && !ann.hotspots.length) {
         add("image-without-markers", `Imagem sem marcação: ${asset}`);
       }
+      const bare = (ann?.markers ?? []).filter((m) => !m.label?.trim()).map((m) => m.n);
+      if (bare.length) add("marker-without-label", `Marcador sem descrição em ${asset}: ${bare.join(", ")}`);
       for (const h of ann?.hotspots ?? []) {
         if (h.target.type !== "url" && !ids.has(h.target.pageId)) {
           add("hotspot-missing-page", `Hotspot de ${asset} aponta para página apagada (${h.target.pageId}).`);

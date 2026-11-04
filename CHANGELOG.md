@@ -14,6 +14,11 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 - Página vazia: passo a passo do primeiro print, com atalho para Exportar; o mesmo texto está na ajuda.
 - Editor: corretor ortográfico explícito no idioma do manual e, na ajuda, como adicionar uma palavra ao dicionário.
 
+### Alterado
+
+- Marcador de imagem: disco numerado de 24 px com cauda apontando o alvo, no Studio e no HTML e PDF exportados. A posição gravada continua sendo o alvo; manuais antigos abrem sem perder marcador.
+- Marcador sem descrição não gera mais a linha "Sem descrição" na legenda (HTML, PDF e Markdown). O Studio avisa na lista de marcações e `checkManual` aponta o marcador sem descrição.
+
 ### Corrigido
 
 - Exportar HTML: imagens com `width` e `height`, para a página não pular enquanto carrega.

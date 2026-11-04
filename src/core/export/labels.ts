@@ -6,7 +6,6 @@ export interface Labels {
   missingImage: string;
   goTo: string;
   legend: string;
-  noDescription: string;
   hotspotUrl: (href: string) => string;
   hotspotPage: (title: string) => string;
   removedPage: string;
@@ -28,7 +27,6 @@ const PT: Labels = {
   missingImage: "imagem não encontrada",
   goTo: "Ir para",
   legend: "Legenda da imagem",
-  noDescription: "(sem descrição)",
   hotspotUrl: (href) => `Área clicável: leva a ${href}`,
   hotspotPage: (title) => `Área clicável: leva à página "${title}"`,
   removedPage: "removida",
@@ -50,7 +48,6 @@ const EN: Labels = {
   missingImage: "image not found",
   goTo: "Go to",
   legend: "Image legend",
-  noDescription: "(no description)",
   hotspotUrl: (href) => `Clickable area: goes to ${href}`,
   hotspotPage: (title) => `Clickable area: goes to the page "${title}"`,
   removedPage: "removed",
