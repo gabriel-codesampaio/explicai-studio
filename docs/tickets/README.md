@@ -43,8 +43,8 @@ Bug (comportamento errado, perda de dado, falha de segurança, erro visível) é
 | [T-144](fechados/T-144-remover-versao-da-pagina.md) | Remover uma versão da página | P2 | feito | #38 |
 | [T-145](fechados/T-145-marca-texto-no-editor.md) | Marca-texto (caneta marcadora) no editor | P2 | feito | #39 |
 | [T-146](fechados/T-146-divisor-no-menu-de-blocos.md) | Componente divisor (linha divisória) | P2 | feito | #40 |
-| [T-134](fechados/T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | feito | #41 |
-| [T-137](fechados/T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | feito | #41 |
+| [T-134](fechados/T-134-export-por-publico-sobrescreve.md) | HTML e Markdown de perfis diferentes se sobrescrevem | P3 | feito | #44 |
+| [T-137](fechados/T-137-pdf-por-publico-com-chrome.md) | PDF por público com Chrome de verdade | P3 | feito | #44 |
 | [T-139](fechados/T-139-passo-depois-de-imagem-volta-ao-1.md) | Passo depois de imagem volta a numerar do 1 | P1 | feito | #31 |
 | [T-132](fechados/T-132-leitura-do-export-html.md) | Leitura do manual exportado em HTML | P1 | feito | #28 |
 | [T-131](fechados/T-131-prompts-depois-da-critica.md) | Prompts do MCP depois da crítica do manual | P1 | feito | explicai-mcp #7 |
