@@ -409,6 +409,7 @@ export const EN: Record<string, string> = {
   "Texto da versão {nome}": "Text of version {nome}",
   "Tipo de bloco: {tipo}": "Block type: {tipo}",
   "Aparência do manual": "Manual appearance",
+  "Editar a capa e o rodapé do manual": "Edit the manual cover and footer",
   "Tema do Studio": "Studio theme",
   "Vale para o HTML, o PDF e o texto do editor. O tema do Studio fica à parte.":
     "Applies to the HTML, the PDF and the editor text. The Studio theme is separate.",

@@ -8,14 +8,38 @@ import { LogoField } from "./LogoField";
 import { ThemeFields } from "./ThemeFields";
 
 /** Diálogo "Aparência do manual" (Ajustes): cores, fontes, logo e rodapé do HTML e do PDF. Cada campo salva sozinho. */
-export function ManualAppearanceDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+export function ManualAppearanceDialog({
+  open,
+  onOpenChange,
+  section,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  /** Seção em que o diálogo abre: o foco vai ao primeiro campo dela. */
+  section?: "cover";
+}) {
   const studio = useStudioContext();
   const manual = studio.manual;
   if (!manual) return null;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg">
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        // Sair do campo salva o que foi digitado; fechar com Esc remove o campo sem blur.
+        if (!next && document.activeElement instanceof HTMLElement) document.activeElement.blur();
+        onOpenChange(next);
+      }}
+    >
+      <DialogContent
+        className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg"
+        onOpenAutoFocus={(e) => {
+          const first = section === "cover" ? document.querySelector<HTMLElement>("#aparencia-capa input") : null;
+          if (!first) return;
+          e.preventDefault();
+          first.focus();
+        }}
+      >
         <div className="px-6 pt-6 pr-12 pb-4">
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Aparência do manual")}</DialogTitle>
           <DialogDescription>
