@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: M
-- Status: aberto
+- Status: em andamento
 - Agente: frontend
 - Origem: [Discovery de tutorial guiado](../discovery/2026-10-30-tutorial-guiado.md), opção B; pedido da pessoa (2026-11-04)
 
@@ -25,4 +25,6 @@ O estado vazio já ensina o primeiro print e onde exportar (T-018), mas só quem
 E2e do primeiro uso, de pular e de reabrir. Print em 375 e 1280, teclado e leitor de tela.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Sem driver.js: o Popover do Radix (já no projeto) serviu, com foco no popover, `role=dialog` nomeado e Esc. Sem dependência nova, então o agente `seguranca` não se aplica.
+Abre sozinho só em manual sem páginas, uma vez (`explicai:passeio` no localStorage), nunca sob `navigator.webdriver`, salvo `?passeio=1`. Reabre por "Passeio guiado" no menu Ajustes. Alvo oculto aponta para o botão do menu lateral; sem ele, fica centrado.
+Ficou de fora: medição de contraste, prints em 375/1280 e teste com leitor de tela.
