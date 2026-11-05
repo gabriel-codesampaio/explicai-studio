@@ -2,7 +2,7 @@
 
 Editor de manuais open source no estilo do editor do Confluence. Roda localmente com `npx explicai` e salva cada manual como uma pasta de Markdown com imagens. O projeto irmão, `explicai-mcp`, usa o módulo `explicai/core` para montar manuais pela IA.
 
-Formato em disco: `docs/manual-format.md`. Estado do trabalho: `docs/passagem.md`. Fila: `docs/tickets/README.md`.
+Formato em disco: `docs/manual-format.md`. Mapa do código: `docs/arquitetura/README.md`. Estado do trabalho: `docs/passagem.md`. Fila: `docs/tickets/README.md`.
 
 ## Stack
 
