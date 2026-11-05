@@ -573,7 +573,7 @@ test.describe("estilo do item", () => {
     await dialog.locator("[data-n='2']").click();
     const panel = dialog.getByRole("region", { name: "Estilo do item" });
     await expect(panel).toContainText("Marcador 2");
-    await expect(panel).toContainText("Herdando da imagem");
+    await expect(panel).toContainText("Usa o estilo da imagem");
     await panel.getByRole("button", { name: "Vermelho" }).click();
     await panel.getByRole("button", { name: "Grande" }).click();
     await expect(dialog.locator("[data-n='2']")).toHaveCSS("background-color", "rgb(196, 38, 29)");

@@ -551,7 +551,7 @@ export const EN: Record<string, string> = {
   "Aparência das marcações": "Markup appearance",
   "Cor das marcações": "Markup color",
   "Estilo do item": "Item style",
-  "Herdando da imagem": "Inheriting from the image",
+  "Usa o estilo da imagem": "Uses the image style",
   "Padrão da imagem": "Image default",
   "Clique numa marcação para dar um estilo só a ela.": "Click a mark to style only that one.",
   Cor: "Color",
