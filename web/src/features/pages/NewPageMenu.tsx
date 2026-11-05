@@ -1,4 +1,5 @@
 import { ChevronDown } from "lucide-react";
+import { useRef } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { t } from "@/lib/i18n";
 import type { TemplateId } from "@/lib/templates";
@@ -10,6 +11,11 @@ interface Props {
 
 /** Ao lado de "Nova página" (que cria em branco): escolhe um modelo no mesmo passo, sem diálogo. */
 export function NewPageMenu({ onPick }: Props) {
+  const picked = useRef(false);
+  const pick = (template?: TemplateId) => {
+    picked.current = true;
+    onPick(template);
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,11 +27,17 @@ export function NewPageMenu({ onPick }: Props) {
           <ChevronDown className="size-3.5" aria-hidden />
         </button>
       </DropdownMenuTrigger>
-      {/* O Radix devolveria o foco ao gatilho e roubaria o do título da página recém-criada. */}
-      <DropdownMenuContent align="end" onCloseAutoFocus={(e) => e.preventDefault()}>
-        <DropdownMenuItem onSelect={() => onPick()}>{t("Em branco")}</DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => onPick("task")}>{t("Tarefa passo a passo")}</DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => onPick("reference")}>{t("Referência de campos")}</DropdownMenuItem>
+      {/* Escolher um modelo não devolve o foco ao gatilho (roubaria o do título da página criada); Esc devolve. */}
+      <DropdownMenuContent
+        align="end"
+        onCloseAutoFocus={(e) => {
+          if (picked.current) e.preventDefault();
+          picked.current = false;
+        }}
+      >
+        <DropdownMenuItem onSelect={() => pick()}>{t("Em branco")}</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => pick("task")}>{t("Tarefa passo a passo")}</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => pick("reference")}>{t("Referência de campos")}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
