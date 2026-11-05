@@ -877,7 +877,7 @@ test.describe("rodapés alinhados", () => {
   test.describe("toque", () => {
     test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
-    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar de novo tem 44 px", async ({
+    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar agora tem 44 px", async ({
       page,
       request,
     }) => {
@@ -893,11 +893,11 @@ test.describe("rodapés alinhados", () => {
       await expect.poll(async () => ((await side.boundingBox())?.y ?? 0) + (await height(side))).toBeGreaterThanOrEqual(799);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
       await page.keyboard.press("Escape");
-      // Servidor fora: o salvamento falha e a barra de status mostra o botão.
+      // Servidor fora: o salvamento falha e a faixa de conexão mostra o botão.
       await page.route("**/api/manuals/*/pages/*", (r) => (r.request().method() === "PUT" ? r.abort() : r.continue()));
       await editor(page).click();
       await page.keyboard.type("x");
-      const retry = page.getByRole("button", { name: "Tentar de novo" }).first();
+      const retry = page.getByRole("button", { name: "Tentar agora" });
       await expect(retry).toBeVisible({ timeout: 10_000 });
       const b = await retry.boundingBox();
       expect(b?.height ?? 0).toBeGreaterThanOrEqual(44);
