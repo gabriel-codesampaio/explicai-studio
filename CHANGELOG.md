@@ -10,46 +10,53 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ### Adicionado
 
-- Aparência do manual nos Ajustes, fora da tela de exportação, com amostra ao vivo do tema e seção Capa e rodapé (prévia e sugestões). Capa e rodapé ficam em `manual.json` e saem no HTML e no PDF; o Markdown não muda.
-- Botão no cabeçalho da página que abre a capa e o rodapé do manual.
-- Públicos: diálogo nos Ajustes para criar, renomear e remover; o termo "Público" vale em toda a interface. "Ver como público" fica acima da busca na barra lateral.
-- Marcação com painel Estilo: cor, tamanho, espessura, borda e preenchimento valem só para o item selecionado e sobrepõem o estilo da imagem. O destaque ganha paleta de marca-texto, preenchimento e a opção de borda nenhuma. Valem no Studio, no HTML e no PDF.
-- Marcações: setas movidas pelo teclado, número do marcador centrado, barra com divisor e dica visível, excluir pelo painel Estilo, foco na legenda do marcador novo (Esc devolve o teclado) e pergunta antes de fechar com mudanças não salvas.
+- Aparência do manual nos Ajustes, fora da tela de exportação, com amostra ao vivo do tema e uma seção Capa e rodapé com prévia e sugestões. Capa e rodapé ficam no `manual.json` e saem no HTML e no PDF (no PDF, o rodapé vai na margem de cada página, com número de página opcional). O Markdown não muda. Um botão no cabeçalho da página abre a capa e o rodapé direto.
+- Públicos: diálogo nos Ajustes para criar, renomear e remover, com a lista de páginas que ficam abertas a todos quando você remove um público. O termo "Público" vale em toda a interface e "Ver como público" fica acima da busca da barra lateral.
+- Painel Estilo nas marcações: cor, tamanho, espessura, borda e preenchimento valem só para o item selecionado e passam por cima do estilo da imagem. O destaque ganhou paleta de marca-texto, preenchimento e a opção de borda nenhuma. Tudo vale no Studio, no HTML e no PDF.
+- Marcações mais cômodas: setas movidas pelo teclado, número centrado no marcador, barra com divisor e dica visível, excluir pelo painel Estilo, foco na legenda do marcador novo (Esc devolve o teclado) e pergunta antes de fechar com mudanças não salvas.
 - Passeio guiado no primeiro uso, só em manual vazio, com entrada animada e deslize entre os passos. Reabre pelo menu Ajustes.
-- Fonte por trecho: menu de fonte na barra da seleção (Ctrl+Shift+F), salvo como `<span data-font="...">` e renderizado no HTML e no PDF.
+- Fonte por trecho: menu de fonte na barra da seleção (Ctrl+Shift+F), salvo no Markdown e renderizado no HTML e no PDF.
 - Botão "Remover imagem" no painel da imagem.
-- Lixeira e ajuda direto no rodapé da barra lateral.
+- Lixeira e ajuda no rodapé da barra lateral. A lixeira pede confirmação e cuida do foco.
 - Busca por digitação na árvore de páginas.
 - Transição curta ao trocar de página.
-- Ao voltar para a aba, o Studio atualiza manuais, árvore e página, e o aviso de conflito mostra o que mudou. Página apagada por fora pode ser recriada.
+- Ao voltar para a aba, o Studio atualiza manuais, árvore e página. O aviso de conflito mostra o que mudou sem empurrar a página, e uma página apagada por fora pode ser recriada.
 - Manual de formato mais novo abre só para leitura, com aviso para atualizar o Studio.
-- Marca do Explicaí na tela de primeiro uso; `main`, regiões nomeadas e link de pular nas telas.
+- Atalhos de teclado em teclas (`Kbd`), com Refazer na lista, e um Select próprio no lugar dos três nativos.
+- A marca do Explicaí na tela de primeiro uso, `main`, regiões nomeadas e link de pular nas telas.
+- Documentação da 1.0: política de compatibilidade e versionamento, formato do manual, metas de desempenho medidas para 500 páginas e modelos de issue no GitHub. O CI roda em Linux, Windows e macOS.
 
 ### Alterado
 
-- O Studio agora pede Node 22.12 ou mais novo (antes, 20.12), a única versão testada no CI (Linux, Windows e macOS).
-- Formato do manual: a versão 1 cresce só por acréscimo (`FORMAT_VERSION` continua 1). Todo manual criado desde a 0.1 abre, edita e exporta na 1.x. Estilo por item, capa, rodapé, públicos e fonte por trecho são campos opcionais.
-- Barra da seleção abre para cima quando está perto do topo e sobrepõe a barra fixa.
-- Barra lateral: a barra de rolagem não passa mais pelo rodapé.
-- Barra de rolagem fina, na cor da marca, sem cobrir o painel vizinho. Alvos pequenos chegam a 24 px.
-- Imagem inválida ou manual de formato mais novo são recusados com erro claro, sem gravar.
-- Mensagens de erro do Reduzir imagem, da consulta do git e da sincronização ao voltar o foco passam a aparecer.
+- O Studio pede Node 22.12 ou mais novo (antes, 20.12), a versão testada no CI.
+- Formato do manual: a versão 1 só cresce por acréscimo (`FORMAT_VERSION` continua 1). Todo manual criado desde a 0.1 abre, edita e exporta em qualquer 1.x. Estilo por item, capa, rodapé, públicos e fonte por trecho são campos opcionais, e campos desconhecidos em `manual.json` e `assets/<imagem>.json` são preservados ao regravar.
+- A barra da seleção abre para cima, por cima da barra fixa quando o texto está no topo. No celular ela vira para baixo para não cobrir a barra de formatação.
+- Versões: o nome da versão fica visível, o botão Versões encurta e o texto deixa claro que a versão vale para a página.
+- Menu da etapa da página com um indicador por item, dicas de status com o gênero certo e cursor de clique em selects, caixas, rádios e rótulos.
+- Barra lateral sem a barra de rolagem passando pelo rodapé. Barra de rolagem fina, na cor da marca, sem cobrir o painel vizinho. Alvos pequenos chegam a 24 px.
+- A árvore de páginas, a numeração e o público ativo ficam memoizados, para manuais de centenas de páginas.
+- Imagem inválida, marcações ou ocultar dados em manual de formato mais novo são recusados com erro claro, sem gravar.
+- Erros do Reduzir imagem, da consulta do git, da carga de imagens da marcação e da sincronização ao voltar o foco passam a aparecer.
+- Criar manual desabilitado explica o motivo.
 
 ### Corrigido
 
 - Trocar rápido de manual não mostra mais o conteúdo do manual anterior.
-- Ao fechar menu ou diálogo, o foco volta ao botão que abriu. Fundo dos menus fica inerte para leitores de tela.
-- Cor inválida do tema não entra mais no estilo do HTML exportado.
+- Ao fechar menu ou diálogo, o foco volta ao botão que abriu, e o fundo dos menus fica inerte para leitores de tela.
+- Cores inválidas, texto de capa ou rodapé que não é texto e outros valores errados no `manual.json` editado à mão deixam de quebrar ou de entrar no HTML exportado.
 - Área clicável invisível quando a imagem não tem borda.
-- A tela Aparência abre em manual sem rodapé salvo.
-- `checkManual` deixa de apontar falsos positivos.
-- Campos desconhecidos em `assets/<imagem>.json` são preservados ao regravar.
-- Arquivo da lixeira de um público fica confinado à pasta da entrada; a limpeza de imagens da lixeira é protegida.
-- Contraste da borda do marca-texto no tema escuro; cabeçalho de tabela nova ganha texto; trilha do manual repetido no celular.
+- A Aparência abre em manual sem rodapé salvo; a amostra de cor dos títulos fica legível no tema escuro e a linha de fontes não é mais cortada em telas de 1024 px.
+- Aviso de conflito: foco levado à faixa, estrutura do trecho que difere corrigida, e a página não troca nem apaga texto novo ao atualizar no foco.
+- Exportar mantém o botão e o resultado à vista no diálogo.
+- Menu de público por página isolado; Esc na edição da linha não fecha o diálogo; trocas de público gravadas em fila.
+- Imagem reabre o balão no primeiro clique depois de fechar a marcação; a imagem não encolhe ao marcar e o painel de marcação não gera rolagem lateral.
+- Busca e menu `/` sem lista vazia; ponto do item de rádio no menu; `checkManual` sem falsos positivos.
+- Arquivo da lixeira de um público fica confinado à pasta da entrada, e a limpeza de imagens da lixeira é protegida.
+- Contraste da borda do marca-texto no tema escuro, cabeçalho de tabela nova com texto e trilha do manual repetido no celular.
 
 ### Summary
 
-Explicaí Studio 1.0 adds a Manual appearance screen (live theme sample, cover and footer), Audiences managed from Settings, a per-item Style panel for annotations (color, size, thickness, border, fill), per-selection fonts, a guided first-use tour, a selection toolbar that opens upward near the top, and a sidebar with trash and help in the footer. Studio needs Node 22.12 or newer. The manual format stays at version 1 and only grows by addition: every manual created since 0.1 opens, edits and exports in any 1.x, and a manual from a newer format opens read-only. Fixes cover focus return after menus and dialogs, quick manual switching, and several accessibility details.
+Explicaí Studio 1.0 adds a Manual appearance screen (live theme sample, cover and footer in HTML and PDF), Audiences managed from Settings, a per-item Style panel for annotations (color, size, thickness, border, fill), per-selection fonts, a guided first-use tour, and a sidebar with trash and help in the footer. The page tree, search, conflict notice and focus handling were reworked, and the selection toolbar flips below the text on phones. Studio needs Node 22.12 or newer, and CI now covers Linux, Windows and macOS. The manual format stays at version 1 and only grows by addition: every manual created since 0.1 opens, edits and exports in any 1.x, and a manual from a newer format opens read-only. Fixes cover quick manual switching, focus return after menus and dialogs, hand-edited `manual.json` values, and several accessibility details.
 
 ## [0.3.0] - 2026-11-04
 
