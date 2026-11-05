@@ -47,7 +47,10 @@ it("acima do limite de linhas não compara", () => {
 
 it("as linhas dos dois painéis refazem os dois textos (textos aleatórios)", () => {
   let seed = 7;
-  const rnd = (n: number) => ((seed = (seed * 1103515245 + 12345) % 2147483648), seed % n);
+  const rnd = (n: number) => {
+    seed = (seed * 1103515245 + 12345) % 2147483648;
+    return seed % n;
+  };
   for (let k = 0; k < 200; k++) {
     const gen = () => Array.from({ length: rnd(12) }, () => `l${rnd(4)}`).join("\n");
     const [a, b] = [gen(), gen()];

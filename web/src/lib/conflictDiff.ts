@@ -115,7 +115,10 @@ function myersOps(a: string[], b: string[]): Op[] | null {
           ? (v[off + k + 1] ?? 0)
           : (v[off + k - 1] ?? 0) + 1;
       let y = x - k;
-      while (x < n && y < m && a[x] === b[y]) x++, y++;
+      while (x < n && y < m && a[x] === b[y]) {
+        x++;
+        y++;
+      }
       v[off + k] = x;
       if (x >= n && y >= m) {
         found = true;
@@ -133,11 +136,24 @@ function myersOps(a: string[], b: string[]): Op[] | null {
     const prevK = k === -d || (k !== d && (vd[off + k - 1] ?? 0) < (vd[off + k + 1] ?? 0)) ? k + 1 : k - 1;
     const px = vd[off + prevK] ?? 0;
     const py = px - prevK;
-    while (x > px && y > py && d > 0) ops.push({ kind: "same", line: a[--x] as string }), y--;
+    while (x > px && y > py && d > 0) {
+      x--;
+      y--;
+      ops.push({ kind: "same", line: a[x] as string });
+    }
     if (d === 0) {
-      while (x > 0) ops.push({ kind: "same", line: a[--x] as string }), y--;
-    } else if (x === px) ops.push({ kind: "add", line: b[--y] as string });
-    else ops.push({ kind: "del", line: a[--x] as string });
+      while (x > 0) {
+        x--;
+        y--;
+        ops.push({ kind: "same", line: a[x] as string });
+      }
+    } else if (x === px) {
+      y--;
+      ops.push({ kind: "add", line: b[y] as string });
+    } else {
+      x--;
+      ops.push({ kind: "del", line: a[x] as string });
+    }
   }
   return ops.reverse();
 }
