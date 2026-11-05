@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: qa
 - Origem: CI e revisão do T-122 (2026-11-03)
 
@@ -25,3 +25,4 @@
 - Não é colisão de título: trocar `Date.now()` por UUID nos títulos não resolveu (1/100 depois). `page.id` é UUID, a chave do `PageView` é `page.id:revision` (sem slug). Não achei de onde o `Editor` recebe o slug de outro manual (`PageView` passa `manual.slug`; `manual` vem de `useStudio`). Próximo passo: logar `manual.slug` e a URL do `<img>` no momento da falha, e checar se `studio.manual` pode ficar com o manual do worker vizinho (servidor e2e único por porta, workspace compartilhado e "manual aberto" lembrado no servidor ou no `localStorage`).
 - Aberto. Sobrou um `node e2e/serve.mjs` (pid 14936) de rodada interrompida; não matei por não saber se é de outra worktree.
 - 2026-11-05 (T-425): causa do `studio.reduzir.e2e.ts:78` medida por leitura do código, não reproduzida de novo: `bigPng` abria `/`, o Studio abria o 1º manual do servidor compartilhado (de outro worker) e gravava o hash dele; o `reload` seguinte abria a página do vizinho. Teste corrigido (`about:blank`). Falta confirmar com `--repeat-each` + 2 workers sob carga (e2e não rodado nesta fatia). T-129 segue aberto.
+- 2026-11-05, fechado: unit `unused-assets-race` resolvido (#96); `reduzir:78` explicado e corrigido no teste (#116, `about:blank` no `bigPng`); `imagem:457/460`, `:637` e `publicos-dialogo:101` nunca reproduziram local (até 40x) e seguem com tolerância `toPass`/`expect.poll` (5b760f1). Acompanhamento no T-426.

@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: P
-- Status: fechado
+- Status: feito
 - Agente: frontend
 - Origem: 2026-11-04, relatório do lote de medição. E2E da main vermelho desde o #106 (T-173); verde no #104.
 
