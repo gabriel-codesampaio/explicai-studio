@@ -64,7 +64,7 @@ export function CoverFooterFields() {
           onChange={(v) => setDraft({ ...draft, text: v })}
           onCommit={(v) => void saveText(v)}
         />
-        <label className="flex items-center gap-2.5 text-sm">
+        <label className="flex min-h-6 items-center gap-2.5 text-sm">
           <input
             type="checkbox"
             checked={manual.footer?.pageNumbers === true}

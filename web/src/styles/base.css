@@ -31,6 +31,12 @@
     outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
+  /* A amostra do manual usa var(--accent) do tema do manual; sem ele --accent, --tinta e --marca-faixa vinham do Studio (tons claros no tema escuro) sobre o fundo branco da amostra (T-204). */
+  .amostra-manual {
+    --accent: #2b4fe0;
+    --tinta: #151a33;
+    --marca-faixa: rgba(255, 212, 59, 0.55);
+  }
   input,
   textarea,
   [contenteditable] {
