@@ -56,27 +56,6 @@ export function StatusMark({ status, className }: { status: PageStatus; classNam
   );
 }
 
-const LEGEND: PageStatus[] = ["revisao", "aprovado", "publicado"];
-
-/** Legenda de uma linha para a árvore: rascunho não tem marca, os outros mostram bolinha. */
-export function StatusLegend({ className }: { className?: string }) {
-  return (
-    <p
-      className={cn("flex flex-wrap gap-x-2.5 text-[11px] text-muted-foreground", className)}
-      title={t("Bolinha ao lado da página: etapa dela. Sem bolinha, é rascunho.")}
-      role="note"
-      aria-label={t("Bolinha ao lado da página: etapa dela. Sem bolinha, é rascunho.")}
-    >
-      {LEGEND.map((id) => (
-        <span key={id} className="inline-flex items-center gap-1">
-          <StatusDot status={id} style={{ color: `var(--${statusOf(id).token})` }} />
-          {statusOf(id).label}
-        </span>
-      ))}
-    </p>
-  );
-}
-
 /** Status da página no topo dela: rascunho, em revisão, aprovado ou publicado. */
 export function StatusMenu({ status, onChange }: { status: PageStatus; onChange: (status: PageStatus) => void }) {
   return (

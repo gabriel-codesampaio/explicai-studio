@@ -55,11 +55,12 @@ test("dica Ctrl+P: visível no desktop, escondida em toque", async ({ page, requ
   await touch.close();
 });
 
-// T-557: legenda do status na árvore. T-558: Ajustes em grupos sem quebra; Exportar com formato e Cancelar.
-test("legenda de status, menu Ajustes sem quebra e diálogo Exportar padronizado", async ({ page, request }) => {
+// T-557: status da árvore sem legenda (title e texto para leitor de tela). T-558: Ajustes em grupos sem quebra; Exportar com formato e Cancelar.
+test("status na árvore, menu Ajustes sem quebra e diálogo Exportar padronizado", async ({ page, request }) => {
   const { slug, id } = await novoManual(request, "Acabamento");
   await page.goto(`/#/${slug}/${id}`);
-  await expect(page.getByText("Em revisão").first()).toBeVisible();
+  await expect(page.getByTitle("Em revisão").first()).toBeVisible();
+  await expect(page.getByRole("note")).toHaveCount(0);
 
   await page.getByRole("button", { name: "Ajustes" }).click();
   const menu = page.getByRole("menu");
