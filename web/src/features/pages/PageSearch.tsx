@@ -178,7 +178,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
                       )}
                     >
                       <span className="truncate text-sm font-bold">{h.title || t("Sem título")}</span>
-                      <span className="truncate text-xs text-muted-foreground">
+                      <span className="line-clamp-2 text-xs text-muted-foreground">
                         {h.before}
                         <mark className="rounded-sm bg-primary/20 px-0.5 text-foreground">{h.match}</mark>
                         {h.after}
