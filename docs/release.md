@@ -16,6 +16,7 @@ Vale para toda versão do pacote `explicai`. O MCP tem release própria. Publica
 4. `CHANGELOG.md`: `[Unreleased]` vira `[X.Y.Z] - AAAA-MM-DD`, com tudo o que a pessoa nota, em pt e o resumo em en.
 5. `package.json` e `package-lock.json` com a versão nova (`npm version X.Y.Z --no-git-tag-version`).
 6. README, `docs/manual-format.md` e landing (`explicai-website`) dizem o que a versão faz e pede (Node 22.12+).
+7. Landing: prints da página de Recursos refeitos com a tela atual (`site/img/feat-*`, pt e en, claro e escuro, celular e desktop: Aparência do manual e diálogo de marcação mudaram em 2026-11-04) e o rótulo "Studio X.Y" de volta em `features/index.html`.
 
 ## Publicar
 
