@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: revisão do T-123 (2026-11-04)
 - Depende de: T-123
@@ -24,6 +24,4 @@ Cinco defeitos pequenos do `checkManual` e do `add_pages`, sem perda de dados.
 Teste de cada caso em `test/check-manual.test.ts` e no `explicai-mcp/test/`. `npm run check` nos dois repos.
 
 ## Registro
-- Commit: `fix(core): corrigir falsos positivos do checkManual (T-130)` (hash na branch feat/lote-codigo-2).
-- Feito: critérios 1 e 2 (citação `> **Resultado:**` depois do passo; link e imagem em bloco de código ignorados), com testes em `test/check-manual.test.ts`.
-- add_pages (3 critérios) pendentes: repo explicai-mcp.
+2026-11-04, PR #97 (7e5825b): os 2 critérios do Studio (`checkManual`). Os 3 de `add_pages` são do MCP, fora do escopo atual: foram para o T-402.
