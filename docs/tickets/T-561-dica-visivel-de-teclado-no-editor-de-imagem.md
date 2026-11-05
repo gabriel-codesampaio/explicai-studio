@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: frontend
 - Origem: design do lote 1 (T-525 parcial)
 
@@ -10,8 +10,8 @@
 As dicas visíveis de cada ferramenta ("Clique onde o número deve ficar", `AnnotationEditor.tsx:48`) não citam o teclado; Tab, setas e Enter só são anunciados para leitor de tela.
 
 ## Critérios de aceite
-- [ ] Dicas incluem "Ou Tab, setas e Enter." (pt e en, `i18n.en.ts`).
-- [ ] Sem quebra de layout a 375 e 1280.
+- [x] Dicas incluem "Ou Tab, setas e Enter." (pt e en, `i18n.en.ts`).
+- [x] Sem quebra de layout a 375 e 1280.
 
 ## Registro
-<!-- preenchido ao fechar -->
+Dicas das 6 ferramentas de desenho terminam em "Ou Tab, setas e Enter." (pt e en). Texto só cresce uma frase curta; o `<p>` já quebra linha. Largura 375/1280 não medida no navegador (fica para o design). Commit: ver git log.

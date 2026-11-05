@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import {
   type Annotations,
   addShape,
-  findItem,
   type Handle,
   type Highlight,
   type HotspotTarget,
   isTooSmall,
   moveAnnotation,
+  nudge,
   type Point,
   type Tool,
 } from "@/lib/annotations";
@@ -67,6 +67,16 @@ function moved(draft: Draft, id: string, handle: Handle, dx: number, dy: number)
     redact: moveRedaction(draft.redact, id, handle, dx, dy),
     crop: moveRedaction(draft.crop, id, handle, dx, dy),
   };
+}
+
+/** Rascunho com o item `id` (marcação, área a ocultar ou recorte) deslocado por uma seta; null se a tecla ou o id não servem. */
+export function nudgeDraft(draft: Draft, id: string, key: string, big: boolean): Draft | null {
+  const ann = nudge(draft.ann, id, key, big);
+  if (ann) return { ...draft, ann };
+  const step = big ? 0.05 : 0.01;
+  const dir = CURSOR_KEYS[key];
+  if (!dir || ![...draft.redact, ...draft.crop].some((r) => r.id === id)) return null;
+  return moved(draft, id, "move", dir[0] * step, dir[1] * step);
 }
 
 /** Rascunho com a forma desenhada entre `a` e `b`, ou null se o arraste foi curto demais. */
@@ -167,7 +177,7 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
     }
     const dir = CURSOR_KEYS[e.key];
     // Com uma marcação selecionada, as setas a movem (o editor trata); sem ela, movem o cursor.
-    if (!dir || (selectedId && findItem(draft.ann, selectedId))) return;
+    if (!dir || (selectedId && draftIds(draft).includes(selectedId))) return;
     e.preventDefault();
     const step = e.shiftKey ? CURSOR_STEP_BIG : CURSOR_STEP;
     setCursor({ x: clamp01(cursor.x + dir[0] * step), y: clamp01(cursor.y + dir[1] * step) });
