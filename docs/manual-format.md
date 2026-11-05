@@ -231,6 +231,7 @@ A exportação lê o manual e grava em `exportacao/`, substituindo a anterior do
 - `exportacao/html/index.html`: o manual num arquivo só, com sumário, uma seção por página e as marcações desenhadas sobre os prints. As imagens usadas vão para `exportacao/html/assets/` e as fontes do manual (com a licença OFL), para `exportacao/html/fonts/`.
 - `exportacao/<titulo>.pdf`: o mesmo HTML impresso pelo Chrome, Edge ou Chromium da máquina (ou o navegador em `EXPLICAI_BROWSER`).
 - `exportacao/markdown/manual.md`: o manual num Markdown só, para quem lê com IA. Depois de cada print vem a legenda em texto.
+- `exportacao/markdown/llms.txt` e `exportacao/markdown/paginas/<slug>.md`: o mesmo conteúdo em partes, para a IA ler uma página por vez. O `llms.txt` tem o título do manual e, por página, um link `paginas/<slug>.md` com o resumo de uma linha. Cada `.md` leva uma página (título no nível 1), com a legenda dos prints em texto, links para outras páginas como `<slug>.md` e imagens em `../assets/`. O `<slug>` tem só `a-z`, `0-9` e `-`, começa pelo número da página e ganha `-2`, `-3` se repetir, então nunca sai da pasta. Página da lixeira fica de fora e o público vale como no arquivo único, que segue igual. Pasta e arquivos novos: acréscimo, `manual.json` e a `version` do formato não mudam (compatível com 1.x).
 
 Exportar para um público (perfil) grava ao lado, sem apagar os outros: `exportacao/html-<perfil>/`, `exportacao/markdown-<perfil>/` e `exportacao/<titulo>-<perfil>.pdf`. Sem perfil, os nomes acima.
 

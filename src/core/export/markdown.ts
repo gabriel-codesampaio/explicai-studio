@@ -20,42 +20,144 @@ const PAGE_LINK = /\]\((?:\.\/)?([^/)#\s]+\.md)(#[^)\s]*)?\)/g;
  * em texto (a IA não vê a imagem, mas lê o que ela aponta).
  */
 export function renderMarkdown(collected: Collected, images: Map<string, ImageInfo>): string {
+  const { meta, pages } = collected;
+  const L = labelsFor(meta.language);
+  const anchor = (p: ExportPage) => slugify(`${p.number} ${p.title}`);
+  const toc = pages.map((p) => `${"  ".repeat(p.depth)}- [${p.number} ${p.title}](#${anchor(p)})`).join("\n");
+  const sections = pages.map((page) => {
+    const level = Math.min(page.depth + 2, 6);
+    const body = renderBody(page, level, collected, images, {
+      link: (target, hash) => `#${hash ? hash.slice(1) : anchor(target)}`,
+      image: (asset) => asset,
+    });
+    return `${"#".repeat(level)} ${page.number} ${page.title}
+
+${body}`;
+  });
+  return `# ${meta.title}
+
+## ${L.toc}
+
+${toc}
+
+${sections.join("\n\n")}
+`;
+}
+
+/**
+ * Um Markdown por página (`paginas/<slug>.md`, título no nível 1, links entre páginas e imagens relativos
+ * a essa pasta) e o `llms.txt` com o título, o resumo de uma linha de cada página e o link para o arquivo.
+ */
+export function renderMarkdownPages(
+  collected: Collected,
+  images: Map<string, ImageInfo>,
+): { llms: string; pages: { file: string; content: string }[] } {
+  const { meta, pages } = collected;
+  const files = pageFileNames(pages);
+  const fileOf = new Map(pages.map((p, i) => [p, files[i] as string]));
+  const out = pages.map((page) => {
+    const body = renderBody(page, 2, collected, images, {
+      link: (target, hash) => `${fileOf.get(target)}${hash ?? ""}`,
+      image: (asset) => `../${asset}`,
+    });
+    return {
+      file: fileOf.get(page) as string,
+      content: `# ${page.number} ${page.title}
+
+${body}
+`,
+    };
+  });
+  const lines = pages.map((p) => {
+    const summary = summaryOf(p.body);
+    return `- [${p.number} ${p.title}](paginas/${fileOf.get(p)})${summary ? `: ${summary}` : ""}`;
+  });
+  return {
+    llms: `# ${meta.title}
+
+${lines.join("\n")}
+`,
+    pages: out,
+  };
+}
+
+/** Nome de arquivo por página: só `[a-z0-9-]` (não sai da pasta nem vira nome reservado do Windows, pois começa pelo número); repetido ganha `-2`, `-3`. */
+function pageFileNames(pages: ExportPage[]): string[] {
+  const used = new Set<string>();
+  return pages.map((p) => {
+    const base = slugify(`${p.number} ${p.title}`) || "pagina";
+    let name = base;
+    for (let n = 2; used.has(name); n++) name = `${base}-${n}`;
+    used.add(name);
+    return `${name}.md`;
+  });
+}
+
+/** Primeira linha de texto corrido da página, sem marcação, até 160 caracteres. */
+function summaryOf(body: string): string {
+  let fence = false;
+  for (const raw of body.split("\n")) {
+    if (/^\s*(```|~~~)/.test(raw)) fence = !fence;
+    const line = raw.trim();
+    if (fence || !line || /^(#|!\[|>|\||---|\*\*\*|<)/.test(line)) continue;
+    const text = line
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/^([-*+]|\d+[.)])\s+/, "")
+      .replace(/[*_`~=]/g, "")
+      .replace(/<[^>]+>/g, "")
+      .trim();
+    if (text) return text.length > 160 ? `${text.slice(0, 157).trimEnd()}...` : text;
+  }
+  return "";
+}
+
+interface BodyLinks {
+  /** Destino de um link para outra página exportada. `hash` vem com `#`. */
+  link: (target: ExportPage, hash: string | undefined) => string;
+  /** Caminho da imagem (`assets/x.png`) como vai no arquivo. */
+  image: (asset: string) => string;
+}
+
+/** Corpo de uma página pronto para o Markdown de IA: títulos, só texto nas cores e fontes, links, legendas dos prints. */
+function renderBody(
+  page: ExportPage,
+  level: number,
+  collected: Collected,
+  images: Map<string, ImageInfo>,
+  to: BodyLinks,
+): string {
   const { meta, pages, hidden } = collected;
   const hiddenFiles = new Set(hidden.map((h) => h.fileName.toLowerCase()));
   const hiddenIds = new Set(hidden.map((h) => h.id));
   const L = labelsFor(meta.language);
-  const anchor = (p: ExportPage) => slugify(`${p.number} ${p.title}`);
-  const toc = pages.map((p) => `${"  ".repeat(p.depth)}- [${p.number} ${p.title}](#${anchor(p)})`).join("\n");
+  return shiftHeadings(hiddenFiles.size ? stripHiddenLinks(page.body, hiddenFiles).text : page.body, level)
+    .replace(COLOR_SPAN, (all, name: string, text: string) => (Object.hasOwn(TEXT_COLORS, name) ? text : all))
+    .replace(FONT_SPAN, (all, id: string, text: string) => (fontById(id) ? text : all))
+    .replace(PAGE_LINK, (all, file: string, hash: string | undefined) => {
+      const target = pages.find((p) => p.fileName === decodeUri(file));
+      return target ? `](${to.link(target, hash)})` : all;
+    })
+    .split("\n")
+    .map((line) => {
+      // A legenda vai depois da linha do print, com a mesma indentação (o print pode estar num passo).
+      const indent = /^\s*/.exec(line)?.[0] ?? "";
+      const notes: string[] = [];
+      const out = line.replace(IMAGE_LINE, (all, alt: string, src: string) => {
+        const asset = assetFromSrc(src);
+        const info = asset ? images.get(asset) : undefined;
+        if (!info) return all;
+        notes.push(...imageNotes(info, pages, L, hiddenIds));
+        return `![${alt}](${to.image(info.asset)})`;
+      });
+      if (!notes.length) return out;
+      return `${out}
 
-  const sections = pages.map((page) => {
-    const level = Math.min(page.depth + 2, 6);
-    const body = shiftHeadings(hiddenFiles.size ? stripHiddenLinks(page.body, hiddenFiles).text : page.body, level)
-      .replace(COLOR_SPAN, (all, name: string, text: string) => (Object.hasOwn(TEXT_COLORS, name) ? text : all))
-      .replace(FONT_SPAN, (all, id: string, text: string) => (fontById(id) ? text : all))
-      .replace(PAGE_LINK, (all, file: string, hash: string | undefined) => {
-        const target = pages.find((p) => p.fileName === decodeUri(file));
-        return target ? `](#${hash ? hash.slice(1) : anchor(target)})` : all;
-      })
-      .split("\n")
-      .map((line) => {
-        // A legenda vai depois da linha do print, com a mesma indentação (o print pode estar num passo).
-        const indent = /^\s*/.exec(line)?.[0] ?? "";
-        const notes: string[] = [];
-        const out = line.replace(IMAGE_LINE, (all, alt: string, src: string) => {
-          const asset = assetFromSrc(src);
-          const info = asset ? images.get(asset) : undefined;
-          if (!info) return all;
-          notes.push(...imageNotes(info, pages, L, hiddenIds));
-          return `![${alt}](${info.asset})`;
-        });
-        if (!notes.length) return out;
-        return `${out}\n\n${indent}> ${L.legend}:\n${notes.map((n) => `${indent}> ${n}`).join("\n")}`;
-      })
-      .join("\n");
-    return `${"#".repeat(level)} ${page.number} ${page.title}\n\n${body.trim()}`;
-  });
-
-  return `# ${meta.title}\n\n## ${L.toc}\n\n${toc}\n\n${sections.join("\n\n")}\n`;
+${indent}> ${L.legend}:
+${notes.map((n) => `${indent}> ${n}`).join("\n")}`;
+    })
+    .join("\n")
+    .trim();
 }
 
 /** Legenda e áreas clicáveis do print, em texto, uma por linha. */
