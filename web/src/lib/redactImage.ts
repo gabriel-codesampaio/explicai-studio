@@ -52,7 +52,11 @@ export async function uploadCanvas(
   // Navegador que não sabe gravar o formato devolve PNG: gravar isso no lugar de um .webp quebraria a imagem.
   if (blob?.type !== type) throw new Error("encode");
   await api.redactAsset(slug, asset, blob);
-  // O navegador guarda as imagens de assets/ por uma hora: renova a cópia e refaz as <img> já na tela.
+  await refreshImage(src);
+}
+
+/** O navegador guarda as imagens de assets/ por uma hora: renova a cópia e refaz as <img> já na tela. */
+export async function refreshImage(src: string) {
   await fetch(src, { cache: "reload" });
   for (const el of document.querySelectorAll<HTMLImageElement>("img")) if (el.getAttribute("src") === src) el.src = src;
 }

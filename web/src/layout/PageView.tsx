@@ -1,3 +1,4 @@
+import { Selection } from "@tiptap/pm/state";
 import type { Editor as TiptapEditor } from "@tiptap/react";
 import { ChevronRight, Pencil } from "lucide-react";
 import { Fragment, useRef, useState } from "react";
@@ -24,6 +25,12 @@ import { StatusBar } from "./StatusBar";
 interface Props {
   manual: ManualDetail;
   page: Page;
+}
+
+/** Foco no início do corpo na hora: `commands.focus` espera um frame e a primeira letra após o Enter cairia no título (T-530). */
+function focusStart(editor: TiptapEditor) {
+  editor.view.dispatch(editor.state.tr.setSelection(Selection.atStart(editor.state.doc)));
+  editor.view.focus();
 }
 
 /*
@@ -110,7 +117,7 @@ export function PageView({ manual, page }: Props) {
                   setTitle(next);
                   studio.editPage({ title: next });
                 }}
-                onEnter={() => editor?.commands.focus("start")}
+                onEnter={() => editor && focusStart(editor)}
               />
             </div>
             {!readOnly && (

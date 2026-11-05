@@ -291,6 +291,16 @@ export const api = {
       method: "POST",
       body: image,
     }),
+  replaceAsset: (slug: string, asset: string, file: File) =>
+    call<{ folder: string }>(
+      `${manualUrl(slug)}/assets/replace?asset=${encodeURIComponent(asset)}&name=${encodeURIComponent(file.name)}`,
+      { method: "POST", body: file },
+    ),
+  undoReplaceAsset: (slug: string, asset: string, folder: string) =>
+    call<{ folder: string }>(
+      `${manualUrl(slug)}/assets/replace/undo?asset=${encodeURIComponent(asset)}&folder=${encodeURIComponent(folder)}`,
+      { method: "POST" },
+    ),
   cleanUnusedAssets: (slug: string) =>
     call<{ moved: number; folder: string | null }>(`${manualUrl(slug)}/assets/clean`, { method: "POST" }),
 
@@ -332,6 +342,10 @@ const CODED: Record<string, (p: Record<string, string | number>) => string> = {
   "audience-too-long": (p) => t("O nome do público tem no máximo {max} caracteres.", { max: String(p.max) }),
   "audience-duplicate": (p) => t("Já existe um público chamado {name}.", { name: String(p.name) }),
   "audience-not-found": (p) => t("O público {name} não existe mais. Feche e abra de novo.", { name: String(p.name) }),
+  "replace-type": (p) =>
+    t("A imagem nova precisa ter o mesmo formato da atual ({ext}). Escolha outro arquivo.", { ext: String(p.ext) }),
+  "replace-invalid": () => t("A imagem nova não pôde ser lida. Escolha outro arquivo."),
+  "replace-missing": () => t("A imagem não está mais no manual. Recarregue a página."),
   "logo-type": () => t("O logo precisa ser PNG, JPG ou SVG. Escolha outro arquivo."),
   "logo-path": () => t("O logo precisa estar na pasta assets/ do manual."),
   "logo-missing": (p) => t("O logo {logo} não está mais no manual. Envie o arquivo de novo.", { logo: String(p.logo) }),

@@ -530,7 +530,10 @@ test("Aparência do manual mostra o nome de cada cor e a exportação segue com 
   // O diálogo de exportação já não tem as cores, só o ponteiro para a tela nova.
   await expect(page.getByRole("dialog").getByText("Cor do texto")).toHaveCount(0);
 
-  await page.getByRole("dialog").getByRole("button", { name: "Exportar", exact: true }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ })
+    .click();
   const link = page.getByRole("dialog").getByRole("link", { name: "Abrir o arquivo" });
   await expect(link).toBeVisible();
   const exported = await (await request.get((await link.getAttribute("href")) ?? "")).text();
@@ -555,8 +558,8 @@ for (const height of [600, 720, 800]) {
       });
     await expect(dialog.getByRole("heading", { name: "Exportar manual" })).toBeInViewport();
     expect(await inView(dialog.getByRole("button", { name: "Fechar" }))).toBe(true);
-    expect(await inView(dialog.getByRole("button", { name: "Exportar", exact: true }))).toBe(true);
-    await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+    expect(await inView(dialog.getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ }))).toBe(true);
+    await dialog.getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ }).click();
     const link = dialog.getByRole("link", { name: "Abrir o arquivo" });
     await expect(link).toBeVisible();
     expect(await inView(link)).toBe(true);
@@ -945,7 +948,7 @@ for (const [label, ext] of [
     await page.getByRole("button", { name: "Exportar manual" }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByText(label, { exact: true }).click();
-    await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+    await dialog.getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ }).click();
 
     const busy = dialog.getByRole("button", { name: "Exportando…" });
     await expect(busy).toBeDisabled();
@@ -982,7 +985,7 @@ test("exportar com erro do servidor: mensagem e Tentar de novo refaz o pedido", 
   await page.goto(`/#/${slug}`);
   await page.getByRole("button", { name: "Exportar manual" }).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+  await dialog.getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ }).click();
   await expect(dialog.getByRole("alert")).toContainText("Falha simulada ao exportar.");
   fail = false;
   await dialog.getByRole("button", { name: "Tentar de novo" }).click();
@@ -1313,7 +1316,7 @@ test("Aparência do manual: logo do cliente entra na capa do HTML, a recusa diz 
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Exportar manual" }).click();
   const exportDialog = page.getByRole("dialog", { name: "Exportar manual" });
-  await exportDialog.getByRole("button", { name: "Exportar", exact: true }).click();
+  await exportDialog.getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ }).click();
   const href = (await exportDialog.getByRole("link", { name: "Abrir o arquivo" }).getAttribute("href")) ?? "";
   const html = await (await request.get(href)).text();
   const logo = /<header class="cover">\s*<img class="logo" src="([^"]+)"/.exec(html)?.[1];

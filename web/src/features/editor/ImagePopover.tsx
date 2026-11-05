@@ -9,6 +9,7 @@ import { t } from "@/lib/i18n";
 import { ImageSizePicker } from "../annotations/ImageSizePicker";
 import { AnchoredPopover } from "./AnchoredPopover";
 import { collisionPadding, MARGEM } from "./editorArea";
+import { ReplaceImage } from "./ReplaceImage";
 
 /** Imagem selecionada (clique nela): posição no documento e descrição atual. */
 function selectedImage(editor: Editor): { pos: number; alt: string; src: string } | null {
@@ -128,6 +129,9 @@ export function ImagePopover({
               >
                 <PenLine /> {t("Editar imagem")}
               </Button>
+            )}
+            {assetPathFromSrc(image.src) && (
+              <ReplaceImage key={image.src} slug={slug} src={image.src} asset={assetPathFromSrc(image.src) ?? ""} />
             )}
             {/* Mesma ação do Delete com a imagem selecionada; Ctrl+Z restaura. A tecla vai no title: com ela o rótulo quebrava a linha. */}
             <Button
