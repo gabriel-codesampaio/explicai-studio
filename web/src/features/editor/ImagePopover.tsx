@@ -9,6 +9,7 @@ import { assetPathFromSrc } from "@/lib/annotations";
 import { t } from "@/lib/i18n";
 import { ImageSizePicker } from "../annotations/ImageSizePicker";
 import { AnchoredPopover } from "./AnchoredPopover";
+import { collisionPadding, MARGEM } from "./editorArea";
 
 /** Imagem selecionada (clique nela): posição no documento e descrição atual. */
 function selectedImage(editor: Editor): { pos: number; alt: string; src: string } | null {
@@ -21,8 +22,27 @@ function selectedImage(editor: Editor): { pos: number; alt: string; src: string 
  * Ao clicar numa imagem, um balão pede a descrição dela. A descrição vira o texto alternativo no
  * Markdown, lido por leitores de tela e pela IA que usa o manual.
  */
-/** Altura do balão com seletor de tamanho e botão (px), mais a folga do rodapé. */
-const BALAO_ALTURA = 330;
+/** Tamanho do balão com seletor de tamanho e botões (px). */
+const BALAO_ALTURA = 300;
+const BALAO_LARGURA = 320;
+
+type Side = "top" | "right" | "bottom" | "left";
+
+/** Primeiro lado da imagem com espaço para o balão inteiro: embaixo, direita, esquerda, em cima. Sem espaço, null. */
+export function freeSide(
+  r: DOMRect,
+  vw: number,
+  vh: number,
+  pad: { top: number; right: number; bottom: number; left: number },
+): Side | null {
+  const w = BALAO_LARGURA + MARGEM;
+  const h = BALAO_ALTURA + MARGEM;
+  if (vh - pad.bottom - r.bottom >= h) return "bottom";
+  if (vw - pad.right - r.right >= w) return "right";
+  if (r.left - pad.left >= w) return "left";
+  if (r.top - pad.top >= h) return "top";
+  return null;
+}
 
 export function ImagePopover({
   editor,
@@ -46,12 +66,22 @@ export function ImagePopover({
     return () => dom.removeEventListener("click", reopen);
   }, [dismissedAt, editor]);
 
-  const rect = () => {
+  const imageRect = () => {
     const dom = image ? editor.view.nodeDOM(image.pos) : null;
-    if (!(dom instanceof HTMLElement)) return new DOMRect();
-    const r = dom.getBoundingClientRect();
-    // Imagem grande não deixa espaço embaixo: o balão (seletor de tamanho incluso) se apoia na parte visível dela.
-    const bottom = Math.max(r.top + 1, Math.min(r.bottom, window.innerHeight - BALAO_ALTURA));
+    // O nó da imagem pode ocupar a coluna inteira; o balão se orienta pela figura em si.
+    return dom instanceof HTMLElement ? (dom.querySelector("img") ?? dom).getBoundingClientRect() : null;
+  };
+  const side = (r: DOMRect | null) => (r && freeSide(r, window.innerWidth, window.innerHeight, collisionPadding())) || null;
+  const rect = () => {
+    const r = imageRect();
+    if (!r) return new DOMRect();
+    // Com espaço ao lado, o balão se apoia na imagem inteira e não a cobre. Sem espaço em lado nenhum
+    // (imagem que ocupa a tela), ele se apoia na parte visível dela, com o seletor de tamanho incluso.
+    if (side(r)) return r;
+    const bottom = Math.max(
+      r.top + 1,
+      Math.min(r.bottom, window.innerHeight - collisionPadding().bottom - BALAO_ALTURA - MARGEM),
+    );
     return new DOMRect(r.x, r.y, r.width, bottom - r.y);
   };
 
@@ -61,6 +91,7 @@ export function ImagePopover({
       onClose={() => setDismissedAt(image?.pos ?? null)}
       getRect={rect}
       label={t("Descrição da imagem")}
+      side={open ? (side(imageRect()) ?? "bottom") : "bottom"}
       onEscape={() => editor.commands.focus()}
     >
       {image && (

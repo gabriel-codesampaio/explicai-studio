@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   type Annotations,
   addShape,
+  findItem,
   type Handle,
   type Highlight,
   type HotspotTarget,
@@ -42,6 +43,18 @@ function pointIn(el: HTMLElement, e: React.PointerEvent): Point {
   const r = el.getBoundingClientRect();
   return { x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height };
 }
+
+/** Tamanho (em fração da imagem) da forma que nasce pelo teclado: Enter cria um retângulo ou uma seta nesse porte. */
+const KEY_SHAPE = { w: 0.2, h: 0.1 };
+const CURSOR_STEP = 0.02;
+const CURSOR_STEP_BIG = 0.1;
+const CURSOR_KEYS: Record<string, [number, number]> = {
+  ArrowLeft: [-1, 0],
+  ArrowRight: [1, 0],
+  ArrowUp: [0, -1],
+  ArrowDown: [0, 1],
+};
+const clamp01 = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 
 const idsOf = (a: Annotations) => [...a.markers, ...a.highlights, ...a.arrows, ...a.hotspots].map((item) => item.id);
 
@@ -83,6 +96,9 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
   const [drag, setDrag] = useState<{ from: Point; to: Point } | null>(null);
   const [grab, setGrab] = useState<{ id: string; handle: Handle; from: Point; to: Point } | null>(null);
   const drawing = tool !== "select";
+  // Cursor do teclado: onde o Enter cria a marcação (começa no centro e anda com as setas).
+  const [cursor, setCursor] = useState<Point>({ x: 0.5, y: 0.5 });
+  const [announcement, setAnnouncement] = useState("");
 
   // Prévia do que está sendo desenhado ou movido, usando a mesma camada da imagem final.
   const preview = grab
@@ -102,6 +118,61 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
     }
   };
 
+  /** Grava o rascunho novo e informa qual id nasceu nele. */
+  const commit = (next: Draft) => {
+    const old = new Set(draftIds(draft));
+    const created = draftIds(next).find((id) => !old.has(id));
+    onChange(next, created ?? null);
+    return created ?? null;
+  };
+
+  /** Enter no canvas focado: cria a marcação da ferramenta ativa no cursor e a anuncia. */
+  const createAtCursor = () => {
+    if (tool === "select") return;
+    // Perto da borda, a forma recua para caber inteira na imagem.
+    const c =
+      tool === "marker"
+        ? cursor
+        : {
+            x: clamp01(cursor.x, KEY_SHAPE.w / 2, 1 - KEY_SHAPE.w / 2),
+            y: clamp01(cursor.y, KEY_SHAPE.h / 2, 1 - KEY_SHAPE.h / 2),
+          };
+    const a = tool === "marker" ? c : { x: c.x - KEY_SHAPE.w / 2, y: c.y - KEY_SHAPE.h / 2 };
+    const b = tool === "marker" ? c : { x: c.x + KEY_SHAPE.w / 2, y: c.y + KEY_SHAPE.h / 2 };
+    const next = drawn(draft, tool, a, b, defaultTarget);
+    if (!next) return;
+    commit(next);
+    const kind = {
+      marker: `${t("Marcador")} ${next.ann.markers.length}`,
+      highlight: t("Destaque"),
+      arrow: t("Seta"),
+      hotspot: t("Área clicável"),
+      redact: t("Ocultar"),
+      crop: t("Recortar"),
+    }[tool];
+    setAnnouncement(
+      t("Nova marcação: {kind}, em {x}% da largura e {y}% da altura. Setas movem.", {
+        kind,
+        x: Math.round(c.x * 100),
+        y: Math.round(c.y * 100),
+      }),
+    );
+  };
+
+  const onCanvasKey = (e: React.KeyboardEvent) => {
+    if (!drawing || e.target !== e.currentTarget) return;
+    if (e.key === "Enter") {
+      e.preventDefault();
+      return createAtCursor();
+    }
+    const dir = CURSOR_KEYS[e.key];
+    // Com uma marcação selecionada, as setas a movem (o editor trata); sem ela, movem o cursor.
+    if (!dir || (selectedId && findItem(draft.ann, selectedId))) return;
+    e.preventDefault();
+    const step = e.shiftKey ? CURSOR_STEP_BIG : CURSOR_STEP;
+    setCursor({ x: clamp01(cursor.x + dir[0] * step), y: clamp01(cursor.y + dir[1] * step) });
+  };
+
   const finish = (to: Point) => {
     if (grab) {
       setGrab(null);
@@ -114,9 +185,7 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
     const next = drawn(draft, tool, drag.from, to, defaultTarget);
     setDrag(null);
     if (!next) return;
-    const old = new Set(draftIds(draft));
-    const created = draftIds(next).find((id) => !old.has(id));
-    onChange(next, created ?? null);
+    commit(next);
   };
 
   const shown = preview ?? draft;
@@ -145,10 +214,14 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
     <div
       ref={box}
       data-annotation-canvas
-      // Foco no canvas ao clicar: Delete e setas valem ali (o teclado do editor escuta a janela toda).
-      tabIndex={-1}
+      // biome-ignore lint/a11y/noNoninteractiveTabindex: widget de teclado (Tab chega; Enter cria, setas movem o cursor ou a marcação selecionada).
+      tabIndex={0}
+      role="application"
+      aria-label={t("Imagem para marcar")}
+      aria-describedby={drawing ? "canvas-keys-hint" : undefined}
+      onKeyDown={onCanvasKey}
       className={cn(
-        "relative inline-block max-w-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 touch-none select-none",
+        "group relative inline-block max-w-full outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-primary touch-none select-none",
         drawing ? "cursor-crosshair" : "cursor-default",
       )}
       onPointerDown={(e) => {
@@ -170,6 +243,19 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
       }}
       onPointerUp={(e) => box.current && finish(pointIn(box.current, e))}
     >
+      <span id="canvas-keys-hint" className="sr-only">
+        {t("Setas movem o cursor e Enter cria a marcação.")}
+      </span>
+      <span role="status" className="sr-only">
+        {announcement}
+      </span>
+      {drawing && !selectedId && (
+        <span
+          aria-hidden
+          style={{ left: `${cursor.x * 100}%`, top: `${cursor.y * 100}%` }}
+          className="pointer-events-none absolute z-10 hidden size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary bg-background/60 shadow-[0_0_0_2px_#fff] group-focus-visible:block"
+        />
+      )}
       <img
         key={attempt}
         src={src}
