@@ -15,6 +15,7 @@ import { useStudioContext } from "@/hooks/StudioContext";
 import type { ManualDetail, Page } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { ancestorsOf, findItem } from "@/lib/tree";
+import { cn } from "@/lib/utils";
 import { FormatNewerNotice } from "./FormatNewerNotice";
 import { PageTitle } from "./PageTitle";
 import { StatusBar } from "./StatusBar";
@@ -62,8 +63,9 @@ export function PageView({ manual, page }: Props) {
             >
               {trail.map(({ key, name }, i) => (
                 <Fragment key={key}>
-                  {i > 0 && <ChevronRight className="size-3.5" aria-hidden />}
-                  <span className="max-w-60 truncate">{name}</span>
+                  {i > 0 && <ChevronRight className={cn("size-3.5", i === 1 && "hidden split:block")} aria-hidden />}
+                  {/* Abaixo de split o MobileBar já mostra o nome do manual: aqui ele só repetiria. */}
+                  <span className={cn("max-w-60 truncate", i === 0 && "hidden split:inline")}>{name}</span>
                 </Fragment>
               ))}
             </nav>
