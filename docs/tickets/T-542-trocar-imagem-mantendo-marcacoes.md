@@ -35,8 +35,9 @@ e2e: trocar a imagem, conferir as marcas e a lixeira; teste de unidade da regra 
 ## Riscos
 Marca no lugar errado sem a pessoa notar (por isso o aviso).
 
-## Decisões pendentes
-2. **Quanto vale a feature 3 contra a 4 (busca, T-543)?** Recomendação do relatório: esta primeiro. É a única que ataca a dor "tela mudou", momento de uso citado no `PRODUCT.md`. Antes, medir quantas vezes a pessoa refaz marcação ao trocar print.
+## Decisão
+Decidido em 2026-11-05: sim, logo depois da fila de UI/UX. Primeira versão: print de tamanho diferente mostra aviso para conferir as marcações, sem realinhar sozinho.
 
 ## Registro
+- 2026-11-05: Decidido em 2026-11-05: sim, logo depois da fila de UI/UX. Primeira versão: print de tamanho diferente mostra aviso para conferir as marcações, sem realinhar sozinho.
 <!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->

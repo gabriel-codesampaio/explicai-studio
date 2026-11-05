@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: fechado
 - Agente: frontend
-- Origem: [relatório UI/UX 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), achado M1 (Médio)
+- Origem: [relatório UI/UX 2026-11-05](../../discovery/2026-11-05-relatorio-ui-ux-e-features.md), achado M1 (Médio)
 
 ## Problema
 `web/src/features/annotations/ImageSizePicker.tsx`: Pequena, Média e Larga saem todas com `aria-pressed="false"` e sem destaque visual, então não se vê qual tamanho está em uso (print `21-img-click.png`).

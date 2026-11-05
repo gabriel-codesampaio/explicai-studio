@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: fechado
 - Agente: frontend
-- Origem: [critique 2026-11-05 (27/40)](../../.impeccable/critique/2026-11-05T12-50-20Z__web-src-app-tsx.md)
+- Origem: [critique 2026-11-05 (27/40)](../../../.impeccable/critique/2026-11-05T12-50-20Z__web-src-app-tsx.md)
 
 ## Problema
 A mesma coisa tem vários nomes e o aviso acima do título empurra o texto. No diálogo Versões, "Remover" quebra linha e parece desativado. Exportar mostra texto longo sobre versão fixada. Mesmo comportamento, só renomear e enxugar. Absorve T-529 (aviso de versão fixada).
