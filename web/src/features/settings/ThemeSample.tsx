@@ -58,7 +58,10 @@ export function ThemeSample({ slug, theme }: { slug: string; theme: ManualTheme 
         >
           {t("Título {n}", { n: 1 })}
         </h5>
-        <h6 className="m-0 text-base font-bold" style={{ color: "var(--t-h2, #151a33)", fontFamily: `var(--display, ${display})` }}>
+        <h6
+          className="m-0 text-base font-bold"
+          style={{ color: "var(--t-h2, #151a33)", fontFamily: `var(--display, ${display})` }}
+        >
           {t("Título {n}", { n: 2 })}
         </h6>
         <p className="m-0">{t("O texto corrido usa a fonte e a cor escolhidas.")}</p>
