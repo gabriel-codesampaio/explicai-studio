@@ -6,7 +6,7 @@ import { reviewedLabel } from "@/lib/reviewed";
 export function ReviewedControl({ reviewed, onMark }: { reviewed: string | undefined; onMark: () => void }) {
   return (
     <div className="flex items-center gap-1">
-      <span className="px-1 text-xs text-muted-foreground" data-testid="reviewed-label">
+      <span className="px-1 text-xs text-muted-foreground" data-testid="reviewed-label" aria-live="polite">
         {reviewedLabel(reviewed)}
       </span>
       <button

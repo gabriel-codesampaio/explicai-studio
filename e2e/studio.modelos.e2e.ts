@@ -71,3 +71,12 @@ test("manual em inglês recebe o modelo em inglês", async ({ page, request }) =
   expect(all).toContain("Result:");
   expect(all).not.toContain("Resultado:");
 });
+
+test("Esc fecha o menu de modelos e devolve o foco ao gatilho", async ({ page, request }) => {
+  await abrir(page, request, "pt-BR");
+  const trigger = page.getByRole("button", { name: "Escolher um modelo de página" });
+  await trigger.click();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menuitem").first()).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
