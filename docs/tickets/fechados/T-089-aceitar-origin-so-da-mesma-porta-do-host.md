@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 6 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 6 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 Host e Origin são checados, mas Origin `http://localhost:3000` passa. Um `POST` com `text/plain` não dispara preflight, então o navegador envia, e o servidor lê o corpo como JSON. `PUT` e `DELETE` ficam protegidos (preflight falha, não há CORS). A resposta não é legível por quem enviou.

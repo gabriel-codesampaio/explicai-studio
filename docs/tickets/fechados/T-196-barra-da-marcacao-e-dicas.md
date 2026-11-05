@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: fechado
 - Agente: frontend
-- Origem: discovery [personalizar-marcacoes](../discovery/personalizar-marcacoes.md), pedido da pessoa 2026-11-04 (lote 1.0), item 7
+- Origem: discovery [personalizar-marcacoes](../../discovery/archives/personalizar-marcacoes.md), pedido da pessoa 2026-11-04 (lote 1.0), item 7
 
 ## Problema
 Achados e medidas na discovery (seções "Problemas achados" e "Modelo de dados por marcador"). Corrige U2 e U5.

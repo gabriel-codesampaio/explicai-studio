@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 2 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 2 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 duas requisições leem o mesmo `manual.json`, cada uma muda uma cópia, e a que grava por último apaga a mudança da outra. O servidor é assíncrono e não serializa nada.

@@ -5,7 +5,7 @@
 - Status: feito
 - Agente: qa
 - Marco: 0.9
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 10 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 10 (2026-11-04)
 
 ## Problema
 Teste de paridade de chaves pt/en (Studio, HTML exportado, core, MCP).

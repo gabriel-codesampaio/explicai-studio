@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: qa
 - Marco: 0.9
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 9 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 9 (2026-11-04)
 
 ## Problema
 Metas de desempenho numéricas e teste de orçamento no CI (abrir, salvar, exportar).

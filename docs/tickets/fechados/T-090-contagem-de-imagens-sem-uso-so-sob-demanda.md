@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 7 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 7 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 cada versão guardada é uma cópia completa da página (`versions.ts:405`). A leitura é sequencial e se repete a cada abertura do painel.

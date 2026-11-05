@@ -2,7 +2,7 @@
 
 Pedido da pessoa, com as palavras dela: "ter opção do MCP de transferir um manual (feito por versões antigas do Explicaí ou outros sistemas, se possível em PDF, MD, HTML) e trazer para o padrão novo da versão mais atualizada do MCP / Studio."
 
-Complementa [mcp.md](mcp.md) (níveis de autonomia, `--allow-dir`, segurança de leitura; lá "importar de Confluence/Notion" ficou fora por falta de pedido). Data: 2026-11-04.
+Complementa [mcp.md](archives/mcp.md) (níveis de autonomia, `--allow-dir`, segurança de leitura; lá "importar de Confluence/Notion" ficou fora por falta de pedido). Data: 2026-11-04.
 
 ## Problema
 

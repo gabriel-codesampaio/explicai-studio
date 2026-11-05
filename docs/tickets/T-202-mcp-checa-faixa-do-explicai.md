@@ -5,7 +5,7 @@
 - Status: aberto
 - Agente: supervisor
 - Marco: 0.5
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 5 (2026-11-04)
+- Origem: discovery [versao-1-0](../discovery/archives/versao-1-0.md), lacuna 5 (2026-11-04)
 
 ## Problema
 Faixa de versão Studio/MCP: o MCP checa a versão de `explicai` e explica o desencontro. Studio só; o MCP segue 0.x (decisão da pessoa).

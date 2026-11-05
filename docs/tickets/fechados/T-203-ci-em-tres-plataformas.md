@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: qa
 - Marco: 0.9
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 7 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 7 (2026-11-04)
 
 ## Problema
 Matriz de plataforma e Node no CI (Windows, macOS, Linux; Node LTS do `engines`). Hipótese: o desenvolvimento é só em Windows.

@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: qa
 - Marco: 0.4
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 2 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 2 (2026-11-04)
 
 ## Problema
 Fixtures congeladas de manual 0.1, 0.2 e 0.3 + teste "abre, edita, salva, exporta" em cada uma.

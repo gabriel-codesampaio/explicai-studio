@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 10 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 10 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 se algo falha no meio (item 9, imagem apagada entre o `exists` e o `copyFile`, `renderHtml` lançando), `exportacao/html/` fica vazia ou pela metade, e a versão boa que já existia se foi. O diálogo desabilita o botão enquanto exporta, mas duas abas ou o MCP podem chamar juntos, e `rm` de uma apaga o que a outra gravou.

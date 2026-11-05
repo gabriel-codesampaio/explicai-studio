@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 5 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 5 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 uma imagem colada há menos de 600 ms, ou presa numa fila de autosave que falhou, ainda não está em nenhuma página no disco. O painel a conta como sem uso e a move para `.lixeira/imagens-<data>/`.

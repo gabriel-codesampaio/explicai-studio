@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: fechado
 - Agente: design
-- Origem: [Discovery do impeccable](../discovery/2026-10-30-impeccable.md) (2026-10-30)
+- Origem: [Discovery do impeccable](../../discovery/archives/2026-10-30-impeccable.md) (2026-10-30)
 
 ## Problema
 Só a `critique` rodou até agora. Falta um `DESIGN.md` que descreva o sistema visual e um audit técnico (acessibilidade, desempenho, tema, responsivo).

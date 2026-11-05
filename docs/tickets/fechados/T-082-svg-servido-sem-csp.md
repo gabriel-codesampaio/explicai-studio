@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: revisão de segurança do lote 7 e auditoria ponytail, achado 1 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: revisão de segurança do lote 7 e auditoria ponytail, achado 1 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 O servidor serve /files/... como image/svg+xml sem Content-Security-Policy; abrir a URL do SVG direto executaria um <script> dentro dele na origem do Studio.

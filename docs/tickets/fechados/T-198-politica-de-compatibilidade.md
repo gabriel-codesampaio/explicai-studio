@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: escritor
 - Marco: 0.4
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 1 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 1 (2026-11-04)
 
 ## Problema
 Política de compatibilidade e semver escrita em `docs/manual-format.md` e no README (o que é contrato, o que é interno).

@@ -72,7 +72,7 @@ Observar: tempo entre o clique e o cursor pronto no editor, com e sem transiçã
 5. Aceitar nenhuma dependência nova (sem Motion, sem react-transition-group)? → Sim.
 
 ## Decisão tomada (2026-10-30)
-Animação só no Studio. O manual exportado fica sem rolagem suave (opção A descartada). Vale a opção B sem a parte do export, com o teste de tempo como portão. → [T-031](../tickets/T-031-transicao-no-studio.md)
+Animação só no Studio. O manual exportado fica sem rolagem suave (opção A descartada). Vale a opção B sem a parte do export, com o teste de tempo como portão. → [T-031](../../tickets/fechados/T-031-transicao-no-studio.md)
 Decisões 2, 4 e 5 seguem a recomendação até a pessoa dizer o contrário.
 
 ## Rascunho de spec (opção A, descartada)

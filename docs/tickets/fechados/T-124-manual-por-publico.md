@@ -4,7 +4,7 @@
 - Tamanho: G
 - Status: feito
 - Agente: frontend
-- Origem: [Discovery do MCP, Revisão](../../discovery/mcp.md) (2026-11-03)
+- Origem: [Discovery do MCP, Revisão](../../discovery/archives/mcp.md) (2026-11-03)
 - Depende de: T-122
 
 ## Problema

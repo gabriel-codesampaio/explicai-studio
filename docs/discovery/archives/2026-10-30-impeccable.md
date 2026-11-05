@@ -94,5 +94,5 @@ Por quê: o audit é barato, só relata, e cobre o que a crítica não mede. O `
 Não verificado: o que cada comando acharia de fato (nenhum foi rodado, por regra desta tarefa); a lista de comandos vem da skill instalada, não da documentação online.
 
 ## Decisões tomadas (2026-10-30)
-- `document` e `audit` agora. → [T-037](../tickets/T-037-design-md-e-audit.md)
-- `harden` antes da versão pública. → [T-038](../tickets/fechados/T-038-harden-antes-do-npm.md)
+- `document` e `audit` agora. → [T-037](../../tickets/fechados/T-037-design-md-e-audit.md)
+- `harden` antes da versão pública. → [T-038](../../tickets/fechados/T-038-harden-antes-do-npm.md)

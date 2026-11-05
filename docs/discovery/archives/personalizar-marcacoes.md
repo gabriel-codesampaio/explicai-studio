@@ -1,6 +1,6 @@
 # Personalizar marcações da imagem: estilo por marcador e revisão de usabilidade
 
-Data: 2026-11-04 (revisão do mesmo dia). Discovery. Sem código, sem ticket, sem commit. Complementa [marcacao-de-imagem](archives/marcacao-de-imagem.md) e [T-133](../tickets/fechados/T-133-decisoes-da-marcacao-de-imagem.md). A direção visual de lá (disco cobalto, caneta azul + marca-texto, marcador ao lado com cauda) continua o padrão.
+Data: 2026-11-04 (revisão do mesmo dia). Discovery. Sem código, sem ticket, sem commit. Complementa [marcacao-de-imagem](marcacao-de-imagem.md) e [T-133](../../tickets/fechados/T-133-decisoes-da-marcacao-de-imagem.md). A direção visual de lá (disco cobalto, caneta azul + marca-texto, marcador ao lado com cauda) continua o padrão.
 
 Pedido original: "adicionar personalização dessas ferramentas, tá tudo azul e borda; personalização dos marcadores".
 

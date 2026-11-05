@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: descartado
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 13 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 13 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 300 páginas de 20 KB = 6 MB lidos e interpretados (YAML) para cada ação, com `Promise.all` abrindo 300 arquivos de uma vez.

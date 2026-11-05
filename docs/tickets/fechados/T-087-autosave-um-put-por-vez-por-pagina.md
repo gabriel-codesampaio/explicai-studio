@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 4 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 4 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 `flush` esvazia a fila e dispara o `PUT`. Se esse `PUT` demora (troca de título renomeia o arquivo e relê todas as outras páginas, achado 11), o próximo `flush` sai em paralelo. No servidor as duas gravações se intercalam e o texto mais antigo pode chegar por último.

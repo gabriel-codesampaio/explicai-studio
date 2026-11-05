@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: descartado
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 12 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 12 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 o custo cresce com o tamanho da página, e o resultado só é usado 600 ms depois da última tecla.

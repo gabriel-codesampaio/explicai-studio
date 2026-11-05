@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 11 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 11 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 digitar "Cadastrar cliente" com duas pausas cria `cadastrar.md`, depois `cadastrar-cliente.md`, e a cada passo lê as outras páginas para corrigir links. Links externos para o arquivo antigo quebram, e o git vê várias renomeações.
