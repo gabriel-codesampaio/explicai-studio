@@ -31,7 +31,7 @@ describe("ItemStylePanel", () => {
   it("troca cor e tamanho do marcador e volta ao padrão", () => {
     const onChange = vi.fn();
     const { rerender } = render(panel("marker", undefined, onChange));
-    expect(screen.getByText("Herdando da imagem")).toBeTruthy();
+    expect(screen.getByText("Usa o estilo da imagem")).toBeTruthy();
     expect(screen.queryByText("Voltar ao padrão")).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Vermelho" }));
     expect(onChange).toHaveBeenLastCalledWith({ color: "red" });

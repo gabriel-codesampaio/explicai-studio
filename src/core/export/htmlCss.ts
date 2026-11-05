@@ -4,7 +4,7 @@ import { TEXT_COLORS } from "./textColors.js";
 
 /** CSS base do manual exportado (tela e impressão). */
 export const CSS = `
-:root{--accent:#2b4fe0;--anotacao:#2b4fe0;--anotacao-fundo:rgba(43,79,224,.08);--sobre-anotacao:#fff;--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--t-cover:#000;--t-page:#000;--t-h1:#000;--t-h2:#000;--t-h3:#000;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
+:root{--accent:#2b4fe0;--anotacao:#2b4fe0;--anotacao-fundo:rgba(43,79,224,.08);--sobre-anotacao:#fff;--marca:#ffd43b;--marca-faixa:rgba(255,212,59,.55);--t-cover:#151a33;--t-page:#151a33;--t-h1:#151a33;--t-h2:#151a33;--t-h3:#151a33;--marca-faixa:rgba(255,212,59,.55);--tinta:#151a33;--grafite:#575e78;--linha:#dce0eb;--papel:#f5f6fa;
 --texto:"Atkinson Hyperlegible Next","Segoe UI",system-ui,sans-serif;--display:"Archivo","Arial Narrow",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Consolas,monospace}
 *{box-sizing:border-box}
 body{margin:0;background:#fff;color:var(--tinta);font:16px/1.65 var(--texto);-webkit-font-smoothing:antialiased}

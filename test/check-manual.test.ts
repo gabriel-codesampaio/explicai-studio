@@ -70,6 +70,13 @@ describe("checkManual", () => {
     expect((await checkManual(dir)).map((f) => f.kind)).toEqual(["no-image"]);
   });
 
+  it("aceita Result: em manual em inglês", async () => {
+    const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
+    const { dir } = await createManual(ws, { title: "M", language: "en" });
+    await addPage(dir, { title: "P", body: "1. Click.\nResult: it opens." });
+    expect((await checkManual(dir)).map((f) => f.kind)).toEqual(["no-image"]);
+  });
+
   it("aceita Resultado em citação logo depois do passo", async () => {
     const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
     const { dir } = await createManual(ws, { title: "M", language: "pt-BR" });

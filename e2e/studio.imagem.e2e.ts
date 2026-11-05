@@ -188,23 +188,23 @@ const openImage = async (page: Page) => {
 /** Seleciona a imagem pelo teclado (Shift+seta sobre ela), sem abrir o balão da descrição. */
 const selectImageByKeyboard = async (page: Page) => {
   await expect(images(page)).toHaveCount(1); // com o conteúdo já no editor, a seleção não é desfeita por um carregamento tardio
-  await editor(page).getByText("Antes.").click();
-  await settleEditor(page);
-  await page.keyboard.press("End");
-  await settleEditor(page);
-  await page.keyboard.press("ArrowRight");
-  await settleEditor(page);
-  await page.keyboard.press("Shift+ArrowRight");
-  // O ProseMirror só copia a imagem depois de processar a seleção; copiar antes copiava um parágrafo vazio.
-  await expect
-    .poll(() =>
-      editor(page).evaluate((el) => {
-        const dt = new DataTransfer();
-        el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
-        return dt.getData("text/html").includes("<img");
-      }),
-    )
-    .toBe(true);
+  // Em CI lento a seleção por teclado às vezes não pega; refaz o gesto inteiro em vez de só esperar a cópia.
+  await expect(async () => {
+    await editor(page).getByText("Antes.").click();
+    await settleEditor(page);
+    await page.keyboard.press("End");
+    await settleEditor(page);
+    await page.keyboard.press("ArrowRight");
+    await settleEditor(page);
+    await page.keyboard.press("Shift+ArrowRight");
+    // O ProseMirror só copia a imagem depois de processar a seleção; copiar antes copiava um parágrafo vazio.
+    const copiou = await editor(page).evaluate((el) => {
+      const dt = new DataTransfer();
+      el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
+      return dt.getData("text/html").includes("<img");
+    });
+    expect(copiou).toBe(true);
+  }).toPass({ timeout: 15_000 });
 };
 const markDialog = (page: Page) => page.getByRole("dialog", { name: "Editar imagem" });
 const annotations = (request: APIRequestContext, slug: string) =>
@@ -437,6 +437,53 @@ test.describe("marcações", () => {
     expect(a.markers[0].label).toBe("Botão Novo");
   });
 
+  test("só com teclado cria as quatro formas, move uma com as setas e a janela passa no axe (T-525)", async ({
+    page,
+    request,
+  }) => {
+    const { slug, id } = await withImage(request, "Imagem Teclado");
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    const dialog = markDialog(page);
+    const canvas = dialog.getByRole("application", { name: "Imagem para marcar" });
+    // Letra da ferramenta (foco na janela), foco no canvas e Enter cria no cursor (centro da imagem).
+    const create = async (tool: string) => {
+      await page.keyboard.press(tool);
+      await canvas.focus();
+      await page.keyboard.press("Enter");
+    };
+    await create("M");
+    // O marcador leva o foco para a legenda; Esc o devolve ao canvas.
+    await expect(dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(dialog.getByRole("status").filter({ hasText: "Nova marcação: Marcador 1" })).toHaveCount(1);
+    await create("D");
+    await create("S");
+    await create("A");
+    await expect(dialog.getByRole("button", { name: "Excluir destaque 1" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Excluir seta 1" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Excluir área 1" })).toBeVisible();
+
+    // A área clicável nasceu selecionada: com o foco no canvas, as setas a movem (3 x 1%).
+    await canvas.focus();
+    for (let i = 0; i < 3; i++) await page.keyboard.press("ArrowRight");
+
+    const axe = await new AxeBuilder({ page }).include('[role="dialog"]').analyze();
+    expect(
+      axe.violations
+        .filter((v) => v.impact === "serious" || v.impact === "critical")
+        .map((v) => `${v.id}: ${v.nodes[0]?.html.slice(0, 160)}`),
+    ).toEqual([]);
+
+    await dialog.getByRole("button", { name: "Salvar marcações" }).click();
+    await expect(dialog).toBeHidden();
+    const a = await annotations(request, slug);
+    expect([a.markers.length, a.highlights.length, a.arrows.length, a.hotspots.length]).toEqual([1, 1, 1, 1]);
+    expect(a.markers[0]).toMatchObject({ x: 0.5, y: 0.5 });
+    expect(a.hotspots[0].x).toBeCloseTo(0.4 + 0.03); // nasce centrada (x = 0,5 - meia largura) e anda 3 x 1%
+  });
+
   test("Cancelar descarta o que foi marcado", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Cancelar");
     await page.goto(`/#/${slug}/${id}`);
@@ -573,7 +620,7 @@ test.describe("estilo do item", () => {
     await dialog.locator("[data-n='2']").click();
     const panel = dialog.getByRole("region", { name: "Estilo do item" });
     await expect(panel).toContainText("Marcador 2");
-    await expect(panel).toContainText("Herdando da imagem");
+    await expect(panel).toContainText("Usa o estilo da imagem");
     await panel.getByRole("button", { name: "Vermelho" }).click();
     await panel.getByRole("button", { name: "Grande" }).click();
     await expect(dialog.locator("[data-n='2']")).toHaveCSS("background-color", "rgb(196, 38, 29)");

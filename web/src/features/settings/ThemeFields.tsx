@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { ManualTheme, ThemePatch } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -11,7 +12,7 @@ const ACCENTS = [
   { label: t("Grafite"), swatch: "#3d4459" },
 ] as const;
 
-const DEFAULTS = { text: "#151a33", accent: ACCENTS[0].swatch, highlight: "#ffd43b", heading: "#000000" };
+const DEFAULTS = { text: "#151a33", accent: ACCENTS[0].swatch, highlight: "#ffd43b", heading: "#151a33" };
 
 const HEADINGS = [
   { slot: "cover", label: t("Título da capa") },
@@ -21,10 +22,24 @@ const HEADINGS = [
   { slot: "h3", label: t("Título 3") },
 ] as const;
 
+type Headings = ManualTheme["headings"];
+
+/** Cor comum dos cinco títulos; `undefined` quando nenhum foi escolhido ou eles diferem. */
+export function commonHeading(headings: Headings): string | undefined {
+  const colors = HEADINGS.map(({ slot }) => headings?.[slot]);
+  return colors.every((c) => c !== undefined && c.toLowerCase() === colors[0]?.toLowerCase()) ? colors[0] : undefined;
+}
+
+/** Os cinco títulos têm cores diferentes entre si (o que não foi escolhido vale o padrão). */
+export function headingsDiffer(headings: Headings): boolean {
+  return new Set(HEADINGS.map(({ slot }) => (headings?.[slot] ?? DEFAULTS.heading).toLowerCase())).size > 1;
+}
+
 /** Cores do manual (o Studio fica sempre no cobalto). Cada campo salva sozinho. */
 export function ThemeFields({ theme }: { theme: ManualTheme }) {
   const studio = useStudioContext();
   const save = (patch: ThemePatch) => studio.setManualTheme(patch);
+  const [byLevel, setByLevel] = useState(() => headingsDiffer(theme.headings));
 
   return (
     <section className="grid gap-3" aria-labelledby="aparencia-cores">
@@ -68,17 +83,35 @@ export function ThemeFields({ theme }: { theme: ManualTheme }) {
           onCommit={(hex) => save({ highlight: hex })}
         />
         <p className="-mt-1 pl-9 text-xs text-muted-foreground">{t("Capa, “Resultado:” e destaques nas imagens.")}</p>
-        <div className="mt-1 grid gap-2.5">
-          {HEADINGS.map(({ slot, label }) => (
-            <ColorField
-              key={slot}
-              label={label}
-              value={theme.headings?.[slot]}
-              fallback={DEFAULTS.heading}
-              onCommit={(hex) => save({ headings: { [slot]: hex } })}
-            />
-          ))}
-        </div>
+        <ColorField
+          label={t("Cor dos títulos")}
+          value={commonHeading(theme.headings)}
+          fallback={DEFAULTS.heading}
+          force={headingsDiffer(theme.headings)}
+          onCommit={(hex) => save({ headings: Object.fromEntries(HEADINGS.map(({ slot }) => [slot, hex])) })}
+        />
+        <button
+          type="button"
+          aria-expanded={byLevel}
+          aria-controls="aparencia-titulos-nivel"
+          onClick={() => setByLevel(!byLevel)}
+          className="justify-self-start rounded-sm px-1.5 py-1 text-sm text-primary hover:bg-accent"
+        >
+          {t("Ajustar por nível")}
+        </button>
+        {byLevel && (
+          <div id="aparencia-titulos-nivel" className="grid gap-2.5">
+            {HEADINGS.map(({ slot, label }) => (
+              <ColorField
+                key={slot}
+                label={label}
+                value={theme.headings?.[slot]}
+                fallback={DEFAULTS.heading}
+                onCommit={(hex) => save({ headings: { [slot]: hex } })}
+              />
+            ))}
+          </div>
+        )}
         <p className="text-xs text-muted-foreground">
           {t("Texto, títulos e destaque precisam de contraste de 4,5:1 com o branco para a leitura ficar nítida.")}
         </p>

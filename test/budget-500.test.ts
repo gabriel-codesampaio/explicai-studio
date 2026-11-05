@@ -2,7 +2,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, expect, it } from "vitest";
-import { addPage, createManual, readPageTree, updatePage } from "../src/core/index.js";
+import { addPage, createManual, readPageTree, searchBodies, updatePage } from "../src/core/index.js";
 
 // T-423: orçamento de abrir e salvar com 500 páginas (medidas e tetos em docs/desempenho.md).
 let ws: string;
@@ -45,4 +45,9 @@ it("salvar com título novo (renomeia o arquivo) leva até 1 s", async () => {
   expect(
     await median(() => updatePage(dir, ids[251] as string, { title: `Outro título ${n++}` }, { fileName: "sync" })),
   ).toBeLessThan(1000);
+});
+
+it("T-543: buscar no corpo de 500 páginas, sem índice, leva até 300 ms (termo que não existe, pior caso)", async () => {
+  const ms = await median(() => searchBodies(dir, "termo inexistente"));
+  expect(ms).toBeLessThan(300);
 });

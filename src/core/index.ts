@@ -34,6 +34,7 @@ export { resolveInside, resolveInsideReal } from "./fs.js";
 export { createManual, listManuals, readManual, renameManual } from "./manuals.js";
 export { addPage, movePage, type PageTreeNode, readPage, readPageTree, updatePage } from "./pages.js";
 export { insideGitRepo, redactAsset } from "./redact.js";
+export { type BodyHit, foldText, searchBodies } from "./search.js";
 export { slugify } from "./text.js";
 export { listTrash, removePage, restorePage, TRASH_DIR, type TrashItem } from "./trash.js";
 export { flatten } from "./tree.js";

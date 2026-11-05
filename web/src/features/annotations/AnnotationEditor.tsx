@@ -5,22 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Kbd } from "@/components/ui/kbd";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
-import {
-  draftChanged,
-  findItem,
-  type HotspotTarget,
-  nudge,
-  removeAnnotation,
-  type Tool,
-  updateItemStyle,
-} from "@/lib/annotations";
+import { draftChanged, findItem, type HotspotTarget, removeAnnotation, type Tool, updateItemStyle } from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
 import { TOOL_KEYS, toolForKey } from "@/lib/toolShortcuts";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
-import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
+import { AnnotationCanvas, type Draft, nudgeDraft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
 import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
@@ -45,12 +37,32 @@ const TOOLS: { tool: Tool; label: string; hint: string; Icon: LucideIcon }[] = [
     hint: t("Clique numa marcação para selecionar e arraste para mover; Delete exclui"),
     Icon: MousePointer2,
   },
-  { tool: "marker", label: t("Marcador"), hint: t("Clique onde o número deve ficar"), Icon: Hash },
-  { tool: "highlight", label: t("Destaque"), hint: t("Arraste sobre o que merece atenção"), Icon: Highlighter },
-  { tool: "arrow", label: t("Seta"), hint: t("Arraste do início até a ponta da seta"), Icon: ArrowUpRight },
-  { tool: "hotspot", label: t("Área clicável"), hint: t("Arraste sobre a área que leva a outra página"), Icon: Link2 },
-  { tool: "redact", label: t("Ocultar"), hint: t("Arraste sobre o dado que deve sumir"), Icon: EyeOff },
-  { tool: "crop", label: t("Recortar"), hint: t("Arraste sobre a parte da imagem que deve ficar"), Icon: Crop },
+  { tool: "marker", label: t("Marcador"), hint: t("Clique onde o número deve ficar. Ou Tab, setas e Enter."), Icon: Hash },
+  {
+    tool: "highlight",
+    label: t("Destaque"),
+    hint: t("Arraste sobre o que merece atenção. Ou Tab, setas e Enter."),
+    Icon: Highlighter,
+  },
+  {
+    tool: "arrow",
+    label: t("Seta"),
+    hint: t("Arraste do início até a ponta da seta. Ou Tab, setas e Enter."),
+    Icon: ArrowUpRight,
+  },
+  {
+    tool: "hotspot",
+    label: t("Área clicável"),
+    hint: t("Arraste sobre a área que leva a outra página. Ou Tab, setas e Enter."),
+    Icon: Link2,
+  },
+  { tool: "redact", label: t("Ocultar"), hint: t("Arraste sobre o dado que deve sumir. Ou Tab, setas e Enter."), Icon: EyeOff },
+  {
+    tool: "crop",
+    label: t("Recortar"),
+    hint: t("Arraste sobre a parte da imagem que deve ficar. Ou Tab, setas e Enter."),
+    Icon: Crop,
+  },
 ];
 
 /** Janela de marcação de uma imagem. Trabalha num rascunho e só grava ao clicar em "Salvar marcações". */
@@ -157,10 +169,10 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
             setSelectedId(null);
           }
           if (selectedId && draft && !target.closest("input, select, textarea, [role=toolbar]")) {
-            const moved = nudge(draft.ann, selectedId, e.key, e.shiftKey);
+            const moved = nudgeDraft(draft, selectedId, e.key, e.shiftKey);
             if (moved) {
               e.preventDefault();
-              change({ ann: moved, redact: draft.redact, crop: draft.crop });
+              change(moved);
             }
           }
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !target.closest("input, select, textarea")) {
