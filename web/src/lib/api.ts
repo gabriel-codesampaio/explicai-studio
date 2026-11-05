@@ -85,6 +85,23 @@ export interface ManualDetail extends ManualSummary {
 
 export type ExportFormat = "html" | "pdf" | "markdown";
 
+export type CheckKind =
+  | "no-image"
+  | "step-without-result"
+  | "dead-link"
+  | "missing-image"
+  | "hotspot-missing-page"
+  | "image-without-markers"
+  | "marker-without-label"
+  | "to-confirm";
+
+export interface CheckFinding {
+  pageId: string;
+  title: string;
+  kind: CheckKind;
+  detail: string;
+}
+
 export interface ExportResult {
   format: ExportFormat;
   /** Arquivo gerado, relativo à pasta do manual. */
@@ -228,6 +245,8 @@ export const api = {
   listFonts: () => call<FontInfo[]>("/api/fonts"),
   exportManual: (slug: string, format: ExportFormat, onlyApproved: boolean, audience?: string) =>
     call<ExportResult>(`${manualUrl(slug)}/export`, send("POST", { format, onlyApproved, ...(audience ? { audience } : {}) })),
+  /** Achados do checkManual, só leitura. */
+  checkManual: (slug: string) => call<CheckFinding[]>(`${manualUrl(slug)}/check`),
   /** Variáveis do tema (o `themeCss` do export) no escopo `.amostra-manual`. */
   themeCss: (slug: string) => call<{ css: string }>(`${manualUrl(slug)}/theme/css`),
   setTheme: (slug: string, patch: ThemePatch) => call<{ ok: true }>(`${manualUrl(slug)}/theme`, send("PUT", patch)),

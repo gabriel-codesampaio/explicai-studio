@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useManualCheck } from "@/features/check/useManualCheck";
 import { ManualAppearanceDialog } from "@/features/settings/ManualAppearanceDialog";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
@@ -31,6 +32,14 @@ const TODOS = "__todos__";
 
 export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenChange?: (open: boolean) => void }) {
   const studio = useStudioContext();
+  // Só avisa: a contagem não bloqueia o export. Refaz ao abrir, para não mostrar número velho.
+  const check = useManualCheck(studio.manual?.slug);
+  const checkCount = check.findings?.length ?? 0;
+  const { reload } = check;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: refaz só quando o diálogo abre
+  useEffect(() => {
+    if (open) reload();
+  }, [open]);
   const [format, setFormat] = useState<ExportFormat>("html");
   const [onlyApproved, setOnlyApproved] = useState(false);
   const approved = flattenItems(studio.manual?.pages ?? []).filter((p) => ["aprovado", "publicado"].includes(p.status)).length;
@@ -81,10 +90,24 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
     >
       <DialogTrigger asChild>
         {/* Primário do topo: mais peso que os vizinhos de texto e 44 px em tela de toque. */}
-        <Button data-passeio="exportar" className="font-semibold [@media(pointer:coarse)]:h-11">
+        <Button
+          data-passeio="exportar"
+          aria-describedby={checkCount > 0 ? "export-check-count" : undefined}
+          className="font-semibold [@media(pointer:coarse)]:h-11"
+        >
           {t("Exportar manual")}
+          {checkCount > 0 && (
+            <span aria-hidden className="ml-1 rounded-full bg-primary-foreground/20 px-1.5 text-xs tabular-nums">
+              {checkCount}
+            </span>
+          )}
         </Button>
       </DialogTrigger>
+      {checkCount > 0 && (
+        <span id="export-check-count" className="sr-only">
+          {tn(checkCount, "{n} achado na checagem do manual.", "{n} achados na checagem do manual.")}
+        </span>
+      )}
       <DialogContent
         className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg"
         aria-busy={busy}

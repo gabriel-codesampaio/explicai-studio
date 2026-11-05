@@ -3,6 +3,32 @@
  * Texto novo sem entrada aqui aparece em português: o teste i18n.test.ts acusa.
  */
 export const EN: Record<string, string> = {
+  "Checar manual": "Check manual",
+  "Confere o manual inteiro sem mudar nada. Clique num achado para abrir a página.":
+    "Checks the whole manual without changing anything. Click a finding to open the page.",
+  "Conferindo o manual…": "Checking the manual…",
+  "Nenhum problema encontrado.": "No problems found.",
+  "Não foi possível checar o manual.": "Could not check the manual.",
+  "{n} achado": "{n} finding",
+  "{n} achados": "{n} findings",
+  "{n} achado na checagem do manual.": "{n} finding in the manual check.",
+  "{n} achados na checagem do manual.": "{n} findings in the manual check.",
+  "Abrir página": "Open page",
+  "Página com passos e sem print": "Page with steps and no screenshot",
+  "Passo sem resultado": "Step without a result",
+  "Link para página que não existe": "Link to a page that does not exist",
+  "Imagem não encontrada": "Image not found",
+  "Área clicável aponta para página apagada": "Clickable area points to a deleted page",
+  "Imagem sem marcação": "Image without annotations",
+  "Marcador sem descrição": "Marker without a description",
+  "A confirmar": "To confirm",
+  "A página tem passos e nenhum print.": "The page has steps and no screenshot.",
+  'A página ainda tem o marcador "A confirmar".': 'The page still has the "A confirmar" marker.',
+  "Passo: {passo}": "Step: {passo}",
+  "Destino: {destino}": "Target: {destino}",
+  "Arquivo: {arquivo}": "File: {arquivo}",
+  "Arquivo {arquivo}, marcadores {numeros}": "File {arquivo}, markers {numeros}",
+  "Arquivo {arquivo}, página de destino {id}": "File {arquivo}, target page {id}",
   "Nenhuma imagem sem uso.": "No unused images.",
   "Move para a lixeira as imagens que nenhuma página usa, contando versões e lixeira.":
     "Moves to the trash the images that no page uses, counting versions and trash.",
