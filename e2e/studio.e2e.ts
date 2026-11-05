@@ -351,7 +351,9 @@ test("versões: guarda, edita, restaura e o texto anterior vira versão", async 
   await dialog.getByRole("button", { name: "Fixar no manual" }).click();
   await expect(dialog.getByText("Fixada no manual", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByText("Fixada no manual", { exact: true })).toBeVisible();
+  await expect(
+    page.locator('div:has(> button:text-is("Usar texto atual"))').getByText("Fixada no manual", { exact: true }),
+  ).toBeVisible();
 
   await editor(page).click();
   await page.keyboard.press("Control+a");

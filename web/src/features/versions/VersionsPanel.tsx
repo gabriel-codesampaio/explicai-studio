@@ -64,6 +64,11 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
         : list.current?.querySelector<HTMLElement>("[data-remove]")
       )?.focus(),
     );
+  // O menu desmonta com o gatilho e devolve o foco ao diálogo; o Cancelar só o recebe depois disso.
+  const askRemove = (id: string) => {
+    setRemoving(id);
+    setTimeout(() => list.current?.querySelector<HTMLElement>("[data-cancel]")?.focus(), 0);
+  };
   const cancelRemove = () => {
     const id = removing;
     setRemoving(null);
@@ -163,7 +168,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                       <Button variant="destructive" size="sm" className={TOUCH} onClick={() => void remove(v.id)}>
                         {t("Remover")}
                       </Button>
-                      <Button variant="outline" size="sm" className={TOUCH} autoFocus onClick={cancelRemove}>
+                      <Button variant="outline" size="sm" className={TOUCH} data-cancel onClick={cancelRemove}>
                         {t("Cancelar")}
                       </Button>
                     </fieldset>
@@ -200,7 +205,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                             variant="destructive"
                             disabled={v.published}
                             title={v.published ? t("Desafixe antes de remover") : undefined}
-                            onSelect={() => setRemoving(v.id)}
+                            onSelect={() => askRemove(v.id)}
                           >
                             <Trash2 aria-hidden /> {t("Remover")}
                           </DropdownMenuItem>
