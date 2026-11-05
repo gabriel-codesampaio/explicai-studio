@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: fechado
 - Agente: frontend
 - Origem: [critique 2026-11-05 (27/40)](../../.impeccable/critique/2026-11-05T12-50-20Z__web-src-app-tsx.md)
 
@@ -19,4 +19,4 @@ O público tem 3 nomes: lateral "Ver como público", botão da página "Todos" (
 Teste de unidade do que for lógica; conferir a tela com script Playwright (uma largura, um tema) e medir com `evaluate_script`/script.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Fechado na branch feat/ui-versoes-publico. Lateral "Visualizar como"; botão da página "Público: Todos"; Exportar usa "Visualizar como" e abre no público visto (estado `viewAs` subiu para useStudio). Teste novo web/test/exportAudience.test.tsx; e2e atualizados (não rodados aqui).

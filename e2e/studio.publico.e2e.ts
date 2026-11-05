@@ -16,32 +16,32 @@ test("público: marca a página, vê como o perfil e exporta só o que ele vê",
   const tree = page.getByRole("navigation", { name: "Páginas do manual" });
 
   // Sem perfil no manual, nada de filtro na tela.
-  await expect(tree.getByLabel("Ver como público")).toHaveCount(0);
+  await expect(tree.getByLabel("Visualizar como")).toHaveCount(0);
 
   await tree.getByRole("button", { name: "Financeiro", exact: true }).click();
-  await page.getByRole("button", { name: /Público da página: Todos/ }).click();
+  await page.getByRole("button", { name: /Público: Todos/ }).click();
   await page.getByRole("textbox", { name: "Novo público" }).fill("admin");
   await page.getByRole("button", { name: "Adicionar" }).click();
-  await expect(page.getByRole("button", { name: "Público da página: admin" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Público: admin" })).toBeVisible();
   await page.keyboard.press("Escape");
 
-  // "Ver como público" aparece e esconde a página de admin para outro perfil.
+  // "Visualizar como" aparece e esconde a página de admin para outro perfil.
   await page.getByRole("button", { name: "Geral", exact: true }).click();
-  await page.getByRole("button", { name: /Público da página: Todos/ }).click();
+  await page.getByRole("button", { name: /Público: Todos/ }).click();
   await page.getByRole("textbox", { name: "Novo público" }).fill("cliente");
   await page.getByRole("button", { name: "Adicionar" }).click();
   await page.keyboard.press("Escape");
-  await tree.getByRole("combobox", { name: "Ver como público" }).click();
+  await tree.getByRole("combobox", { name: "Visualizar como" }).click();
   await page.getByRole("option", { name: "admin" }).click();
   await expect(tree.getByRole("button", { name: "Financeiro", exact: true })).toBeVisible();
   await expect(tree.getByRole("button", { name: "Geral", exact: true })).toHaveCount(0);
-  await tree.getByRole("combobox", { name: "Ver como público" }).click();
+  await tree.getByRole("combobox", { name: "Visualizar como" }).click();
   await page.getByRole("option", { name: "Todos" }).click();
 
   // Exportar para "cliente": só a página dele.
   await page.getByRole("button", { name: "Exportar manual" }).click();
   const dialog = page.getByRole("dialog");
-  await dialog.getByRole("combobox", { name: "Público do export" }).click();
+  await dialog.getByRole("combobox", { name: "Visualizar como" }).click();
   await page.getByRole("option", { name: "cliente" }).click();
   await dialog.getByText("Markdown para IA").click();
   await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
@@ -70,13 +70,13 @@ test("público: duas trocas seguidas gravam na ordem e o menu mostra o que ficou
   });
   await page.goto(`/#/${manual.slug}`);
   await page.getByRole("navigation", { name: "Páginas do manual" }).getByRole("button", { name: "Alvo", exact: true }).click();
-  await page.getByRole("button", { name: /Público da página: Todos/ }).click();
+  await page.getByRole("button", { name: /Público: Todos/ }).click();
   await page.getByRole("checkbox", { name: "a", exact: true }).check();
   await page.getByRole("checkbox", { name: "b", exact: true }).check();
   await expect(page.getByRole("checkbox", { name: "a", exact: true })).toBeChecked();
   await expect(page.getByRole("checkbox", { name: "b", exact: true })).toBeChecked();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("button", { name: "Público da página: a, b" })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole("button", { name: "Público: a, b" })).toBeVisible({ timeout: 10_000 });
   const list = await (await request.get(`/api/manuals/${manual.slug}`)).json();
   const alvo = list.pages.find((p: { title: string }) => p.title === "Alvo");
   await expect

@@ -27,8 +27,8 @@ const TODOS = "__todos__";
 export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   const studio = useStudioContext();
   const { manuals, manual, page } = studio;
-  // "Ver como público": a árvore mostra só o que o perfil vê no export. Não muda nada no disco.
-  const [viewAs, setViewAs] = useState("");
+  // "Visualizar como": a árvore mostra só o que o perfil vê no export.
+  const { viewAs, setViewAs } = studio;
   const [renaming, setRenaming] = useState(false);
   const profile = manual?.audiences.includes(viewAs) ? viewAs : null;
   const pages = manual?.pages;
@@ -80,7 +80,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             {manual.audiences.length > 0 && (
               <div className="mb-2 flex flex-col gap-1 px-2">
                 <label htmlFor="ver-como" className="rotulo text-muted-foreground">
-                  {t("Ver como público")}
+                  {t("Visualizar como")}
                 </label>
                 <Select value={profile || TODOS} onValueChange={(v) => setViewAs(v === TODOS ? "" : v)}>
                   <SelectTrigger id="ver-como" className="w-full px-1.5 py-1">

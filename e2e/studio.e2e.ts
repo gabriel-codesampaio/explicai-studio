@@ -727,7 +727,7 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     const { buttons, rowRight, scrollW, innerW } = await topButtons(page);
     expect(buttons.map((b) => b.name.replace(/:.*/, "").replace(/\s+/g, " "))).toEqual([
       "Versões",
-      "Público da página",
+      "Público",
       "Status da página",
       "Nesta página",
       "Exportar manual",
@@ -744,7 +744,7 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     expect(scrollW).toBeLessThanOrEqual(innerW);
 
     await page.getByRole("button", { name: "Versões" }).focus();
-    for (const name of [/Público da página/, /Status da página/, /Nesta página/, /Exportar manual/]) {
+    for (const name of [/^Público:/, /Status da página/, /Nesta página/, /Exportar manual/]) {
       await page.keyboard.press("Tab");
       await expect(page.getByRole("button", { name })).toBeFocused();
     }

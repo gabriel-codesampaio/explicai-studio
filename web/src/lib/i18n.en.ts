@@ -594,7 +594,6 @@ export const EN: Record<string, string> = {
   "Se continuar, feche o comando explicai no terminal e rode de novo.":
     "If it keeps happening, stop the explicai command in the terminal and run it again.",
   Todos: "Everyone",
-  "Público da página: {publico}": "Page audience: {publico}",
   "Público da página": "Page audience",
   "Novo público": "New audience",
   "Ex.: admin": "E.g. admin",
@@ -626,11 +625,11 @@ export const EN: Record<string, string> = {
   "e mais {n}": "and {n} more",
   "Sem nenhum público marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.":
     "With no audience checked, the page is for everyone. It only filters what you export: the manual's files keep everything.",
-  "Público do export": "Export audience",
   "Todos (o manual inteiro)": "Everyone (the whole manual)",
   "Só entram as páginas desse público e as sem restrição. Links para as outras viram texto. Não é controle de acesso.":
     "Only this audience's pages and the unrestricted ones are included. Links to the others become plain text. This is not access control.",
-  "Ver como público": "View as audience",
+  "Visualizar como": "View as",
+  "Público: {publico}": "Audience: {publico}",
   Amostra: "Preview",
   "Como o manual fica com estas cores e fontes.": "How the manual looks with these colors and fonts.",
   "Um título de página": "A page heading",

@@ -38,7 +38,9 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
   const onlyApprovedOn = onlyApproved && approved > 0;
   const pinnedCount = flattenItems(studio.manual?.pages ?? []).filter((p) => p.published).length;
   const audiences = studio.manual?.audiences ?? [];
-  const [audience, setAudience] = useState("");
+  // Pré-seleciona o público visto agora; a pessoa pode trocar só para este export.
+  const [chosen, setChosen] = useState<string | null>(null);
+  const audience = chosen ?? studio.viewAs;
   const audienceOn = audiences.includes(audience) ? audience : "";
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const appearanceBtn = useRef<HTMLButtonElement>(null);
@@ -76,6 +78,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
         if (!next && busy) return;
         onOpenChange?.(next);
         if (next) return;
+        setChosen(null);
         setResult(null);
         setError(null);
       }}
@@ -157,8 +160,8 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
 
           {audiences.length > 0 && (
             <label htmlFor="para-quem" className="grid gap-1.5 text-sm">
-              <span className="font-bold">{t("Público do export")}</span>
-              <Select value={audienceOn || TODOS} onValueChange={(v) => setAudience(v === TODOS ? "" : v)} disabled={busy}>
+              <span className="font-bold">{t("Visualizar como")}</span>
+              <Select value={audienceOn || TODOS} onValueChange={(v) => setChosen(v === TODOS ? "" : v)} disabled={busy}>
                 <SelectTrigger id="para-quem">
                   <SelectValue />
                 </SelectTrigger>
