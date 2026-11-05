@@ -59,5 +59,5 @@ it("trecho sem sintaxe Markdown (negrito, código, tabela, link, imagem)", async
   const [hit] = await searchBodies(d, "cobranca");
   expect(hit?.before).toBe("Gere o boleto em ");
   expect(hit?.after).toContain("A B x y Veja cobrança");
-  expect(hit?.after).not.toMatch(/[*`|#\[\]()]/);
+  expect(hit?.after).not.toMatch(/[*`|#[\]()]/);
 });

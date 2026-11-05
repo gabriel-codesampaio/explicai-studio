@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: aberto
 - Agente: qa (+ frontend)
-- Origem: pedido da pessoa, 2026-11-05; relacionado a [T-426](T-426-tirar-tolerancia-dos-e2e-que-so-falham-no-ci.md)
+- Origem: pedido da pessoa, 2026-11-05; relacionado a [T-426](T-426-tirar-tolerancia-dos-e2e.md)
 
 ## Problema
 O Windows do CI estoura o limite de 5 s do Vitest em `test/export-audience.test.ts`, em `test/format-contract.test.ts` e no teste de PDF "todas as imagens entram no PDF" (cerca de 32 s, com `ECONNREFUSED` na porta 3000). `web/test/pageTreeNumbers.test.tsx` (500 páginas) é flaky sob carga. O #143 subiu o `testTimeout` de 5 s para 20 s para destravar o CI, o que esconde a lentidão em vez de resolver.

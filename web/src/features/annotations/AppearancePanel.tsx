@@ -1,4 +1,4 @@
-import { type AnnotationStyle, STYLE_PALETTE, type StyleBorder, type StyleColor, type StyleStep } from "@/lib/annotationStyle";
+import { type AnnotationStyle, STYLE_PALETTE, type StyleBorder } from "@/lib/annotationStyle";
 import { t } from "@/lib/i18n";
 import { BORDERS, COLORS, SIZES, STROKES } from "./styleOptions";
 

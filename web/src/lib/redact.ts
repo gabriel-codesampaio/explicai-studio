@@ -53,10 +53,11 @@ function blurArea(img: Pixels, x0: number, y0: number, x1: number, y1: number) {
       const ey = Math.min(h, by + block);
       const sum = [0, 0, 0];
       for (let y = by; y < ey; y++)
-        for (let x = bx; x < ex; x++) for (let c = 0; c < 3; c++) sum[c]! += img.data[((y0 + y) * img.width + x0 + x) * 4 + c]!;
+        for (let x = bx; x < ex; x++)
+          for (let c = 0; c < 3; c++) sum[c] = (sum[c] ?? 0) + (img.data[((y0 + y) * img.width + x0 + x) * 4 + c] ?? 0);
       const n = (ex - bx) * (ey - by);
       for (let y = by; y < ey; y++)
-        for (let x = bx; x < ex; x++) for (let c = 0; c < 3; c++) cur[(y * w + x) * 3 + c] = sum[c]! / n;
+        for (let x = bx; x < ex; x++) for (let c = 0; c < 3; c++) cur[(y * w + x) * 3 + c] = (sum[c] ?? 0) / n;
     }
   }
   const r = Math.max(1, Math.floor(block / 3));
@@ -69,7 +70,7 @@ function blurArea(img: Pixels, x0: number, y0: number, x1: number, y1: number) {
         const b = Math.min(len - 1, pos + r);
         for (let c = 0; c < 3; c++) {
           let s = 0;
-          for (let k = a; k <= b; k++) s += src[(horizontal ? y * w + k : k * w + x) * 3 + c]!;
+          for (let k = a; k <= b; k++) s += src[(horizontal ? y * w + k : k * w + x) * 3 + c] ?? 0;
           out[(y * w + x) * 3 + c] = s / (b - a + 1);
         }
       }
@@ -80,7 +81,7 @@ function blurArea(img: Pixels, x0: number, y0: number, x1: number, y1: number) {
   for (let y = 0; y < h; y++)
     for (let x = 0; x < w; x++) {
       const i = ((y0 + y) * img.width + x0 + x) * 4;
-      for (let c = 0; c < 3; c++) img.data[i + c] = Math.round(done[(y * w + x) * 3 + c]!);
+      for (let c = 0; c < 3; c++) img.data[i + c] = Math.round(done[(y * w + x) * 3 + c] ?? 0);
       img.data[i + 3] = 255;
     }
 }

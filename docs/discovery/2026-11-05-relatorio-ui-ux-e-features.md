@@ -19,7 +19,7 @@ Data: 2026-11-05. Só leitura: nenhum código foi alterado, nenhum ticket criado
 - Navegador: Playwright headless (Chrome instalado), 1 worker, pasta temporária com cópia de `docs/exemplo/financeiro` (porta 4871) e uma pasta vazia (porta 4872). Nenhum dado real tocado.
 - Telas: abertura do manual, editor, barra de blocos, menu `/`, popover e edição de imagem, árvore (teclado, menu, exclusão com desfazer), busca (Ctrl+P), exportação, Ajustes, Aparência do manual, Ajuda, Lixeira, Versões, público, status, primeira execução (pasta vazia), manual sem páginas, primeira página, passeio guiado, 404, servidor caído.
 - Medidas por script: overflow horizontal, alvos de toque, contraste de texto (calculado sobre o fundo efetivo), nome acessível, tamanho de fonte, ordem de Tab, anel de foco, Esc e retorno de foco.
-- Prints em `C:\Users\PC\AppData\Local\Temp\claude\9e0de75f1873b03a\347759f2-859e-44d7-a919-f12ef054265b\scratchpad\shots`.
+- Prints guardados fora do repositório (pasta temporária da sessão).
 - Larguras e temas: 1280 claro (padrão), 1280 escuro, 375 claro; 375 escuro só parcial. Idioma pt-BR (pt na maior parte; en-US só na abertura).
 
 ### Achados
