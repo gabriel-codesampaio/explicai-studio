@@ -33,9 +33,12 @@ export const cssString = (s: string) =>
     .replace(/</g, "\\3C ")
     .replace(/\r\n|\r|\n/g, "\\A ")}"`;
 
+/** Texto do rodapé já aparado; valor que não é string (manual editado à mão) conta como vazio. */
+const footerText = (footer: ManualFooter | undefined): string => (typeof footer?.text === "string" ? footer.text.trim() : "");
+
 /** Linha de texto do rodapé na tela (HTML). Em papel o texto vai na margem de cada página. */
 export const footerHtml = (footer: ManualFooter | undefined): string =>
-  footer?.text?.trim() ? `<p class="foot-text">${escapeHtml(footer.text.trim())}</p>` : "";
+  footerText(footer) ? `<p class="foot-text">${escapeHtml(footerText(footer))}</p>` : "";
 
 export const FOOTER_CSS = ".foot-text{margin:0 0 8px;white-space:pre-line;overflow-wrap:anywhere}";
 
@@ -44,7 +47,7 @@ export const FOOTER_CSS = ".foot-text{margin:0 0 8px;white-space:pre-line;overfl
  * à direita, nenhum dos dois na capa. Cor fixa: variável CSS não vale nas margens.
  */
 export function footerPageCss(footer: ManualFooter | undefined, color: string): string {
-  const text = footer?.text?.trim();
+  const text = footerText(footer);
   if (!text && !footer?.pageNumbers) return "";
   const box = `font:9pt Archivo,sans-serif;color:${color}`;
   const left = text ? `@bottom-left{content:${cssString(text)};${box};white-space:pre-line}` : "";

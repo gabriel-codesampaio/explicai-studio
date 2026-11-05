@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -206,5 +206,20 @@ describe("exportação: escape contra XSS", () => {
     const md = await readFile(path.join(dir, (await exportManual(dir, "markdown")).file), "utf8");
     expect(md).toContain("vermelho e");
     expect(md).not.toContain('data-color="red"');
+  });
+});
+
+describe("exportação: manual.json editado à mão", () => {
+  it("theme.text inválido e footer.text que não é string são ignorados, sem derrubar a exportação", async () => {
+    dir = (await createManual(workspace, { title: "M", language: "pt-BR" })).dir;
+    await addPage(dir, { title: "P", body: "texto" });
+    const file = path.join(dir, "manual.json");
+    const meta = JSON.parse(await readFile(file, "utf8"));
+    meta.theme = { ...meta.theme, text: "vermelho" };
+    meta.footer = { text: 42, pageNumbers: true };
+    await writeFile(file, JSON.stringify(meta), "utf8");
+    const doc = await html();
+    expect(doc).not.toContain(`<p class="foot-text">`);
+    expect(doc).not.toContain("vermelho");
   });
 });

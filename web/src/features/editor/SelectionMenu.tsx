@@ -4,6 +4,7 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { Bold, Code, Highlighter, Italic, Link2 } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { BlockTypeMenu } from "./BlockTypeMenu";
+import { collisionPadding } from "./editorArea";
 import { FontMenu } from "./FontMenu";
 import { TextColorMenu } from "./TextColorMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
@@ -13,6 +14,9 @@ interface Props {
   pickImage: () => void;
   onEditLink: () => void;
 }
+
+// No celular (T-524) a barra vira para baixo em vez de cobrir a de formatação; no desktop fica por cima dela, sem cobrir o texto (T-165).
+const NARROW = () => window.matchMedia("(max-width: 639px)").matches;
 
 const MENU_KEY = "selectionMenu";
 
@@ -38,8 +42,8 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
     <BubbleMenu
       editor={editor}
       pluginKey={MENU_KEY}
-      // Sem flip (T-165): perto do topo a barra abre para cima e sobrepõe a barra fixa (z-20 > z-10), em vez de cobrir a linha seguinte.
-      options={{ placement: "top-start", offset: 8, flip: false }}
+      // Abre para cima; em tela estreita vira para baixo se subiria sobre a barra fixa de formatação.
+      options={{ placement: "top-start", offset: 8, flip: NARROW() ? () => ({ padding: collisionPadding() }) : false }}
       // Só em texto selecionado: o print selecionado tem o seu próprio menu (ImagePopover), e no bloco de código não há cor.
       shouldShow={({ view, state, from, to }) =>
         view.hasFocus() &&
