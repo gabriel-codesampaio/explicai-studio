@@ -58,7 +58,7 @@ export function PageOutlineButton(props: Omit<Props, "onNavigate">) {
           <ListTree className="size-3.5" aria-hidden /> {t("Nesta página")}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="max-h-[60vh] w-72 overflow-y-auto p-3">
+      <PopoverContent align="end" aria-label={t("Nesta página")} className="max-h-[60vh] w-72 overflow-y-auto p-3">
         <PageOutline {...props} onNavigate={() => setOpen(false)} />
       </PopoverContent>
     </Popover>

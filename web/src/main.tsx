@@ -7,6 +7,7 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { locale } from "./lib/i18n";
+import { inertWhenHidden } from "./lib/inertWhenHidden";
 import { followSystemTheme } from "./lib/theme";
 import "./styles/index.css";
 
@@ -16,6 +17,7 @@ if (!root) throw new Error("index.html sem o elemento #root.");
 // O index.html nasce em pt-BR; o leitor de tela precisa saber o idioma escolhido.
 document.documentElement.lang = locale;
 followSystemTheme();
+inertWhenHidden();
 createRoot(root).render(
   <StrictMode>
     <ErrorBoundary root>
