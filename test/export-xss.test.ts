@@ -27,9 +27,14 @@ async function html(): Promise<string> {
   return doc.replace(`<script>${TOC_SEARCH_SCRIPT}</script>`, "");
 }
 
-/** Tags reais do HTML gerado, com o texto escapado já fora. O CSS e o SVG das setas são do próprio exportador. */
+/** Tags reais do HTML gerado, com o texto escapado já fora. O CSS, o SVG das setas e o ícone inline são do próprio exportador. */
 function tags(doc: string): string[] {
-  return [...doc.replace(/<style>[\s\S]*?<\/style>/, "").matchAll(/<([a-z][a-z0-9]*)\b[^>]*>/gi)].map((m) => m[0]);
+  return [
+    ...doc
+      .replace(/<style>[\s\S]*?<\/style>/, "")
+      .replace(/<link rel="icon" href="data:image\/svg\+xml,[^"<>]*">/, "")
+      .matchAll(/<([a-z][a-z0-9]*)\b[^>]*>/gi),
+  ].map((m) => m[0]);
 }
 
 function expectNoActiveContent(doc: string) {
