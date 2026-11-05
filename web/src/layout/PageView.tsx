@@ -85,6 +85,7 @@ export function PageView({ manual, page }: Props) {
                     slug={manual.slug}
                     pageId={page.id}
                     pageTitle={page.title}
+                    flush={studio.flush}
                     onSave={studio.saveVersion}
                     onRestore={studio.restoreVersion}
                     onPublish={studio.publishVersion}
