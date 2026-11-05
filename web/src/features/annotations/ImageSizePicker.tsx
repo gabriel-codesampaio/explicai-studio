@@ -11,13 +11,15 @@ const SIZES: { id: ImageDisplay; label: () => string }[] = [
 
 /**
  * Tamanho da imagem na página e no manual exportado. Grava `display` no JSON ao lado da imagem
- * (vale em todo lugar onde ela aparece). Sem escolha, nenhum botão fica ativo e a imagem é como sempre foi.
+ * (vale em todo lugar onde ela aparece). Sem escolha gravada, Larga aparece como atual (a imagem é como sempre foi).
  */
 export function ImageSizePicker({ slug, src }: { slug: string; src: string }) {
   const asset = assetPathFromSrc(src);
   const annotations = useAnnotations(slug, asset);
   const [failed, setFailed] = useState(false);
   if (!asset) return null;
+  // Sem escolha gravada a imagem aparece na largura total, então "Larga" é o tamanho em uso.
+  const current = annotations ? (annotations.display ?? "full") : undefined;
 
   const choose = (display: ImageDisplay) => {
     setFailed(false);
@@ -32,10 +34,10 @@ export function ImageSizePicker({ slug, src }: { slug: string; src: string }) {
           <button
             key={s.id}
             type="button"
-            aria-pressed={annotations?.display === s.id}
+            aria-pressed={current === s.id}
             disabled={!annotations}
             onClick={() => choose(s.id)}
-            className="min-h-11 min-w-11 rounded-md border border-border px-3 py-1 text-sm hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-bold disabled:opacity-50"
+            className="min-h-11 min-w-11 rounded-md border border-border px-3 py-1 text-sm hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-bold aria-pressed:ring-1 aria-pressed:ring-primary disabled:opacity-50"
           >
             {s.label()}
           </button>
