@@ -1,10 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { type APIRequestContext, expect, test } from "@playwright/test";
-
-// Páginas novas nunca foram conferidas (T-545); estes testes olham outros achados.
-const TODAY = new Date().toLocaleDateString("sv");
-const review = (request: APIRequestContext, slug: string, ...ids: string[]) =>
-  Promise.all(ids.map((id) => request.put(`/api/manuals/${slug}/pages/${id}`, { data: { reviewed: TODAY } })));
+import { expect, test } from "@playwright/test";
 
 // T-540: "Checar manual" pelo menu do manual, contagem no Exportar e clique que abre a página.
 test("checar manual: achados por página, teclado, axe, clique abre a página e contagem no Exportar", async ({
@@ -20,7 +15,6 @@ test("checar manual: achados por página, teclado, axe, clique abre a página e 
   const good = await (
     await request.post(`/api/manuals/${m.slug}/pages`, { data: { title: "Página boa", body: "Só texto." } })
   ).json();
-  await review(request, m.slug, bad.id, good.id);
   await page.goto(`/#/${m.slug}/${good.id}`);
 
   // Contagem no botão: o nome continua "Exportar manual"; o número vai na descrição.
@@ -74,7 +68,6 @@ test("checar manual: achados por página, teclado, axe, clique abre a página e 
 test("checar manual: sem achado mostra o estado vazio e o Exportar fica sem número", async ({ page, request }) => {
   const m = await (await request.post("/api/manuals", { data: { title: "Limpo", language: "pt-BR" } })).json();
   const p = await (await request.post(`/api/manuals/${m.slug}/pages`, { data: { title: "Início", body: "Texto." } })).json();
-  await review(request, m.slug, p.id);
   await page.goto(`/#/${m.slug}/${p.id}`);
   await page.getByRole("button", { name: /Limpo/ }).click();
   await page.getByRole("menuitem", { name: "Checar manual" }).click();

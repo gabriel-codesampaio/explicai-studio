@@ -48,6 +48,6 @@ it("o modelo de tarefa nasce sem achado do check além de 'sem print'", async ()
     const { dir } = await createManual(await mkdtemp(path.join(tmpdir(), "expl-")), { title: "M", language });
     await addPage(dir, { title: "T", body: templateBody("task", language) });
     await addPage(dir, { title: "R", body: templateBody("reference", language) });
-    expect((await checkManual(dir)).filter((f) => f.kind !== "not-reviewed").map((f) => f.kind)).toEqual([kind]);
+    expect((await checkManual(dir)).map((f) => f.kind)).toEqual([kind]);
   }
 });

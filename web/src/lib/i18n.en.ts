@@ -4,8 +4,6 @@
  */
 export const EN: Record<string, string> = {
   "Checar manual": "Check manual",
-  "Ninguém conferiu esta página ainda.": "Nobody has reviewed this page yet.",
-  "Leia a página e marque como conferida.": "Read the page and mark it as reviewed.",
   "Cole um print que mostre o passo, ou tire os passos se não precisar deles.":
     "Paste a screenshot that shows the step, or remove the steps if you do not need them.",
   'Acrescente uma linha "Resultado:" dizendo o que a pessoa vê depois do passo.':
@@ -39,15 +37,6 @@ export const EN: Record<string, string> = {
   "Imagem sem marcação": "Image without annotations",
   "Marcador sem descrição": "Marker without a description",
   "A confirmar": "To confirm",
-  "Nunca conferida": "Never reviewed",
-  "Conferida em {data}": "Reviewed on {data}",
-  "Marcar como conferida": "Mark as reviewed",
-  "Só não conferidas": "Only unreviewed",
-  "Páginas sem data de conferência ou conferidas há mais de 90 dias": "Pages with no review date or reviewed over 90 days ago",
-  "Nenhuma página pendente de conferência.": "No pages waiting for review.",
-  "Página sem conferência": "Page not reviewed",
-  "A página nunca foi conferida.": "The page has never been reviewed.",
-  "Última conferência em {data}, há mais de 90 dias.": "Last reviewed on {data}, over 90 days ago.",
   "A página tem passos e nenhum print.": "The page has steps and no screenshot.",
   'A página ainda tem o marcador "A confirmar".': 'The page still has the "A confirmar" marker.',
   "Passo: {passo}": "Step: {passo}",
@@ -245,7 +234,6 @@ export const EN: Record<string, string> = {
   "Destaques e setas": "Highlights and arrows",
   "Destino da área {n}": "Target of area {n}",
   "Editar link": "Edit link",
-  "Bolinha ao lado da página: etapa dela. Sem bolinha, é rascunho.": "Dot next to a page: its stage. No dot means draft.",
   "Em revisão": "In review",
   "Endereço da área {n}": "Address of area {n}",
   "Endereço inválido. Exemplo: https://exemplo.com.br": "Invalid address. Example: https://example.com",

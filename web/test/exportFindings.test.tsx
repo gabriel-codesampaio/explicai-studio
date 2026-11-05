@@ -25,19 +25,13 @@ it("sem achados diz 'Nenhum achado.'", () => {
   expect(screen.getByText("Nenhum achado.")).toBeTruthy();
 });
 
-it("not-reviewed tem rótulo e dica", () => {
-  expect(kindLabel("not-reviewed")).toBe("Página sem conferência");
-  render(<ExportFindings findings={[f("not-reviewed")]} onOpenPage={vi.fn()} />);
-  expect(screen.getByText("Leia a página e marque como conferida.")).toBeTruthy();
-});
-
 it("tipo desconhecido não quebra a lista", () => {
   render(<ExportFindings findings={[f("novo-tipo", "detalhe")]} onOpenPage={vi.fn()} />);
   expect(screen.getByText("novo-tipo")).toBeTruthy();
 });
 
 it("cada botão Abrir página tem nome único (título e tipo)", () => {
-  render(<ExportFindings findings={[f("dead-link"), f("not-reviewed")]} onOpenPage={vi.fn()} />);
+  render(<ExportFindings findings={[f("dead-link"), f("to-confirm")]} onOpenPage={vi.fn()} />);
   expect(screen.getByRole("button", { name: `Abrir página Entrada: ${kindLabel("dead-link")}` })).toBeTruthy();
-  expect(screen.getByRole("button", { name: `Abrir página Entrada: ${kindLabel("not-reviewed")}` })).toBeTruthy();
+  expect(screen.getByRole("button", { name: `Abrir página Entrada: ${kindLabel("to-confirm")}` })).toBeTruthy();
 });
