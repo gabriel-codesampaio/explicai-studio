@@ -3,7 +3,6 @@ import { readAnnotations } from "./assets.js";
 import { exists } from "./fs.js";
 import { readManual } from "./manuals.js";
 import { readPage } from "./pages.js";
-import { isStale, STALE_DAYS } from "./reviewed.js";
 import { flatten } from "./tree.js";
 
 export type CheckKind =
@@ -14,8 +13,7 @@ export type CheckKind =
   | "hotspot-missing-page"
   | "image-without-markers"
   | "marker-without-label"
-  | "to-confirm"
-  | "not-reviewed";
+  | "to-confirm";
 
 export interface CheckFinding {
   pageId: string;
@@ -86,12 +84,6 @@ export async function checkManual(dir: string, opts: { allowNewer?: boolean } = 
     const steps = stepsWithoutResult(page.body);
     for (const s of steps) add("step-without-result", `Passo sem "Resultado:": ${s}`);
     if (/\bA confirmar\b/.test(page.body)) add("to-confirm", 'A página contém "A confirmar".');
-    if (isStale(page.reviewed)) {
-      add(
-        "not-reviewed",
-        page.reviewed ? `Sem conferência há mais de ${STALE_DAYS} dias (${page.reviewed}).` : "Página nunca conferida.",
-      );
-    }
     const text = prose(page.body);
     const images = [...new Set([...text.matchAll(IMAGE)].map((m) => decode(m[1] as string).replace(/^(\.\.\/)+/, "")))];
     if (images.length === 0 && /^\s*\d+\.\s/m.test(page.body)) add("no-image", "A página tem passos e nenhum print.");

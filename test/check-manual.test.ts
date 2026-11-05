@@ -8,8 +8,7 @@ const PNG = Uint8Array.from(
   Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==", "base64"),
 );
 
-/** Sem os achados de conferência: cada teste daqui olha outro defeito. */
-const findings = async (dir: string) => (await checkManual(dir)).filter((f) => f.kind !== "not-reviewed");
+const findings = (dir: string) => checkManual(dir);
 
 describe("checkManual", () => {
   it("aponta cada defeito e deixa a página boa em paz", async () => {

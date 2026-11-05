@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { isSubcommand, runSubcommand } from "../src/cli-commands.js";
-import { addPage, createManual, ExplicaiError, updatePage } from "../src/core/index.js";
+import { addPage, createManual, ExplicaiError } from "../src/core/index.js";
 
 async function run(args: string[]) {
   const out: string[] = [];
@@ -16,7 +16,6 @@ async function manual(body: string) {
   const ws = await mkdtemp(path.join(tmpdir(), "expl-cli-"));
   const { dir } = await createManual(ws, { title: "M", language: "pt-BR" });
   const page = await addPage(dir, { title: "P", body });
-  await updatePage(dir, page.id, { reviewed: new Date().toLocaleDateString("sv") }); // conferida hoje: check não acusa "não conferida"
   return dir;
 }
 

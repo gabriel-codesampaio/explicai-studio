@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { splitFrontmatter } from "../src/core/frontmatter.js";
-import { addPage, createManual, readPage, updatePage } from "../src/core/index.js";
+import { addPage, checkManual, createManual, readPage, updatePage } from "../src/core/index.js";
 
 let workspace: string;
 let dir: string;
@@ -29,6 +29,18 @@ describe("frontmatter: ida e volta", () => {
     const saved = splitFrontmatter(await readFile(path.join(dir, back.file), "utf8"));
     expect(saved.data).toMatchObject({ id: page.id, title: "Depois", sources: ["src/a.ts", "src/b.ts"] });
     expect(saved.body).toBe("novo");
+  });
+
+  it("manual antigo com reviewed: lê, não acusa e preserva o campo como desconhecido", async () => {
+    const page = await addPage(dir, { title: "Velha", body: "texto" });
+    const file = path.join(dir, page.file);
+    await writeFile(file, (await readFile(file, "utf8")).replace("---\n\n", "reviewed: 2026-11-05\n---\n\n"));
+
+    await updatePage(dir, page.id, { body: "novo" });
+
+    expect((await readPage(dir, page.id)).extra).toEqual({ reviewed: "2026-11-05" });
+    expect(splitFrontmatter(await readFile(path.join(dir, page.file), "utf8")).data).toMatchObject({ reviewed: "2026-11-05" });
+    expect((await checkManual(dir)).map((f) => f.kind)).toEqual([]);
   });
 
   it("grava e lê audience; vazio ou null apaga o campo", async () => {
