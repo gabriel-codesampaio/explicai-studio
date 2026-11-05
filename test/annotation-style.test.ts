@@ -105,17 +105,6 @@ describe("borda", () => {
   });
 });
 
-describe("a cópia do editor é idêntica", () => {
-  it("web/src/lib/annotationStyle.ts == src/core/annotationStyle.ts", async () => {
-    const [core, web] = await Promise.all(
-      ["../src/core/annotationStyle.ts", "../web/src/lib/annotationStyle.ts"].map((f) =>
-        readFile(new URL(f, import.meta.url), "utf8"),
-      ),
-    );
-    expect(web).toBe(core);
-  });
-});
-
 describe("gravar e regravar", () => {
   let workspace: string;
   let dir: string;

@@ -1,6 +1,6 @@
 /**
- * Aparência das marcações de uma imagem (`style` no JSON ao lado dela). O editor tem uma cópia em
- * web/src/lib/annotationStyle.ts; test/annotation-style.test.ts garante que as duas são idênticas.
+ * Aparência das marcações de uma imagem (`style` no JSON ao lado dela). O editor reexporta este arquivo
+ * (web/src/lib/annotationStyle.ts).
  */
 export type StyleColor = "cobalt" | "ink" | "red" | "green" | "purple" | "orange";
 /** Cores da paleta de marca-texto (só o destaque usa). */
