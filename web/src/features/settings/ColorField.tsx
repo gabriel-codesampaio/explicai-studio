@@ -10,10 +10,12 @@ interface Props {
   fallback: string;
   /** Recebe o hexadecimal, ou `null` para voltar ao padrão. Recusa (lança) se o core não aceitar a cor. */
   onCommit: (hex: string | null) => Promise<void>;
+  /** Aplica mesmo quando a cor igual à mostrada (o valor mostrado não representa o estado real). */
+  force?: boolean;
 }
 
 /** Uma cor do manual: seletor, campo hexadecimal e "Padrão". Salva ao sair do campo. */
-export function ColorField({ label, value, fallback, onCommit }: Props) {
+export function ColorField({ label, value, fallback, onCommit, force }: Props) {
   const shown = value ?? fallback;
   const [text, setText] = useState(shown);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +27,7 @@ export function ColorField({ label, value, fallback, onCommit }: Props) {
       setError(t("Use o formato #2b4fe0."));
       return;
     }
-    if ((next ?? fallback).toLowerCase() === shown.toLowerCase()) return setError(null);
+    if (!force && (next ?? fallback).toLowerCase() === shown.toLowerCase()) return setError(null);
     try {
       await onCommit(next);
       setError(null);
@@ -80,7 +82,7 @@ export function ColorField({ label, value, fallback, onCommit }: Props) {
         <p
           id={errorId}
           role="alert"
-          className="absolute top-full right-0 left-9 z-10 mt-0.5 rounded-md border border-destructive bg-background px-2 py-1 text-xs text-destructive shadow-md"
+          className="pointer-events-none absolute top-full right-0 left-9 z-10 mt-0.5 rounded-md border border-destructive bg-background px-2 py-1 text-xs text-destructive shadow-md"
         >
           {error}
         </p>

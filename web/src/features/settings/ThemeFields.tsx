@@ -87,6 +87,7 @@ export function ThemeFields({ theme }: { theme: ManualTheme }) {
           label={t("Cor dos títulos")}
           value={commonHeading(theme.headings)}
           fallback={DEFAULTS.heading}
+          force={headingsDiffer(theme.headings)}
           onCommit={(hex) => save({ headings: Object.fromEntries(HEADINGS.map(({ slot }) => [slot, hex])) })}
         />
         <button
@@ -94,7 +95,7 @@ export function ThemeFields({ theme }: { theme: ManualTheme }) {
           aria-expanded={byLevel}
           aria-controls="aparencia-titulos-nivel"
           onClick={() => setByLevel(!byLevel)}
-          className="justify-self-start rounded-sm px-1.5 py-0.5 text-xs text-primary hover:bg-accent"
+          className="justify-self-start rounded-sm px-1.5 py-1 text-sm text-primary hover:bg-accent"
         >
           {t("Ajustar por nível")}
         </button>
