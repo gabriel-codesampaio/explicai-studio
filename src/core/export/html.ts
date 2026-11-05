@@ -13,7 +13,7 @@ import { ANNOTATION_BORDER_CSS, ANNOTATION_STYLE_CSS } from "./annotationCss.js"
 import { arrowShape, arrowThickness, legendRows, placeMarkers } from "./annotationShapes.js";
 import { readCallout } from "./callout.js";
 import type { Collected, ExportPage } from "./collect.js";
-import { muted } from "./color.js";
+import { HEX, muted } from "./color.js";
 import { COVER_CSS, coverHtml } from "./cover.js";
 import { fontSpanOpen, fontStack, inlineFonts } from "./fonts.js";
 import { FOOTER_CSS, footerHtml, footerPageCss } from "./footer.js";
@@ -98,7 +98,10 @@ function extraCss(meta: Collected["meta"]): string {
   const css = [
     meta.cover && Object.keys(meta.cover).length ? COVER_CSS : "",
     footerHtml(meta.footer) ? FOOTER_CSS : "",
-    footerPageCss(meta.footer, muted(meta.theme?.text ?? DEFAULT_TEXT)),
+    footerPageCss(
+      meta.footer,
+      muted(typeof meta.theme?.text === "string" && HEX.test(meta.theme.text) ? meta.theme.text : DEFAULT_TEXT),
+    ),
   ].join("");
   // No papel o texto do rodapé vai na margem de cada página; a linha do fim só aparece na tela.
   return css
