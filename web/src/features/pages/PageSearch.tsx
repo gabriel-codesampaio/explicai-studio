@@ -1,5 +1,5 @@
 import { ChevronRight, Search } from "lucide-react";
-import { type KeyboardEvent, useEffect, useEffectEvent, useState } from "react";
+import { type KeyboardEvent, useEffect, useEffectEvent, useRef, useState } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useStudioContext } from "@/hooks/StudioContext";
 import { t } from "@/lib/i18n";
@@ -21,6 +21,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
   const studio = useStudioContext();
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);
+  const opener = useRef<Element | null>(null); // quem tinha o foco antes de abrir: Esc devolve o teclado a ele (T-528)
   const matches = searchPages(studio.manual?.pages ?? [], query).slice(0, 50);
   const text = useTextSearch(studio.manual?.slug, query);
   // Uma lista só para as setas: títulos primeiro, depois os trechos do texto.
@@ -41,9 +42,17 @@ export function PageSearch({ open, onOpenChange }: Props) {
       onOpenChange(true);
     }
   });
+  // O foco muda para o campo da busca ao abrir; por isso guardamos o último foco de fora enquanto ela está fechada.
+  const onFocusIn = useEffectEvent((e: FocusEvent) => {
+    if (!open) opener.current = e.target as Element;
+  });
   useEffect(() => {
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.addEventListener("focusin", onFocusIn);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("focusin", onFocusIn);
+    };
   }, []);
 
   // O resultado ativo (pelas setas ou pelo mouse) fica à vista; o item já visível não rola.
@@ -73,6 +82,13 @@ export function PageSearch({ open, onOpenChange }: Props) {
       <DialogContent
         showCloseButton={false}
         aria-describedby={undefined}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+          const el = opener.current;
+          // Se o ponto de origem sumiu (ex.: a página trocou), cai no texto, não no início do documento.
+          const back = el instanceof HTMLElement && el.isConnected ? el : document.querySelector<HTMLElement>(".ProseMirror");
+          (back ?? document.body).focus();
+        }}
         className="top-[12vh] translate-y-0 gap-0 overflow-hidden p-0 sm:max-w-lg"
       >
         <DialogTitle className="sr-only">{t("Buscar página")}</DialogTitle>

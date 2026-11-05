@@ -5,11 +5,20 @@ import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
+import { isSubcommand, runSubcommand } from "./cli-commands.js";
 import { createStudioServer } from "./server/index.js";
 
 const USAGE = `Uso: explicai [pasta] [--port 4321] [--no-open] [--version]
 
-Abre o Explicaí Studio no navegador. Os manuais ficam em [pasta] (padrão: pasta atual).`;
+Abre o Explicaí Studio no navegador. Os manuais ficam em [pasta] (padrão: pasta atual).
+
+Sem abrir o Studio (para CI e scripts; saem com 1 se houver achado ou erro):
+  explicai check <pasta>                        confere o manual (link morto, imagem que falta...)
+  explicai export <pasta> --format html|pdf|md  exporta o manual para <pasta>/exportacao`;
+
+if (isSubcommand(process.argv[2])) {
+  process.exit(await runSubcommand(process.argv.slice(2), { out: (t) => console.log(t), err: (t) => console.error(t) }));
+}
 
 function parseCliArgs() {
   try {
