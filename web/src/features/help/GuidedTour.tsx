@@ -33,6 +33,17 @@ export function GuidedTour({ emptyManual }: { emptyManual: boolean }) {
     return () => window.removeEventListener(TOUR_EVENT, reopen);
   }, [emptyManual]);
 
+  // Pulso curto no elemento do passo: mostra para onde o balão aponta.
+  useEffect(() => {
+    const step = index === null ? undefined : TOUR_STEPS[index];
+    const el = step ? findTarget(step) : null;
+    if (!(el instanceof HTMLElement)) return;
+    el.dataset.passeioAlvo = "";
+    return () => {
+      delete el.dataset.passeioAlvo;
+    };
+  }, [index]);
+
   if (index === null) return null;
   const step = TOUR_STEPS[index];
   if (!step) return null;
@@ -50,7 +61,7 @@ export function GuidedTour({ emptyManual }: { emptyManual: boolean }) {
         aria-labelledby={titleId}
         side={sideFor(target, innerHeight)}
         collisionPadding={12}
-        className="w-80 max-w-[calc(100vw-1.5rem)] motion-reduce:animate-none motion-reduce:transition-none"
+        className="passeio w-80 max-w-[calc(100vw-1.5rem)] motion-reduce:animate-none motion-reduce:transition-none"
         onInteractOutside={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => {
           // Sem gatilho, o Radix não tem para onde devolver o foco: vai para a área principal.
@@ -58,18 +69,25 @@ export function GuidedTour({ emptyManual }: { emptyManual: boolean }) {
           document.getElementById("conteudo")?.focus();
         }}
       >
-        <p className="rotulo mb-1">{t("Passo {n} de {total}", { n: index + 1, total: TOUR_STEPS.length })}</p>
-        <h2 id={titleId} className="font-display text-base font-bold">
-          {t(step.title)}
-        </h2>
-        <p className="mt-1 text-sm text-muted-foreground">{t(step.body)}</p>
-        <div className="mt-3 flex justify-between gap-2">
-          <Button type="button" variant="ghost" className="[@media(pointer:coarse)]:h-11" onClick={close}>
-            {t("Pular passeio")}
-          </Button>
-          <Button type="button" className="[@media(pointer:coarse)]:h-11" onClick={() => (last ? close() : setIndex(index + 1))}>
-            {last ? t("Concluir") : t("Próximo")}
-          </Button>
+        {/* key: o conteúdo entra de novo a cada passo. */}
+        <div key={index} className="animate-in fade-in-0 slide-in-from-bottom-1 duration-200">
+          <p className="rotulo mb-1">{t("Passo {n} de {total}", { n: index + 1, total: TOUR_STEPS.length })}</p>
+          <h2 id={titleId} className="font-display text-base font-bold">
+            {t(step.title)}
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t(step.body)}</p>
+          <div className="mt-3 flex justify-between gap-2">
+            <Button type="button" variant="ghost" className="[@media(pointer:coarse)]:h-11" onClick={close}>
+              {t("Pular passeio")}
+            </Button>
+            <Button
+              type="button"
+              className="[@media(pointer:coarse)]:h-11"
+              onClick={() => (last ? close() : setIndex(index + 1))}
+            >
+              {last ? t("Concluir") : t("Próximo")}
+            </Button>
+          </div>
         </div>
       </PopoverContent>
     </Popover>
