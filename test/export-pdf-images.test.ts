@@ -57,7 +57,10 @@ describe.skipIf(!browser)("PDF com 100 imagens", () => {
       body += `Passo ${i + 1}.\n\n![Tela ${i + 1}](../assets/img${i}.png)\n\n`;
     }
     await addPage(dir, { title: "Passo a passo", body });
+    const t0 = performance.now();
     const r = await exportManual(dir, "pdf");
+    // Orçamento (docs/desempenho.md): medido 4,7 a 7,5 s; teto 30 s.
+    expect(performance.now() - t0).toBeLessThan(30_000);
     expect(r.warnings).toEqual([]);
     const pdf = (await readFile(path.join(dir, r.file))).toString("latin1");
     // Uma imagem do PDF por print (o Chrome ainda grava uma máscara por imagem, daí o "pelo menos").
