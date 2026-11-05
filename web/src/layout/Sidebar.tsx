@@ -118,7 +118,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               className="mb-3 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
-              <Kbd className="ml-auto">Ctrl+P</Kbd>
+              <Kbd className="ml-auto pointer-coarse:hidden">Ctrl+P</Kbd>
             </button>
             <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
               <span className="rotulo">{t("Páginas")}</span>
