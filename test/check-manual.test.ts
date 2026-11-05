@@ -8,6 +8,9 @@ const PNG = Uint8Array.from(
   Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==", "base64"),
 );
 
+/** Sem os achados de conferência: cada teste daqui olha outro defeito. */
+const findings = async (dir: string) => (await checkManual(dir)).filter((f) => f.kind !== "not-reviewed");
+
 describe("checkManual", () => {
   it("aponta cada defeito e deixa a página boa em paz", async () => {
     const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
@@ -29,7 +32,7 @@ describe("checkManual", () => {
       body: `1. Clique.\n   Resultado: abre.\n\n[ok](./${path.posix.basename(gone.file)})\n\n![](../${ok})`,
     });
     await addPage(dir, { title: "Sem passos", body: "Só texto." });
-    const found = await checkManual(dir);
+    const found = await findings(dir);
     expect(
       found
         .filter((f) => f.pageId === bad.id)
@@ -58,7 +61,7 @@ describe("checkManual", () => {
       ],
     });
     const page = await addPage(dir, { title: "P", body: `![](../${img})` });
-    expect(await checkManual(dir)).toEqual([
+    expect(await findings(dir)).toEqual([
       { pageId: page.id, title: "P", kind: "marker-without-label", detail: `Marcador sem descrição em ${img}: 2, 3` },
     ]);
   });
@@ -67,7 +70,7 @@ describe("checkManual", () => {
     const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
     const { dir } = await createManual(ws, { title: "M", language: "pt-BR" });
     await addPage(dir, { title: "P", body: "1. Clique.\nResultado: ok." });
-    expect((await checkManual(dir)).map((f) => f.kind)).toEqual(["no-image"]);
+    expect((await findings(dir)).map((f) => f.kind)).toEqual(["no-image"]);
   });
 
   it("aceita Resultado em citação logo depois do passo", async () => {
@@ -76,7 +79,7 @@ describe("checkManual", () => {
     const ok = await saveAsset(dir, "ok.png", PNG);
     await appendAnnotations(dir, ok, { markers: [{ x: 0.5, y: 0.5, label: "Botão" }] });
     await addPage(dir, { title: "Citação", body: `1. Clique.\n> **Resultado:** abre.\n\n![](../${ok})` });
-    expect(await checkManual(dir)).toEqual([]);
+    expect(await findings(dir)).toEqual([]);
   });
 
   it("ignora link e imagem dentro de bloco de código", async () => {
@@ -88,6 +91,6 @@ describe("checkManual", () => {
       title: "Código",
       body: `\`\`\`md\n[x](./nao-existe.md)\n![](../assets/some.png)\n\`\`\`\n\n1. Clique.\nResultado: ok.\n\n![](../${ok})`,
     });
-    expect(await checkManual(dir)).toEqual([]);
+    expect(await findings(dir)).toEqual([]);
   });
 });
