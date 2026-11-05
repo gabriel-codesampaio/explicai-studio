@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { numberPages, type TreeItem } from "../src/lib/tree";
+import type { TreeItem } from "../src/lib/api";
+import { numberPages } from "../src/lib/tree";
 
 // T-205: orçamento de numerar 500 páginas (docs/desempenho.md). Medido 0,03 ms; teto 50 ms.
 describe("orçamento da numeração", () => {
