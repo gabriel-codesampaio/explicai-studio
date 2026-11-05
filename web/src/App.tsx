@@ -107,7 +107,7 @@ function Shell() {
           )}
         </main>
       </div>
-      {manual && !firstRun && !studio.creatingManual && <GuidedTour />}
+      {manual && !firstRun && !studio.creatingManual && <GuidedTour emptyManual={manual.pages.length === 0} />}
       {manual && <PageSearch open={searchOpen} onOpenChange={setSearchOpen} />}
       {/* Acima da linha de status, para o aviso não cobrir o "Salvo às…". */}
       <Toaster theme={theme} position="bottom-right" offset={{ bottom: 56, right: 24 }} />

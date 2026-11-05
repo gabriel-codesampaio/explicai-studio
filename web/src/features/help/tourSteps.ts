@@ -17,7 +17,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
     body: "Uma página por tela ou tarefa. Clique em Nova página para começar.",
   },
   {
-    target: 'main [contenteditable="true"]',
+    target: ".tiptap",
     title: "Cole um print",
     body: "Copie um print de fora e cole aqui com Ctrl+V. O Studio não captura a tela.",
   },
@@ -52,15 +52,29 @@ export function markTourSeen(store: Store | null): void {
 }
 
 /** Abre sozinho só na primeira vez, e nunca sob automação (e2e), a não ser com ?passeio=1. */
-export function shouldAutoOpen(opts: { seen: boolean; webdriver: boolean; search: string }): boolean {
+export function shouldAutoOpen(opts: { seen: boolean; webdriver: boolean; search: string; emptyManual: boolean }): boolean {
   if (new URLSearchParams(opts.search).get("passeio") === "1") return true;
-  return !opts.seen && !opts.webdriver;
+  // Quem já tem páginas já usa o Studio: não vê o passeio ao atualizar a versão.
+  return !opts.seen && !opts.webdriver && opts.emptyManual;
 }
 
-/** Elemento-alvo visível, ou null (menu fechado, tela estreita): o passo cai no centro da tela. */
+/** Alvo alto (o editor) não cabe embaixo: o popover vai ao lado, dentro da janela. */
+export function sideFor(target: Element | null, viewportHeight: number): "top" | "bottom" | "left" {
+  if (!target) return "top";
+  return target.getBoundingClientRect().height > viewportHeight * 0.5 ? "left" : "bottom";
+}
+
+/** Botão que abre a lista de páginas: o passo cuja barra lateral está fechada (375 px) aponta para ele. */
+export const MENU_BUTTON = '[data-passeio="menu"]';
+
+const visible = (el: Element | null): el is Element => {
+  const r = el?.getBoundingClientRect();
+  return !!r && r.width > 0 && r.height > 0;
+};
+
+/** Alvo visível; senão o botão do menu lateral; senão null (o passo cai no centro, sem cobrir o título). */
 export function findTarget(step: TourStep, root: ParentNode = document): Element | null {
-  const el = root.querySelector(step.target);
-  if (!el) return null;
-  const r = el.getBoundingClientRect();
-  return r.width > 0 && r.height > 0 ? el : null;
+  const own = root.querySelector(step.target);
+  if (visible(own)) return own;
+  return [...root.querySelectorAll(MENU_BUTTON)].find(visible) ?? null;
 }

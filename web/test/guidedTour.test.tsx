@@ -7,6 +7,7 @@ import {
   isTourSeen,
   markTourSeen,
   shouldAutoOpen,
+  sideFor,
   TOUR_EVENT,
   TOUR_KEY,
   TOUR_STEPS,
@@ -32,9 +33,11 @@ it("3 a 4 passos, todos traduzidos", () => {
 });
 
 it("abre só na primeira vez e nunca sob automação, salvo ?passeio=1", () => {
-  const base = { seen: false, webdriver: false, search: "" };
+  const base = { seen: false, webdriver: false, search: "", emptyManual: true };
   expect(shouldAutoOpen(base)).toBe(true);
   expect(shouldAutoOpen({ ...base, seen: true })).toBe(false);
+  expect(shouldAutoOpen({ ...base, emptyManual: false })).toBe(false); // quem já tem páginas
+  expect(shouldAutoOpen({ ...base, emptyManual: false, search: "?passeio=1" })).toBe(true);
   expect(shouldAutoOpen({ ...base, webdriver: true })).toBe(false);
   expect(shouldAutoOpen({ ...base, seen: true, webdriver: true, search: "?passeio=1" })).toBe(true);
 });
@@ -64,9 +67,21 @@ it("alvo ausente ou sem tamanho devolve null", () => {
   expect(findTarget(step)).toBeNull(); // happy-dom: tamanho 0, como menu fechado
 });
 
+it("alvo oculto aponta para o botão do menu lateral, se ele aparece", () => {
+  const box = (id: string, w: number) => {
+    document.body.innerHTML = `<i id="alvo"></i><b data-passeio="menu"></b>`;
+    const rect = (width: number) => () => ({ width, height: width }) as DOMRect;
+    document.getElementById("alvo")!.getBoundingClientRect = rect(0);
+    document.querySelector("[data-passeio=menu]")!.getBoundingClientRect = rect(w);
+    return findTarget({ target: `#${id}`, title: "", body: "" });
+  };
+  expect(box("alvo", 40)?.getAttribute("data-passeio")).toBe("menu");
+  expect(box("alvo", 0)).toBeNull();
+});
+
 it("abre com ?passeio=1, é um dialog nomeado, Pular fecha e grava visto", () => {
   history.replaceState(null, "", "/?passeio=1");
-  render(<GuidedTour />);
+  render(<GuidedTour emptyManual />);
   const dialog = screen.getByRole("dialog", { name: "Crie uma página" });
   expect(dialog).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Próximo" }));
@@ -78,9 +93,16 @@ it("abre com ?passeio=1, é um dialog nomeado, Pular fecha e grava visto", () =>
 
 it("Esc fecha e o evento do menu reabre", async () => {
   history.replaceState(null, "", "/?passeio=1");
-  render(<GuidedTour />);
+  render(<GuidedTour emptyManual />);
   fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
   expect(screen.queryByRole("dialog")).toBeNull();
   window.dispatchEvent(new Event(TOUR_EVENT));
   expect(await screen.findByRole("dialog")).toBeTruthy();
+});
+
+it("sideFor: sem alvo em cima, alvo alto ao lado, baixo embaixo", () => {
+  const el = (h: number) => ({ getBoundingClientRect: () => ({ height: h }) }) as Element;
+  expect(sideFor(null, 800)).toBe("top");
+  expect(sideFor(el(600), 800)).toBe("left");
+  expect(sideFor(el(40), 800)).toBe("bottom");
 });

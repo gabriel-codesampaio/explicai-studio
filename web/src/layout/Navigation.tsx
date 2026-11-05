@@ -26,6 +26,7 @@ export function Navigation({ sidebar, onSearch }: Props) {
             <button
               type="button"
               onClick={sidebar.expand}
+              data-passeio="menu"
               aria-label={t("Mostrar as páginas ({atalho})", { atalho: SHORTCUT })}
               title={t("Mostrar as páginas ({atalho})", { atalho: SHORTCUT })}
               className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -70,6 +71,7 @@ export function MobileBar({ title, onOpen, drawerOpen = false }: { title: string
       <button
         type="button"
         onClick={onOpen}
+        data-passeio="menu"
         aria-label={t("Mostrar as páginas ({atalho})", { atalho: SHORTCUT })}
         className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-bold hover:bg-muted"
       >
