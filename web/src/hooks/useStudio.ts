@@ -307,11 +307,11 @@ export function useStudio() {
     });
 
   /** Página nova nasce sem título, com o cursor no campo de título (ver PageView). */
-  const addPage = (parentId: string | null) =>
+  const addPage = (parentId: string | null, body?: string) =>
     run(async () => {
       if (!manual) return;
       await flush();
-      const created = await api.addPage(manual.slug, "", parentId);
+      const created = await api.addPage(manual.slug, "", parentId, body);
       remember(created);
       openSeq.current++;
       await refreshManual(manual.slug);
