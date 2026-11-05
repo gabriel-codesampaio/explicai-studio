@@ -38,3 +38,25 @@ it("o botão Versões não leva o selo da versão fixada (T-564)", () => {
   render(<VersionsPanel slug="m" pageId="p" onSave={noop} onRestore={noop} onPublish={noop} pageTitle="P" />);
   expect(screen.getByRole("button", { name: "Versões" }).textContent).toBe("Versões");
 });
+
+it("comparar grava o que está pendente no editor antes de ler o texto atual (T-569)", async () => {
+  const order: string[] = [];
+  vi.spyOn(api, "listVersions").mockResolvedValue([
+    { id: "v1", title: "P", note: "Revisada", savedAt: "2026-11-04T10:00:00Z", published: false },
+  ]);
+  vi.spyOn(api, "getVersion").mockImplementation(async () => {
+    order.push("lê versão");
+    return { id: "v1", title: "P", note: "Revisada", savedAt: "", published: false, body: "a" } as never;
+  });
+  vi.spyOn(api, "getPage").mockImplementation(async () => {
+    order.push("lê página");
+    return { body: "b" } as never;
+  });
+  const flush = vi.fn(async () => void order.push("flush"));
+  const noop = async () => {};
+  render(<VersionsPanel slug="m" pageId="p" onSave={noop} onRestore={noop} onPublish={noop} pageTitle="P" flush={flush} />);
+  fireEvent.click(screen.getByRole("button", { name: "Versões" }));
+  fireEvent.click(await screen.findByRole("button", { name: "Comparar com o atual" }));
+  await screen.findByRole("button", { name: "Voltar à lista" });
+  expect(order[0]).toBe("flush");
+});

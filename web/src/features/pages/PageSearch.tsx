@@ -30,6 +30,8 @@ export function PageSearch({ open, onOpenChange }: Props) {
     ...text.hits.map((h) => ({ id: h.id, dom: `busca-texto-${h.id}` })),
   ];
   const count = rows.length;
+  // Os trechos do texto chegam depois de digitar e mudam a lista: o índice nunca passa do fim.
+  const active = Math.min(index, Math.max(count - 1, 0));
   const wait = text.loading && count === 0;
 
   const onKey = useEffectEvent((e: globalThis.KeyboardEvent) => {
@@ -54,7 +56,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
   }, []);
 
   // O resultado ativo (pelas setas ou pelo mouse) fica à vista; o item já visível não rola.
-  const activeDom = rows[index]?.dom;
+  const activeDom = rows[active]?.dom;
   useEffect(() => {
     if (activeDom) document.getElementById(activeDom)?.scrollIntoView({ block: "nearest" });
   }, [activeDom]);
@@ -67,10 +69,10 @@ export function PageSearch({ open, onOpenChange }: Props) {
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
       const step = e.key === "ArrowDown" ? 1 : -1;
-      setIndex((i) => (i + step + count) % Math.max(count, 1));
+      setIndex((active + step + count) % Math.max(count, 1));
     } else if (e.key === "Enter") {
       e.preventDefault();
-      const hit = rows[index];
+      const hit = rows[active];
       if (hit) go(hit.id);
     }
   };
@@ -106,7 +108,7 @@ export function PageSearch({ open, onOpenChange }: Props) {
             role="combobox"
             aria-expanded={count > 0}
             aria-controls={count > 0 ? "busca-resultados" : undefined}
-            aria-activedescendant={rows[index]?.dom}
+            aria-activedescendant={activeDom}
             aria-label={t("Buscar por título ou texto")}
             placeholder={t("Buscar por título ou texto…")}
             value={query}
@@ -133,43 +135,45 @@ export function PageSearch({ open, onOpenChange }: Props) {
             aria-label={t("Páginas encontradas")}
             className="max-h-[50vh] overflow-y-auto p-1"
           >
-            {/* biome-ignore lint/a11y/useSemanticElements: group dentro de listbox; fieldset não vale aqui */}
-            <div role="group" aria-label={t("Por título")}>
-              {matches.map((m, i) => (
-                <div
-                  key={m.item.id}
-                  id={`busca-${m.item.id}`}
-                  role="option"
-                  tabIndex={-1}
-                  aria-selected={i === index}
-                  onMouseMove={() => setIndex(i)}
-                  onClick={() => go(m.item.id)}
-                  onKeyDown={() => {}}
-                  className={cn("flex cursor-pointer items-center gap-2 rounded-md px-3 py-2", i === index && "bg-accent")}
-                >
-                  {m.number && (
-                    <span aria-hidden className="shrink-0 font-mono text-xs tabular-nums text-primary">
-                      {m.number}
-                    </span>
-                  )}
-                  <span className="grid min-w-0 flex-1 leading-tight">
-                    <span className="truncate text-sm font-bold">{m.item.title || t("Sem título")}</span>
-                    {m.path.length > 0 && (
-                      <span className="flex min-w-0 items-center gap-1 truncate text-xs text-muted-foreground">
-                        {m.path.map((p, j) => (
-                          <span key={m.path.slice(0, j + 1).join("/")} className="flex items-center gap-1">
-                            {j > 0 && <ChevronRight className="size-3" aria-hidden />}
-                            {p}
-                          </span>
-                        ))}
+            {matches.length > 0 && (
+              // biome-ignore lint/a11y/useSemanticElements: group dentro de listbox; fieldset não vale aqui
+              <div role="group" aria-label={t("Por título")}>
+                {matches.map((m, i) => (
+                  <div
+                    key={m.item.id}
+                    id={`busca-${m.item.id}`}
+                    role="option"
+                    tabIndex={-1}
+                    aria-selected={i === active}
+                    onMouseMove={() => setIndex(i)}
+                    onClick={() => go(m.item.id)}
+                    onKeyDown={() => {}}
+                    className={cn("flex cursor-pointer items-center gap-2 rounded-md px-3 py-2", i === active && "bg-accent")}
+                  >
+                    {m.number && (
+                      <span aria-hidden className="shrink-0 font-mono text-xs tabular-nums text-primary">
+                        {m.number}
                       </span>
                     )}
-                  </span>
-                  {m.item.status !== "rascunho" && <StatusLabel status={m.item.status} className="text-xs font-medium" />}
-                  {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
-                </div>
-              ))}
-            </div>
+                    <span className="grid min-w-0 flex-1 leading-tight">
+                      <span className="truncate text-sm font-bold">{m.item.title || t("Sem título")}</span>
+                      {m.path.length > 0 && (
+                        <span className="flex min-w-0 items-center gap-1 truncate text-xs text-muted-foreground">
+                          {m.path.map((p, j) => (
+                            <span key={m.path.slice(0, j + 1).join("/")} className="flex items-center gap-1">
+                              {j > 0 && <ChevronRight className="size-3" aria-hidden />}
+                              {p}
+                            </span>
+                          ))}
+                        </span>
+                      )}
+                    </span>
+                    {m.item.status !== "rascunho" && <StatusLabel status={m.item.status} className="text-xs font-medium" />}
+                    {m.item.id === studio.page?.id && <span className="text-xs text-muted-foreground">{t("aberta")}</span>}
+                  </div>
+                ))}
+              </div>
+            )}
             {text.hits.length > 0 && (
               // biome-ignore lint/a11y/useSemanticElements: group dentro de listbox; fieldset não vale aqui
               <div role="group" aria-labelledby="busca-no-texto">
@@ -184,13 +188,13 @@ export function PageSearch({ open, onOpenChange }: Props) {
                       id={`busca-texto-${h.id}`}
                       role="option"
                       tabIndex={-1}
-                      aria-selected={i === index}
+                      aria-selected={i === active}
                       onMouseMove={() => setIndex(i)}
                       onClick={() => go(h.id)}
                       onKeyDown={() => {}}
                       className={cn(
                         "grid min-h-11 cursor-pointer gap-0.5 rounded-md px-3 py-2 leading-tight",
-                        i === index && "bg-accent",
+                        i === active && "bg-accent",
                       )}
                     >
                       <span className="truncate text-sm font-bold">{h.title || t("Sem título")}</span>
