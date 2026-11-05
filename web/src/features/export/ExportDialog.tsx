@@ -36,6 +36,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
   const approved = flattenItems(studio.manual?.pages ?? []).filter((p) => ["aprovado", "publicado"].includes(p.status)).length;
   // Sem página aprovada a opção fica desligada, mesmo que tenha sido marcada antes.
   const onlyApprovedOn = onlyApproved && approved > 0;
+  const pinnedCount = flattenItems(studio.manual?.pages ?? []).filter((p) => p.published).length;
   const audiences = studio.manual?.audiences ?? [];
   const [audience, setAudience] = useState("");
   const audienceOn = audiences.includes(audience) ? audience : "";
@@ -95,7 +96,11 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
       >
         <DialogHeader className="px-6 pt-6 pr-12 pb-4">
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
-          <DialogDescription>{t('Cada página entra com a "Versão do manual" ou, sem ela, com o texto atual.')}</DialogDescription>
+          <DialogDescription>
+            {pinnedCount > 0
+              ? tn(pinnedCount, "{n} página usa versão fixada.", "{n} páginas usam versão fixada.")
+              : t("Cada página entra com o texto atual.")}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto px-6 pb-4">

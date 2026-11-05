@@ -96,7 +96,6 @@ export function PageView({ manual, page }: Props) {
           </div>
 
           {manual.newerFormat !== undefined && <FormatNewerNotice version={manual.newerFormat} />}
-          {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
 
           {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
           <h1 className="sr-only">{title || t("Sem título")}</h1>
@@ -112,6 +111,7 @@ export function PageView({ manual, page }: Props) {
                 onEnter={() => editor?.commands.focus("start")}
               />
             </div>
+            {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
             {!readOnly && (
               <>
                 {/* Edita a capa do manual, não o título da página. Sempre ocupa o lugar: aparecer não desloca nada. */}
