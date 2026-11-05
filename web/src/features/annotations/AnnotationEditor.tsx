@@ -5,22 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Kbd } from "@/components/ui/kbd";
 import { saveAnnotations, useAnnotations } from "@/lib/annotationStore";
-import {
-  draftChanged,
-  findItem,
-  type HotspotTarget,
-  nudge,
-  removeAnnotation,
-  type Tool,
-  updateItemStyle,
-} from "@/lib/annotations";
+import { draftChanged, findItem, type HotspotTarget, removeAnnotation, type Tool, updateItemStyle } from "@/lib/annotations";
 import { api, errorMessage, type TreeItem } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { readRedactStyle, saveRedactStyle } from "@/lib/redact";
 import { TOOL_KEYS, toolForKey } from "@/lib/toolShortcuts";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
-import { AnnotationCanvas, type Draft } from "./AnnotationCanvas";
+import { AnnotationCanvas, type Draft, nudgeDraft } from "./AnnotationCanvas";
 import { AnnotationList } from "./AnnotationList";
 import { AppearancePanel } from "./AppearancePanel";
 import { CropPanel } from "./CropPanel";
@@ -177,10 +169,10 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
             setSelectedId(null);
           }
           if (selectedId && draft && !target.closest("input, select, textarea, [role=toolbar]")) {
-            const moved = nudge(draft.ann, selectedId, e.key, e.shiftKey);
+            const moved = nudgeDraft(draft, selectedId, e.key, e.shiftKey);
             if (moved) {
               e.preventDefault();
-              change({ ann: moved, redact: draft.redact, crop: draft.crop });
+              change(moved);
             }
           }
           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !target.closest("input, select, textarea")) {

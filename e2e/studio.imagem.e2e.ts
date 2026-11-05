@@ -437,6 +437,53 @@ test.describe("marcações", () => {
     expect(a.markers[0].label).toBe("Botão Novo");
   });
 
+  test("só com teclado cria as quatro formas, move uma com as setas e a janela passa no axe (T-525)", async ({
+    page,
+    request,
+  }) => {
+    const { slug, id } = await withImage(request, "Imagem Teclado");
+    await page.goto(`/#/${slug}/${id}`);
+    await openImage(page);
+    await page.getByRole("button", { name: "Editar imagem" }).click();
+    const dialog = markDialog(page);
+    const canvas = dialog.getByRole("application", { name: "Imagem para marcar" });
+    // Letra da ferramenta (foco na janela), foco no canvas e Enter cria no cursor (centro da imagem).
+    const create = async (tool: string) => {
+      await page.keyboard.press(tool);
+      await canvas.focus();
+      await page.keyboard.press("Enter");
+    };
+    await create("M");
+    // O marcador leva o foco para a legenda; Esc o devolve ao canvas.
+    await expect(dialog.getByRole("textbox", { name: "O que o marcador 1 mostra" })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(dialog.getByRole("status").filter({ hasText: "Nova marcação: Marcador 1" })).toHaveCount(1);
+    await create("D");
+    await create("S");
+    await create("A");
+    await expect(dialog.getByRole("button", { name: "Excluir destaque 1" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Excluir seta 1" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Excluir área 1" })).toBeVisible();
+
+    // A área clicável nasceu selecionada: com o foco no canvas, as setas a movem (3 x 1%).
+    await canvas.focus();
+    for (let i = 0; i < 3; i++) await page.keyboard.press("ArrowRight");
+
+    const axe = await new AxeBuilder({ page }).include('[role="dialog"]').analyze();
+    expect(
+      axe.violations
+        .filter((v) => v.impact === "serious" || v.impact === "critical")
+        .map((v) => `${v.id}: ${v.nodes[0]?.html.slice(0, 160)}`),
+    ).toEqual([]);
+
+    await dialog.getByRole("button", { name: "Salvar marcações" }).click();
+    await expect(dialog).toBeHidden();
+    const a = await annotations(request, slug);
+    expect([a.markers.length, a.highlights.length, a.arrows.length, a.hotspots.length]).toEqual([1, 1, 1, 1]);
+    expect(a.markers[0]).toMatchObject({ x: 0.5, y: 0.5 });
+    expect(a.hotspots[0].x).toBeCloseTo(0.4 + 0.03); // nasce centrada (x = 0,5 - meia largura) e anda 3 x 1%
+  });
+
   test("Cancelar descarta o que foi marcado", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Cancelar");
     await page.goto(`/#/${slug}/${id}`);
