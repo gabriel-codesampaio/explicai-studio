@@ -23,6 +23,7 @@ describe("subcomandos da CLI", () => {
   it("só check e export são subcomandos", () => {
     expect(isSubcommand("check")).toBe(true);
     expect(isSubcommand("export")).toBe(true);
+    expect(isSubcommand("./check")).toBe(false);
     expect(isSubcommand("manuais")).toBe(false);
     expect(isSubcommand(undefined)).toBe(false);
   });
@@ -64,6 +65,7 @@ describe("subcomandos da CLI", () => {
     expect(semFormato.code).toBe(1);
     expect(semFormato.err).toContain("--format");
     expect((await run(["export", dir, "--format", "docx"])).code).toBe(1);
+    expect((await run(["export", dir, "--format", "constructor"])).code).toBe(1);
   });
 
   it("export pdf sem navegador mostra a mensagem do núcleo e sai com 1", async () => {

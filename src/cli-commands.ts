@@ -49,7 +49,7 @@ export async function runSubcommand(argv: string[], io: CliIo): Promise<number> 
   }
   try {
     if (name === "check") return await check(dir, io);
-    const format = FORMATS[values.format ?? ""];
+    const format = Object.hasOwn(FORMATS, values.format ?? "") ? FORMATS[values.format as string] : undefined;
     if (!format) {
       io.err(`Informe --format html, pdf ou md.\n\n${usage}`);
       return 1;

@@ -71,7 +71,7 @@ O formato completo está em [docs/manual-format.md](https://github.com/gabriel-c
 
 #### Compatibilidade
 
-A partir da 1.0 do Studio, o formato da pasta só cresce por acréscimo: campo opcional novo, nunca um campo que some ou muda de sentido. Manuais criados desde a 0.1 devem abrir na 1.x. Seguem semver o formato em disco, os exports de `explicai/core`, as flags do comando `explicai` (incluindo os subcomandos `explicai check <pasta>` e `explicai export <pasta> --format html|pdf|md`) e os nomes e schemas das tools e prompts do MCP. A API HTTP local do Studio é interna e pode mudar a qualquer versão. O MCP segue na 0.x, com versão própria. A política completa está em [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade).
+A partir da 1.0 do Studio, o formato da pasta só cresce por acréscimo: campo opcional novo, nunca um campo que some ou muda de sentido. Manuais criados desde a 0.1 devem abrir na 1.x. Seguem semver o formato em disco, os exports de `explicai/core`, as flags do comando `explicai` (incluindo os subcomandos `explicai check <pasta>` e `explicai export <pasta> --format html|pdf|md`; uma pasta chamada `check` ou `export` abre o Studio com `explicai ./check`) e os nomes e schemas das tools e prompts do MCP. A API HTTP local do Studio é interna e pode mudar a qualquer versão. O MCP segue na 0.x, com versão própria. A política completa está em [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade).
 
 ### Usar como biblioteca
 
@@ -117,7 +117,7 @@ Each manual is a folder of Markdown files you can keep in git next to your code:
 
 #### Compatibility
 
-From Studio 1.0 on, the folder format only grows by addition: a new optional field, never one that disappears or changes meaning. Manuals created since 0.1 should open on any 1.x. Semver covers the on-disk format, the `explicai/core` exports, the `explicai` CLI flags (including the `explicai check <folder>` and `explicai export <folder> --format html|pdf|md` subcommands), and the names and schemas of the MCP tools and prompts. The Studio's local HTTP API is internal and may change in any release. The MCP stays on 0.x with its own version. The full policy is in [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade) (in Portuguese).
+From Studio 1.0 on, the folder format only grows by addition: a new optional field, never one that disappears or changes meaning. Manuals created since 0.1 should open on any 1.x. Semver covers the on-disk format, the `explicai/core` exports, the `explicai` CLI flags (including the `explicai check <folder>` and `explicai export <folder> --format html|pdf|md` subcommands; a folder named `check` or `export` opens the Studio with `explicai ./check`), and the names and schemas of the MCP tools and prompts. The Studio's local HTTP API is internal and may change in any release. The MCP stays on 0.x with its own version. The full policy is in [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade) (in Portuguese).
 
 ### Library
 
