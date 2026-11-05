@@ -3,7 +3,7 @@ import { mkdir, readdir, rename, rm } from "node:fs/promises";
 import path from "node:path";
 import { splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, exists, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
-import { PAGES_DIR, updateManual } from "./manuals.js";
+import { PAGES_DIR, readManual, updateManual } from "./manuals.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
 import type { PageNode } from "./types.js";
 
@@ -53,21 +53,42 @@ export async function listTrash(dir: string): Promise<TrashItem[]> {
  * Devolve o id da lixeira, usado para desfazer. Imagens ficam em assets/, porque outras páginas podem usar.
  */
 export async function removePage(dir: string, id: string): Promise<{ trashId: string }> {
-  const entry = await updateManual(dir, (meta): TrashEntry => {
-    const { node, siblings } = findNode(meta.pages, id);
-    const index = siblings.indexOf(node);
-    siblings.splice(index, 1);
-    return { node, parentId: parentOf(meta.pages, siblings), index, deletedAt: new Date().toISOString() };
-  });
+  // Arquivos primeiro: se mover falhar (EBUSY no Windows), a página continua na árvore e nada se perde.
+  const { pages } = await readManual(dir);
+  const { node, siblings } = findNode(pages, id);
+  const entry: TrashEntry = {
+    node,
+    parentId: parentOf(pages, siblings),
+    index: siblings.indexOf(node),
+    deletedAt: new Date().toISOString(),
+  };
 
   const trashId = randomUUID();
   const trash = path.join(dir, TRASH_DIR, trashId);
   await mkdir(path.join(trash, PAGES_DIR), { recursive: true });
-  for (const n of flatten([entry.node])) {
-    const from = resolveInside(dir, n.file);
-    if (await exists(from)) await rename(from, path.join(trash, n.file));
+  const moved: Array<[string, string]> = [];
+  try {
+    for (const n of flatten([node])) {
+      const from = resolveInside(dir, n.file);
+      if (!(await exists(from))) continue;
+      const to = path.join(trash, n.file);
+      await rename(from, to);
+      moved.push([from, to]);
+    }
+    await atomicWrite(
+      path.join(trash, "entry.json"),
+      `${JSON.stringify(entry, null, 2)}
+`,
+    );
+  } catch (err) {
+    for (const [from, to] of moved) await rename(to, from).catch(() => {});
+    await rm(trash, { recursive: true, force: true });
+    throw err;
   }
-  await atomicWrite(path.join(trash, "entry.json"), `${JSON.stringify(entry, null, 2)}\n`);
+  await updateManual(dir, (meta) => {
+    const found = findIn(meta.pages, id);
+    if (found) found.siblings.splice(found.siblings.indexOf(found.node), 1);
+  });
   return { trashId };
 }
 

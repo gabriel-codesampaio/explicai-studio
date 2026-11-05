@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { readFile, realpath, rename, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, realpath, rename, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 /** Grava num arquivo temporário e renomeia, para um travamento no meio não deixar o arquivo pela metade. */
@@ -30,11 +30,19 @@ export async function resolveInsideReal(dir: string, relative: string): Promise<
   return abs;
 }
 
-/** `base.ext`, ou `base-2.ext`, `base-3.ext`… se já existir. */
+/**
+ * `base.ext`, ou `base-2.ext`, `base-3.ext`… se já existir. Reserva o nome (arquivo vazio; pasta se `ext` for vazio)
+ * para que duas chamadas simultâneas não recebam o mesmo caminho. Quem chama grava por cima.
+ */
 export async function uniquePath(parent: string, base: string, ext: string): Promise<string> {
   for (let i = 1; ; i++) {
     const candidate = path.join(parent, `${i === 1 ? base : `${base}-${i}`}${ext}`);
-    if (!(await exists(candidate))) return candidate;
+    try {
+      await (ext ? writeFile(candidate, "", { flag: "wx" }) : mkdir(candidate));
+      return candidate;
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code !== "EEXIST") throw err;
+    }
   }
 }
 

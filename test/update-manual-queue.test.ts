@@ -22,6 +22,13 @@ describe("updateManual: fila por pasta", () => {
     expect(flatten((await readManual(dir)).pages)).toHaveLength(10);
   });
 
+  it("2 addPage simultâneos com título vazio usam arquivos diferentes", async () => {
+    const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
+    const [a, b] = await Promise.all([1, 2].map(() => addPage(dir, { title: "", parentId: null, index: 0 })));
+    expect(a?.file).not.toBe(b?.file);
+    expect(new Set(flatten((await readManual(dir)).pages).map((n) => n.file)).size).toBe(2);
+  });
+
   it("falha no meio não trava as seguintes e o erro chega a quem chamou", async () => {
     const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
     const boom = updateManual(dir, () => {
