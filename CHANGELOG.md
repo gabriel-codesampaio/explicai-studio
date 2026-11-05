@@ -6,15 +6,50 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
-### Alterado
-
-- O Studio agora pede Node 22.12 ou mais novo (antes, 20.12), a única versão testada no CI. / Studio now needs Node 22.12 or newer (was 20.12), the only version tested in CI.
+## [1.0.0] - 2026-11-05
 
 ### Adicionado
 
-- Estilo por marcação (`style` em cada marcador, seta, destaque e área clicável de `assets/<imagem>.json`): cor, tamanho, espessura, borda e preenchimento (área) valem só para o item e sobrepõem o estilo da imagem. Vale no Studio, no HTML e no PDF; sem `style`, tudo sai como antes. Recorte, edição no Studio e `annotate_image` preservam o campo. A tela para escolher o estilo vem em seguida (T-194).
+- Aparência do manual nos Ajustes, fora da tela de exportação, com amostra ao vivo do tema e seção Capa e rodapé (prévia e sugestões). Capa e rodapé ficam em `manual.json` e saem no HTML e no PDF; o Markdown não muda.
+- Botão no cabeçalho da página que abre a capa e o rodapé do manual.
+- Públicos: diálogo nos Ajustes para criar, renomear e remover; o termo "Público" vale em toda a interface. "Ver como público" fica acima da busca na barra lateral.
+- Marcação com painel Estilo: cor, tamanho, espessura, borda e preenchimento valem só para o item selecionado e sobrepõem o estilo da imagem. O destaque ganha paleta de marca-texto, preenchimento e a opção de borda nenhuma. Valem no Studio, no HTML e no PDF.
+- Marcações: setas movidas pelo teclado, número do marcador centrado, barra com divisor e dica visível, excluir pelo painel Estilo, foco na legenda do marcador novo (Esc devolve o teclado) e pergunta antes de fechar com mudanças não salvas.
+- Passeio guiado no primeiro uso, só em manual vazio, com entrada animada e deslize entre os passos. Reabre pelo menu Ajustes.
+- Fonte por trecho: menu de fonte na barra da seleção (Ctrl+Shift+F), salvo como `<span data-font="...">` e renderizado no HTML e no PDF.
+- Botão "Remover imagem" no painel da imagem.
+- Lixeira e ajuda direto no rodapé da barra lateral.
+- Busca por digitação na árvore de páginas.
+- Transição curta ao trocar de página.
+- Ao voltar para a aba, o Studio atualiza manuais, árvore e página, e o aviso de conflito mostra o que mudou. Página apagada por fora pode ser recriada.
+- Manual de formato mais novo abre só para leitura, com aviso para atualizar o Studio.
+- Marca do Explicaí na tela de primeiro uso; `main`, regiões nomeadas e link de pular nas telas.
 
-Added: per-item `style` (marker, arrow, highlight, hotspot) overriding the image style; preserved by crop, editing and `annotate_image`. No UI yet.
+### Alterado
+
+- O Studio agora pede Node 22.12 ou mais novo (antes, 20.12), a única versão testada no CI (Linux, Windows e macOS).
+- Formato do manual: a versão 1 cresce só por acréscimo (`FORMAT_VERSION` continua 1). Todo manual criado desde a 0.1 abre, edita e exporta na 1.x. Estilo por item, capa, rodapé, públicos e fonte por trecho são campos opcionais.
+- Barra da seleção abre para cima quando está perto do topo e sobrepõe a barra fixa.
+- Barra lateral: a barra de rolagem não passa mais pelo rodapé.
+- Barra de rolagem fina, na cor da marca, sem cobrir o painel vizinho. Alvos pequenos chegam a 24 px.
+- Imagem inválida ou manual de formato mais novo são recusados com erro claro, sem gravar.
+- Mensagens de erro do Reduzir imagem, da consulta do git e da sincronização ao voltar o foco passam a aparecer.
+
+### Corrigido
+
+- Trocar rápido de manual não mostra mais o conteúdo do manual anterior.
+- Ao fechar menu ou diálogo, o foco volta ao botão que abriu. Fundo dos menus fica inerte para leitores de tela.
+- Cor inválida do tema não entra mais no estilo do HTML exportado.
+- Área clicável invisível quando a imagem não tem borda.
+- A tela Aparência abre em manual sem rodapé salvo.
+- `checkManual` deixa de apontar falsos positivos.
+- Campos desconhecidos em `assets/<imagem>.json` são preservados ao regravar.
+- Arquivo da lixeira de um público fica confinado à pasta da entrada; a limpeza de imagens da lixeira é protegida.
+- Contraste da borda do marca-texto no tema escuro; cabeçalho de tabela nova ganha texto; trilha do manual repetido no celular.
+
+### Summary
+
+Explicaí Studio 1.0 adds a Manual appearance screen (live theme sample, cover and footer), Audiences managed from Settings, a per-item Style panel for annotations (color, size, thickness, border, fill), per-selection fonts, a guided first-use tour, a selection toolbar that opens upward near the top, and a sidebar with trash and help in the footer. Studio needs Node 22.12 or newer. The manual format stays at version 1 and only grows by addition: every manual created since 0.1 opens, edits and exports in any 1.x, and a manual from a newer format opens read-only. Fixes cover focus return after menus and dialogs, quick manual switching, and several accessibility details.
 
 ## [0.3.0] - 2026-11-04
 
@@ -124,7 +159,8 @@ A 0.1.0 foi a primeira versão do Studio; este bloco reúne o que entrou desde a
 
 New since 0.1.0: bundled OFL fonts and font choice for exports, manual theme colors and client logo, alert blocks, text colors with names, a floating selection toolbar, a richer `/` menu, table row and column controls, annotation shortcuts, full-screen error pages, translated errors, GitHub Actions CI and a much larger test suite. New: warning instead of overwrite when a page changed on disk outside the Studio. Image tools: hide sensitive data (solid bar or strong blur burned into the pixels), display size (small, medium, wide), crop with annotations remapped, and resolution/weight reduction. Fixes cover autosave races, per-folder write queue, atomic exports, unused-image cleanup and many editor and accessibility details. Security: symlinks that leave the manual folder are refused, CSP on `/files/`, same-port `Origin` check. The npm package no longer ships source maps.
 
-[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.3.0...v1.0.0
 [0.3.0]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/gabriel-codesampaio/explicai-studio/compare/v0.1.0...v0.2.0
