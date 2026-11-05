@@ -73,7 +73,7 @@ export function MobileBar({ title, onOpen, drawerOpen = false }: { title: string
         onClick={onOpen}
         data-passeio="menu"
         aria-label={t("Mostrar as páginas ({atalho})", { atalho: SHORTCUT })}
-        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-bold hover:bg-muted"
+        className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-bold hover:bg-muted [@media(pointer:coarse)]:min-h-11"
       >
         <PanelLeftOpen className="size-4" aria-hidden /> {t("Páginas")}
       </button>

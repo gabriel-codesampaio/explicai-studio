@@ -367,7 +367,13 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
         )}
 
         <DialogFooter className="flex-row flex-wrap items-center justify-end gap-2 sm:gap-3">
-          <Button variant="ghost" onClick={undo} disabled={past.length === 0} className="mr-auto" title="Ctrl+Z">
+          <Button
+            variant="ghost"
+            onClick={undo}
+            disabled={past.length === 0}
+            className="mr-auto [@media(pointer:coarse)]:min-w-11"
+            title="Ctrl+Z"
+          >
             <Undo2 aria-hidden /> <span className="sr-only sm:not-sr-only">{t("Desfazer")}</span>
           </Button>
           {error && (
