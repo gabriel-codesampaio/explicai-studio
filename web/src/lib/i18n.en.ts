@@ -624,6 +624,7 @@ export const EN: Record<string, string> = {
   "Não achamos *este manual*": "We could not find *this manual*",
   "O que você escreveu continua nesta tela e será salvo quando o servidor voltar.":
     "What you wrote is still on this screen and will be saved when the server is back.",
+  "Aguardando o servidor": "Waiting for the server",
   "Sem conexão com o Studio.": "No connection to the Studio.",
   "O servidor do Studio foi fechado ou está reiniciando. Quando ele voltar, esta tela abre o Studio sozinha. Se você usa o terminal, confira se o comando explicai ainda está rodando.":
     "The Studio server was closed or is restarting. When it is back, this screen opens the Studio by itself. If you use the terminal, check that the explicai command is still running.",
