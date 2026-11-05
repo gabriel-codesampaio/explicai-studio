@@ -1,7 +1,8 @@
-import { ArrowLeft, BookCheck, Eye, RotateCcw, Trash2 } from "lucide-react";
+import { ArrowLeft, BookCheck, Eye, MoreHorizontal, RotateCcw, Trash2 } from "lucide-react";
 import { type FormEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { api, errorMessage, type Version, type VersionInfo } from "@/lib/api";
 import { locale, t } from "@/lib/i18n";
@@ -14,7 +15,7 @@ interface Props {
   onSave: (note: string) => Promise<void>;
   onRestore: (versionId: string) => Promise<void>;
   onPublish: (versionId: string | null) => Promise<void>;
-  /** Página com Versão do manual: o botão avisa. */
+  /** Página fixada no manual: o botão avisa. */
   pinned: boolean;
 }
 
@@ -55,14 +56,19 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
     setOpen(false);
   };
   const publish = (id: string | null) => onPublish(id).then(load);
-  // Foco volta para um botão "Remover" da lista (o da própria linha ao cancelar, o primeiro ao apagar).
+  // Foco volta para um botão ⋯ da lista (o da própria linha ao cancelar, o primeiro ao apagar).
   const focusRemove = (id?: string) =>
     requestAnimationFrame(() =>
       (id
         ? list.current?.querySelector<HTMLElement>(`[data-remove="${CSS.escape(id)}"]`)
-        : list.current?.querySelector<HTMLElement>("[data-remove]:not(:disabled)")
+        : list.current?.querySelector<HTMLElement>("[data-remove]")
       )?.focus(),
     );
+  // O menu desmonta com o gatilho e devolve o foco ao diálogo; o Cancelar só o recebe depois disso.
+  const askRemove = (id: string) => {
+    setRemoving(id);
+    setTimeout(() => list.current?.querySelector<HTMLElement>("[data-cancel]")?.focus(), 0);
+  };
   const cancelRemove = () => {
     const id = removing;
     setRemoving(null);
@@ -95,9 +101,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           {t("Versões")}
-          {pinned && (
-            <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">{t("Versão do manual")}</span>
-          )}
+          {pinned && <span className="rounded-sm bg-marca px-1.5 text-xs font-bold text-[#151a33]">{t("Fixada no manual")}</span>}
         </button>
       </DialogTrigger>
       <DialogContent className="grid max-h-[90vh] w-[min(96vw,46rem)] max-w-none grid-rows-[auto_auto_minmax(0,1fr)] gap-4 sm:max-w-none">
@@ -105,7 +109,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Versões desta página")}</DialogTitle>
           <DialogDescription>
             {t(
-              'Estas versões são só desta página, não do manual inteiro. Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que esta página usa no manual final. Sem ela, vale o texto atual.',
+              'Estas versões são só desta página, não do manual inteiro. Guarde o texto como está agora para voltar a ele depois. A versão "Fixada no manual" é a que esta página usa no manual final. Sem ela, vale o texto atual.',
             )}
           </DialogDescription>
         </DialogHeader>
@@ -131,7 +135,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                 </Button>
                 <span className="flex-1 truncate text-sm font-bold">{noteLabel(preview.note)}</span>
                 <Button variant="outline" size="sm" onClick={() => void restore(preview.id)}>
-                  <RotateCcw aria-hidden /> {t("Restaurar na página")}
+                  <RotateCcw aria-hidden /> {t("Restaurar")}
                 </Button>
               </div>
               <VersionPreview slug={slug} version={preview} />
@@ -149,7 +153,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                       <span className="truncate">{noteLabel(v.note)}</span>
                       {v.published && (
                         <span className="shrink-0 rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold text-[#151a33]">
-                          {t("Versão do manual")}
+                          {t("Fixada no manual")}
                         </span>
                       )}
                     </span>
@@ -164,7 +168,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                       <Button variant="destructive" size="sm" className={TOUCH} onClick={() => void remove(v.id)}>
                         {t("Remover")}
                       </Button>
-                      <Button variant="outline" size="sm" className={TOUCH} autoFocus onClick={cancelRemove}>
+                      <Button variant="outline" size="sm" className={TOUCH} data-cancel onClick={cancelRemove}>
                         {t("Cancelar")}
                       </Button>
                     </fieldset>
@@ -174,24 +178,39 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                         <Eye aria-hidden /> {t("Ver")}
                       </Button>
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void restore(v.id)}>
-                        <RotateCcw aria-hidden /> {t("Restaurar na página")}
+                        <RotateCcw aria-hidden /> {t("Restaurar")}
                       </Button>
-                      <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void publish(v.published ? null : v.id)}>
-                        <BookCheck aria-hidden /> {v.published ? t("Tirar da página do manual") : t("Usar na página do manual")}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={`${TOUCH} min-w-36 justify-center`}
+                        onClick={() => void publish(v.published ? null : v.id)}
+                      >
+                        <BookCheck aria-hidden /> {v.published ? t("Desafixar") : t("Fixar no manual")}
                       </Button>
-                      <span title={v.published ? t("Escolha outra versão antes") : undefined}>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className={TOUCH}
-                          data-remove={v.id}
-                          disabled={v.published}
-                          aria-label={t("Remover versão {nome}", { nome: noteLabel(v.note) })}
-                          onClick={() => setRemoving(v.id)}
-                        >
-                          <Trash2 aria-hidden /> {t("Remover")}
-                        </Button>
-                      </span>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className={TOUCH}
+                            data-remove={v.id}
+                            aria-label={t("Mais ações da versão {nome}", { nome: noteLabel(v.note) })}
+                          >
+                            <MoreHorizontal aria-hidden />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            variant="destructive"
+                            disabled={v.published}
+                            title={v.published ? t("Desafixe antes de remover") : undefined}
+                            onSelect={() => askRemove(v.id)}
+                          >
+                            <Trash2 aria-hidden /> {t("Remover")}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </>
                   )}
                 </li>

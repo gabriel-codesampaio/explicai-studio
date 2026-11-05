@@ -348,10 +348,12 @@ test("versões: guarda, edita, restaura e o texto anterior vira versão", async 
   const dialog = page.getByRole("dialog", { name: "Versões desta página" });
   await dialog.getByLabel("Nome da versão (opcional)").fill("Aprovada");
   await dialog.getByRole("button", { name: "Guardar versão" }).click();
-  await dialog.getByRole("button", { name: "Usar na página do manual" }).click();
-  await expect(dialog.getByText("Versão do manual", { exact: true })).toBeVisible();
+  await dialog.getByRole("button", { name: "Fixar no manual" }).click();
+  await expect(dialog.getByText("Fixada no manual", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByText("O manual final usa a Versão do manual desta página.", { exact: false })).toBeVisible();
+  await expect(
+    page.locator('div:has(> button:text-is("Usar texto atual"))').getByText("Fixada no manual", { exact: true }),
+  ).toBeVisible();
 
   await editor(page).click();
   await page.keyboard.press("Control+a");
@@ -375,18 +377,20 @@ test("versões: remover pede confirmação, cancelar mantém e a marcada no manu
 
   await page.getByRole("button", { name: /^Versões/ }).click();
   const dialog = page.getByRole("dialog", { name: "Versões desta página" });
-  const marked = dialog.getByRole("button", { name: "Remover versão Final" });
-  await expect(marked).toBeDisabled();
-  await expect(marked.locator("..")).toHaveAttribute("title", "Escolha outra versão antes");
+  await dialog.getByRole("button", { name: "Mais ações da versão Final" }).click();
+  await expect(page.getByRole("menuitem", { name: "Remover" })).toBeDisabled();
+  await page.keyboard.press("Escape");
 
-  const trigger = dialog.getByRole("button", { name: "Remover versão Antiga" });
+  const trigger = dialog.getByRole("button", { name: "Mais ações da versão Antiga" });
   await trigger.click();
+  await page.getByRole("menuitem", { name: "Remover" }).click();
   await expect(dialog.getByRole("button", { name: "Cancelar" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(trigger).toBeFocused();
   expect((await (await request.get(`${url}/versions`)).json()).length).toBe(2);
 
   await trigger.click();
+  await page.getByRole("menuitem", { name: "Remover" }).click();
   await dialog.getByRole("button", { name: "Remover", exact: true }).click();
   await expect(dialog.getByText("Antiga")).toHaveCount(0);
   await expect(dialog.getByText("Final", { exact: true })).toBeVisible();
@@ -725,7 +729,7 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     const { buttons, rowRight, scrollW, innerW } = await topButtons(page);
     expect(buttons.map((b) => b.name.replace(/:.*/, "").replace(/\s+/g, " "))).toEqual([
       "Versões",
-      "Público da página",
+      "Público",
       "Status da página",
       "Nesta página",
       "Exportar manual",
@@ -742,7 +746,7 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     expect(scrollW).toBeLessThanOrEqual(innerW);
 
     await page.getByRole("button", { name: "Versões" }).focus();
-    for (const name of [/Público da página/, /Status da página/, /Nesta página/, /Exportar manual/]) {
+    for (const name of [/^Público:/, /Status da página/, /Nesta página/, /Exportar manual/]) {
       await page.keyboard.press("Tab");
       await expect(page.getByRole("button", { name })).toBeFocused();
     }

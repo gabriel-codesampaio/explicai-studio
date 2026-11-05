@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: fechado
 - Agente: frontend
 - Origem: [relatório UI/UX 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), achado M4 (Médio)
 
@@ -21,4 +21,4 @@ Na página com "Versão do manual", o aviso "O manual final usa a Versão do man
 Conferir o texto em pt e en; medir o espaço com `evaluate_script`; o título não desce com o aviso aberto.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Coberto por T-554 (aviso virou selo ao lado do título, sem parágrafo, sem empurrar o título).

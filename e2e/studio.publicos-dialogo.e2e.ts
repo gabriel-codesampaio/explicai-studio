@@ -26,7 +26,7 @@ const grave = async (page: Page) =>
 test("públicos: lista com contagem, cria, recusa repetido, renomeia, remove com confirmação", async ({ page, request }) => {
   const slug = await seed(request, "Manual Dialogo Publicos");
   await page.goto(`/#/${slug}`);
-  await expect(page.getByRole("button", { name: "Público da página: aluno" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Público: aluno" })).toBeVisible();
 
   await page.getByRole("button", { name: "Ajustes" }).click();
   await page.getByRole("menuitem", { name: "Públicos" }).click();
@@ -95,7 +95,7 @@ test("públicos: lista com contagem, cria, recusa repetido, renomeia, remove com
 
   // A página aberta (Solo) foi relida: o botão do popover mostra "Todos".
   await dialog.getByRole("button", { name: "Fechar" }).click();
-  await expect(page.getByRole("button", { name: "Público da página: Todos" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Público: Todos" })).toBeVisible();
 });
 
 test("públicos: o link do popover abre o diálogo; popover e diálogo sem violação de acessibilidade", async ({
@@ -104,7 +104,7 @@ test("públicos: o link do popover abre o diálogo; popover e diálogo sem viola
 }) => {
   const slug = await seed(request, "Manual Axe Publicos");
   await page.goto(`/#/${slug}`);
-  await page.getByRole("button", { name: "Público da página: aluno" }).click();
+  await page.getByRole("button", { name: "Público: aluno" }).click();
   const popover = page.getByRole("dialog", { name: "Público da página" });
   await expect(popover).toBeVisible();
   // Transição de cor ou animação em curso engana o axe (CI lento): violação de verdade persiste e falha no fim do prazo.

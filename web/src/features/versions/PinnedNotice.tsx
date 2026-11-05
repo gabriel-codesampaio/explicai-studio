@@ -1,22 +1,22 @@
 import { t } from "@/lib/i18n";
 
 /**
- * Linha discreta sob o caminho da página com Versão do manual: o manual final usa aquela versão,
- * então o que se escreve aqui não entra nele até a pessoa voltar para o texto atual.
+ * Selo da página fixada, logo abaixo do título: o manual final usa a versão guardada, então o que se
+ * escreve aqui só entra nele quando a pessoa volta ao texto atual.
  */
 export function PinnedNotice({ onUseCurrent }: { onUseCurrent: () => void }) {
   return (
-    <p className="mt-2 text-sm text-muted-foreground">
-      {t(
-        "O manual final usa a Versão do manual desta página. O que você escrever aqui só entra nele quando você voltar para o texto atual.",
-      )}{" "}
+    <div className="mb-3 flex items-center gap-2 text-[13px]">
+      <span className="rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold whitespace-nowrap text-[#151a33]">
+        {t("Fixada no manual")}
+      </span>
       <button
         type="button"
         onClick={onUseCurrent}
-        className="rounded-sm font-bold text-primary underline underline-offset-2 hover:no-underline"
+        className="rounded-sm font-bold whitespace-nowrap text-primary underline underline-offset-2 hover:no-underline [@media(pointer:coarse)]:min-h-11"
       >
-        {t("Usar o texto atual")}
+        {t("Usar texto atual")}
       </button>
-    </p>
+    </div>
   );
 }

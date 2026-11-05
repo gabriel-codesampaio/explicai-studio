@@ -96,7 +96,6 @@ export function PageView({ manual, page }: Props) {
           </div>
 
           {manual.newerFormat !== undefined && <FormatNewerNotice version={manual.newerFormat} />}
-          {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
 
           {/* O campo não serve de título para leitores de tela, então um h1 invisível anuncia a página. */}
           <h1 className="sr-only">{title || t("Sem título")}</h1>
@@ -137,6 +136,9 @@ export function PageView({ manual, page }: Props) {
               </>
             )}
           </div>
+
+          {/* Selo logo abaixo do título: ele não perde largura nem desce. */}
+          {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
 
           {empty && !readOnly && <FirstStepHint onExport={() => setExportOpen(true)} />}
 

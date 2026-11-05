@@ -41,6 +41,8 @@ export function useStudio() {
   const [openError, setOpenError] = useState<{ slug: string; error: unknown } | null>(null);
   /** true enquanto o formulário de novo manual está aberto na área principal. */
   const [creatingManual, setCreatingManual] = useState(false);
+  /** "Visualizar como": público visto na árvore e pré-selecionado no Exportar. "" = todos. Não muda nada no disco. */
+  const [viewAs, setViewAs] = useState("");
   /** Muda quando o texto da página aberta é trocado por fora do editor (restaurar versão), para recriar o editor. */
   const [revision, setRevision] = useState(0);
 
@@ -493,6 +495,8 @@ export function useStudio() {
     openFromLocation,
     creatingManual,
     setCreatingManual,
+    viewAs,
+    setViewAs,
     revision,
     diskConflict: page !== null && conflictId === page.id,
     conflictDiff:
