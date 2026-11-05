@@ -221,7 +221,7 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
       aria-describedby={drawing ? "canvas-keys-hint" : undefined}
       onKeyDown={onCanvasKey}
       className={cn(
-        "group relative inline-block max-w-full outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 touch-none select-none",
+        "group relative inline-block max-w-full outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-primary touch-none select-none",
         drawing ? "cursor-crosshair" : "cursor-default",
       )}
       onPointerDown={(e) => {
@@ -253,7 +253,7 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
         <span
           aria-hidden
           style={{ left: `${cursor.x * 100}%`, top: `${cursor.y * 100}%` }}
-          className="pointer-events-none absolute z-10 hidden size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary bg-background/60 group-focus-visible:block"
+          className="pointer-events-none absolute z-10 hidden size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary bg-background/60 shadow-[0_0_0_2px_#fff] group-focus-visible:block"
         />
       )}
       <img
