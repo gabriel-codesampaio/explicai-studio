@@ -1,12 +1,14 @@
-import { ArrowLeft, BookCheck, Eye, MoreHorizontal, RotateCcw, Trash2 } from "lucide-react";
+import { ArrowLeft, BookCheck, Eye, GitCompare, MoreHorizontal, RotateCcw, Trash2 } from "lucide-react";
 import { type FormEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { api, errorMessage, type Version, type VersionInfo } from "@/lib/api";
+import { type LineDiff, lineDiff } from "@/lib/conflictDiff";
 import { locale, t } from "@/lib/i18n";
 import { ago } from "@/lib/time";
+import { VersionDiff } from "./VersionDiff";
 import { VersionPreview } from "./VersionPreview";
 
 interface Props {
@@ -36,6 +38,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [preview, setPreview] = useState<Version | null>(null);
+  const [compare, setCompare] = useState<{ version: VersionInfo; diff: LineDiff } | null>(null);
   const [removing, setRemoving] = useState<string | null>(null);
   const list = useRef<HTMLUListElement>(null);
 
@@ -84,6 +87,20 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
     load();
     focusRemove();
   };
+  // Só leitura: lê a versão e o texto atual no disco e compara. Nada é restaurado.
+  const openCompare = async (v: VersionInfo) => {
+    try {
+      const [saved, current] = await Promise.all([api.getVersion(slug, pageId, v.id), api.getPage(slug, pageId)]);
+      setCompare({ version: v, diff: lineDiff(saved.body, current.body) });
+    } catch (err) {
+      fail(err);
+    }
+  };
+  const closeCompare = () => {
+    const id = compare?.version.id;
+    setCompare(null);
+    if (id) requestAnimationFrame(() => list.current?.querySelector<HTMLElement>(`[data-compare="${CSS.escape(id)}"]`)?.focus());
+  };
   const view = (id: string) => api.getVersion(slug, pageId, id).then(setPreview, fail);
 
   return (
@@ -92,6 +109,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
       onOpenChange={(next) => {
         setOpen(next);
         setPreview(null);
+        setCompare(null);
         if (next) load();
       }}
     >
@@ -127,7 +145,19 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
 
         <div className="min-h-0 overflow-y-auto">
           {error && <p className="pb-2 text-sm text-destructive">{error}</p>}
-          {preview ? (
+          {compare ? (
+            <div className="grid gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button variant="ghost" size="sm" autoFocus onClick={closeCompare}>
+                  <ArrowLeft aria-hidden /> {t("Voltar à lista")}
+                </Button>
+                <span className="flex-1 truncate text-sm font-bold">
+                  {t("Comparando {nome} com o texto atual", { nome: noteLabel(compare.version.note) })}
+                </span>
+              </div>
+              <VersionDiff diff={compare.diff} name={noteLabel(compare.version.note)} />
+            </div>
+          ) : preview ? (
             <div className="grid gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={() => setPreview(null)}>
@@ -176,6 +206,9 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                     <>
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void view(v.id)}>
                         <Eye aria-hidden /> {t("Ver")}
+                      </Button>
+                      <Button variant="ghost" size="sm" className={TOUCH} data-compare={v.id} onClick={() => void openCompare(v)}>
+                        <GitCompare aria-hidden /> {t("Comparar com o atual")}
                       </Button>
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void restore(v.id)}>
                         <RotateCcw aria-hidden /> {t("Restaurar")}
