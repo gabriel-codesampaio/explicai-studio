@@ -89,7 +89,7 @@ export function CoverFooterFields() {
             </p>
           ))}
         </div>
-        <div className="flex flex-wrap justify-between gap-x-4 rounded-md border border-border bg-superficie px-4 py-2 text-[11px] text-grafite">
+        <div className="flex flex-wrap justify-between gap-x-4 rounded-md border border-border bg-superficie px-4 py-2 text-xs text-grafite">
           <span className="min-w-0 whitespace-pre-line break-words">{draft.text.trim()}</span>
           {manual.footer?.pageNumbers && <span className="ml-auto">2 / 8</span>}
         </div>
