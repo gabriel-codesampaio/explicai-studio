@@ -40,6 +40,7 @@ export async function replaceAsset(
 export async function restoreReplacedAsset(dir: string, assetPath: string, folder: string): Promise<{ folder: string }> {
   await readManual(dir);
   const target = assetFile(dir, assetPath);
+  await resolveInsideReal(dir, assetPath);
   const trash = resolveInside(dir, folder);
   const copy = path.join(trash, ASSETS_DIR, path.basename(target));
   const parent = path.dirname(trash);

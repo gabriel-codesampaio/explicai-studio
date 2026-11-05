@@ -3,7 +3,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { addPage, createManual, exportManual, replaceAsset } from "../src/core/index.js";
+import { addPage, createManual, exportManual, replaceAsset, restoreReplacedAsset } from "../src/core/index.js";
 import { createStudioServer } from "../src/server/index.js";
 
 let workspace: string;
@@ -54,5 +54,6 @@ describe("replaceAsset com link simbólico", () => {
     await rm(path.join(dir, "assets"), { recursive: true, force: true });
     await symlink(outside, path.join(dir, "assets"), "junction");
     await expect(replaceAsset(dir, "assets/segredo.png", "novo.png", Buffer.from("x"))).rejects.toThrow(/fora do manual/);
+    await expect(restoreReplacedAsset(dir, "assets/segredo.png", ".lixeira/imagens-x")).rejects.toThrow(/fora do manual/);
   });
 });
