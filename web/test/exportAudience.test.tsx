@@ -13,6 +13,10 @@ const studio = {
   viewAs: "cliente",
   exportManual: vi.fn(),
 };
+// Sem rede: o diálogo confere o manual com useManualCheck, que faria fetch na porta 3000.
+vi.mock("../src/features/check/useManualCheck", () => ({
+  useManualCheck: () => ({ findings: null, error: null, reload: () => {} }),
+}));
 vi.mock("../src/hooks/StudioContext", () => ({ useStudioContext: () => studio }));
 
 afterEach(cleanup);
