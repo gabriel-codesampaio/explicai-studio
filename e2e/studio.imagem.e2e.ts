@@ -646,7 +646,7 @@ test.describe("exportação HTML aberta no navegador", () => {
     const html = await exportApi(request, slug, "html");
     const colors: string[] = [];
     for (const colorScheme of ["light", "dark"] as const) {
-      const ctx = await browser.newContext({ colorScheme, baseURL: test.info().project.use.baseURL });
+      const ctx = await browser.newContext({ colorScheme, baseURL: `http://localhost:${process.env.E2E_PORT ?? "4400"}` });
       const page = await ctx.newPage();
       await page.goto(html.url);
       const hot = page.locator("a.hot").first();
@@ -654,7 +654,9 @@ test.describe("exportação HTML aberta no navegador", () => {
       await hot.click({ position: { x: 4, y: 4 }, force: true }); // o marcador 1 cobre o centro
       await expect.poll(() => page.evaluate(() => location.hash)).toBe(await hot.getAttribute("href"));
       // O HTML exportado não tem tema escuro: fundo e texto são os mesmos nos dois esquemas.
-      colors.push(await page.evaluate(() => `${getComputedStyle(document.body).backgroundColor}|${getComputedStyle(document.body).color}`));
+      colors.push(
+        await page.evaluate(() => `${getComputedStyle(document.body).backgroundColor}|${getComputedStyle(document.body).color}`),
+      );
       await ctx.close();
     }
     expect(colors[1]).toBe(colors[0]);

@@ -9,7 +9,11 @@ test("menus abertos: axe sem aria-hidden-focus e Tab não sai do menu", async ({
   const abrir = [
     () => page.getByRole("button", { name: "Ajustes" }).click(),
     () => page.getByRole("button", { name: /Status da página/ }).click(),
-    () => page.getByRole("button", { name: /Mais ações para/ }).first().click({ force: true }),
+    () =>
+      page
+        .getByRole("button", { name: /Mais ações para/ })
+        .first()
+        .click({ force: true }),
   ];
   for (const open of abrir) {
     await open();
