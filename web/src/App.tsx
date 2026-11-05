@@ -76,36 +76,39 @@ function Shell() {
   return (
     <TooltipProvider delayDuration={400}>
       <SkipLink />
-      <div className="flex h-full">
-        {!firstRun && <Navigation sidebar={sidebar} onSearch={() => setSearchOpen(true)} />}
-        <main id="conteudo" tabIndex={-1} className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto outline-none">
-          {!firstRun && (
-            <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} drawerOpen={sidebar.drawerOpen} />
-          )}
-          {studio.serverDown && <ConnectionBanner checking={studio.reconnect.checking} onRetry={studio.reconnect.retryNow} />}
-          {studio.diskConflict && (
-            <DiskConflictBanner
-              diff={studio.conflictDiff}
-              onReload={() => studio.resolveConflict("reload")}
-              onKeep={() => studio.resolveConflict("keep")}
-            />
-          )}
-          {firstRun || studio.creatingManual ? (
-            <CreateManual firstRun={firstRun} onCreate={studio.createManual} onCancel={() => studio.setCreatingManual(false)} />
-          ) : !manual ? null : !page ? (
-            <EmptyState
-              title={manual.title}
-              action={{ label: t("Criar a primeira página"), onClick: () => void studio.addPage(null) }}
-            >
-              {t("Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.")}
-            </EmptyState>
-          ) : (
-            // key: cada página (e cada versão restaurada) tem o próprio editor, criado com o conteúdo dela.
-            <ErrorBoundary resetKey={page.id}>
-              <PageView key={`${page.id}:${studio.revision}`} manual={manual} page={page} />
-            </ErrorBoundary>
-          )}
-        </main>
+      <div className="flex h-full flex-col">
+        {/* Fora do <main>: a faixa cobre a largura toda e não desloca só a coluna principal. */}
+        {studio.serverDown && <ConnectionBanner checking={studio.reconnect.checking} onRetry={studio.reconnect.retryNow} />}
+        <div className="flex min-h-0 flex-1">
+          {!firstRun && <Navigation sidebar={sidebar} onSearch={() => setSearchOpen(true)} />}
+          <main id="conteudo" tabIndex={-1} className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto outline-none">
+            {!firstRun && (
+              <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} drawerOpen={sidebar.drawerOpen} />
+            )}
+            {studio.diskConflict && (
+              <DiskConflictBanner
+                diff={studio.conflictDiff}
+                onReload={() => studio.resolveConflict("reload")}
+                onKeep={() => studio.resolveConflict("keep")}
+              />
+            )}
+            {firstRun || studio.creatingManual ? (
+              <CreateManual firstRun={firstRun} onCreate={studio.createManual} onCancel={() => studio.setCreatingManual(false)} />
+            ) : !manual ? null : !page ? (
+              <EmptyState
+                title={manual.title}
+                action={{ label: t("Criar a primeira página"), onClick: () => void studio.addPage(null), passeio: "nova-pagina" }}
+              >
+                {t("Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.")}
+              </EmptyState>
+            ) : (
+              // key: cada página (e cada versão restaurada) tem o próprio editor, criado com o conteúdo dela.
+              <ErrorBoundary resetKey={page.id}>
+                <PageView key={`${page.id}:${studio.revision}`} manual={manual} page={page} />
+              </ErrorBoundary>
+            )}
+          </main>
+        </div>
       </div>
       {manual && !firstRun && !studio.creatingManual && <GuidedTour emptyManual={manual.pages.length === 0} />}
       {manual && <PageSearch open={searchOpen} onOpenChange={setSearchOpen} />}

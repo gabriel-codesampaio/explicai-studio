@@ -21,8 +21,9 @@ async function openCompare(page: Page, hash: string) {
   return dialog;
 }
 
+// Com o diálogo aberto o fundo fica inerte: se a página rolar, o main não tem nada focável (regra de página, não do diálogo).
 const grave = async (page: Page) =>
-  (await new AxeBuilder({ page }).analyze()).violations
+  (await new AxeBuilder({ page }).disableRules(["scrollable-region-focusable"]).analyze()).violations
     .filter((v) => v.impact === "serious" || v.impact === "critical")
     .map((v) => `${v.id}: ${v.nodes[0]?.target}`);
 

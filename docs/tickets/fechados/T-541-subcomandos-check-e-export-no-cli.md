@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: core (+ qa)
 - Origem: [relatório de features 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 2 (esforço M, risco M)
 
@@ -38,4 +38,4 @@ Decidido em 2026-11-05: sim, entra na 1.x só com `explicai check <pasta>` e `ex
 
 ## Registro
 - 2026-11-05: Decidido em 2026-11-05: sim, entra na 1.x só com `explicai check <pasta>` e `explicai export <pasta> --format html|pdf|md`, sem outras opções por enquanto.
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- 2026-11-05: feito em feat/cli-check-export. `explicai check <pasta>` e `explicai export <pasta> --format html|pdf|md` (src/cli-commands.ts), saída 1 com achado ou erro, 0 sem. README anota como promessa 1.x. Ficou de fora: `--manual`, `--fail-on`, `--audience`, `--json` (decisão do ticket).

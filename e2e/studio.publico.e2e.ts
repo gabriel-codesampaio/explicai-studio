@@ -44,7 +44,7 @@ test("público: marca a página, vê como o perfil e exporta só o que ele vê",
   await dialog.getByRole("combobox", { name: "Visualizar como" }).click();
   await page.getByRole("option", { name: "cliente" }).click();
   await dialog.getByText("Markdown para IA").click();
-  await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+  await dialog.getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ }).click();
   const link = dialog.getByRole("link", { name: "Abrir o arquivo" });
   await expect(link).toBeVisible();
   const text = await (await request.get((await link.getAttribute("href")) ?? "")).text();

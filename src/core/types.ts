@@ -92,6 +92,8 @@ export interface Page {
   rev?: string;
   /** Perfis que veem a página (`audience` no frontmatter). Sem o campo, vale para todos. */
   audience?: string[];
+  /** Dia da última conferência (`reviewed` no frontmatter, AAAA-MM-DD). Sem o campo, nunca foi conferida. */
+  reviewed?: string;
   /** Campos do frontmatter que o Studio não conhece (`sources:` etc.): voltam intactos ao salvar. */
   extra?: Record<string, unknown>;
 }

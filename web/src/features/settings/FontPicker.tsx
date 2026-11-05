@@ -28,9 +28,7 @@ export function FontPicker({ label, fonts, value, fallback, onChange }: Props) {
             className="rounded-md border border-border px-2.5 py-1 text-sm hover:bg-muted aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-bold"
           >
             {f.family}
-            {f.id === fallback && (
-              <span className="font-sans text-[11px] font-normal text-muted-foreground"> · {t("padrão")}</span>
-            )}
+            {f.id === fallback && <span className="font-sans text-xs font-normal text-muted-foreground"> · {t("padrão")}</span>}
           </button>
         ))}
       </div>

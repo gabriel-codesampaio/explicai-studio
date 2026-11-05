@@ -74,7 +74,7 @@ export function contentExtensions(image: AnyExtension = Image, callout: AnyExten
     TextColor,
     TextFont,
     Highlight,
-    Placeholder.configure({ placeholder: t("Escreva aqui, ou digite / para inserir um bloco. Cole um print com Ctrl+V.") }),
+    Placeholder.configure({ placeholder: t("Escreva aqui, ou digite / para inserir um bloco.") }),
     Markdown.configure({ markedOptions: { gfm: true } }),
   ];
 }

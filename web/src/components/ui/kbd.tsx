@@ -7,7 +7,7 @@ export function Kbd({ className, ...props }: React.ComponentProps<"kbd">) {
     <kbd
       aria-hidden
       className={cn(
-        "inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-sm border border-border bg-muted px-1 font-mono text-[11px] leading-none font-medium whitespace-nowrap text-muted-foreground",
+        "inline-flex h-5 min-w-5 items-center justify-center rounded-sm border border-border bg-muted px-1 font-mono text-xs leading-none font-medium whitespace-nowrap text-muted-foreground",
         className,
       )}
       {...props}

@@ -44,13 +44,15 @@ test("Cor dos títulos grava os cinco níveis e Ajustar por nível mostra cada u
 test("erro de contraste na cor não muda a posição de 'Cor de realce'", async ({ page, request }) => {
   const { dialog } = await abrir(page, request);
   const realce = dialog.getByLabel("Cor de realce", { exact: true });
+  // espera a animação de abertura acabar: medir no meio dela dá posição fracionada
+  await dialog.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)));
   const antes = (await realce.boundingBox())?.y;
   const hex = dialog.getByLabel("Cor do texto: código da cor");
   await hex.fill("#eeeeee");
   await hex.press("Enter");
   await expect(dialog.getByRole("alert")).toContainText("o mínimo é 4,5:1");
-  expect((await realce.boundingBox())?.y).toBeCloseTo(antes ?? 0, 0); // a animação de abertura mexe frações de px
+  expect((await realce.boundingBox())?.y).toBeCloseTo(antes ?? 0, 1);
   await hex.fill("#222222");
   await expect(dialog.getByRole("alert")).toHaveCount(0);
-  expect((await realce.boundingBox())?.y).toBeCloseTo(antes ?? 0, 0); // a animação de abertura mexe frações de px
+  expect((await realce.boundingBox())?.y).toBeCloseTo(antes ?? 0, 1);
 });
