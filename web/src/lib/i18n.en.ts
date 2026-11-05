@@ -304,6 +304,16 @@ export const EN: Record<string, string> = {
   "Marcando imagens": "Marking up images",
   "Editar imagem": "Edit image",
   "Remover imagem": "Remove image",
+  "Trocar imagem": "Replace image",
+  "Trocar mesmo assim": "Replace anyway",
+  "Imagem trocada. As marcações ficaram onde estavam.": "Image replaced. The markings stayed where they were.",
+  "A proporção da imagem nova é diferente. As marcações podem sair do lugar: confira depois de trocar.":
+    "The new image has a different aspect ratio. The markings may shift: check them after replacing.",
+  "Não foi possível trocar a imagem.": "Could not replace the image.",
+  "A imagem nova não pôde ser lida. Escolha outro arquivo.": "The new image could not be read. Choose another file.",
+  "A imagem nova precisa ter o mesmo formato da atual ({ext}). Escolha outro arquivo.":
+    "The new image must have the same format as the current one ({ext}). Choose another file.",
+  "A imagem não está mais no manual. Recarregue a página.": "The image is no longer in the manual. Reload the page.",
   "Tamanho da imagem": "Image size",
   "Não foi possível salvar o tamanho.": "Could not save the size.",
   Pequena: "Small",
