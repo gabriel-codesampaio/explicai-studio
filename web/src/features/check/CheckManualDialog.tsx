@@ -36,7 +36,7 @@ export function CheckManualDialog({ slug, onOpenPage, onClose }: Props) {
           document.getElementById(MANUAL_SWITCHER_ID)?.focus();
         }}
       >
-        <DialogHeader className="px-6 pt-6 pr-12 pb-4">
+        <DialogHeader className="px-6 pt-6 pr-12 pb-4 text-left">
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Checar manual")}</DialogTitle>
           <DialogDescription>
             {t("Confere o manual inteiro sem mudar nada. Clique num achado para abrir a página.")}
@@ -86,21 +86,22 @@ export function CheckManualDialog({ slug, onOpenPage, onClose }: Props) {
 }
 
 function FindingRow({ finding, onOpen }: { finding: CheckFinding; onOpen: () => void }) {
-  // "A confirmar" é lembrete, não defeito: ícone neutro em vez de alerta.
-  const Icon = finding.kind === "to-confirm" ? CircleHelp : AlertTriangle;
+  // "A confirmar" é lembrete, não defeito: ícone neutro em vez de alerta. Defeito leva a cor de erro (o formato do ícone também muda, cor não é o único sinal).
+  const reminder = finding.kind === "to-confirm";
+  const Icon = reminder ? CircleHelp : AlertTriangle;
   return (
     <button
       type="button"
       onClick={onOpen}
       className="flex min-h-11 w-full items-start gap-3 rounded-md border border-border px-3 py-2 text-left hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
     >
-      <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+      <Icon className={`mt-0.5 size-4 shrink-0 ${reminder ? "text-muted-foreground" : "text-destructive"}`} aria-hidden />
       <span className="grid min-w-0 flex-1 leading-tight">
         <span className="text-sm font-bold">{kindLabel(finding.kind)}</span>
-        <span className="text-xs break-words text-muted-foreground">{findingDetail(finding.kind, finding.detail)}</span>
+        <span className="text-sm break-words text-muted-foreground">{findingDetail(finding.kind, finding.detail)}</span>
       </span>
       <span className="flex shrink-0 items-center gap-1 text-xs font-bold text-primary">
-        {t("Abrir página")} <ArrowUpRight className="size-3.5" aria-hidden />
+        <span className="max-sm:sr-only">{t("Abrir página")}</span> <ArrowUpRight className="size-3.5" aria-hidden />
       </span>
     </button>
   );
