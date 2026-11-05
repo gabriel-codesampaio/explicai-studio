@@ -188,23 +188,23 @@ const openImage = async (page: Page) => {
 /** Seleciona a imagem pelo teclado (Shift+seta sobre ela), sem abrir o balão da descrição. */
 const selectImageByKeyboard = async (page: Page) => {
   await expect(images(page)).toHaveCount(1); // com o conteúdo já no editor, a seleção não é desfeita por um carregamento tardio
-  await editor(page).getByText("Antes.").click();
-  await settleEditor(page);
-  await page.keyboard.press("End");
-  await settleEditor(page);
-  await page.keyboard.press("ArrowRight");
-  await settleEditor(page);
-  await page.keyboard.press("Shift+ArrowRight");
-  // O ProseMirror só copia a imagem depois de processar a seleção; copiar antes copiava um parágrafo vazio.
-  await expect
-    .poll(() =>
-      editor(page).evaluate((el) => {
-        const dt = new DataTransfer();
-        el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
-        return dt.getData("text/html").includes("<img");
-      }),
-    )
-    .toBe(true);
+  // Em CI lento a seleção por teclado às vezes não pega; refaz o gesto inteiro em vez de só esperar a cópia.
+  await expect(async () => {
+    await editor(page).getByText("Antes.").click();
+    await settleEditor(page);
+    await page.keyboard.press("End");
+    await settleEditor(page);
+    await page.keyboard.press("ArrowRight");
+    await settleEditor(page);
+    await page.keyboard.press("Shift+ArrowRight");
+    // O ProseMirror só copia a imagem depois de processar a seleção; copiar antes copiava um parágrafo vazio.
+    const copiou = await editor(page).evaluate((el) => {
+      const dt = new DataTransfer();
+      el.dispatchEvent(new ClipboardEvent("copy", { clipboardData: dt, bubbles: true, cancelable: true }));
+      return dt.getData("text/html").includes("<img");
+    });
+    expect(copiou).toBe(true);
+  }).toPass({ timeout: 15_000 });
 };
 const markDialog = (page: Page) => page.getByRole("dialog", { name: "Editar imagem" });
 const annotations = (request: APIRequestContext, slug: string) =>
