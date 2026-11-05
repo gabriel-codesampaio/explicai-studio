@@ -6,7 +6,8 @@ export const TOC_SEARCH_CSS = `.toc-search{margin:0 0 12px}
 .toc-search input{width:100%;min-height:44px;padding:6px 10px;border:1px solid var(--grafite);border-radius:6px;background:#fff;color:var(--tinta);font:inherit;font-size:15px}
 .toc-search input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .toc-search [role=status]{margin:4px 0 0;color:var(--grafite);font-size:13px}
-@media screen{.page.hit{box-shadow:-12px 0 0 -8px var(--marca)}.toc li.hit>a{background:var(--marca-faixa)}}
+@media screen{.page.hit{box-shadow:-12px 0 0 -8px var(--marca)}.toc li.hit>a{background:var(--marca-faixa)}.toc li.hit>a:hover{background:var(--marca)}}
+@media (forced-colors:active){.toc li.hit>a{border:1px solid Highlight}.page.hit{border-left:4px solid Highlight}}
 `;
 
 export function tocSearchHtml(L: Labels): string {
