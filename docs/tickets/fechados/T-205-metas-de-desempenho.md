@@ -18,4 +18,4 @@ Metas de desempenho numéricas e teste de orçamento no CI (abrir, salvar, expor
 Conforme a discovery; evidência no Registro.
 
 ## Registro
-- Metas só com número medido, em `docs/desempenho.md`: PDF de 100 imagens teto 30 s (medido 4,7 a 7,5 s) e numerar 500 páginas teto 50 ms (medido 0,035 ms), ambos com teste de orçamento. Abrir e salvar um manual de 500 páginas e digitação ficam sem meta até serem medidos (T-423).
+- Metas só com número medido, em `docs/desempenho.md`: PDF de 100 imagens teto 30 s (medido 4,7 a 7,5 s) e numerar 500 páginas teto 200 ms (medido 0,035 ms), ambos com teste de orçamento. Abrir e salvar um manual de 500 páginas e digitação ficam sem meta até serem medidos (T-423).

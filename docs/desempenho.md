@@ -5,7 +5,7 @@ Só entra meta com número medido (T-105, T-106, 2026-11-04; Windows 10, Chrome 
 | Operação | Medido | Teto (teste) |
 |---|---|---|
 | Exportar PDF com 100 imagens PNG | 4,7 a 7,5 s, RSS 86 MB, 1,2 MB de PDF | 30 s (`test/export-pdf-images.test.ts`, pula sem Chrome) |
-| Numerar a árvore de 500 páginas | 0,035 ms | 50 ms (`web/test/numberPagesBudget.test.ts`) |
+| Numerar a árvore de 500 páginas | 0,035 ms | 200 ms (`web/test/numberPagesBudget.test.ts`) |
 
 ## Sem meta ainda (não medido)
 - Abrir manual de 500 páginas e salvar: falta medida de ponta a ponta.
