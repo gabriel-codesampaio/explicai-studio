@@ -67,7 +67,7 @@ export function CoverFooterFields() {
         <label className="flex items-center gap-2.5 text-sm">
           <input
             type="checkbox"
-            checked={manual.footer.pageNumbers === true}
+            checked={manual.footer?.pageNumbers === true}
             onChange={(e) => void run(studio.setManualFooter({ pageNumbers: e.target.checked ? true : null }))}
             className="size-4 accent-[var(--primary)]"
           />
@@ -91,7 +91,7 @@ export function CoverFooterFields() {
         </div>
         <div className="flex flex-wrap justify-between gap-x-4 rounded-md border border-border bg-white px-4 py-2 text-[11px] text-[#575e78]">
           <span className="min-w-0 whitespace-pre-line break-words">{draft.text.trim()}</span>
-          {manual.footer.pageNumbers && <span className="ml-auto">2 / 8</span>}
+          {manual.footer?.pageNumbers && <span className="ml-auto">2 / 8</span>}
         </div>
         <p className="text-xs text-muted-foreground">
           {t("A capa não leva rodapé. O número de página só sai no PDF e pede Chrome 131 ou mais novo.")}
