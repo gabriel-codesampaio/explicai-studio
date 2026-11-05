@@ -19,6 +19,8 @@ interface Props {
   onPublish: (versionId: string | null) => Promise<void>;
   /** Título atual da página: a linha da versão só o repete se ele mudou. */
   pageTitle: string;
+  /** Grava o que está pendente no editor: a comparação lê o disco e precisa ver o texto digitado agora. */
+  flush?: () => Promise<unknown>;
 }
 
 /** Nome da versão. "Antes de restaurar" é gravado pelo Studio em português e aparece traduzido. */
@@ -32,7 +34,7 @@ const when = (iso: string) => new Date(iso).toLocaleString(locale, { dateStyle: 
  * Botão "Versões" da página: guarda o texto como está, mostra as versões antigas, restaura uma
  * e escolhe qual vai para o manual final.
  */
-export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pageTitle }: Props) {
+export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pageTitle, flush }: Props) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<VersionInfo[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +92,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, page
   // Só leitura: lê a versão e o texto atual no disco e compara. Nada é restaurado.
   const openCompare = async (v: VersionInfo) => {
     try {
+      await flush?.();
       const [saved, current] = await Promise.all([api.getVersion(slug, pageId, v.id), api.getPage(slug, pageId)]);
       setCompare({ version: v, diff: lineDiff(saved.body, current.body) });
     } catch (err) {
@@ -203,7 +206,8 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, page
                       </Button>
                     </fieldset>
                   ) : (
-                    <>
+                    // Um grupo só: se faltar largura, as ações descem juntas, na mesma linha.
+                    <div className="ml-auto flex items-center gap-1">
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void view(v.id)}>
                         <Eye aria-hidden /> {t("Ver")}
                       </Button>
@@ -244,7 +248,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, page
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                    </>
+                    </div>
                   )}
                 </li>
               ))}

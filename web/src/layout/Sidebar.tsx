@@ -1,4 +1,4 @@
-import { PanelLeftClose, Plus, Search } from "lucide-react";
+import { ListFilter, PanelLeftClose, Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Brand } from "@/components/Brand";
 import { Kbd } from "@/components/ui/kbd";
@@ -13,6 +13,7 @@ import { StatusLegend } from "@/features/pages/StatusMenu";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
+import { staleOnly } from "@/lib/reviewed";
 import { templateBody } from "@/lib/templates";
 import { shiftTarget, visibleFor } from "@/lib/tree";
 import { MoreMenu } from "./MoreMenu";
@@ -37,7 +38,11 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   const [checking, setChecking] = useState(false);
   const profile = manual?.audiences.includes(viewAs) ? viewAs : null;
   const pages = manual?.pages;
-  const visible = useMemo(() => (pages ? visibleFor(pages, profile) : []), [pages, profile]);
+  const [onlyStale, setOnlyStale] = useState(false);
+  const visible = useMemo(() => {
+    const seen = pages ? visibleFor(pages, profile) : [];
+    return onlyStale ? staleOnly(seen) : seen;
+  }, [pages, profile, onlyStale]);
   const current = manuals?.find((m) => m.slug === manual?.slug) ?? null;
 
   const act = (item: TreeItem, action: PageAction) => {
@@ -123,6 +128,17 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
               <Kbd className="ml-auto pointer-coarse:hidden">Ctrl+P</Kbd>
             </button>
+            {manual.pages.length > 0 && (
+              <button
+                type="button"
+                aria-pressed={onlyStale}
+                title={t("Páginas sem data de conferência ou conferidas há mais de 90 dias")}
+                onClick={() => setOnlyStale((v) => !v)}
+                className="mb-2 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground aria-pressed:bg-accent aria-pressed:text-foreground [@media(pointer:coarse)]:min-h-11"
+              >
+                <ListFilter className="size-3.5" aria-hidden /> {t("Só não conferidas")}
+              </button>
+            )}
             <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
               <span className="rotulo">{t("Páginas")}</span>
               <div className="flex items-center">
@@ -151,6 +167,8 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             <StatusLegend className="mb-2 px-2" />
             {manual.pages.length === 0 ? (
               <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
+            ) : onlyStale && visible.length === 0 ? (
+              <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página pendente de conferência.")}</p>
             ) : (
               <PageTree
                 pages={visible}

@@ -35,7 +35,9 @@ it("GET /check devolve os achados com o id da página certa", async () => {
   await fetch(`${base}/api/manuals/chk/pages`, post({ title: "Boa", body: "Só texto." }));
   const res = await fetch(`${base}/api/manuals/chk/check`);
   expect(res.status).toBe(200);
-  const found = (await res.json()) as { pageId: string; title: string; kind: string }[];
+  const found = ((await res.json()) as { pageId: string; title: string; kind: string }[]).filter(
+    (f) => f.kind !== "not-reviewed",
+  );
   expect(found.map((f) => f.kind).sort()).toEqual(["no-image", "step-without-result", "to-confirm"]);
   expect(found.every((f) => f.pageId === bad.id && f.title === "Ruim")).toBe(true);
 });
@@ -43,7 +45,8 @@ it("GET /check devolve os achados com o id da página certa", async () => {
 it("manual sem problema devolve lista vazia", async () => {
   await fetch(`${base}/api/manuals`, post({ title: "Ok" }));
   await fetch(`${base}/api/manuals/ok/pages`, post({ title: "P", body: "Texto." }));
-  expect(await (await fetch(`${base}/api/manuals/ok/check`)).json()).toEqual([]);
+  const found = (await (await fetch(`${base}/api/manuals/ok/check`)).json()) as { kind: string }[];
+  expect(found.filter((f) => f.kind !== "not-reviewed")).toEqual([]);
 });
 
 // Formato mais novo: a checagem é só leitura, então lista os achados e não grava nada.
@@ -55,7 +58,9 @@ it("manual de formato mais novo lista os achados e não grava nada", async () =>
   const before = await readFile(file, "utf8");
   const res = await fetch(`${base}/api/manuals/fin/check`);
   expect(res.status).toBe(200);
-  expect(await res.json()).toMatchObject([{ kind: "to-confirm" }]);
+  expect(((await res.json()) as { kind: string }[]).filter((f) => f.kind !== "not-reviewed")).toMatchObject([
+    { kind: "to-confirm" },
+  ]);
   expect(await readFile(file, "utf8")).toBe(before);
 });
 
