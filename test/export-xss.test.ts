@@ -2,6 +2,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { TOC_SEARCH_SCRIPT } from "../src/core/export/tocSearch.js";
 import { addPage, createManual, exportManual, saveAsset, setManualTheme, writeAnnotations } from "../src/core/index.js";
 
 /** O manual exportado é aberto por quem recebe o arquivo: nada que a pessoa escreveu pode virar código. */
@@ -20,7 +21,10 @@ const PAYLOAD = `"><script>alert(1)</script><img src=x onerror=alert(2)>`;
 const png = () => new Uint8Array([137, 80, 78, 71]);
 
 async function html(): Promise<string> {
-  return readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+  const doc = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+  // O único script é a busca do sumário (T-544), fixa; o texto do manual não a altera. Tudo mais com <script> falha.
+  expect(doc).toContain(`<script>${TOC_SEARCH_SCRIPT}</script>`);
+  return doc.replace(`<script>${TOC_SEARCH_SCRIPT}</script>`, "");
 }
 
 /** Tags reais do HTML gerado, com o texto escapado já fora. O CSS e o SVG das setas são do próprio exportador. */

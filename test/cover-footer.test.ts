@@ -77,7 +77,7 @@ describe("capa e rodapé: HTML", () => {
     const doc = await html();
     const css = doc.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
     expect(css).not.toContain("</style");
-    expect(doc.match(/<script/g)).toBeNull();
+    expect(doc.match(/<script/g)).toHaveLength(1); // só a busca do sumário (T-544)
     expect(doc).toContain("&lt;/style&gt;&lt;script&gt;x&lt;/script&gt; &quot;a&quot; &#39;b&#39; c\\d\ne");
     expect(css).toContain('content:"\\3C /style>\\3C script>x\\3C /script> \\"a\\" \'b\' c\\\\d\\A e"');
     expect(css).toContain('@bottom-right{content:counter(page) " / " counter(pages)');

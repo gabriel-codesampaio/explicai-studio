@@ -74,7 +74,7 @@ describe("logo do cliente", () => {
     expect(html.match(new RegExp(`<img class="logo[^>]*src="${logo}"`, "g"))).toHaveLength(2);
     expect(html).toMatch(/<header class="cover">\s*<img class="logo/);
     expect(html).toMatch(/<nav class="toc"[^>]*>\s*<img class="logo/);
-    expect(html).not.toContain("<script");
+    expect(html.match(/<script/g)).toHaveLength(1); // só a busca do sumário (T-544)
     expect(html).not.toMatch(/(?:src|href)="https?:/);
     expect(await readFile(path.join(dir, "exportacao/html", logo), "utf8")).toContain("<svg");
   });

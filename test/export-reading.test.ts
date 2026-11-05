@@ -109,7 +109,7 @@ describe("leitura do HTML exportado", () => {
     const out = await html();
     expect(out).toMatch(/<a class="zoom" href="assets\/larga\.png" target="_blank" rel="noopener"><img [^>]*alt="A"/);
     expect(out).not.toContain('href="assets/pequena.png"');
-    expect(out).not.toContain("<script");
+    expect(out.match(/<script/g)).toHaveLength(1); // só a busca do sumário (T-544)
   });
 
   it("sumário traz as seções, é recolhível e cada página volta a ele", async () => {
