@@ -41,12 +41,12 @@ export function BlockTypeMenu({
           aria-label={t("Tipo de bloco: {tipo}", { tipo: active.label })}
           onMouseDown={(e) => e.preventDefault()}
           className={cn(
-            "inline-flex h-8 w-52 items-center gap-2 rounded-md px-2.5 text-sm [@media(pointer:coarse)]:h-11 hover:bg-secondary data-[state=open]:bg-secondary",
+            "inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-sm [@media(pointer:coarse)]:h-11 hover:bg-secondary data-[state=open]:bg-secondary",
             className,
           )}
         >
           <active.icon className="size-4 text-primary" aria-hidden />
-          <span className="flex-1 truncate text-left font-display font-bold">{active.label}</span>
+          <span className="truncate text-left font-display font-bold">{active.label}</span>
           <ChevronDown className="size-4 text-muted-foreground" aria-hidden />
         </button>
       </DropdownMenuTrigger>

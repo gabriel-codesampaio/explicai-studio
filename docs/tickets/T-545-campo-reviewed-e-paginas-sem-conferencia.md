@@ -32,8 +32,9 @@ Teste de unidade do frontmatter; e2e: marcar, ver a data, filtrar a árvore.
 ## Riscos
 Vira burocracia: por isso sem bloqueio. Formato aditivo dentro da política de compatibilidade da 1.x (T-198).
 
-## Decisões pendentes
-3. **Nome do campo `reviewed`?** Recomendação do relatório: manter em inglês no frontmatter, como `status` e `audience`, e rótulo em pt/en na interface ("Conferida em").
+## Decisão
+Decidido em 2026-11-05: sim, campo `reviewed` no frontmatter (em inglês, como `status` e `audience`), rótulo "Conferida em" na interface.
 
 ## Registro
+- 2026-11-05: Decidido em 2026-11-05: sim, campo `reviewed` no frontmatter (em inglês, como `status` e `audience`), rótulo "Conferida em" na interface.
 <!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->

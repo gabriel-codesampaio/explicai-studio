@@ -48,17 +48,20 @@ export function ThemeSample({ slug, theme }: { slug: string; theme: ManualTheme 
       >
         <h4
           className="m-0 text-3xl font-extrabold leading-tight"
-          style={{ color: "var(--t-page, #000)", fontFamily: `var(--display, ${display})` }}
+          style={{ color: "var(--t-page, #151a33)", fontFamily: `var(--display, ${display})` }}
         >
           {t("Um título de página")}
         </h4>
         <h5
           className="m-0 mt-2 text-xl font-bold"
-          style={{ color: "var(--t-h1, #000)", fontFamily: `var(--display, ${display})` }}
+          style={{ color: "var(--t-h1, #151a33)", fontFamily: `var(--display, ${display})` }}
         >
           {t("Título {n}", { n: 1 })}
         </h5>
-        <h6 className="m-0 text-base font-bold" style={{ color: "var(--t-h2, #000)", fontFamily: `var(--display, ${display})` }}>
+        <h6
+          className="m-0 text-base font-bold"
+          style={{ color: "var(--t-h2, #151a33)", fontFamily: `var(--display, ${display})` }}
+        >
           {t("Título {n}", { n: 2 })}
         </h6>
         <p className="m-0">{t("O texto corrido usa a fonte e a cor escolhidas.")}</p>

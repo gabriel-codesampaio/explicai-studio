@@ -59,12 +59,13 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange, onDele
     disabled?: (id: string) => boolean,
     hint?: string,
   ) => (
-    <fieldset className="flex items-center gap-2">
+    <fieldset className="grid gap-1">
       <legend className="sr-only">{legend}</legend>
-      <span aria-hidden className="w-24 shrink-0 text-sm font-bold">
+      <span aria-hidden className="text-sm font-bold">
         {legend}
       </span>
-      <div className="flex flex-wrap gap-1">
+      {/* Uma coluna por opção: nenhum item cai sozinho na 2ª linha. */}
+      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
         {items.map((s) => (
           <button
             key={s.id}
@@ -73,7 +74,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange, onDele
             disabled={disabled?.(s.id)}
             title={disabled?.(s.id) ? hint : undefined}
             onClick={() => set({ [key]: s.id })}
-            className={`${option} px-2 disabled:opacity-50`}
+            className={`${option} justify-center px-1.5 disabled:opacity-50`}
           >
             {s.label()}
           </button>
@@ -139,17 +140,20 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange, onDele
           (id) => id === "none" && (kind === "hotspot" || hl) && fill === "none",
           t("Sem preenchimento precisa de borda"),
         )}
-      <button
-        type="button"
-        onClick={onDelete}
-        aria-label={t("Excluir {nome}", { nome: name.toLowerCase() })}
-        className="flex min-h-8 items-center gap-1.5 justify-self-start rounded-md border border-border px-2 text-sm text-destructive hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 [@media(pointer:coarse)]:min-h-11"
-      >
-        <Trash2 className="size-4" aria-hidden />
-        {t("Excluir")}
+      {/* A tecla fica fora do botão: dentro dele o texto visível ("Excluir Del") não cabe no nome acessível (axe label-content-name-mismatch). */}
+      <div className="flex items-center gap-2 justify-self-start">
+        <button
+          type="button"
+          onClick={onDelete}
+          aria-label={t("Excluir {nome}", { nome: name.toLowerCase() })}
+          className="flex min-h-8 items-center gap-1.5 rounded-md border border-border px-2 text-sm text-destructive hover:bg-muted focus-visible:ring-[3px] focus-visible:ring-ring/50 [@media(pointer:coarse)]:min-h-11"
+        >
+          <Trash2 className="size-4" aria-hidden />
+          {t("Excluir")}
+        </button>
         <Kbd>Del</Kbd>
-      </button>
-      {!style && <p className="text-xs text-muted-foreground">{t("Herdando da imagem")}</p>}
+      </div>
+      {!style && <p className="text-xs text-muted-foreground">{t("Usa o estilo da imagem")}</p>}
     </section>
   );
 }

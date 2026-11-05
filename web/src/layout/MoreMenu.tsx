@@ -37,6 +37,8 @@ export function MoreMenu() {
   const [mode, setMode] = useState<Mode>(() => readAppearance().mode);
   // Lixeira e Ajuda abrem sem gatilho de diálogo: devolve o foco ao botão que abriu quando o painel fecha.
   const opener = useRef<HTMLElement | null>(null);
+  // Item de menu some ao abrir o painel: o foco volta ao botão "Ajustes" que abriu o menu.
+  const menuButton = useRef<HTMLButtonElement | null>(null);
   const bind = (id: Panel) => ({
     open: panel === id,
     onOpenChange: (open: boolean) => {
@@ -48,6 +50,10 @@ export function MoreMenu() {
       }
     },
   });
+  const openFromMenu = (id: Panel) => () => {
+    opener.current = menuButton.current;
+    setPanel(id);
+  };
   const openFrom = (id: Panel) => (e: React.MouseEvent<HTMLElement>) => {
     opener.current = e.currentTarget;
     setPanel(id);
@@ -59,6 +65,7 @@ export function MoreMenu() {
         <DropdownMenuTrigger asChild>
           {/* Mesmo jeito de "Buscar página": linha com texto, não um ⋯ igual ao da árvore. */}
           <button
+            ref={menuButton}
             type="button"
             className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted [@media(pointer:coarse)]:min-h-11"
           >
@@ -73,21 +80,21 @@ export function MoreMenu() {
         >
           {/* Três grupos: o manual aberto, o app e a ajuda. */}
           {manual && (
-            <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("audiences")}>
+            <DropdownMenuItem className={TOUCH} onSelect={openFromMenu("audiences")}>
               <Users className={ICON} aria-hidden /> {t("Públicos")}
             </DropdownMenuItem>
           )}
           {manual && (
-            <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("manualAppearance")}>
+            <DropdownMenuItem className={TOUCH} onSelect={openFromMenu("manualAppearance")}>
               <Palette className={ICON} aria-hidden /> {t("Aparência do manual")}
             </DropdownMenuItem>
           )}
           {manual && <DropdownMenuSeparator />}
-          <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("appearance")}>
+          <DropdownMenuItem className={TOUCH} onSelect={openFromMenu("appearance")}>
             <SunMoon className={ICON} aria-hidden /> {t("Tema do Studio")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{t(MODE_LABELS[mode])}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("language")}>
+          <DropdownMenuItem className={TOUCH} onSelect={openFromMenu("language")}>
             <Languages className={ICON} aria-hidden /> {t("Idioma")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{LANGS.find((l) => l.id === lang)?.label}</span>
           </DropdownMenuItem>

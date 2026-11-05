@@ -114,7 +114,7 @@ test.describe("ocultar dados", () => {
     await dragOn(page, dialog, [0.1, 0.1], [0.2, 0.2]);
     await expect(dialog.getByText("1 área a ocultar")).toBeVisible();
     await dialog.getByRole("button", { name: "Desfazer" }).click();
-    await expect(dialog.getByText("Arraste sobre o dado que deve sumir.")).toBeVisible();
+    await expect(dialog.getByText("Arraste sobre o dado que deve sumir.", { exact: true })).toBeVisible();
     const box = await dragOn(page, dialog, [0.25, 0.3], [0.6, 0.45]);
     await expect(dialog.getByText("1 área a ocultar")).toBeVisible();
     // Fora da numeração e da legenda.
@@ -140,7 +140,7 @@ test.describe("ocultar dados", () => {
     // Aplicar de verdade.
     await dialog.getByRole("button", { name: "Aplicar ocultação" }).click();
     await confirm.getByRole("button", { name: "Ocultar e apagar o original" }).click();
-    await expect(dialog.getByText("Arraste sobre o dado que deve sumir.")).toBeVisible();
+    await expect(dialog.getByText("Arraste sobre o dado que deve sumir.", { exact: true })).toBeVisible();
 
     const m = await measure(page, url, rect);
     expect(m.size).toEqual([512, 512]);
@@ -183,7 +183,7 @@ test.describe("ocultar dados", () => {
       .getByRole("dialog", { name: "Ocultar as áreas marcadas?" })
       .getByRole("button", { name: "Ocultar e apagar o original" })
       .click();
-    await expect(dialog.getByText("Arraste sobre o dado que deve sumir.")).toBeVisible();
+    await expect(dialog.getByText("Arraste sobre o dado que deve sumir.", { exact: true })).toBeVisible();
     const m = await page.evaluate(
       async ([u, k]) => {
         const before = (globalThis as unknown as { __px: ImageData }).__px;

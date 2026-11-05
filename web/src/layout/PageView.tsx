@@ -83,7 +83,7 @@ export function PageView({ manual, page }: Props) {
                   <VersionsPanel
                     slug={manual.slug}
                     pageId={page.id}
-                    pinned={pinned}
+                    pageTitle={page.title}
                     onSave={studio.saveVersion}
                     onRestore={studio.restoreVersion}
                     onPublish={studio.publishVersion}

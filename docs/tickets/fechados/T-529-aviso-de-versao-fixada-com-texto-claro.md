@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: fechado
 - Agente: frontend
-- Origem: [relatório UI/UX 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), achado M4 (Médio)
+- Origem: [relatório UI/UX 2026-11-05](../../discovery/2026-11-05-relatorio-ui-ux-e-features.md), achado M4 (Médio)
 
 ## Problema
 Na página com "Versão do manual", o aviso "O manual final usa a Versão do manual desta página…" repete o termo do rótulo, fica colado à barra de ações e empurra o título para baixo (`m-1280-dark-pagina-imagem.png`). Arquivos: `web/src/features/versions/PinnedNotice.tsx`, `VersionsPanel.tsx:99`. Relacionado: T-016 e T-159 (nomes de versão), fechados.

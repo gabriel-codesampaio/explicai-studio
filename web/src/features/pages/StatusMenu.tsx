@@ -64,6 +64,7 @@ export function StatusLegend({ className }: { className?: string }) {
     <p
       className={cn("flex flex-wrap gap-x-2.5 text-[11px] text-muted-foreground", className)}
       title={t("Bolinha ao lado da página: etapa dela. Sem bolinha, é rascunho.")}
+      aria-label={t("Bolinha ao lado da página: etapa dela. Sem bolinha, é rascunho.")}
     >
       {LEGEND.map((id) => (
         <span key={id} className="inline-flex items-center gap-1">

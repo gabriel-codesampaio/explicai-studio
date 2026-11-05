@@ -33,8 +33,9 @@ No terminal, com a pasta de exemplo: cada comando e `echo $?` com e sem achado.
 ## Riscos
 Semver da 1.x (acima). PDF no CI precisa de Chrome na imagem; a mensagem de erro atual já avisa (hipótese, confirmar).
 
-## Decisões pendentes
-1. **Lote 1.1 sem CLI?** Recomendação do relatório: sim. Features 1, 6, 7 e 9 primeiro (esforço P, risco B); o CLI compromete flags no semver. Este ticket só começa quando a pessoa disser que os nomes entram na 1.x.
+## Decisão
+Decidido em 2026-11-05: sim, entra na 1.x só com `explicai check <pasta>` e `explicai export <pasta> --format html|pdf|md`, sem outras opções por enquanto.
 
 ## Registro
+- 2026-11-05: Decidido em 2026-11-05: sim, entra na 1.x só com `explicai check <pasta>` e `explicai export <pasta> --format html|pdf|md`, sem outras opções por enquanto.
 <!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->

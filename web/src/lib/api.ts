@@ -123,6 +123,15 @@ export interface Page {
   version?: string;
 }
 
+/** Página com o termo no corpo; o termo vem separado para a interface destacar. */
+export interface TextHit {
+  id: string;
+  title: string;
+  before: string;
+  match: string;
+  after: string;
+}
+
 export interface TrashItem {
   trashId: string;
   pageId: string;
@@ -203,9 +212,12 @@ export const api = {
   createManual: (title: string, language: string) => call<ManualSummary>("/api/manuals", send("POST", { title, language })),
   renameManual: (slug: string, title: string) => call<{ slug: string; title: string }>(manualUrl(slug), send("PUT", { title })),
   getManual: (slug: string) => call<ManualDetail>(manualUrl(slug)),
+  /** Busca no corpo das páginas (sem acento nem caixa). `signal` cancela a consulta que ficou velha. */
+  searchText: (slug: string, q: string, signal?: AbortSignal) =>
+    call<TextHit[]>(`${manualUrl(slug)}/search?q=${encodeURIComponent(q)}`, signal ? { signal } : undefined),
 
-  addPage: (slug: string, title: string, parentId: string | null) =>
-    call<Page>(`${manualUrl(slug)}/pages`, send("POST", { title, parentId })),
+  addPage: (slug: string, title: string, parentId: string | null, body?: string) =>
+    call<Page>(`${manualUrl(slug)}/pages`, send("POST", { title, parentId, body })),
   getPage: (slug: string, id: string) => call<Page>(pageUrl(slug, id)),
   updatePage: (slug: string, id: string, patch: PagePatch, version?: string) => {
     const init = send("PUT", patch);

@@ -1,12 +1,14 @@
-import { ArrowLeft, BookCheck, Eye, MoreHorizontal, RotateCcw, Trash2 } from "lucide-react";
+import { ArrowLeft, BookCheck, Eye, GitCompare, MoreHorizontal, RotateCcw, Trash2 } from "lucide-react";
 import { type FormEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { api, errorMessage, type Version, type VersionInfo } from "@/lib/api";
+import { type LineDiff, lineDiff } from "@/lib/conflictDiff";
 import { locale, t } from "@/lib/i18n";
 import { ago } from "@/lib/time";
+import { VersionDiff } from "./VersionDiff";
 import { VersionPreview } from "./VersionPreview";
 
 interface Props {
@@ -15,8 +17,8 @@ interface Props {
   onSave: (note: string) => Promise<void>;
   onRestore: (versionId: string) => Promise<void>;
   onPublish: (versionId: string | null) => Promise<void>;
-  /** Página fixada no manual: o botão avisa. */
-  pinned: boolean;
+  /** Título atual da página: a linha da versão só o repete se ele mudou. */
+  pageTitle: string;
 }
 
 /** Nome da versão. "Antes de restaurar" é gravado pelo Studio em português e aparece traduzido. */
@@ -30,12 +32,13 @@ const when = (iso: string) => new Date(iso).toLocaleString(locale, { dateStyle: 
  * Botão "Versões" da página: guarda o texto como está, mostra as versões antigas, restaura uma
  * e escolhe qual vai para o manual final.
  */
-export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinned }: Props) {
+export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pageTitle }: Props) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<VersionInfo[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [preview, setPreview] = useState<Version | null>(null);
+  const [compare, setCompare] = useState<{ version: VersionInfo; diff: LineDiff } | null>(null);
   const [removing, setRemoving] = useState<string | null>(null);
   const list = useRef<HTMLUListElement>(null);
 
@@ -84,6 +87,20 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
     load();
     focusRemove();
   };
+  // Só leitura: lê a versão e o texto atual no disco e compara. Nada é restaurado.
+  const openCompare = async (v: VersionInfo) => {
+    try {
+      const [saved, current] = await Promise.all([api.getVersion(slug, pageId, v.id), api.getPage(slug, pageId)]);
+      setCompare({ version: v, diff: lineDiff(saved.body, current.body) });
+    } catch (err) {
+      fail(err);
+    }
+  };
+  const closeCompare = () => {
+    const id = compare?.version.id;
+    setCompare(null);
+    if (id) requestAnimationFrame(() => list.current?.querySelector<HTMLElement>(`[data-compare="${CSS.escape(id)}"]`)?.focus());
+  };
   const view = (id: string) => api.getVersion(slug, pageId, id).then(setPreview, fail);
 
   return (
@@ -92,6 +109,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
       onOpenChange={(next) => {
         setOpen(next);
         setPreview(null);
+        setCompare(null);
         if (next) load();
       }}
     >
@@ -101,7 +119,6 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           {t("Versões")}
-          {pinned && <span className="rounded-sm bg-marca px-1.5 text-xs font-bold text-[#151a33]">{t("Fixada no manual")}</span>}
         </button>
       </DialogTrigger>
       <DialogContent className="grid max-h-[90vh] w-[min(96vw,46rem)] max-w-none grid-rows-[auto_auto_minmax(0,1fr)] gap-4 sm:max-w-none">
@@ -127,7 +144,19 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
 
         <div className="min-h-0 overflow-y-auto">
           {error && <p className="pb-2 text-sm text-destructive">{error}</p>}
-          {preview ? (
+          {compare ? (
+            <div className="grid gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button variant="ghost" size="sm" autoFocus onClick={closeCompare}>
+                  <ArrowLeft aria-hidden /> {t("Voltar à lista")}
+                </Button>
+                <span className="flex-1 truncate text-sm font-bold">
+                  {t("Comparando {nome} com o texto atual", { nome: noteLabel(compare.version.note) })}
+                </span>
+              </div>
+              <VersionDiff diff={compare.diff} name={noteLabel(compare.version.note)} />
+            </div>
+          ) : preview ? (
             <div className="grid gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={() => setPreview(null)}>
@@ -158,7 +187,8 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                       )}
                     </span>
                     <span className="text-xs text-muted-foreground" title={when(v.savedAt)}>
-                      {ago(v.savedAt)} · {v.title || t("Sem título")}
+                      {ago(v.savedAt)}
+                      {v.title !== pageTitle && ` · ${v.title || t("Sem título")}`}
                     </span>
                   </span>
                   {removing === v.id ? (
@@ -176,6 +206,9 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                     <>
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void view(v.id)}>
                         <Eye aria-hidden /> {t("Ver")}
+                      </Button>
+                      <Button variant="ghost" size="sm" className={TOUCH} data-compare={v.id} onClick={() => void openCompare(v)}>
+                        <GitCompare aria-hidden /> {t("Comparar com o atual")}
                       </Button>
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void restore(v.id)}>
                         <RotateCcw aria-hidden /> {t("Restaurar")}

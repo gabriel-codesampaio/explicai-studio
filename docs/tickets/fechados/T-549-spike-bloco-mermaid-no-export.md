@@ -2,9 +2,9 @@
 
 - Prioridade: P3
 - Tamanho: M
-- Status: aberto
+- Status: fechado (adiado)
 - Agente: core (+ design)
-- Origem: [relatório de features 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 10 (esforço G, risco M). Este ticket é spike: medição e decisão, não entrega.
+- Origem: [relatório de features 2026-11-05](../../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 10 (esforço G, risco M). Este ticket é spike: medição e decisão, não entrega.
 
 ## Problema
 Fluxo ("o pedido passa por aprovação") só cabe hoje como lista ou print de outra ferramenta. Hipótese: manual de sistema usa fluxo com frequência; sem evidência ainda.
@@ -29,8 +29,9 @@ Fluxo ("o pedido passa por aprovação") só cabe hoje como lista ou print de ou
 ## Como verificar
 Medição de tamanho do bundle, relatório de licenças e os dois exports de exemplo.
 
-## Decisões pendentes
-5. **Mermaid: vale o spike agora?** Recomendação do relatório: não. Só quando um manual real precisar de fluxo; o MCP já descreve fluxo em lista numerada. Este ticket só anda com a decisão da pessoa.
+## Decisão
+Decidido em 2026-11-05: não por enquanto. Só volta quando um manual real precisar de fluxo. Fechado como adiado; ideia no caderno.
 
 ## Registro
+- 2026-11-05: Decidido em 2026-11-05: não por enquanto. Só volta quando um manual real precisar de fluxo. Fechado como adiado; ideia no caderno.
 <!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->

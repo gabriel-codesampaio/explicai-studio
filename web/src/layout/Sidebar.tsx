@@ -6,12 +6,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CheckManualDialog } from "@/features/check/CheckManualDialog";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import { RenameManualDialog } from "@/features/manuals/RenameManualDialog";
+import { NewPageMenu } from "@/features/pages/NewPageMenu";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
 import { StatusLegend } from "@/features/pages/StatusMenu";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
+import { templateBody } from "@/lib/templates";
 import { shiftTarget, visibleFor } from "@/lib/tree";
 import { MoreMenu } from "./MoreMenu";
 
@@ -123,17 +125,25 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             </button>
             <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
               <span className="rotulo">{t("Páginas")}</span>
-              <button
-                type="button"
-                data-passeio="nova-pagina"
-                onClick={() => {
-                  onNavigate?.();
-                  void studio.addPage(null);
-                }}
-                className="flex items-center gap-1 rounded-md px-1.5 py-1 font-bold text-primary hover:bg-accent"
-              >
-                <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
-              </button>
+              <div className="flex items-center">
+                <button
+                  type="button"
+                  data-passeio="nova-pagina"
+                  onClick={() => {
+                    onNavigate?.();
+                    void studio.addPage(null);
+                  }}
+                  className="flex items-center gap-1 rounded-md px-1.5 py-1 font-bold text-primary hover:bg-accent"
+                >
+                  <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
+                </button>
+                <NewPageMenu
+                  onPick={(template) => {
+                    onNavigate?.();
+                    void studio.addPage(null, template && templateBody(template, manual.language));
+                  }}
+                />
+              </div>
             </div>
             <StatusLegend className="mb-2 px-2" />
             {manual.pages.length === 0 ? (

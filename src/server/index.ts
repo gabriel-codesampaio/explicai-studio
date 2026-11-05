@@ -10,6 +10,7 @@ import { exportRoutes } from "./routes/export.js";
 import { fontRoutes } from "./routes/fonts.js";
 import { manualRoutes } from "./routes/manuals.js";
 import { pageRoutes } from "./routes/pages.js";
+import { searchRoutes } from "./routes/search.js";
 import { versionRoutes } from "./routes/versions.js";
 import { webRoutes } from "./routes/web.js";
 import { assertLocalRequest } from "./security.js";
@@ -20,6 +21,7 @@ export type { StudioOptions } from "./router.js";
 const routes: Route[] = [
   ...manualRoutes,
   ...pageRoutes,
+  ...searchRoutes,
   ...audienceRoutes,
   ...checkRoutes,
   ...versionRoutes,

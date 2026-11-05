@@ -6,6 +6,14 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+### Alterado
+
+- Aparência do manual: a cor dos títulos é uma só ("Cor dos títulos"), com "Ajustar por nível" para mudar cada um. O padrão dos títulos passou de preto (`#000000`) para o nanquim da marca (`#151a33`): manuais que nunca escolheram cor de título saem no HTML e no PDF com os títulos em nanquim. Quem quer o preto escolhe `#000000`.
+
+### English summary
+
+Manual appearance has a single "Heading color" with "Adjust by level" for per-level colors. The default heading color changed from black (`#000000`) to the brand ink (`#151a33`), so manuals that never set a heading color export with ink headings in HTML and PDF.
+
 ## [1.0.0] - 2026-11-05
 
 ### Adicionado
