@@ -59,6 +59,30 @@ describe("useStudio", () => {
     expect(window.location.hash).toContain("/b");
   });
 
+  it("descarta o manual antigo ao trocar de manual rápido (T-425)", async () => {
+    const detail = (slug: string) => ({ slug, title: slug, pages: [node(`${slug}-p`)] }) as never;
+    const slowX = deferred<never>();
+    vi.mocked(api.listManuals).mockResolvedValue(["m", "x", "y"].map((slug) => ({ slug, title: slug })) as never);
+    const { result } = await openFirstPage();
+    vi.mocked(api.getManual).mockImplementation((slug) => (slug === "x" ? slowX.promise : Promise.resolve(detail(slug))));
+
+    let first!: Promise<void>;
+    act(() => {
+      first = result.current.openManual("x");
+    });
+    await act(async () => {
+      await result.current.openManual("y");
+    });
+    await act(async () => {
+      slowX.resolve(detail("x"));
+      await first;
+    });
+
+    // Manual x chegando depois não pode ficar com a página de y: o editor montaria com o slug errado.
+    expect(result.current.manual?.slug).toBe("y");
+    expect(result.current.page?.id).toBe("y-p");
+  });
+
   it("servidor fora ao trocar de página: acusa a queda e mantém a página aberta", async () => {
     const { result } = await openFirstPage();
     vi.mocked(api.getPage).mockRejectedValueOnce(new ApiError("x", "offline"));

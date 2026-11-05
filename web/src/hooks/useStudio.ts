@@ -162,7 +162,11 @@ export function useStudio() {
         await flush();
         setCreatingManual(false);
         setOpenError(null);
-        const detail = await refreshManual(slug);
+        const seq = ++openSeq.current;
+        const detail = await api.getManual(slug);
+        // Outra abertura começou durante a leitura: a vencedora cuida do resto (senão o editor montaria com o slug errado).
+        if (seq !== openSeq.current) return;
+        setManual(detail);
         const found = pageId ? findItem(detail.pages, pageId)?.id : undefined;
         if (pageId && !found) {
           setPage(null);
@@ -177,7 +181,7 @@ export function useStudio() {
         setOpenError({ slug, error: err });
       }
     },
-    [flush, refreshManual, showPage],
+    [flush, showPage],
   );
 
   /** Abre o que o endereço (hash) pede. Manual que não existe vira a tela 404; sem endereço, o primeiro manual. */
