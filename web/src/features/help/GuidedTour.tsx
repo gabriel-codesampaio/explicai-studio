@@ -27,8 +27,8 @@ export function GuidedTour({ emptyManual }: { emptyManual: boolean }) {
       shouldAutoOpen({ seen: isTourSeen(store()), webdriver: navigator.webdriver === true, search: location.search, emptyManual })
     )
       setIndex(0);
-    // setTimeout: deixa o menu fechar e devolver o foco antes de o passeio pegar o foco.
-    const reopen = () => setTimeout(() => setIndex(0), 0);
+    // setTimeout: shortcut: atraso fixo; deixa o menu fechar (animação) e devolver o foco antes de o passeio pegar o foco.
+    const reopen = () => setTimeout(() => setIndex(0), 250);
     window.addEventListener(TOUR_EVENT, reopen);
     return () => window.removeEventListener(TOUR_EVENT, reopen);
   }, [emptyManual]);
