@@ -49,3 +49,15 @@ it("trecho curto, com reticências cortadas pela interface", async () => {
   const [hit] = await searchBodies(d, "alvo");
   expect((hit?.before.length ?? 0) + (hit?.after.length ?? 0)).toBeLessThanOrEqual(130);
 });
+
+it("trecho sem sintaxe Markdown (negrito, código, tabela, link, imagem)", async () => {
+  const d = (await createManual(ws, { title: "Md", language: "pt-BR" })).dir;
+  await addPage(d, {
+    title: "M",
+    body: "Gere o **boleto** em `cobrança`.\n\n| A | B |\n|---|---|\n| x | y |\n\nVeja [cobrança](https://x.com/a) e ![print](a.png) fim.",
+  });
+  const [hit] = await searchBodies(d, "cobranca");
+  expect(hit?.before).toBe("Gere o boleto em ");
+  expect(hit?.after).toContain("A B x y Veja cobrança");
+  expect(hit?.after).not.toMatch(/[*`|#\[\]()]/);
+});

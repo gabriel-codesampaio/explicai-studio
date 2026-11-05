@@ -20,6 +20,21 @@ export interface BodyHit {
   after: string;
 }
 
+/** Tira a sintaxe Markdown do trecho (`**`, `|`, links, imagens) para ele ler como texto; um link cortado ao meio também sai. */
+function plain(text: string): string {
+  return text
+    .replace(/!?\[([^\]]*)\]\([^)]*(\)|$)/g, "$1")
+    .replace(/^\]\([^)]*(\)|$)/, "")
+    .replace(/-{3,}|\|+/g, " ")
+    .replace(/[*`#>~=[\]]+/g, "")
+    .replace(/\s+/g, " ");
+}
+
+/** Se o trecho começou no meio do texto, tira a palavra cortada do início. */
+function cutWord(text: string, cut: boolean): string {
+  return cut ? text.replace(/^\S*\s/, "") : text;
+}
+
 /** Texto sem acento e, para cada letra dele, onde ela começa no original (o trecho sai do original). */
 function foldWithMap(text: string): { folded: string; start: number[] } {
   let folded = "";
@@ -62,9 +77,9 @@ export async function searchBodies(
         return {
           id: node.id,
           title: typeof data.title === "string" ? data.title : "",
-          before: body.slice(Math.max(0, from - SNIPPET_SIDE), from).replace(/\s+/g, " "),
+          before: cutWord(plain(body.slice(Math.max(0, from - SNIPPET_SIDE), from)), from > SNIPPET_SIDE),
           match: body.slice(from, to),
-          after: body.slice(to, to + SNIPPET_SIDE).replace(/\s+/g, " "),
+          after: plain(body.slice(to, to + SNIPPET_SIDE)),
         };
       } catch {
         return null; // arquivo sumido ou com frontmatter quebrado: a árvore já mostra o problema
