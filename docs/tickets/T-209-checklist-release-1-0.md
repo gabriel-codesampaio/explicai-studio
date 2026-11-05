@@ -10,6 +10,8 @@
 ## Problema
 Checklist de release 1.0: `seguranca`, `npm audit`, tag, notas de versão pt/en, landing atualizada. Post do blog só quando a pessoa pedir. Studio só; o MCP segue 0.x (decisão da pessoa).
 
+O checklist está em [docs/release.md](../release.md). Fica aberto até ser cumprido na próxima versão.
+
 ## Critérios de aceite
 - [ ] O que a lacuna 12 descreve, feito e verificado conforme a discovery (seções "O que 1.0 promete" e "Critérios de pronto").
 - [ ] Documentado onde a discovery indica.
