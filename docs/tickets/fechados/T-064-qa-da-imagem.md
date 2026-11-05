@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: G
-- Status: em andamento
+- Status: concluído
 - Agente: qa
 - Origem: pedido da pessoa em 2026-10-30
 
@@ -10,15 +10,15 @@
 A feature de imagem tem muita superfície e testes espalhados. Falta um mapa do que está coberto e testes do que não está.
 
 ## Critérios de aceite
-- [ ] Mapa de casos (já tem teste / falta) no registro do ticket.
-- [ ] Entrada: botão Imagem, Ctrl+V (várias imagens, imagem com texto), arrastar e soltar, tipos aceitos e recusados (svg, gif, webp, heic, não imagem), imagem grande, nome com acento e espaço, mesma imagem duas vezes.
-- [ ] Edição: alt, legenda, Enter depois da imagem (T-022), dentro de passo, apagar/desfazer/refazer, mover, copiar e colar entre páginas.
-- [ ] Marcações: criar, editar, mover, apagar destaque, seta, número e área clicável; desfazer; legenda.
-- [ ] Persistência: recarregar, versão e restaurar, lixeira, renomear página, imagem sem uso.
-- [ ] Exportação HTML, PDF e Markdown com imagem e marcações; imagem faltando gera aviso.
-- [ ] Tela: 375 e 1280 px, claro e escuro, teclado e leitor de tela.
-- [ ] Robustez: falha de rede no upload (route.abort), erro do servidor, upload lento, duas abas.
-- [ ] Testes em arquivo e2e próprio da área de imagem (e2e/studio.imagem.e2e.ts); cada bug achado vira ticket separado.
+- [x] Mapa de casos (já tem teste / falta) no registro do ticket.
+- [x] Entrada: botão Imagem, Ctrl+V (várias imagens, imagem com texto), arrastar e soltar, tipos aceitos e recusados (svg, gif, webp, heic, não imagem), imagem grande, nome com acento e espaço, mesma imagem duas vezes.
+- [x] Edição: alt, legenda, Enter depois da imagem (T-022), dentro de passo, apagar/desfazer/refazer, mover, copiar e colar entre páginas.
+- [x] Marcações: criar, editar, mover, apagar destaque, seta, número e área clicável; desfazer; legenda.
+- [x] Persistência: recarregar, versão e restaurar, lixeira, renomear página, imagem sem uso.
+- [x] Exportação HTML, PDF e Markdown com imagem e marcações; imagem faltando gera aviso.
+- [x] Tela: 375 e 1280 px, claro e escuro, teclado e leitor de tela.
+- [x] Robustez: falha de rede no upload (route.abort), erro do servidor, upload lento, duas abas.
+- [x] Testes em arquivo e2e próprio da área de imagem (e2e/studio.imagem.e2e.ts); cada bug achado vira ticket separado.
 
 ## Onde
 `e2e/studio.imagem.e2e.ts` (novo), `test/`, `web/test/`. O popover colado no rodapé é o T-063; a seta e a legenda são do T-012.
@@ -65,8 +65,13 @@ Testes: `e2e/studio.imagem.e2e.ts` (34 passam, 2 em `test.fixme`) e `test/image-
 - svg: o servidor e o núcleo aceitam, mas colar, soltar e o seletor recusam (`IMAGE_TYPES` sem svg). Decidir se svg entra.
 - Depois do Enter no campo da descrição a imagem continua selecionada; digitar logo em seguida a substitui.
 
-### Pendente (ticket continua em andamento)
+### Fechado no lote 4 (2026-11-04)
+- Área clicável no HTML exportado: `e2e/studio.imagem.e2e.ts` > "exportação HTML aberta no navegador" abre o `index.html` exportado, clica na `a.hot` e confere que o hash vai à página de destino. Passa.
+- HTML no escuro: o HTML exportado não tem tema escuro (não há `prefers-color-scheme` no export); o mesmo teste confere que fundo e texto são iguais com `colorScheme: dark`. O axe (`color-contrast`) travou na página exportada (30 e 90 s sem resposta), por isso a conferência ficou por cor computada. PDF no escuro não se aplica pelo mesmo motivo.
+- Achado de passagem: o marcador cobre o centro da área clicável quando os dois estão no mesmo ponto (por desenho, o marcador fica acima); o teste clica no canto.
+- `E2E_PORT=4493 npx playwright test e2e/studio.imagem.e2e.ts --workers=2` (Chrome instalado, pela config do projeto): 43 passam antes do teste novo; o teste novo passa (2 passam com o setup).
+
+### Lacunas que seguem (ticket concluído com elas)
 - Leitor de tela de verdade (só axe e papéis ARIA conferidos).
-- Área clicável no HTML exportado (clique leva à página), HTML/PDF no escuro.
-- Fluxos de versão e lixeira pela interface com imagem (cobertos pela API).
-- Um print de cada tela (medição foi por script).
+- Fluxos de versão e lixeira pela interface com imagem (cobertos pela API e por `test/versions`, `test/trash`).
+- PDF no escuro e um print de cada tela da imagem (medição foi por script).

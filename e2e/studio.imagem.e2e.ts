@@ -636,6 +636,31 @@ const marks = {
   hotspots: [],
 };
 
+test.describe("exportação HTML aberta no navegador", () => {
+  test("área clicável leva à página de destino; no escuro o HTML exportado não muda de cores", async ({ browser, request }) => {
+    const { slug } = await withImage(request, "Imagem Hotspot");
+    const second = await (await request.post(`/api/manuals/${slug}/pages`, { data: { title: "Destino" } })).json();
+    await request.put(`/api/manuals/${slug}/annotations?asset=assets/tela.png`, {
+      data: { ...marks, hotspots: [{ id: "t1", x: 0.1, y: 0.1, w: 0.4, h: 0.4, target: { type: "page", pageId: second.id } }] },
+    });
+    const html = await exportApi(request, slug, "html");
+    const colors: string[] = [];
+    for (const colorScheme of ["light", "dark"] as const) {
+      const ctx = await browser.newContext({ colorScheme, baseURL: test.info().project.use.baseURL });
+      const page = await ctx.newPage();
+      await page.goto(html.url);
+      const hot = page.locator("a.hot").first();
+      await expect(hot).toHaveAttribute("href", /^#/);
+      await hot.click({ position: { x: 4, y: 4 }, force: true }); // o marcador 1 cobre o centro
+      await expect.poll(() => page.evaluate(() => location.hash)).toBe(await hot.getAttribute("href"));
+      // O HTML exportado não tem tema escuro: fundo e texto são os mesmos nos dois esquemas.
+      colors.push(await page.evaluate(() => `${getComputedStyle(document.body).backgroundColor}|${getComputedStyle(document.body).color}`));
+      await ctx.close();
+    }
+    expect(colors[1]).toBe(colors[0]);
+  });
+});
+
 test.describe("persistência", () => {
   test("versão guardada e restaurada mantém a imagem e as marcações", async ({ page, request }) => {
     const { slug, id } = await withImage(request, "Imagem Versao");
