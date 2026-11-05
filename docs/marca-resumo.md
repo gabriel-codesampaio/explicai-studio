@@ -8,6 +8,7 @@ Resumo para quem mexe na tela. Completo: [brand book](https://gabriel-codesampai
 - **Rótulo de seção:** mono, maiúsculo, espaçado, pequeno (classe `rotulo`).
 - **Forma:** raio 3 px na interface; arredondado só no ícone, nos prints e nos marcadores.
 - **Marcação no print:** número em círculo cobalto; destaque em marca-texto; área clicável tracejada.
+- **Cores do destaque (5):** preenchimento / borda no claro (3:1 contra branco) / borda no escuro (3:1 contra `#0E1120` e `#161A2E`). Amarelo `#FFD43B` / `#8A6D00` / `#FFD43B`; verde `#5ED38A` / `#1A7A3C` / `#5ED38A`; rosa `#FF7EB6` / `#B0245F` / `#FF7EB6`; azul `#6CB8FF` / `#1D5FA8` / `#6CB8FF`; laranja `#FFAB5E` / `#A84400` / `#FFAB5E`. O export é sempre claro.
 - **Numeração:** páginas e passos numerados (1, 2, 2.1) em mono cobalto, igual no Studio e no manual exportado.
 - **Ícones:** só quando identificam a ação sem texto (negrito, link). Ícone decorativo sai.
 - **Botão principal:** um só por tela, sólido em cobalto (ex.: Exportar manual). O resto é texto ou contorno discreto.
