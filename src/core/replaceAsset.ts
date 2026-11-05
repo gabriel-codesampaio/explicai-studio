@@ -4,7 +4,7 @@ import path from "node:path";
 import { assetFile } from "./assets.js";
 import { ExplicaiError } from "./errors.js";
 import { imageSize } from "./export/imageSize.js";
-import { exists, relativePosix, resolveInside } from "./fs.js";
+import { exists, relativePosix, resolveInside, resolveInsideReal } from "./fs.js";
 import { ASSETS_DIR, readManual } from "./manuals.js";
 
 const TRASH_PREFIX = "imagens-";
@@ -27,6 +27,7 @@ export async function replaceAsset(
   const target = assetFile(dir, assetPath);
   if (!(await exists(target)))
     throw new ExplicaiError("replace-missing", `A imagem ${assetPath} não existe.`, { asset: assetPath });
+  await resolveInsideReal(dir, assetPath);
   if (!sameKind(fileName, target)) {
     throw new ExplicaiError("replace-type", `A imagem nova precisa ter o mesmo formato da atual (${path.extname(target)}).`, {
       ext: path.extname(target),

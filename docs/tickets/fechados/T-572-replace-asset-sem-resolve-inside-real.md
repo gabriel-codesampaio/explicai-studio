@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: M
-- Status: aberto
+- Status: feito
 - Agente: backend
 - Origem: achado de revisão dos PRs de 2026-11-05
 

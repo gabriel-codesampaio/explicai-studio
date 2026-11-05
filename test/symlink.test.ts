@@ -3,7 +3,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { addPage, createManual, exportManual } from "../src/core/index.js";
+import { addPage, createManual, exportManual, replaceAsset } from "../src/core/index.js";
 import { createStudioServer } from "../src/server/index.js";
 
 let workspace: string;
@@ -45,5 +45,14 @@ describe("link simbólico que sai da pasta do manual (junction no Windows, sem p
     await symlink(outside, path.join(dir, "assets"), "junction"); // junction: no Windows não exige permissão de administrador
     await addPage(dir, { title: "P", body: "![x](../assets/segredo.png)" });
     await expect(exportManual(dir, "html")).rejects.toThrow(/fora do manual/);
+  });
+});
+
+describe("replaceAsset com link simbólico", () => {
+  it("recusa imagem cujo link sai da pasta do manual", async () => {
+    const { dir } = await createManual(workspace, { title: "M", language: "pt-BR" });
+    await rm(path.join(dir, "assets"), { recursive: true, force: true });
+    await symlink(outside, path.join(dir, "assets"), "junction");
+    await expect(replaceAsset(dir, "assets/segredo.png", "novo.png", Buffer.from("x"))).rejects.toThrow(/fora do manual/);
   });
 });
