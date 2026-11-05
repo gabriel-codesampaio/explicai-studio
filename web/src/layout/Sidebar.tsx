@@ -1,5 +1,5 @@
 import { PanelLeftClose, Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Brand } from "@/components/Brand";
 import { Kbd } from "@/components/ui/kbd";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -31,6 +31,8 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   const [viewAs, setViewAs] = useState("");
   const [renaming, setRenaming] = useState(false);
   const profile = manual?.audiences.includes(viewAs) ? viewAs : null;
+  const pages = manual?.pages;
+  const visible = useMemo(() => (pages ? visibleFor(pages, profile) : []), [pages, profile]);
   const current = manuals?.find((m) => m.slug === manual?.slug) ?? null;
 
   const act = (item: TreeItem, action: PageAction) => {
@@ -121,7 +123,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
             ) : (
               <PageTree
-                pages={visibleFor(manual.pages, profile)}
+                pages={visible}
                 selectedId={page?.id ?? null}
                 onSelect={(id) => {
                   onNavigate?.();
