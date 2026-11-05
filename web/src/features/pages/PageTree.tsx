@@ -1,5 +1,5 @@
 import { TriangleAlert } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
 import { type DropZone, dropTarget, findItem, numberPages } from "@/lib/tree";
@@ -41,7 +41,8 @@ export function PageTree({ pages, selectedId, onSelect, onAction, onMove }: Prop
   // Uma parada só do Tab: a página aberta (ou a primeira) recebe o foco ao entrar na árvore.
   const tabStop = selectedId && findItem(pages, selectedId) ? selectedId : pages[0]?.id;
 
-  const numbers = numberPages(pages);
+  // A numeração só muda com a árvore; hover de arrastar e menu aberto re-renderizam sem mudar `pages`.
+  const numbers = useMemo(() => numberPages(pages), [pages]);
 
   const drop = (targetId: string, zone: DropZone, draggedId: string) => {
     setHover(null);

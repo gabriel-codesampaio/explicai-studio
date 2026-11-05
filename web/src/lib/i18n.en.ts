@@ -160,6 +160,8 @@ export const EN: Record<string, string> = {
   "Caminho da página": "Page path",
   Cancelar: "Cancel",
   "Carregando as marcações…": "Loading markups…",
+  "Não foi possível verificar se a pasta está no git. Os avisos sobre o histórico podem não aparecer.":
+    "Could not check whether the folder is in git. Warnings about history may not show.",
   "Carregando…": "Loading…",
   Citação: "Quote",
   Claro: "Light",

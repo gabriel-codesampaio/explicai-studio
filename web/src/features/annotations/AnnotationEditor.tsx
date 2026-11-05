@@ -69,13 +69,22 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
   const [leaving, setLeaving] = useState(false);
   const requestClose = () => (draft && draftChanged(draft, saved) ? setLeaving(true) : onClose());
   const [inGit, setInGit] = useState(false);
+  const [gitError, setGitError] = useState(false);
+  const [gitRev, setGitRev] = useState(0);
   const [redactStyle, setRedactStyle] = useState(readRedactStyle);
+  // Sem a resposta, o aviso de histórico do git some em silêncio: por isso mostramos o erro e deixamos tentar de novo.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `gitRev` refaz a consulta no "Tentar de novo" (o slug não muda).
   useEffect(() => {
+    let live = true;
+    setGitError(false);
     api
       .inGitRepo(slug)
-      .then((r) => setInGit(r.git))
-      .catch(() => {});
-  }, [slug]);
+      .then((r) => live && setInGit(r.git))
+      .catch(() => live && setGitError(true));
+    return () => {
+      live = false;
+    };
+  }, [slug, gitRev]);
   const undo = () => {
     const previous = past.at(-1);
     if (!previous) return;
@@ -197,6 +206,21 @@ export function AnnotationEditor({ slug, asset, src, alt, pages, onClose }: Prop
           <p aria-hidden className="text-sm text-muted-foreground">
             {current?.hint}
           </p>
+          {gitError && (
+            <div role="alert" className="flex flex-wrap items-center gap-2 text-sm text-destructive">
+              <span>
+                {t("Não foi possível verificar se a pasta está no git. Os avisos sobre o histórico podem não aparecer.")}
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setGitRev((n) => n + 1)}
+                className="[@media(pointer:coarse)]:h-11"
+              >
+                {t("Tentar de novo")}
+              </Button>
+            </div>
+          )}
         </div>
 
         {draft ? (
