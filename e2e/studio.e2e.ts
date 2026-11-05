@@ -586,7 +586,7 @@ test("barra: troca de manual pelo cabeçalho e abre a busca pela linha", async (
   await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeHidden();
 });
 
-test("barra enxuta: Exportar só no topo e Lixeira, Aparência, Idioma e Atalhos pelo menu Ajustes, com foco de volta", async ({
+test("barra enxuta: Exportar só no topo e Aparência, Tema e Idioma pelo menu Ajustes, Lixeira e Ajuda direto no rodapé, com foco de volta", async ({
   page,
   request,
 }) => {
@@ -597,11 +597,9 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência, Idioma e Atalhos
   await expect(page.getByRole("button", { name: "Exportar manual" })).toHaveCount(1);
   const more = page.getByRole("button", { name: "Ajustes" });
   for (const [item, title] of [
-    ["Lixeira", "Lixeira deste manual"],
     ["Aparência do manual", "Aparência do manual"],
     ["Tema do Studio", "Tema do Studio"],
     ["Idioma", "Idioma"],
-    ["Atalhos", "Atalhos de teclado"],
   ] as const) {
     await more.click();
     await page.getByRole("menuitem", { name: item }).click();
@@ -609,6 +607,17 @@ test("barra enxuta: Exportar só no topo e Lixeira, Aparência, Idioma e Atalhos
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toHaveCount(0);
     await expect(more).toBeFocused();
+  }
+  // Lixeira e Ajuda abrem direto do rodapé, sem passar por Ajustes, e devolvem o foco ao botão.
+  for (const [name, title] of [
+    ["Lixeira", "Lixeira deste manual"],
+    ["Ajuda", "Ajuda"],
+  ] as const) {
+    const foot = page.getByRole("button", { name, exact: true });
+    await foot.click();
+    await expect(page.getByRole("dialog", { name: title })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(foot).toBeFocused();
   }
   // Ícone decorativo e cursor de mão: o texto segue sendo o nome acessível.
   await more.click();
@@ -646,11 +655,9 @@ test("tela estreita: painéis de Ajustes abrem sobre a gaveta, Esc fecha só o p
   await expect(drawer).toBeVisible();
   const more = drawer.getByRole("button", { name: "Ajustes" });
   for (const [item, title] of [
-    ["Lixeira", "Lixeira deste manual"],
     ["Aparência do manual", "Aparência do manual"],
     ["Tema do Studio", "Tema do Studio"],
     ["Idioma", "Idioma"],
-    ["Atalhos", "Atalhos de teclado"],
   ] as const) {
     await more.click();
     await page.getByRole("menuitem", { name: item }).click();
@@ -668,8 +675,7 @@ test("lixeira: restaurar fecha o painel e mostra a página restaurada", async ({
   await page.getByRole("button", { name: "Mais ações para Sai" }).click();
   await page.getByRole("menuitem", { name: "Excluir página" }).click();
   await expect(treePage(page, "Sai")).toHaveCount(0);
-  await page.getByRole("button", { name: "Ajustes" }).click();
-  await page.getByRole("menuitem", { name: "Lixeira" }).click();
+  await page.getByRole("button", { name: "Lixeira", exact: true }).click();
   await page.getByRole("dialog", { name: "Lixeira deste manual" }).getByRole("button", { name: "Restaurar" }).click();
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(treePage(page, "Sai")).toBeVisible();
@@ -795,8 +801,13 @@ test.describe("toque", () => {
     expect(await height(page.getByRole("button", { name: "Cor do texto" }))).toBeGreaterThanOrEqual(44);
     await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
     await page.getByRole("dialog", { name: "Páginas do manual" }).getByRole("button", { name: "Ajustes" }).click();
-    for (const name of ["Lixeira", "Aparência do manual", "Tema do Studio", "Idioma", "Atalhos"])
+    for (const name of ["Aparência do manual", "Tema do Studio", "Idioma"])
       expect(await height(page.getByRole("menuitem", { name }))).toBeGreaterThanOrEqual(44);
+    await page.keyboard.press("Escape");
+    for (const name of ["Lixeira", "Ajuda"]) {
+      const box = await page.getByRole("button", { name, exact: true }).boundingBox();
+      expect(Math.min(box?.width ?? 0, box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    }
   });
 });
 

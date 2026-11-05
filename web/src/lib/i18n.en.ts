@@ -146,8 +146,7 @@ export const EN: Record<string, string> = {
   "Arraste sobre o que merece atenção": "Drag over what deserves attention",
   "As páginas excluídas ficam na pasta .lixeira do manual até você restaurar.":
     "Deleted pages stay in the manual's .lixeira folder until you restore them.",
-  Atalhos: "Shortcuts",
-  "Atalhos de teclado": "Keyboard shortcuts",
+  Ajuda: "Help",
   "Bloco de código": "Code block",
   Divisor: "Divider",
   "Linha que separa partes da página": "Line that separates parts of the page",
@@ -420,6 +419,7 @@ export const EN: Record<string, string> = {
   "Manter a minha versão": "Keep my version",
   "A página “{title}” foi apagada fora do Studio.": "The page “{title}” was deleted outside Studio.",
   "Copiar meu texto": "Copy my text",
+  "Recriar página": "Recreate page",
   Texto: "Text",
   "Texto da versão {nome}": "Text of version {nome}",
   "Tipo de bloco: {tipo}": "Block type: {tipo}",

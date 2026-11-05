@@ -233,15 +233,46 @@ describe("useStudio: conflito com o disco", () => {
       await waitFor(() => expect(toast.warning).toHaveBeenCalled());
       const [, opts] = vi.mocked(toast.warning).mock.calls.at(-1) as unknown as [
         string,
-        { action?: { label: string; onClick: () => void } },
+        { action?: { label: string; onClick: () => void }; cancel?: { label: string; onClick: () => void } },
       ];
-      expect(opts.action?.label).toMatch(/Copiar/);
+      expect(opts.cancel?.label).toMatch(/Copiar/);
       const writeText = vi.fn().mockResolvedValue(undefined);
       Object.defineProperty(navigator, "clipboard", { value: { writeText }, configurable: true });
-      opts.action?.onClick();
+      opts.cancel?.onClick();
       expect(writeText).toHaveBeenCalledWith("meu texto");
       expect(result.current.manual?.pages).toHaveLength(2);
       expect(result.current.page?.id).not.toBe("p0"); // não fica no editor da página apagada
+    });
+
+    it("página apagada por fora: Recriar página cria com o título e o texto não gravado e abre", async () => {
+      const { result } = await openFirstPage();
+      update.mockRejectedValue(new ApiError("sumiu", "not-found", {}, 404));
+      act(() => result.current.editPage({ title: "Novo nome", body: "meu texto" }));
+      vi.spyOn(api, "getManual").mockResolvedValue({ slug: "m", title: "M", pages: [node("a"), node("b")] } as never);
+      await focus();
+      await waitFor(() => expect(toast.warning).toHaveBeenCalled());
+      const [, opts] = vi.mocked(toast.warning).mock.calls.at(-1) as unknown as [
+        string,
+        { action?: { label: string; onClick: () => void } },
+      ];
+      expect(opts.action?.label).toBe("Recriar página");
+
+      // O disco agora tem a página recriada: uma sincronização tardia não a acha "apagada" de novo.
+      vi.spyOn(api, "getManual").mockResolvedValue({
+        slug: "m",
+        title: "M",
+        pages: [node("a"), node("b"), node("novo")],
+      } as never);
+      const add = vi.spyOn(api, "addPage").mockResolvedValue(pageOf("novo"));
+      update
+        .mockReset()
+        .mockImplementation((async (_s: string, id: string, patch: object) => ({ ...pageOf(id), ...patch })) as never);
+      await act(async () => opts.action?.onClick());
+
+      expect(add).toHaveBeenCalledWith("m", "Novo nome", null);
+      expect(update).toHaveBeenCalledWith("m", "novo", { body: "meu texto" });
+
+      await waitFor(() => expect(result.current.page?.id).toBe("novo"));
     });
 
     it("outro erro vira toast com o motivo", async () => {
