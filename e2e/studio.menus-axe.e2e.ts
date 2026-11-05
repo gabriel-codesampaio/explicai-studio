@@ -137,7 +137,10 @@ async function tabCompleto(page: Page, onde: string, dentro?: string) {
         dentro: escopo ? !!el.closest(escopo) : true,
       };
     }, dentro);
-    if (!s) break; // saiu da página: ciclo fechou (sem armadilha)
+    if (!s) {
+      expect(dentro, `${onde}: foco saiu do diálogo`).toBeUndefined();
+      break;
+    } // sem diálogo: saiu da página, ciclo fechou
     expect(s.dentro, `${onde}: foco saiu de ${dentro}`).toBe(true);
     expect(s.visivel, `${onde}: foco invisível em ${s.id}`).toBe(true);
     if (vistos[0] === s.id && vistos.length > 1) break; // voltou ao primeiro: diálogo em ciclo
