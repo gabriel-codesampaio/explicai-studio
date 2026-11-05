@@ -1,7 +1,8 @@
 import { Extension } from "@tiptap/core";
 import FileHandler from "@tiptap/extension-file-handler";
 import { EditorContent, type Editor as TiptapEditor, useEditor } from "@tiptap/react";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AnnotationEditor } from "@/features/annotations/AnnotationEditor";
 import { AnnotatedImage } from "@/features/annotations/annotatedImage";
 import { useFontPreview } from "@/features/settings/useFontPreview";
 import { useStudioContext } from "@/hooks/StudioContext";
@@ -20,11 +21,6 @@ import { SelectionMenu } from "./SelectionMenu";
 import { SlashCommand } from "./slash/slashCommand";
 import { TableControls } from "./TableControls";
 import { Toolbar } from "./Toolbar";
-
-// Só abre ao anotar uma imagem: fora do caminho de abertura do editor.
-const AnnotationEditor = lazy(() =>
-  import("@/features/annotations/AnnotationEditor").then((m) => ({ default: m.AnnotationEditor })),
-);
 
 interface Props {
   slug: string;
@@ -135,16 +131,14 @@ export function Editor({ slug, initialMarkdown, onChange, onError, onReady, page
       <LinkPopover editor={editor} open={linkOpen} onClose={() => setLinkOpen(false)} pages={pages} />
       <ImagePopover editor={editor} slug={slug} onAnnotate={(src, alt) => setAnnotating({ src, alt })} />
       {annotating && assetPathFromSrc(annotating.src) && (
-        <Suspense fallback={null}>
-          <AnnotationEditor
-            slug={slug}
-            asset={assetPathFromSrc(annotating.src) ?? ""}
-            src={annotating.src}
-            alt={annotating.alt}
-            pages={pages}
-            onClose={() => setAnnotating(null)}
-          />
-        </Suspense>
+        <AnnotationEditor
+          slug={slug}
+          asset={assetPathFromSrc(annotating.src) ?? ""}
+          src={annotating.src}
+          alt={annotating.alt}
+          pages={pages}
+          onClose={() => setAnnotating(null)}
+        />
       )}
     </div>
   );
