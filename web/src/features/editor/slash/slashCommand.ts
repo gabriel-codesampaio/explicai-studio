@@ -3,6 +3,7 @@ import { Extension } from "@tiptap/core";
 import { ReactRenderer } from "@tiptap/react";
 import Suggestion from "@tiptap/suggestion";
 import { type Block, searchBlocks } from "../blocks";
+import { t } from "@/lib/i18n";
 import { collisionPadding } from "../editorArea";
 import { SlashMenu, type SlashMenuHandle } from "./SlashMenu";
 
@@ -54,6 +55,9 @@ export const SlashCommand = Extension.create<SlashOptions>({
           return {
             onStart: (props) => {
               component = new ReactRenderer(SlashMenu, { props, editor: props.editor });
+              // Sem landmark o axe acusa "region": a lista flutua no body, fora do <main>.
+              component.element.setAttribute("role", "region");
+              component.element.setAttribute("aria-label", t("Inserir bloco"));
               unmount = props.mount(component.element);
             },
             onUpdate: (props) => component?.updateProps(props),
