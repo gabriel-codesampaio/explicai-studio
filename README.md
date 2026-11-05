@@ -29,6 +29,8 @@ O Explicaí Studio abre no navegador, e os manuais ficam na pasta `manuais` (sem
 - `--no-open` não abre o navegador;
 - `--help` mostra o uso.
 
+Para CI e scripts, sem abrir o Studio: `explicai check <pasta>` confere o manual (sai com 1 se achar link morto, imagem que falta etc.) e `explicai export <pasta> --format html|pdf|md` exporta para `<pasta>/exportacao`.
+
 ### O que dá para fazer
 
 - Escrever cada tela ou tarefa do sistema numa página, organizada em árvore.
@@ -69,7 +71,7 @@ O formato completo está em [docs/manual-format.md](https://github.com/gabriel-c
 
 #### Compatibilidade
 
-A partir da 1.0 do Studio, o formato da pasta só cresce por acréscimo: campo opcional novo, nunca um campo que some ou muda de sentido. Manuais criados desde a 0.1 devem abrir na 1.x. Seguem semver o formato em disco, os exports de `explicai/core`, as flags do comando `explicai` e os nomes e schemas das tools e prompts do MCP. A API HTTP local do Studio é interna e pode mudar a qualquer versão. O MCP segue na 0.x, com versão própria. A política completa está em [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade).
+A partir da 1.0 do Studio, o formato da pasta só cresce por acréscimo: campo opcional novo, nunca um campo que some ou muda de sentido. Manuais criados desde a 0.1 devem abrir na 1.x. Seguem semver o formato em disco, os exports de `explicai/core`, as flags do comando `explicai` (incluindo os subcomandos `explicai check <pasta>` e `explicai export <pasta> --format html|pdf|md`) e os nomes e schemas das tools e prompts do MCP. A API HTTP local do Studio é interna e pode mudar a qualquer versão. O MCP segue na 0.x, com versão própria. A política completa está em [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade).
 
 ### Usar como biblioteca
 
@@ -99,7 +101,7 @@ Needs Node 22.12 or newer. PDF export also needs Chrome, Edge or Chromium instal
 npx explicai manuals
 ```
 
-Explicaí Studio opens in your browser, and the manuals live in the `manuals` folder (with no folder, the current one is used). Options: `--port 4321` changes the port, `--no-open` skips opening the browser, `--help` prints the usage. The interface is available in Portuguese and English and follows the browser language.
+Explicaí Studio opens in your browser, and the manuals live in the `manuals` folder (with no folder, the current one is used). Options: `--port 4321` changes the port, `--no-open` skips opening the browser, `--help` prints the usage. For CI and scripts, `explicai check <folder>` checks a manual (exit 1 on findings) and `explicai export <folder> --format html|pdf|md` exports it, without opening the Studio. The interface is available in Portuguese and English and follows the browser language.
 
 ### What you can do
 
@@ -115,7 +117,7 @@ Each manual is a folder of Markdown files you can keep in git next to your code:
 
 #### Compatibility
 
-From Studio 1.0 on, the folder format only grows by addition: a new optional field, never one that disappears or changes meaning. Manuals created since 0.1 should open on any 1.x. Semver covers the on-disk format, the `explicai/core` exports, the `explicai` CLI flags, and the names and schemas of the MCP tools and prompts. The Studio's local HTTP API is internal and may change in any release. The MCP stays on 0.x with its own version. The full policy is in [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade) (in Portuguese).
+From Studio 1.0 on, the folder format only grows by addition: a new optional field, never one that disappears or changes meaning. Manuals created since 0.1 should open on any 1.x. Semver covers the on-disk format, the `explicai/core` exports, the `explicai` CLI flags (including the `explicai check <folder>` and `explicai export <folder> --format html|pdf|md` subcommands), and the names and schemas of the MCP tools and prompts. The Studio's local HTTP API is internal and may change in any release. The MCP stays on 0.x with its own version. The full policy is in [Compatibilidade](https://github.com/gabriel-codesampaio/explicai-studio/blob/main/docs/manual-format.md#compatibilidade) (in Portuguese).
 
 ### Library
 
