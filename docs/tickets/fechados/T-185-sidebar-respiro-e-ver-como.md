@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: discovery [aparencia-sidebar-e-perfis](../discovery/aparencia-sidebar-e-perfis.md), pedido da pessoa 2026-11-04 (lote 1.0)
+- Origem: discovery [aparencia-sidebar-e-perfis](../../discovery/archives/aparencia-sidebar-e-perfis.md), pedido da pessoa 2026-11-04 (lote 1.0)
 
 ## Problema
 Ver a seção correspondente da discovery. Absorve: nada. Usa o termo do T-158 se já decidido.

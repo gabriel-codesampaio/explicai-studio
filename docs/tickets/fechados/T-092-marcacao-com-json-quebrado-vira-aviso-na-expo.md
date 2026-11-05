@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 9 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 9 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 `assets/tela.png.json` com erro de sintaxe (editado à mão, merge do git, disco cheio) faz `loadImages` lançar. O Studio mostra `Unexpected token...` sem dizer qual arquivo, e nenhum formato sai.

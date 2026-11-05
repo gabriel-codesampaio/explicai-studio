@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: discovery [aparencia-sidebar-e-perfis](../discovery/aparencia-sidebar-e-perfis.md), pedido da pessoa 2026-11-04 (lote 1.0)
+- Origem: discovery [aparencia-sidebar-e-perfis](../../discovery/archives/aparencia-sidebar-e-perfis.md), pedido da pessoa 2026-11-04 (lote 1.0)
 
 ## Problema
 Ver a seção correspondente da discovery. Absorve: **T-160** (fonte do manual em lugar com alcance claro), (decidido: a fonte sai da barra do editor).

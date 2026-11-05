@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: fechado
 - Agente: design
-- Origem: [Discovery do impeccable](../../discovery/2026-10-30-impeccable.md) (2026-10-30)
+- Origem: [Discovery do impeccable](../../discovery/archives/2026-10-30-impeccable.md) (2026-10-30)
 
 ## Problema
 Antes de publicar no npm, a interface precisa aguentar erro, texto longo, idioma, estado vazio e conexão lenta.

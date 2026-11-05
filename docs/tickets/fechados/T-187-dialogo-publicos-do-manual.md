@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: discovery [aparencia-sidebar-e-perfis](../discovery/aparencia-sidebar-e-perfis.md), pedido da pessoa 2026-11-04 (lote 1.0)
+- Origem: discovery [aparencia-sidebar-e-perfis](../../discovery/archives/aparencia-sidebar-e-perfis.md), pedido da pessoa 2026-11-04 (lote 1.0)
 
 ## Problema
 Ver a seção correspondente da discovery. Depende do T-186 (termo "Público" já decidido, T-158). Absorve: **T-135** (trava de dois cliques), **T-136** (matriz de tela), **T-172** (nome acessível do popover). Cada um vira critério abaixo; fechar os três com referência a este ticket.

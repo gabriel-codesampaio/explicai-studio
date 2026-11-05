@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: frontend
 - Marco: 0.4
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 13 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 13 (2026-11-04)
 
 ## Problema
 Canal de feedback: modelos de issue no GitHub (bug, sugestão, "meu manual antigo não abriu"). Sem usuário, é o único sinal que a 1.x terá.

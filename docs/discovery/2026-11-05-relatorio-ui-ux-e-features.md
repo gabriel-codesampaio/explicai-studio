@@ -126,7 +126,7 @@ As células "<24 = 3" são os campos `input` de rádio e caixa de 13 a 16 px den
 
 Pedido: sugestões de features pós-1.0 com esforço e risco, comparando com Confluence, Scribe, Tango e GitBook. Sem código, sem ticket, sem commit. Rascunho para o supervisor.
 
-Não repete: [checagem do manual](2026-10-30-checagem-do-manual.md) (roteiro no sistema), [importar manual](importar-manual.md), [MCP](mcp.md), [capa e rodapé](capa-e-rodape.md), [personalizar marcações](personalizar-marcacoes.md), [aparência e públicos](aparencia-sidebar-e-perfis.md), [versão 1.0](versao-1-0.md). Tickets abertos hoje: T-150, T-178, T-197, T-202, T-220, T-402, T-426 (nenhum toca as features abaixo).
+Não repete: [checagem do manual](2026-10-30-checagem-do-manual.md) (roteiro no sistema), [importar manual](importar-manual.md), [MCP](archives/mcp.md), [capa e rodapé](archives/capa-e-rodape.md), [personalizar marcações](archives/personalizar-marcacoes.md), [aparência e públicos](archives/aparencia-sidebar-e-perfis.md), [versão 1.0](archives/versao-1-0.md). Tickets abertos hoje: T-150, T-178, T-197, T-202, T-220, T-402, T-426 (nenhum toca as features abaixo).
 
 Sem usuário real, número de uso ou depoimento (`PRODUCT.md`, "Evidence on Hand"). Tudo que diz "quem sente a dor" é hipótese vinda dos três perfis do `PRODUCT.md`, não de pesquisa.
 

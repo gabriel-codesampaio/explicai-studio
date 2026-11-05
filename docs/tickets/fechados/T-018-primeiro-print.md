@@ -13,7 +13,7 @@ Os estados vazios são neutros ("Sem título", "Nenhuma página ainda"). Não h�
 - [x] Página vazia sugere o caminho: colar um print (Ctrl+V) e numerar o que a pessoa precisa clicar.
 - [x] Texto no tom da marca, sem humor, em pt-BR e en.
 - [x] Desaparece assim que a página tem conteúdo.
-- [x] Uma linha aponta onde exportar e leva ao botão (ampliado pelo [discovery de tutorial](../../discovery/2026-10-30-tutorial-guiado.md), 2026-10-30).
+- [x] Uma linha aponta onde exportar e leva ao botão (ampliado pelo [discovery de tutorial](../../discovery/archives/2026-10-30-tutorial-guiado.md), 2026-10-30).
 - [x] O mesmo texto aparece na ajuda. Usável só com teclado; nenhuma dependência nova.
 - [x] Público: quem monta o manual no Studio, não quem lê o manual exportado.
 

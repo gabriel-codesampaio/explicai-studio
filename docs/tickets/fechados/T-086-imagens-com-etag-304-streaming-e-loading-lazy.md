@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 3 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 3 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 a cada abertura de página, o navegador rebaixa todas as imagens, e o Node carrega cada arquivo inteiro na memória antes de responder. Assets têm nome único e nunca mudam depois de gravados (`saveAsset`, `flag: "wx"`), então o `no-cache` não protege nada.

@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: frontend
 - Marco: 0.5
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 4 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 4 (2026-11-04)
 
 ## Problema
 Manual de formato maior que o suportado: abrir só leitura com mensagem acionável, nunca regravar; documentar o caminho `explicai migrate` para uma v2.

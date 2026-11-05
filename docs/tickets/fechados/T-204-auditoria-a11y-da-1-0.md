@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: qa
 - Marco: 0.9
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 8 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 8 (2026-11-04)
 
 ## Problema
 Auditoria de a11y completa (axe em todas as telas e estados + leitor de tela) como ticket de marco, não só os achados soltos.

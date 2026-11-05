@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: pedido da pessoa (2026-11-04) e [discovery](../discovery/personalizar-marcacoes.md)
+- Origem: pedido da pessoa (2026-11-04) e [discovery](../../discovery/archives/personalizar-marcacoes.md)
 - Depende de: T-133
 
 ## Problema

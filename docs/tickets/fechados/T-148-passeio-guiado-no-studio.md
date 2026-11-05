@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: frontend
-- Origem: [Discovery de tutorial guiado](../discovery/2026-10-30-tutorial-guiado.md), opção B; pedido da pessoa (2026-11-04)
+- Origem: [Discovery de tutorial guiado](../../discovery/archives/2026-10-30-tutorial-guiado.md), opção B; pedido da pessoa (2026-11-04)
 
 ## Problema
 O estado vazio já ensina o primeiro print e onde exportar (T-018), mas só quem lê o texto aprende. Quem abre o Studio pela primeira vez não é levado pelo caminho: criar página, colar print, numerar, exportar.

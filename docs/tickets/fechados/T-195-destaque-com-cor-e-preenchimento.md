@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: fechado
 - Agente: frontend
-- Origem: discovery [personalizar-marcacoes](../discovery/personalizar-marcacoes.md), pedido da pessoa 2026-11-04 (lote 1.0), item 6
+- Origem: discovery [personalizar-marcacoes](../../discovery/archives/personalizar-marcacoes.md), pedido da pessoa 2026-11-04 (lote 1.0), item 6
 
 ## Problema
 Achados e medidas na discovery (seções "Problemas achados" e "Modelo de dados por marcador"). Depende do T-193.

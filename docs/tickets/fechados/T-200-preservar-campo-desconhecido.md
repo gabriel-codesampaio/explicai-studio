@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: frontend
 - Marco: 0.4
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 3 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 3 (2026-11-04)
 
 ## Problema
 Verificar e testar que `manual.json` e `assets/*.json` preservam campo desconhecido ao regravar (Studio e MCP).

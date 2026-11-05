@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: fechado
 - Agente: qa
-- Origem: auditoria ponytail de 2026-11-02, achado 25 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 25 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 Medir árvore com 500 páginas e memoizar numeração

@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: fechado
 - Agente: frontend
-- Origem: [Discovery de transições](../../discovery/2026-10-30-transicoes.md) (2026-10-30)
+- Origem: [Discovery de transições](../../discovery/archives/2026-10-30-transicoes.md) (2026-10-30)
 
 ## Problema
 A troca de página na árvore do Studio é seca. A pessoa quer uma transição suave, só no Studio; o manual exportado não ganha animação.

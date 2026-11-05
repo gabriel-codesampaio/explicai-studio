@@ -5,7 +5,7 @@
 - Status: fechado
 - Agente: escritor
 - Marco: 0.9
-- Origem: discovery [versao-1-0](../discovery/versao-1-0.md), lacuna 11 (2026-11-04)
+- Origem: discovery [versao-1-0](../../discovery/archives/versao-1-0.md), lacuna 11 (2026-11-04)
 
 ## Problema
 Docs da 1.0: guia de primeiros passos, exemplo completo, CHANGELOG da 1.0 e seção de compatibilidade no README do MCP. Studio só; o MCP segue 0.x (decisão da pessoa).

@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 19 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 19 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 Lixeira pula item com `entry.json` quebrado

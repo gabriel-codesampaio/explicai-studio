@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: feito
 - Agente: frontend
-- Origem: auditoria ponytail de 2026-11-02, achado 8 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 8 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 PNG, GIF e WebP guardam as dimensões nos primeiros bytes; JPEG, nos primeiros KB. O código carrega o arquivo todo (até 20 MB) por imagem e depois o `copyFile` lê de novo.

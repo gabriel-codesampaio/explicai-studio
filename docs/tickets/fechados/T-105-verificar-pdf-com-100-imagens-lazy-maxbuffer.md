@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: fechado
 - Agente: qa
-- Origem: auditoria ponytail de 2026-11-02, achado 24 (`docs/discovery/2026-11-02-auditoria-ponytail.md`)
+- Origem: auditoria ponytail de 2026-11-02, achado 24 (`docs/discovery/archives/2026-11-02-auditoria-ponytail.md`)
 
 ## Problema
 Verificar PDF com 100 imagens (`lazy`, `maxBuffer`)

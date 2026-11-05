@@ -5,7 +5,7 @@
 - Tamanho: G
 - Status: concluído
 - Agente: frontend
-- Origem: pedido da pessoa (2026-11-04) e [discovery](../discovery/capa-e-rodape.md)
+- Origem: pedido da pessoa (2026-11-04) e [discovery](../../discovery/archives/capa-e-rodape.md)
 
 ## Problema
 Quem entrega o manual ao cliente não consegue dizer na capa de quem é, qual a versão e a data. O PDF não tem rodapé nem número de página: o único rodapé é a frase fixa no fim do documento.

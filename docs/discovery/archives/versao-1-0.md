@@ -1,6 +1,6 @@
 # Discovery: versão 1.0 do Explicaí (2026-11-04)
 
-Pedido da pessoa: "Vamos começar a pensar na versão 1.0 do Explicaí". Sem pesquisa externa nesta rodada; tudo vem do repositório (`PRODUCT.md`, `docs/manual-format.md`, `docs/tickets/README.md`, `src/core/manuals.ts`, `src/core/types.ts`). O que não está lá marca-se como hipótese. Complementa [importar-manual.md](importar-manual.md) e [personalizar-marcacoes.md](personalizar-marcacoes.md).
+Pedido da pessoa: "Vamos começar a pensar na versão 1.0 do Explicaí". Sem pesquisa externa nesta rodada; tudo vem do repositório (`PRODUCT.md`, `docs/manual-format.md`, `docs/tickets/README.md`, `src/core/manuals.ts`, `src/core/types.ts`). O que não está lá marca-se como hipótese. Complementa [importar-manual.md](../importar-manual.md) e [personalizar-marcacoes.md](personalizar-marcacoes.md).
 
 ## Problema
 

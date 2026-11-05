@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: feito
 - Agente: design
-- Origem: discovery [personalizar-marcacoes](../discovery/personalizar-marcacoes.md), pedido da pessoa 2026-11-04 (lote 1.0), item 5
+- Origem: discovery [personalizar-marcacoes](../../discovery/archives/personalizar-marcacoes.md), pedido da pessoa 2026-11-04 (lote 1.0), item 5
 
 ## Problema
 Achados e medidas na discovery (seções "Problemas achados" e "Modelo de dados por marcador"). Depende do T-193 e do layout do T-157.
