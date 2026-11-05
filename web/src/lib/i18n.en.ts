@@ -47,7 +47,8 @@ export const EN: Record<string, string> = {
   "Recorte pendente": "Crop pending",
   "Sem recorte": "No crop",
   "Ferramenta Recortar": "Crop tool",
-  "Arraste sobre a parte da imagem que deve ficar": "Drag over the part of the image to keep",
+  "Arraste sobre a parte da imagem que deve ficar. Ou Tab, setas e Enter.":
+    "Drag over the part of the image to keep. Or Tab, arrow keys and Enter.",
   "Arraste sobre a parte que deve ficar.": "Drag over the part to keep.",
   "Para ajustar o retângulo, use Selecionar (V). Depois aplique.": "To adjust the rectangle, use Select (V). Then apply.",
   "Aplicar recorte": "Apply crop",
@@ -95,7 +96,8 @@ export const EN: Record<string, string> = {
   Ocultar: "Hide",
   "Ocultar dados": "Hide sensitive data",
   "Ferramenta Ocultar": "Hide tool",
-  "Arraste sobre o dado que deve sumir": "Drag over the data that must disappear",
+  "Arraste sobre o dado que deve sumir. Ou Tab, setas e Enter.":
+    "Drag over the data that must disappear. Or Tab, arrow keys and Enter.",
   "Arraste sobre o dado que deve sumir.": "Drag over the data that must disappear.",
   "{n} área a ocultar": "{n} area to hide",
   "{n} áreas a ocultar": "{n} areas to hide",
@@ -177,9 +179,12 @@ export const EN: Record<string, string> = {
   Aprovado: "Approved",
   "Área clicável": "Clickable area",
   "Áreas clicáveis": "Clickable areas",
-  "Arraste do início até a ponta da seta": "Drag from the start to the tip of the arrow",
-  "Arraste sobre a área que leva a outra página": "Drag over the area that leads to another page",
-  "Arraste sobre o que merece atenção": "Drag over what deserves attention",
+  "Arraste do início até a ponta da seta. Ou Tab, setas e Enter.":
+    "Drag from the start to the tip of the arrow. Or Tab, arrow keys and Enter.",
+  "Arraste sobre a área que leva a outra página. Ou Tab, setas e Enter.":
+    "Drag over the area that leads to another page. Or Tab, arrow keys and Enter.",
+  "Arraste sobre o que merece atenção. Ou Tab, setas e Enter.":
+    "Drag over what deserves attention. Or Tab, arrow keys and Enter.",
   "As páginas excluídas ficam na pasta .lixeira do manual até você restaurar.":
     "Deleted pages stay in the manual's .lixeira folder until you restore them.",
   Ajuda: "Help",
@@ -208,7 +213,7 @@ export const EN: Record<string, string> = {
   Claro: "Light",
   "Clique numa marcação para selecionar e arraste para mover; Delete exclui":
     "Click a markup to select it and drag to move it; Delete removes it",
-  "Clique onde o número deve ficar": "Click where the number should go",
+  "Clique onde o número deve ficar. Ou Tab, setas e Enter.": "Click where the number should go. Or Tab, arrow keys and Enter.",
   Cobalto: "Cobalt",
   "Código no texto": "Inline code",
   "Comandos e trechos de código": "Commands and code snippets",
@@ -579,7 +584,7 @@ export const EN: Record<string, string> = {
   "Aparência das marcações": "Markup appearance",
   "Cor das marcações": "Markup color",
   "Estilo do item": "Item style",
-  "Herdando da imagem": "Inheriting from the image",
+  "Usa o estilo da imagem": "Uses the image style",
   "Padrão da imagem": "Image default",
   "Clique numa marcação para dar um estilo só a ela.": "Click a mark to style only that one.",
   Cor: "Color",
