@@ -6,8 +6,8 @@ export default defineConfig({
   test: {
     // Limite fixo: a máquina da pessoa não pode ir a 100% de CPU.
     maxWorkers: 2,
-    // Windows do CI é lento: export e pastas passavam de 5 s (flaky em main, #135/#136/#139).
-    testTimeout: 20_000,
+    // Testes lentos se consertam (T-571), não se escondem com timeout.
+    testTimeout: 10_000,
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts", "web/src/**/*.{ts,tsx}"],
