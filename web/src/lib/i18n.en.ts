@@ -433,6 +433,7 @@ export const EN: Record<string, string> = {
   Selecionar: "Select",
   "sem nome": "unnamed",
   "Sem título": "Untitled",
+  "Abrir página {titulo}: {tipo}": "Open page {titulo}: {tipo}",
   Seta: "Arrow",
   "Seta {n}": "Arrow {n}",
   Sistema: "System",
@@ -739,8 +740,7 @@ export const EN: Record<string, string> = {
   Próximo: "Next",
   "Passeio guiado": "Guided tour",
   "Crie uma página": "Create a page",
-  "Uma página por tela ou tarefa. Clique em Criar a primeira página para começar.":
-    "One page per screen or task. Click Create the first page to start.",
+  "Uma página por tela ou tarefa. Crie a primeira para começar.": "One page per screen or task. Create the first one to start.",
   "Cole um print": "Paste a screenshot",
   "Copie um print de fora e cole aqui com Ctrl+V. O Studio não captura a tela.":
     "Copy a screenshot from elsewhere and paste it here with Ctrl+V. Studio does not capture the screen.",
