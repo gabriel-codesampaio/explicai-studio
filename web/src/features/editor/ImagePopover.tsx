@@ -4,7 +4,6 @@ import { PenLine, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Kbd } from "@/components/ui/kbd";
 import { assetPathFromSrc } from "@/lib/annotations";
 import { t } from "@/lib/i18n";
 import { ImageSizePicker } from "../annotations/ImageSizePicker";
@@ -130,9 +129,16 @@ export function ImagePopover({
                 <PenLine /> {t("Editar imagem")}
               </Button>
             )}
-            {/* Mesma ação do Delete com a imagem selecionada; Ctrl+Z restaura. */}
-            <Button type="button" size="sm" variant="outline" onClick={() => editor.chain().focus().deleteSelection().run()}>
-              <Trash2 /> {t("Remover imagem")} <Kbd>Del</Kbd>
+            {/* Mesma ação do Delete com a imagem selecionada; Ctrl+Z restaura. A tecla vai no title: com ela o rótulo quebrava a linha. */}
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              title="Del"
+              aria-keyshortcuts="Delete"
+              onClick={() => editor.chain().focus().deleteSelection().run()}
+            >
+              <Trash2 /> {t("Remover imagem")}
             </Button>
           </div>
         </div>
