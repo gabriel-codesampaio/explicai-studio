@@ -43,7 +43,7 @@ test("checar manual: achados por página, teclado, axe, clique abre a página e 
   await page.getByRole("menuitem", { name: "Checar manual" }).click();
   await dialog.getByRole("button", { name: /Passo sem resultado/ }).click();
   await expect(dialog).toBeHidden();
-  expect(new URL(page.url()).hash).toBe(`#/${m.slug}/${bad.id}`);
+  await expect.poll(() => new URL(page.url()).hash).toBe(`#/${m.slug}/${bad.id}`);
 });
 
 test("checar manual: sem achado mostra o estado vazio e o Exportar fica sem número", async ({ page, request }) => {
