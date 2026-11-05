@@ -877,10 +877,7 @@ test.describe("rodapés alinhados", () => {
   test.describe("toque", () => {
     test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
-    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar agora tem 44 px", async ({
-      page,
-      request,
-    }) => {
+    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar agora tem 44 px", async ({ page, request }) => {
       const { slug } = await setup(request, "Manual Rodape Celular", ["Início"]);
       await page.goto(`/#/${slug}`);
       // offsetHeight ignora a escala da animação de abertura da gaveta.
