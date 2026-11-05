@@ -204,8 +204,8 @@ export const api = {
   renameManual: (slug: string, title: string) => call<{ slug: string; title: string }>(manualUrl(slug), send("PUT", { title })),
   getManual: (slug: string) => call<ManualDetail>(manualUrl(slug)),
 
-  addPage: (slug: string, title: string, parentId: string | null) =>
-    call<Page>(`${manualUrl(slug)}/pages`, send("POST", { title, parentId })),
+  addPage: (slug: string, title: string, parentId: string | null, body?: string) =>
+    call<Page>(`${manualUrl(slug)}/pages`, send("POST", { title, parentId, body })),
   getPage: (slug: string, id: string) => call<Page>(pageUrl(slug, id)),
   updatePage: (slug: string, id: string, patch: PagePatch, version?: string) => {
     const init = send("PUT", patch);
