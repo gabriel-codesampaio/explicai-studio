@@ -4,7 +4,9 @@ import {
   insideGitRepo,
   readAnnotations,
   redactAsset,
+  replaceAsset,
   resolveInsideReal,
+  restoreReplacedAsset,
   saveAsset,
   writeAnnotations,
 } from "../../core/index.js";
@@ -44,6 +46,29 @@ export const assetRoutes: Route[] = [
       await redactAsset(manualDir(ctx), asset, await readBody(ctx.req, MAX_UPLOAD));
       return json({ path: asset });
     },
+  },
+  {
+    // Troca o arquivo da imagem mantendo caminho e marcações; o antigo vai para .lixeira/imagens-<data>/.
+    method: "POST",
+    path: "/api/manuals/:slug/assets/replace",
+    handle: async (ctx) => {
+      const asset = ctx.url.searchParams.get("asset") ?? "";
+      const name = ctx.url.searchParams.get("name") ?? "";
+      return json(await replaceAsset(manualDir(ctx), asset, name, await readBody(ctx.req, MAX_UPLOAD)));
+    },
+  },
+  {
+    // Desfaz a troca: devolve o arquivo da lixeira ao lugar.
+    method: "POST",
+    path: "/api/manuals/:slug/assets/replace/undo",
+    handle: async (ctx) =>
+      json(
+        await restoreReplacedAsset(
+          manualDir(ctx),
+          ctx.url.searchParams.get("asset") ?? "",
+          ctx.url.searchParams.get("folder") ?? "",
+        ),
+      ),
   },
   {
     method: "GET",
