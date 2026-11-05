@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { Brand } from "@/components/Brand";
 import { Kbd } from "@/components/ui/kbd";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CheckManualDialog } from "@/features/check/CheckManualDialog";
 import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import { RenameManualDialog } from "@/features/manuals/RenameManualDialog";
 import type { PageAction } from "@/features/pages/PageActions";
@@ -30,6 +31,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
   // "Visualizar como": a árvore mostra só o que o perfil vê no export.
   const { viewAs, setViewAs } = studio;
   const [renaming, setRenaming] = useState(false);
+  const [checking, setChecking] = useState(false);
   const profile = manual?.audiences.includes(viewAs) ? viewAs : null;
   const pages = manual?.pages;
   const visible = useMemo(() => (pages ? visibleFor(pages, profile) : []), [pages, profile]);
@@ -69,10 +71,23 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             onOpen={(slug) => void studio.openManual(slug)}
             onCreate={() => studio.setCreatingManual(true)}
             onRename={() => setRenaming(true)}
+            onCheck={() => setChecking(true)}
           />
         )}
         {renaming && current && (
           <RenameManualDialog title={current.title} onRename={studio.renameManual} onClose={() => setRenaming(false)} />
+        )}
+
+        {checking && manual && (
+          <CheckManualDialog
+            slug={manual.slug}
+            onOpenPage={(id) => {
+              setChecking(false);
+              onNavigate?.();
+              void studio.selectPage(id);
+            }}
+            onClose={() => setChecking(false)}
+          />
         )}
 
         {manual && (

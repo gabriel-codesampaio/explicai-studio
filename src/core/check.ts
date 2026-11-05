@@ -73,13 +73,13 @@ function prose(body: string): string {
  * Confere o manual inteiro, só lendo: nada é corrigido. Devolve um achado por problema, na ordem das páginas.
  * "Página sem print" vale para página com passos; "A confirmar" é texto que não devia ter ficado no manual.
  */
-export async function checkManual(dir: string): Promise<CheckFinding[]> {
-  const nodes = flatten((await readManual(dir)).pages);
+export async function checkManual(dir: string, opts: { allowNewer?: boolean } = {}): Promise<CheckFinding[]> {
+  const nodes = flatten((await readManual(dir, opts)).pages);
   const ids = new Set(nodes.map((n) => n.id));
   const files = new Set(nodes.map((n) => path.posix.basename(n.file)));
   const findings: CheckFinding[] = [];
   for (const node of nodes) {
-    const page = await readPage(dir, node.id);
+    const page = await readPage(dir, node.id, opts);
     const add = (kind: CheckKind, detail: string) => findings.push({ pageId: page.id, title: page.title, kind, detail });
     const steps = stepsWithoutResult(page.body);
     for (const s of steps) add("step-without-result", `Passo sem "Resultado:": ${s}`);

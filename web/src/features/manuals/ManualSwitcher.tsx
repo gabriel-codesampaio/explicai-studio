@@ -1,4 +1,4 @@
-import { Check, ChevronsUpDown, Pencil, Plus } from "lucide-react";
+import { Check, ChevronsUpDown, ListChecks, Pencil, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,10 +19,11 @@ interface Props {
   onOpen: (slug: string) => void;
   onCreate: () => void;
   onRename: () => void;
+  onCheck: () => void;
 }
 
 /** Troca de manual e atalho para criar um novo. O nome do manual aberto fica sempre à vista. */
-export function ManualSwitcher({ manuals, current, onOpen, onCreate, onRename }: Props) {
+export function ManualSwitcher({ manuals, current, onOpen, onCreate, onRename, onCheck }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -61,6 +62,11 @@ export function ManualSwitcher({ manuals, current, onOpen, onCreate, onRename }:
         {current && (
           <DropdownMenuItem onSelect={onRename}>
             <Pencil /> {t("Renomear manual")}
+          </DropdownMenuItem>
+        )}
+        {current && (
+          <DropdownMenuItem onSelect={onCheck}>
+            <ListChecks /> {t("Checar manual")}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
