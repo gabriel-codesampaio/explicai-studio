@@ -21,7 +21,8 @@ export function NewPageMenu({ onPick }: Props) {
           <ChevronDown className="size-3.5" aria-hidden />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      {/* O Radix devolveria o foco ao gatilho e roubaria o do título da página recém-criada. */}
+      <DropdownMenuContent align="end" onCloseAutoFocus={(e) => e.preventDefault()}>
         <DropdownMenuItem onSelect={() => onPick()}>{t("Em branco")}</DropdownMenuItem>
         <DropdownMenuItem onSelect={() => onPick("task")}>{t("Tarefa passo a passo")}</DropdownMenuItem>
         <DropdownMenuItem onSelect={() => onPick("reference")}>{t("Referência de campos")}</DropdownMenuItem>

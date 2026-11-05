@@ -4,6 +4,23 @@
  */
 export const EN: Record<string, string> = {
   "Checar manual": "Check manual",
+  "Ninguém conferiu esta página ainda.": "Nobody has reviewed this page yet.",
+  "Leia a página e marque como conferida.": "Read the page and mark it as reviewed.",
+  "Cole um print que mostre o passo, ou tire os passos se não precisar deles.":
+    "Paste a screenshot that shows the step, or remove the steps if you do not need them.",
+  'Acrescente uma linha "Resultado:" dizendo o que a pessoa vê depois do passo.':
+    'Add a "Resultado:" line saying what people see after the step.',
+  "Troque o link por uma página que existe, ou tire o link.": "Point the link to a page that exists, or remove the link.",
+  "Envie a imagem de novo ou troque por outra.": "Upload the image again or replace it with another.",
+  "Escolha outra página de destino para a área clicável, ou tire a área.":
+    "Pick another target page for the clickable area, or remove the area.",
+  "Marque na imagem o que a pessoa deve olhar.": "Mark on the image what people should look at.",
+  "Escreva uma descrição para cada marcador.": "Write a description for each marker.",
+  'Confirme a informação e tire o "A confirmar".': 'Confirm the information and remove the "A confirmar" mark.',
+  "Checagem do manual": "Manual check",
+  "Nenhum achado.": "No findings.",
+  "Problemas que podem deixar o manual incompleto. Eles não impedem de exportar.":
+    "Problems that may leave the manual incomplete. They do not stop you from exporting.",
   "Confere o manual inteiro sem mudar nada. Clique num achado para abrir a página.":
     "Checks the whole manual without changing anything. Click a finding to open the page.",
   "Conferindo o manual…": "Checking the manual…",
@@ -22,6 +39,15 @@ export const EN: Record<string, string> = {
   "Imagem sem marcação": "Image without annotations",
   "Marcador sem descrição": "Marker without a description",
   "A confirmar": "To confirm",
+  "Nunca conferida": "Never reviewed",
+  "Conferida em {data}": "Reviewed on {data}",
+  "Marcar como conferida": "Mark as reviewed",
+  "Só não conferidas": "Only unreviewed",
+  "Páginas sem data de conferência ou conferidas há mais de 90 dias": "Pages with no review date or reviewed over 90 days ago",
+  "Nenhuma página pendente de conferência.": "No pages waiting for review.",
+  "Página sem conferência": "Page not reviewed",
+  "A página nunca foi conferida.": "The page has never been reviewed.",
+  "Última conferência em {data}, há mais de 90 dias.": "Last reviewed on {data}, over 90 days ago.",
   "A página tem passos e nenhum print.": "The page has steps and no screenshot.",
   'A página ainda tem o marcador "A confirmar".': 'The page still has the "A confirmar" marker.',
   "Passo: {passo}": "Step: {passo}",
@@ -232,8 +258,7 @@ export const EN: Record<string, string> = {
   "Escolha uma ferramenta e clique ou arraste sobre a imagem. Cada marcador numerado ganha uma linha aqui para você escrever o que ele mostra.":
     "Pick a tool and click or drag over the image. Each numbered marker gets a line here for you to write what it shows.",
   "Esconder as páginas ({atalho})": "Hide pages ({atalho})",
-  "Escreva aqui, ou digite / para inserir um bloco. Cole um print com Ctrl+V.":
-    "Write here, or type / to insert a block. Paste a screenshot with Ctrl+V.",
+  "Escreva aqui, ou digite / para inserir um bloco.": "Write here, or type / to insert a block.",
   Escrevendo: "Writing",
   Escuro: "Dark",
   Esmeralda: "Emerald",
@@ -636,6 +661,7 @@ export const EN: Record<string, string> = {
   "Não achamos *este manual*": "We could not find *this manual*",
   "O que você escreveu continua nesta tela e será salvo quando o servidor voltar.":
     "What you wrote is still on this screen and will be saved when the server is back.",
+  "Aguardando o servidor": "Waiting for the server",
   "Sem conexão com o Studio.": "No connection to the Studio.",
   "O servidor do Studio foi fechado ou está reiniciando. Quando ele voltar, esta tela abre o Studio sozinha. Se você usa o terminal, confira se o comando explicai ainda está rodando.":
     "The Studio server was closed or is restarting. When it is back, this screen opens the Studio by itself. If you use the terminal, check that the explicai command is still running.",
@@ -713,7 +739,8 @@ export const EN: Record<string, string> = {
   Próximo: "Next",
   "Passeio guiado": "Guided tour",
   "Crie uma página": "Create a page",
-  "Uma página por tela ou tarefa. Clique em Nova página para começar.": "One page per screen or task. Click New page to start.",
+  "Uma página por tela ou tarefa. Clique em Criar a primeira página para começar.":
+    "One page per screen or task. Click Create the first page to start.",
   "Cole um print": "Paste a screenshot",
   "Copie um print de fora e cole aqui com Ctrl+V. O Studio não captura a tela.":
     "Copy a screenshot from elsewhere and paste it here with Ctrl+V. Studio does not capture the screen.",

@@ -35,6 +35,7 @@ export { createManual, listManuals, readManual, renameManual } from "./manuals.j
 export { addPage, movePage, type PageTreeNode, readPage, readPageTree, updatePage } from "./pages.js";
 export { insideGitRepo, redactAsset } from "./redact.js";
 export { replaceAsset, restoreReplacedAsset } from "./replaceAsset.js";
+export { isReviewedDate, isStale, STALE_DAYS } from "./reviewed.js";
 export { type BodyHit, foldText, searchBodies } from "./search.js";
 export { slugify } from "./text.js";
 export { listTrash, removePage, restorePage, TRASH_DIR, type TrashItem } from "./trash.js";

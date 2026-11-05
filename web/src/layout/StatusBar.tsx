@@ -1,11 +1,12 @@
-import { AlertCircle, Check, Loader2 } from "lucide-react";
+import { AlertCircle, Check, Loader2, WifiOff } from "lucide-react";
 import type { SaveState } from "@/hooks/useAutosave";
 import { locale, t } from "@/lib/i18n";
 
 interface Props {
   /** Caminho do arquivo da página dentro do workspace, ex.: financeiro/pages/clientes.md */
   path: string;
-  state: SaveState | "conflict";
+  /** "offline": servidor fora; a faixa de conexão tem a ação e o salvamento volta sozinho. */
+  state: SaveState | "conflict" | "offline";
   savedAt: Date | null;
   onRetry: () => void;
 }
@@ -44,6 +45,12 @@ export function StatusBar({ path, state, savedAt, onRetry }: Props) {
           <>
             <AlertCircle className="size-3.5 text-destructive" aria-hidden />
             <span className="text-destructive">{t("Aguardando sua escolha")}</span>
+          </>
+        )}
+        {state === "offline" && (
+          <>
+            <WifiOff className="size-3.5 text-destructive" aria-hidden />
+            <span className="text-destructive">{t("Aguardando o servidor")}</span>
           </>
         )}
         {state === "error" && (
