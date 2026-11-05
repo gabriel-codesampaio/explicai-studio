@@ -65,10 +65,10 @@ describe("tema do manual", () => {
     expect(html).toContain('class="t2"');
   });
 
-  it("manual sem tema sai com títulos pretos e as cores de hoje", async () => {
+  it("manual sem tema sai com títulos em nanquim e as cores de hoje", async () => {
     await addPage(dir, { title: "A", body: "# Um" });
     const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
-    expect(html).toContain("--t-page:#000");
+    expect(html).toContain("--t-page:#151a33");
     expect(html).toContain("--tinta:#151a33");
     expect(html.split(":root{")).toHaveLength(2); // só o :root da marca, sem sobreposição do tema
   });
