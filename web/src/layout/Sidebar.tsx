@@ -66,7 +66,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             onClick={onCollapse}
             aria-label={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
             title={t("Esconder as páginas ({atalho})", { atalho: "Ctrl+\\" })}
-            className="grid size-8 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="grid size-8 pointer-coarse:size-11 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
           >
             <PanelLeftClose className="size-4" aria-hidden />
           </button>
@@ -123,7 +123,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             <button
               type="button"
               onClick={onSearch}
-              className="mb-3 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="mb-3 flex items-center gap-2 rounded-md px-2 py-1.5 pointer-coarse:min-h-11 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
               <Kbd className="ml-auto pointer-coarse:hidden">Ctrl+P</Kbd>
@@ -142,17 +142,20 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
             <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
               <span className="rotulo">{t("Páginas")}</span>
               <div className="flex items-center">
-                <button
-                  type="button"
-                  data-passeio="nova-pagina"
-                  onClick={() => {
-                    onNavigate?.();
-                    void studio.addPage(null);
-                  }}
-                  className="flex items-center gap-1 rounded-md px-1.5 py-1 font-bold text-primary hover:bg-accent"
-                >
-                  <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
-                </button>
+                {/* Manual vazio: o botão "Criar a primeira página" do centro é o único (T-539). */}
+                {manual.pages.length > 0 && (
+                  <button
+                    type="button"
+                    data-passeio="nova-pagina"
+                    onClick={() => {
+                      onNavigate?.();
+                      void studio.addPage(null);
+                    }}
+                    className="flex items-center gap-1 rounded-md px-1.5 py-1 pointer-coarse:min-h-11 font-bold text-primary hover:bg-accent"
+                  >
+                    <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
+                  </button>
+                )}
                 <NewPageMenu
                   onPick={(template) => {
                     onNavigate?.();

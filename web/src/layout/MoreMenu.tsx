@@ -92,11 +92,11 @@ export function MoreMenu() {
           {manual && <DropdownMenuSeparator />}
           <DropdownMenuItem className={TOUCH} onSelect={openFromMenu("appearance")}>
             <SunMoon className={ICON} aria-hidden /> {t("Tema do Studio")}
-            <span className="ml-auto font-mono text-[11px] text-muted-foreground">{t(MODE_LABELS[mode])}</span>
+            <span className="ml-auto font-mono text-xs text-muted-foreground">{t(MODE_LABELS[mode])}</span>
           </DropdownMenuItem>
           <DropdownMenuItem className={TOUCH} onSelect={openFromMenu("language")}>
             <Languages className={ICON} aria-hidden /> {t("Idioma")}
-            <span className="ml-auto font-mono text-[11px] text-muted-foreground">{LANGS.find((l) => l.id === lang)?.label}</span>
+            <span className="ml-auto font-mono text-xs text-muted-foreground">{LANGS.find((l) => l.id === lang)?.label}</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem className={TOUCH} onSelect={() => window.dispatchEvent(new Event(TOUR_EVENT))}>

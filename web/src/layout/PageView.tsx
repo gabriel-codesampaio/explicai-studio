@@ -176,7 +176,7 @@ export function PageView({ manual, page }: Props) {
       </div>
       <StatusBar
         path={`${manual.slug}/${page.file}`}
-        state={studio.save.state}
+        state={studio.serverDown && studio.save.state === "error" ? "offline" : studio.save.state}
         savedAt={studio.save.savedAt}
         onRetry={() => void studio.save.retry()}
       />

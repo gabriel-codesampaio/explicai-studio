@@ -184,7 +184,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, page
                     <span className="flex items-center gap-2 text-sm">
                       <span className="truncate">{noteLabel(v.note)}</span>
                       {v.published && (
-                        <span className="shrink-0 rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold text-[#151a33]">
+                        <span className="shrink-0 rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold text-nanquim">
                           {t("Fixada no manual")}
                         </span>
                       )}
