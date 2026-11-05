@@ -640,4 +640,20 @@ export const EN: Record<string, string> = {
   "Abra o menu Ajustes": "Open the Settings menu",
   "Resultado: a tela abre sem erro.": "Result: the screen opens without errors.",
   "Marcador no print": "Marker on the screenshot",
+  "Passo {n} de {total}": "Step {n} of {total}",
+  "Pular passeio": "Skip tour",
+  Concluir: "Done",
+  Próximo: "Next",
+  "Passeio guiado": "Guided tour",
+  "Crie uma página": "Create a page",
+  "Uma página por tela ou tarefa. Clique em Nova página para começar.": "One page per screen or task. Click New page to start.",
+  "Cole um print": "Paste a screenshot",
+  "Copie um print de fora e cole aqui com Ctrl+V. O Studio não captura a tela.":
+    "Copy a screenshot from elsewhere and paste it here with Ctrl+V. Studio does not capture the screen.",
+  "Numere o que importa": "Number what matters",
+  "Clique no print, escolha Editar imagem e numere o que a pessoa precisa clicar. Escreva ao lado de cada número o que ele mostra.":
+    "Click the screenshot, choose Edit image and number what the person needs to click. Next to each number, write what it shows.",
+  "Exporte o manual": "Export the manual",
+  "Com o manual pronto, exporte em HTML ou PDF por este botão.":
+    "When the manual is ready, export it as HTML or PDF with this button.",
 };

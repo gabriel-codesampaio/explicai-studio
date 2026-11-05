@@ -1,7 +1,8 @@
-import { CircleHelp, Languages, Palette, Settings, SunMoon, Trash2, Users } from "lucide-react";
+import { CircleHelp, Languages, Palette, Route, Settings, SunMoon, Trash2, Users } from "lucide-react";
 import { useRef, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
+import { TOUR_EVENT } from "@/features/help/tourSteps";
 import { TrashPanel } from "@/features/pages/TrashPanel";
 import { AppearancePanel } from "@/features/settings/AppearancePanel";
 import { AudiencesDialog } from "@/features/settings/AudiencesDialog";
@@ -76,6 +77,9 @@ export function MoreMenu() {
           <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("language")}>
             <Languages className={ICON} aria-hidden /> {t("Idioma")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{LANGS.find((l) => l.id === lang)?.label}</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem className={TOUCH} onSelect={() => window.dispatchEvent(new Event(TOUR_EVENT))}>
+            <Route className={ICON} aria-hidden /> {t("Passeio guiado")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

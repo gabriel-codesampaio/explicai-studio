@@ -107,6 +107,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               <span className="rotulo">{t("Páginas")}</span>
               <button
                 type="button"
+                data-passeio="nova-pagina"
                 onClick={() => {
                   onNavigate?.();
                   void studio.addPage(null);
