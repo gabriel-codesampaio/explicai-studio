@@ -24,8 +24,5 @@ test("passeio: não abre sozinho, abre com ?passeio=1, pula com Esc e reabre pel
   await page.getByRole("menuitem", { name: "Passeio guiado" }).click();
   const again = page.getByRole("dialog", { name: "Crie uma página" });
   await expect(again).toBeVisible();
-  await expect(again.getByRole("button", { name: "Pular passeio" }))
-    .toBeFocused()
-    .catch(() => {});
-  expect(await again.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+  await expect(again.getByRole("button", { name: "Pular passeio" })).toBeFocused();
 });
