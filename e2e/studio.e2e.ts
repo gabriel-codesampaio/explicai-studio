@@ -51,7 +51,11 @@ async function primeiroUso(page: Page, url: string) {
   await page.getByLabel("Nome do manual").fill("Manual do Primeiro Uso");
   await page.getByRole("button", { name: "Criar manual" }).click();
 
+  // T-539: manual vazio tem um botão só para criar a página.
+  await expect(page.getByRole("button", { name: /^(Criar a primeira página|Nova página)$/ })).toHaveCount(1);
   await page.getByRole("button", { name: "Criar a primeira página" }).click();
+  // T-539: página vazia tem uma dica só para colar print (o cartão; o placeholder não repete).
+  await expect(page.getByText(/Cole um print com Ctrl\+V/)).toHaveCount(1);
   const title = page.getByRole("textbox", { name: "Título da página" });
   await expect(title).toBeFocused();
   await title.fill("Cadastrar cliente");

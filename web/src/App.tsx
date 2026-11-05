@@ -97,7 +97,7 @@ function Shell() {
             ) : !manual ? null : !page ? (
               <EmptyState
                 title={manual.title}
-                action={{ label: t("Criar a primeira página"), onClick: () => void studio.addPage(null) }}
+                action={{ label: t("Criar a primeira página"), onClick: () => void studio.addPage(null), passeio: "nova-pagina" }}
               >
                 {t("Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.")}
               </EmptyState>

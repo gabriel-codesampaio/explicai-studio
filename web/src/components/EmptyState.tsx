@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 interface Props {
   title: string;
   children: ReactNode;
-  action?: { label: string; onClick: () => void };
+  action?: { label: string; onClick: () => void; passeio?: string };
   /** Tela de erro: anuncia para o leitor de tela e leva o foco para o título. */
   alert?: boolean;
   /** Abaixo do botão: ação secundária, código do erro. */
@@ -28,7 +28,7 @@ export function EmptyState({ title, children, action, alert, extra }: Props) {
       </h1>
       <p className="text-muted-foreground">{children}</p>
       {action && (
-        <Button className="[@media(pointer:coarse)]:min-h-11" onClick={action.onClick}>
+        <Button className="[@media(pointer:coarse)]:min-h-11" data-passeio={action.passeio} onClick={action.onClick}>
           {action.label}
         </Button>
       )}

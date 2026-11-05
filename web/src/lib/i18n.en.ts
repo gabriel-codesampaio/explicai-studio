@@ -231,8 +231,7 @@ export const EN: Record<string, string> = {
   "Escolha uma ferramenta e clique ou arraste sobre a imagem. Cada marcador numerado ganha uma linha aqui para você escrever o que ele mostra.":
     "Pick a tool and click or drag over the image. Each numbered marker gets a line here for you to write what it shows.",
   "Esconder as páginas ({atalho})": "Hide pages ({atalho})",
-  "Escreva aqui, ou digite / para inserir um bloco. Cole um print com Ctrl+V.":
-    "Write here, or type / to insert a block. Paste a screenshot with Ctrl+V.",
+  "Escreva aqui, ou digite / para inserir um bloco.": "Write here, or type / to insert a block.",
   Escrevendo: "Writing",
   Escuro: "Dark",
   Esmeralda: "Emerald",
@@ -702,7 +701,8 @@ export const EN: Record<string, string> = {
   Próximo: "Next",
   "Passeio guiado": "Guided tour",
   "Crie uma página": "Create a page",
-  "Uma página por tela ou tarefa. Clique em Nova página para começar.": "One page per screen or task. Click New page to start.",
+  "Uma página por tela ou tarefa. Clique em Criar a primeira página para começar.":
+    "One page per screen or task. Click Create the first page to start.",
   "Cole um print": "Paste a screenshot",
   "Copie um print de fora e cole aqui com Ctrl+V. O Studio não captura a tela.":
     "Copy a screenshot from elsewhere and paste it here with Ctrl+V. Studio does not capture the screen.",
