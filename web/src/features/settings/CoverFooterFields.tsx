@@ -80,16 +80,16 @@ export function CoverFooterFields() {
         )}
       </div>
       <fieldset aria-label={t("Prévia da capa e do rodapé")} className="grid min-w-0 gap-2 border-0 p-0">
-        <div className="rounded-md border border-border bg-white p-4 text-[#151a33]">
+        <div className="rounded-md border border-border bg-superficie p-4 text-tinta">
           <p className="font-display text-lg font-extrabold leading-tight">{manual.title}</p>
           {coverLines(draft).map((line, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: linhas podem repetir (versão igual à data); a lista só é recriada inteira.
-            <p key={i} className="mt-1 whitespace-pre-line break-words text-xs text-[#575e78]">
+            <p key={i} className="mt-1 whitespace-pre-line break-words text-xs text-grafite">
               {line}
             </p>
           ))}
         </div>
-        <div className="flex flex-wrap justify-between gap-x-4 rounded-md border border-border bg-white px-4 py-2 text-[11px] text-[#575e78]">
+        <div className="flex flex-wrap justify-between gap-x-4 rounded-md border border-border bg-superficie px-4 py-2 text-[11px] text-grafite">
           <span className="min-w-0 whitespace-pre-line break-words">{draft.text.trim()}</span>
           {manual.footer?.pageNumbers && <span className="ml-auto">2 / 8</span>}
         </div>

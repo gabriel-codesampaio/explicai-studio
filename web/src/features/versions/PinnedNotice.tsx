@@ -7,7 +7,7 @@ import { t } from "@/lib/i18n";
 export function PinnedNotice({ onUseCurrent }: { onUseCurrent: () => void }) {
   return (
     <div className="mb-3 flex items-center gap-2 text-[13px]">
-      <span className="rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold whitespace-nowrap text-[#151a33]">
+      <span className="rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold whitespace-nowrap text-nanquim">
         {t("Fixada no manual")}
       </span>
       <button
