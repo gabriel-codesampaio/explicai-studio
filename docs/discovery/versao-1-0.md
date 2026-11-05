@@ -11,7 +11,7 @@ Hoje Studio (0.3.0 no npm; o `package.json` desta branch ainda diz 0.2.1, a bran
 1. **Formato v1 estável.** `manual.json`, página, `assets/*.json` e `.versoes/` mudam só por acréscimo (campo opcional novo, valor novo numa lista). Nada some, nada muda de sentido. `FORMAT_VERSION` continua 1 enquanto for assim.
 2. **Compatibilidade para trás.** Todo manual criado a partir da 0.1 abre, edita e exporta na 1.x. Prova: manuais de fixture de cada versão no teste.
 3. **Compatibilidade para frente, com aviso.** Manual de formato maior que o suportado abre com mensagem clara ("atualize o Studio") e não é regravado. Hoje só lança erro (`manuals.ts:60`).
-4. **Migração.** Sem migração na 1.0: não há v2. Existe a regra escrita: v2 só com comando `explicai migrate`, backup antes e leitura de v1 mantida pela 1.x toda.
+4. **Migração.** Sem migração na 1.0: não há v2. Existe a regra escrita: v2 só com migração planejada (hoje não há comando), backup antes e leitura de v1 mantida pela 1.x toda.
 5. **Semver dos pontos de contato:** formato em disco, `explicai/core` (exports), flags do CLI, nomes e schemas das tools e prompts do MCP. A API HTTP local do Studio fica fora (uso interno); dizer isso.
 > Decisão posterior da pessoa (2026-11-04): só o Studio (`explicai`) vai a 1.0; o MCP segue 0.x, com semver próprio. Vale sobre os itens 6 e a pergunta 1 abaixo.
 
@@ -56,7 +56,7 @@ Notas:
 1. Política de compatibilidade e semver escrita em `docs/manual-format.md` e no README (o que é contrato, o que é interno).
 2. Fixtures congeladas de manual 0.1, 0.2 e 0.3 + teste "abre, edita, salva, exporta" em cada uma.
 3. Verificar e testar que `manual.json` e `assets/*.json` preservam campo desconhecido ao regravar (Studio e MCP).
-4. Manual de formato maior que o suportado: abrir só leitura com mensagem acionável, nunca regravar; documentar o caminho `explicai migrate` para uma v2.
+4. Manual de formato maior que o suportado: abrir só leitura com mensagem acionável, nunca regravar; documentar o plano de migração para uma v2 (sem comando hoje).
 5. Faixa de versão Studio/MCP: o MCP checa a versão de `explicai` e explica o desencontro.
 6. Publicar `explicai-mcp` no npm (hoje 0.1.0 sem publicar, segundo `passagem.md`) e definir se sobe a 1.0 junto com o Studio.
 7. Matriz de plataforma e Node no CI (Windows, macOS, Linux; Node LTS do `engines`). Hipótese: o desenvolvimento é só em Windows.

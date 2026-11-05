@@ -255,10 +255,10 @@ Esta seção vale a partir da 1.0 do Studio (pacote `explicai`). O MCP (`explica
 
 **O que é interno.** A API HTTP local do Studio serve só ao editor que vem no mesmo pacote. Ela pode mudar em qualquer versão, e quem a chama por fora não tem garantia.
 
-**Política de acréscimo.** A versão 1 do formato cresce só por acréscimo: campo opcional novo, ou valor novo numa lista. Nenhum campo some e nenhum muda de sentido. Enquanto for assim, `version` em `manual.json` continua 1. Todo manual criado a partir da 0.1 deve abrir, editar e exportar em qualquer 1.x.
+**Política de acréscimo.** A versão 1 do formato cresce só por acréscimo: campo opcional novo, ou valor novo numa lista. Nenhum campo some e nenhum muda de sentido. Enquanto for assim, `version` em `manual.json` continua 1. Todo manual criado a partir da 0.1 deve abrir, editar e exportar em qualquer 1.x (`test/old-manuals.test.ts` guarda um manual de cada versão, inclusive a 1.0).
 
-**Migração.** A 1.0 não tem migração, porque não existe versão 2. Se ela vier, entra só com o comando `explicai migrate`, com cópia de segurança antes de qualquer mudança, e a leitura da versão 1 continua em toda a série 1.x.
+**Migração.** A 1.0 não tem migração, porque não existe versão 2. Plano, se um dia houver v2 (não existe comando hoje): a migração teria cópia de segurança antes de qualquer mudança, e a leitura da versão 1 continuaria em toda a série 1.x.
 
-**Manual de formato mais novo.** Um manual com `version` maior que a suportada aparece na lista e abre só para leitura, com a faixa "atualize o Studio" (`npx explicai@latest`). O Studio, o CLI e o MCP recusam qualquer gravação nele (erro `format-newer`, HTTP 409) e `manual.json` não é tocado. Isso inclui exportar, que registra a data no `manual.json`. Para uma versão 2 existir, o caminho é o comando `explicai migrate` (ver Migração): cópia de segurança antes e leitura da versão 1 mantida em toda a série 1.x.
+**Manual de formato mais novo.** Um manual com `version` maior que a suportada aparece na lista e abre só para leitura, com a faixa "atualize o Studio" (`npx explicai@latest`). O Studio, o CLI e o MCP recusam qualquer gravação nele (erro `format-newer`, HTTP 409) e `manual.json` não é tocado. Isso inclui exportar, que registra a data no `manual.json`. Se uma versão 2 existir, o plano está em Migração: cópia de segurança antes e leitura da versão 1 mantida em toda a série 1.x.
 
 **Campos desconhecidos.** Ler e regravar sem perder campos que o Studio não conhece vale para o frontmatter das páginas, para `manual.json` e para `assets/*.json`, com a exceção de `style` descrita em Campos desconhecidos, acima.
