@@ -46,16 +46,16 @@ it("manual sem problema devolve lista vazia", async () => {
   expect(await (await fetch(`${base}/api/manuals/ok/check`)).json()).toEqual([]);
 });
 
-// checkManual não aceita formato mais novo (e check.ts está fora do ticket): a rota recusa com 409 e a tela mostra o aviso.
-it("manual de formato mais novo recusa com 409 format-newer e não grava nada", async () => {
+// Formato mais novo: a checagem é só leitura, então lista os achados e não grava nada.
+it("manual de formato mais novo lista os achados e não grava nada", async () => {
   await fetch(`${base}/api/manuals`, post({ title: "Fin" }));
   await fetch(`${base}/api/manuals/fin/pages`, post({ title: "P", body: "A confirmar." }));
   const file = path.join(workspace, "fin", "manual.json");
   await writeFile(file, JSON.stringify({ ...JSON.parse(await readFile(file, "utf8")), version: 2 }));
   const before = await readFile(file, "utf8");
   const res = await fetch(`${base}/api/manuals/fin/check`);
-  expect(res.status).toBe(409);
-  expect(await res.json()).toMatchObject({ code: "format-newer" });
+  expect(res.status).toBe(200);
+  expect(await res.json()).toMatchObject([{ kind: "to-confirm" }]);
   expect(await readFile(file, "utf8")).toBe(before);
 });
 
