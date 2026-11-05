@@ -659,4 +659,8 @@ export const EN: Record<string, string> = {
   "Exporte o manual": "Export the manual",
   "Com o manual pronto, exporte em HTML ou PDF por este botão.":
     "When the manual is ready, export it as HTML or PDF with this button.",
+  "Imagem para marcar": "Image to mark up",
+  "Setas movem o cursor e Enter cria a marcação.": "Arrow keys move the cursor and Enter creates the mark.",
+  "Nova marcação: {kind}, em {x}% da largura e {y}% da altura. Setas movem.":
+    "New mark: {kind}, at {x}% across and {y}% down. Arrow keys move it.",
 };
