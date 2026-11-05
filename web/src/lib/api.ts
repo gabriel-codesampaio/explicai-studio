@@ -22,6 +22,8 @@ export interface TreeItem {
   published?: string;
   /** Perfis que veem a página; sem o campo, todos. */
   audience?: string[];
+  /** Dia da última conferência (AAAA-MM-DD). Sem ele, a página nunca foi conferida. */
+  reviewed?: string;
   children: TreeItem[];
 }
 
@@ -93,7 +95,8 @@ export type CheckKind =
   | "hotspot-missing-page"
   | "image-without-markers"
   | "marker-without-label"
-  | "to-confirm";
+  | "to-confirm"
+  | "not-reviewed";
 
 export interface CheckFinding {
   pageId: string;
@@ -119,6 +122,7 @@ export interface Page {
   body: string;
   file: string;
   audience?: string[];
+  reviewed?: string;
   /** Versão do arquivo no disco; volta no `If-Match` para o servidor detectar edição feita fora. */
   version?: string;
 }
@@ -151,6 +155,8 @@ export interface PagePatch {
   status?: PageStatus;
   /** Lista vazia tira a restrição: a página volta a valer para todos. */
   audience?: string[];
+  /** Dia da conferência, AAAA-MM-DD. */
+  reviewed?: string;
   /** "keep" grava o título sem renomear o arquivo; "sync" renomeia se o nome não combina com o título. */
   fileName?: "keep" | "sync";
 }

@@ -15,6 +15,7 @@ import {
 import { conflictDiff } from "../lib/conflictDiff";
 import { readLocation, writeLocation } from "../lib/hashRoute";
 import { locale, t, tn } from "../lib/i18n";
+import { today } from "../lib/reviewed";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
 import { withTransition } from "../lib/withTransition";
 import { useAutosave } from "./useAutosave";
@@ -418,6 +419,24 @@ export function useStudio() {
       await refreshManual(manual.slug);
     });
 
+  /** "Marcar como conferida": grava o dia de hoje na página aberta. */
+  const markPageReviewed = () =>
+    run(async () => {
+      if (!manual || !page) return;
+      await flush();
+      const reviewed = today();
+      let saved: Page;
+      try {
+        saved = await api.updatePage(manual.slug, page.id, { reviewed }, versions.current.get(page.id));
+      } catch (err) {
+        if (isConflict(err)) autosave.queue(manual.slug, page.id, { reviewed });
+        throw err;
+      }
+      remember(saved);
+      setPage((p) => (p && p.id === saved.id ? { ...p, ...(saved.reviewed ? { reviewed: saved.reviewed } : {}) } : p));
+      await refreshManual(manual.slug);
+    });
+
   const {
     saveVersion,
     restoreVersion,
@@ -523,6 +542,7 @@ export function useStudio() {
     setManualFooter,
     uploadManualLogo,
     setPageStatus,
+    markPageReviewed,
     setPageAudience,
     audiences,
     createManual,

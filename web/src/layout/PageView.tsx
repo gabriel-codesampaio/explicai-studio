@@ -7,6 +7,7 @@ import { PageOutline, PageOutlineButton } from "@/features/editor/PageOutline";
 import { ExportDialog } from "@/features/export/ExportDialog";
 import { AudienceMenu } from "@/features/pages/AudienceMenu";
 import { FirstStepHint } from "@/features/pages/FirstStepHint";
+import { ReviewedControl } from "@/features/pages/ReviewedControl";
 import { StatusMenu } from "@/features/pages/StatusMenu";
 import { ManualAppearanceDialog } from "@/features/settings/ManualAppearanceDialog";
 import { PinnedNotice } from "@/features/versions/PinnedNotice";
@@ -87,6 +88,7 @@ export function PageView({ manual, page }: Props) {
                     known={manual.audiences}
                     onChange={(a) => studio.setPageAudience(a)}
                   />
+                  <ReviewedControl reviewed={page.reviewed} onMark={() => void studio.markPageReviewed()} />
                   <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
                 </>
               )}
