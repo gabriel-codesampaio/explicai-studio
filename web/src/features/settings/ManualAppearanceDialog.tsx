@@ -33,7 +33,7 @@ export function ManualAppearanceDialog({
       }}
     >
       <DialogContent
-        className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl"
+        className="flex max-h-[calc(100dvh-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl"
         onOpenAutoFocus={(e) => {
           const first = section === "cover" ? document.querySelector<HTMLElement>("#aparencia-capa input") : null;
           if (!first) return;

@@ -4,6 +4,7 @@ import { BubbleMenu } from "@tiptap/react/menus";
 import { Bold, Code, Highlighter, Italic, Link2 } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { BlockTypeMenu } from "./BlockTypeMenu";
+import { collisionPadding } from "./editorArea";
 import { FontMenu } from "./FontMenu";
 import { TextColorMenu } from "./TextColorMenu";
 import { ToolbarButton as Btn } from "./ToolbarButton";
@@ -38,8 +39,8 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
     <BubbleMenu
       editor={editor}
       pluginKey={MENU_KEY}
-      // Sem flip (T-165): perto do topo a barra abre para cima e sobrepõe a barra fixa (z-20 > z-10), em vez de cobrir a linha seguinte.
-      options={{ placement: "top-start", offset: 8, flip: false }}
+      // Abre para cima e só vira para baixo se subiria sobre a barra fixa de formatação (T-524); antes, sem flip (T-165), cobria essa barra.
+      options={{ placement: "top-start", offset: 8, flip: () => ({ padding: collisionPadding() }) }}
       // Só em texto selecionado: o print selecionado tem o seu próprio menu (ImagePopover), e no bloco de código não há cor.
       shouldShow={({ view, state, from, to }) =>
         view.hasFocus() &&
