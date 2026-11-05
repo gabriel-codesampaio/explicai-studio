@@ -476,6 +476,17 @@ export const EN: Record<string, string> = {
   "Versões desta página": "Versions of this page",
   "Virar subpágina ou subir um nível": "Make it a subpage or move up a level",
   "Voltar à lista": "Back to the list",
+  "Comparar com o atual": "Compare with current",
+  "Comparando {nome} com o texto atual": "Comparing {nome} with the current text",
+  "Sem diferenças": "No differences",
+  "Removida:": "Removed:",
+  "Adicionada:": "Added:",
+  "Versão guardada: {nome}": "Saved version: {nome}",
+  "Texto atual da página": "Current page text",
+  "A página tem mais de {n} linhas e é grande demais para comparar aqui.":
+    "The page has more than {n} lines and is too large to compare here.",
+  "São muitas mudanças: o trecho que difere aparece todo como removido e adicionado.":
+    "There are many changes: the differing section is shown entirely as removed and added.",
   "Cores do manual": "Manual colors",
   "Logo do cliente": "Client logo",
   "Aparece na capa e no topo do sumário do HTML e do PDF. PNG, JPG ou SVG, até 1 MB.":
