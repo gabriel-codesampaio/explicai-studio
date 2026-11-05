@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: G
-- Status: aberto
+- Status: feito (aguardando revisão de design)
 - Agente: frontend (+ qa)
 - Origem: [relatório de features 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 8 (esforço M, risco B)
 
@@ -31,4 +31,8 @@ e2e: guardar versão, editar, comparar, conferir as linhas; teste com página gr
 Interface em páginas grandes e em estado vazio (o relatório aponta os dois).
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito na branch `feat/comparar-versao`.
+- Cada versão ganhou "Comparar com o atual": dois painéis (versão guardada e texto atual) com diff por linha, alinhado por Myers, em `web/src/lib/conflictDiff.ts` e `web/src/features/versions/VersionDiff.tsx`.
+- Sem diferença: estado "Sem diferenças". Limite: acima de 10000 linhas mostra aviso em vez de comparar; modo grosso se passar de 2000 edições. Teste e2e com 5000 linhas.
+- Painéis são regiões nomeadas e focáveis; axe sem falha grave; Voltar devolve o foco. Comparar não restaura. pt e en.
+- Ficou de fora: diff de imagem e de marcação.
