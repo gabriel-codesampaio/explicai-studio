@@ -9,6 +9,7 @@ import { RenameManualDialog } from "@/features/manuals/RenameManualDialog";
 import { NewPageMenu } from "@/features/pages/NewPageMenu";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
+import { StatusLegend } from "@/features/pages/StatusMenu";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -120,7 +121,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
               className="mb-3 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               <Search className="size-3.5" aria-hidden /> {t("Buscar página")}
-              <Kbd className="ml-auto">Ctrl+P</Kbd>
+              <Kbd className="ml-auto pointer-coarse:hidden">Ctrl+P</Kbd>
             </button>
             <div className="mb-2 flex items-center justify-between px-2 text-[13px] text-muted-foreground">
               <span className="rotulo">{t("Páginas")}</span>
@@ -144,6 +145,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
                 />
               </div>
             </div>
+            <StatusLegend className="mb-2 px-2" />
             {manual.pages.length === 0 ? (
               <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
             ) : (
