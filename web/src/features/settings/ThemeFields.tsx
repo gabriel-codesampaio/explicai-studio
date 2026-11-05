@@ -87,9 +87,7 @@ export function ThemeFields({ theme }: { theme: ManualTheme }) {
           label={t("Cor dos títulos")}
           value={commonHeading(theme.headings)}
           fallback={DEFAULTS.heading}
-          onCommit={(hex) =>
-            save({ headings: hex === null ? null : Object.fromEntries(HEADINGS.map(({ slot }) => [slot, hex])) })
-          }
+          onCommit={(hex) => save({ headings: Object.fromEntries(HEADINGS.map(({ slot }) => [slot, hex])) })}
         />
         <button
           type="button"
