@@ -730,26 +730,27 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     await page.goto(`/#/${slug}`);
     await expect(page.getByRole("button", { name: "Exportar manual" })).toBeVisible();
     const { buttons, rowRight, scrollW, innerW } = await topButtons(page);
-    expect(buttons.map((b) => b.name.replace(/:.*/, "").replace(/\s+/g, " "))).toEqual([
-      "Versões",
-      "Público",
-      "Status da página",
-      "Nesta página",
-      "Exportar manual",
-    ]);
-    const exportBtn = buttons[4];
+    expect(
+      buttons.map((b) =>
+        b.name
+          .replace(/:.*/, "")
+          .replace(/\s+/g, " ")
+          .replace(/(?<=\D)\d+$/, ""),
+      ),
+    ).toEqual(["Versões", "Público", "Marcar como conferida", "Status da página", "Nesta página", "Exportar manual"]);
+    const exportBtn = buttons[5];
     // Sem espaço na linha, o Exportar desce para uma linha própria; abaixo de sm o grupo fica à esquerda (T-078), nunca no meio.
-    const others = buttons.slice(0, 4);
+    const others = buttons.slice(0, 5);
     expect(exportBtn?.top ?? 0).toBeGreaterThanOrEqual(Math.max(...others.map((b) => b.top)) - 1);
-    if (exportBtn && Math.abs(exportBtn.top - (others[3]?.top ?? 0)) < 1)
-      expect(exportBtn.left).toBeGreaterThan(others[3]?.left ?? 0);
+    if (exportBtn && Math.abs(exportBtn.top - (others[4]?.top ?? 0)) < 1)
+      expect(exportBtn.left).toBeGreaterThan(others[4]?.left ?? 0);
     expect(exportBtn?.left ?? 0).toBeLessThan(rowRight / 2);
     // Alvo de toque: todos os itens do topo têm 44 px.
     for (const b of buttons) expect(b.height).toBeGreaterThanOrEqual(44);
     expect(scrollW).toBeLessThanOrEqual(innerW);
 
     await page.getByRole("button", { name: "Versões" }).focus();
-    for (const name of [/^Público:/, /Status da página/, /Nesta página/, /Exportar manual/]) {
+    for (const name of [/^Público:/, /Marcar como conferida/, /Status da página/, /Nesta página/, /Exportar manual/]) {
       await page.keyboard.press("Tab");
       await expect(page.getByRole("button", { name })).toBeFocused();
     }
@@ -762,7 +763,8 @@ test("botão Exportar manual em 1280 px: último à direita, altura de botão pr
   await page.goto(`/#/${slug}`);
   await expect(page.getByRole("button", { name: "Exportar manual" })).toBeVisible();
   const { buttons, rowRight } = await topButtons(page);
-  expect(buttons.at(-1)?.name).toBe("Exportar manual");
+  // Sem número: o achado "nunca conferida" põe a contagem no botão.
+  expect(buttons.at(-1)?.name.replace(/\d+$/, "")).toBe("Exportar manual");
   expect(Math.abs((buttons.at(-1)?.right ?? 0) - rowRight)).toBeLessThan(1);
   expect(buttons.at(-1)?.height).toBe(36);
   // Só ele tem fundo sólido: os vizinhos são texto.

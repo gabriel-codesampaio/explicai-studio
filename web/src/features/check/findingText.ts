@@ -20,6 +20,8 @@ export function kindLabel(kind: CheckKind): string {
       return t("Marcador sem descrição");
     case "to-confirm":
       return t("A confirmar");
+    case "not-reviewed":
+      return t("Página sem conferência");
   }
 }
 
@@ -30,6 +32,7 @@ const VARIABLE: Partial<Record<CheckKind, RegExp>> = {
   "missing-image": /^Imagem não encontrada: (.*)$/s,
   "image-without-markers": /^Imagem sem marcação: (.*)$/s,
   "marker-without-label": /^Marcador sem descrição em (.+?): (.*)$/s,
+  "not-reviewed": /^Sem conferência há mais de \d+ dias \((.*)\)\.$/s,
   "hotspot-missing-page": /^Hotspot de (.+?) aponta para página apagada \((.*)\)\.$/s,
 };
 
@@ -42,6 +45,8 @@ export function findingDetail(kind: CheckKind, detail: string): string {
       return t("A página tem passos e nenhum print.");
     case "to-confirm":
       return t('A página ainda tem o marcador "A confirmar".');
+    case "not-reviewed":
+      return m ? t("Última conferência em {data}, há mais de 90 dias.", { data: a }) : t("A página nunca foi conferida.");
     case "step-without-result":
       return m ? t("Passo: {passo}", { passo: a }) : detail;
     case "dead-link":

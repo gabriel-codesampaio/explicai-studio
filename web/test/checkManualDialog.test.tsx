@@ -21,11 +21,12 @@ const KINDS: CheckKind[] = [
   "image-without-markers",
   "marker-without-label",
   "to-confirm",
+  "not-reviewed",
 ];
 
-it("os 8 tipos têm nome próprio e tradução em inglês", () => {
+it("os 9 tipos têm nome próprio e tradução em inglês", () => {
   const labels = KINDS.map(kindLabel);
-  expect(new Set(labels).size).toBe(8);
+  expect(new Set(labels).size).toBe(9);
   expect(labels.filter((l) => !(l in EN))).toEqual([]);
   expect(kindLabel("to-confirm")).toBe("A confirmar");
 });
