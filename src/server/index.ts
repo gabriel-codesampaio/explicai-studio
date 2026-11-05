@@ -5,6 +5,7 @@ import { HttpError, publicMessage, send, sendJson, statusOf } from "./http.js";
 import { matchRoute, type Route, type StudioOptions } from "./router.js";
 import { assetRoutes } from "./routes/assets.js";
 import { audienceRoutes } from "./routes/audiences.js";
+import { checkRoutes } from "./routes/check.js";
 import { exportRoutes } from "./routes/export.js";
 import { fontRoutes } from "./routes/fonts.js";
 import { manualRoutes } from "./routes/manuals.js";
@@ -20,6 +21,7 @@ const routes: Route[] = [
   ...manualRoutes,
   ...pageRoutes,
   ...audienceRoutes,
+  ...checkRoutes,
   ...versionRoutes,
   ...exportRoutes,
   ...fontRoutes,
