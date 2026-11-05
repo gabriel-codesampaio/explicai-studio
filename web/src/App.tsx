@@ -78,7 +78,11 @@ function Shell() {
       <SkipLink />
       <div className="flex h-full">
         {!firstRun && <Navigation sidebar={sidebar} onSearch={() => setSearchOpen(true)} />}
-        <main id="conteudo" tabIndex={-1} className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto outline-none">
+        <main
+          id="conteudo"
+          tabIndex={0}
+          className="flex h-full min-w-0 flex-1 flex-col overflow-y-auto outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+        >
           {!firstRun && (
             <MobileBar title={manual?.title ?? ""} onOpen={() => sidebar.setDrawerOpen(true)} drawerOpen={sidebar.drawerOpen} />
           )}
