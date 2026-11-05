@@ -96,9 +96,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
           className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] [@media(pointer:coarse)]:min-h-11 text-muted-foreground hover:bg-muted hover:text-foreground"
         >
           {t("Versões")}
-          {pinned && (
-            <span className="rounded-sm bg-marca px-1 text-[11px] font-bold text-[#151a33]">{t("Fixada no manual")}</span>
-          )}
+          {pinned && <span className="rounded-sm bg-marca px-1.5 text-xs font-bold text-[#151a33]">{t("Fixada no manual")}</span>}
         </button>
       </DialogTrigger>
       <DialogContent className="grid max-h-[90vh] w-[min(96vw,46rem)] max-w-none grid-rows-[auto_auto_minmax(0,1fr)] gap-4 sm:max-w-none">
@@ -177,7 +175,12 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, pinn
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void restore(v.id)}>
                         <RotateCcw aria-hidden /> {t("Restaurar")}
                       </Button>
-                      <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void publish(v.published ? null : v.id)}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className={`${TOUCH} min-w-36 justify-center`}
+                        onClick={() => void publish(v.published ? null : v.id)}
+                      >
                         <BookCheck aria-hidden /> {v.published ? t("Desafixar") : t("Fixar no manual")}
                       </Button>
                       <DropdownMenu>
