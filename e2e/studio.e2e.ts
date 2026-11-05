@@ -404,7 +404,7 @@ test("Ctrl+P busca a página pelo título, sem acento, e abre com Enter", async 
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Início");
 
   await page.keyboard.press("Control+p");
-  await page.getByRole("combobox", { name: "Buscar página pelo título" }).fill("relatorio");
+  await page.getByRole("combobox", { name: "Buscar por título ou texto" }).fill("relatorio");
   await expect(page.getByRole("option")).toHaveCount(1);
   await page.keyboard.press("Enter");
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Relatórios de vendas");
@@ -418,7 +418,7 @@ test("a árvore e a busca mostram a numeração do sumário, como 2.1 numa subp�
   await expect(treePage(page, "Cadastro")).toContainText("2.1");
 
   await page.keyboard.press("Control+p");
-  await page.getByRole("combobox", { name: "Buscar página pelo título" }).fill("cadastro");
+  await page.getByRole("combobox", { name: "Buscar por título ou texto" }).fill("cadastro");
   await expect(page.getByRole("option")).toContainText("2.1");
 });
 
@@ -585,9 +585,9 @@ test("barra: troca de manual pelo cabeçalho e abre a busca pela linha", async (
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Beta");
 
   await page.getByRole("button", { name: /Buscar página/ }).click();
-  await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "Buscar por título ou texto" })).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("combobox", { name: "Buscar página pelo título" })).toBeHidden();
+  await expect(page.getByRole("combobox", { name: "Buscar por título ou texto" })).toBeHidden();
 });
 
 test("barra enxuta: Exportar só no topo e Aparência, Tema e Idioma pelo menu Ajustes, Lixeira e Ajuda direto no rodapé, com foco de volta", async ({
@@ -1136,7 +1136,7 @@ test("o status aparece escrito ao lado do nome, na árvore e na busca", async ({
   await expect(treePage(page, "Início")).toBeVisible();
 
   await page.keyboard.press("Control+p");
-  await page.getByRole("combobox", { name: "Buscar página pelo título" }).fill("cadastro");
+  await page.getByRole("combobox", { name: "Buscar por título ou texto" }).fill("cadastro");
   await expect(page.getByRole("option", { name: /Cadastro.*Em revisão/ })).toBeVisible();
 });
 
@@ -1179,7 +1179,7 @@ test("Ctrl+P: com muitas páginas, a seta mantém o resultado ativo à vista", a
   await page.goto(`/#/${slug}`);
   await expect(page.getByRole("textbox", { name: "Título da página" })).toHaveValue("Página 1");
   await page.keyboard.press("Control+p");
-  const box = page.getByRole("combobox", { name: "Buscar página pelo título" });
+  const box = page.getByRole("combobox", { name: "Buscar por título ou texto" });
   const list = page.getByRole("listbox", { name: "Páginas encontradas" });
   const active = list.locator('[aria-selected="true"]');
   for (let n = 1; n < titles.length; n++) {

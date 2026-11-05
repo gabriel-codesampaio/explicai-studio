@@ -23,7 +23,7 @@ const GROUPS: { title: string; keys: [string, string][] }[] = [
   {
     title: "Páginas",
     keys: [
-      ["Ctrl+P", "Buscar página pelo título"],
+      ["Ctrl+P", "Buscar página pelo título ou texto"],
       ["Ctrl+\\", "Mostrar ou esconder as páginas"],
       ["↑ ↓", "Andar entre as páginas da árvore"],
       ["Alt+Shift+↑ ↓", "Mover a página para cima ou para baixo"],
