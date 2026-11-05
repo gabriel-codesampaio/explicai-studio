@@ -8,6 +8,7 @@ coverage/
 CLAUDE.local.md
 .claude/settings.local.json
 exemplos/
+docs/exemplo/*/exportacao/
 .impeccable/hook.cache.json
 test-results/
 playwright-report/

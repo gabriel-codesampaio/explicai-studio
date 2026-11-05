@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "title": "Financeiro",
+  "language": "pt-BR",
+  "pages": [
+    {
+      "id": "52b6939b-e367-4749-9238-4e62e1d507b2",
+      "file": "pages/visao-geral.md",
+      "children": [
+        {
+          "id": "4a91f683-4fbd-4a0f-aadb-6993c438addf",
+          "file": "pages/cadastrar-cliente.md",
+          "children": [],
+          "published": "2026-11-05T01-05-58-952Z"
+        },
+        {
+          "id": "80a521db-8821-40d4-aab8-78c2cf847f21",
+          "file": "pages/emitir-cobranca.md",
+          "children": []
+        }
+      ]
+    }
+  ],
+  "audiences": [
+    "administrador"
+  ]
+}

@@ -261,4 +261,4 @@ Esta seção vale a partir da 1.0 do Studio (pacote `explicai`). O MCP (`explica
 
 **Manual de formato mais novo.** Um manual com `version` maior que a suportada aparece na lista e abre só para leitura, com a faixa "atualize o Studio" (`npx explicai@latest`). O Studio, o CLI e o MCP recusam qualquer gravação nele (erro `format-newer`, HTTP 409) e `manual.json` não é tocado. Isso inclui exportar, que registra a data no `manual.json`. Para uma versão 2 existir, o caminho é o comando `explicai migrate` (ver Migração): cópia de segurança antes e leitura da versão 1 mantida em toda a série 1.x.
 
-**Campos desconhecidos.** Ler e regravar sem perder campos que o Studio não conhece está documentado só para o frontmatter das páginas. Para `manual.json` e `assets/*.json`, a garantia ainda não foi verificada por teste.
+**Campos desconhecidos.** Ler e regravar sem perder campos que o Studio não conhece vale para o frontmatter das páginas, para `manual.json` e para `assets/*.json`, com a exceção de `style` descrita em Campos desconhecidos, acima.

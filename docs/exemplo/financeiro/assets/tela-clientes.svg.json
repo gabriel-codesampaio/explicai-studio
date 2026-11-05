@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "markers": [
+    {
+      "id": "b04578b8-07cf-48e6-b9bc-0c478aea6ad7",
+      "n": 1,
+      "x": 0.82,
+      "y": 0.14,
+      "label": "Novo cliente"
+    },
+    {
+      "id": "45397eec-58cb-4006-965b-15e7831e36c4",
+      "n": 2,
+      "x": 0.5,
+      "y": 0.42,
+      "label": "Lista de clientes"
+    }
+  ],
+  "highlights": [
+    {
+      "id": "6e908fd0-d519-405b-a7e8-e54a0924d4ee",
+      "x": 0.04,
+      "y": 0.3,
+      "w": 0.92,
+      "h": 0.1
+    }
+  ],
+  "arrows": [
+    {
+      "id": "2a58f5ec-640b-4fa5-bc3c-e047504d31ec",
+      "from": {
+        "x": 0.65,
+        "y": 0.3
+      },
+      "to": {
+        "x": 0.78,
+        "y": 0.18
+      }
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "9cad767e-9bd8-4a40-81e7-0b9ed047c054",
+      "x": 0.7,
+      "y": 0.08,
+      "w": 0.26,
+      "h": 0.12,
+      "target": {
+        "type": "page",
+        "pageId": "4a91f683-4fbd-4a0f-aadb-6993c438addf"
+      }
+    }
+  ]
+}
