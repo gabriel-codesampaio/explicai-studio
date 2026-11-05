@@ -113,7 +113,7 @@ describe("exportação", () => {
     expect(html).toContain("Texto aprovado.");
     expect(html).not.toContain("Rascunho que não deve sair.");
     expect(html).toContain("&lt;script&gt;");
-    expect(html).not.toContain("<script>");
+    expect(html.match(/<script>/g)).toHaveLength(1); // só a busca do sumário (T-544)
     expect(html).not.toContain("javascript:");
     expect(await readFile(path.join(dir, "exportacao/html/assets/tela.png"))).toHaveLength(33);
   });

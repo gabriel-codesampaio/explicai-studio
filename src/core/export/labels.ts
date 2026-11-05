@@ -18,6 +18,9 @@ export interface Labels {
   openOriginal: string;
   start: string;
   readTime: (pages: number, minutes: number) => string;
+  search: string;
+  /** `{n}` vira a contagem de páginas com o termo. */
+  searchResults: { zero: string; one: string; many: string };
 }
 
 const PT: Labels = {
@@ -39,6 +42,8 @@ const PT: Labels = {
   openOriginal: "Abrir a imagem no tamanho original",
   start: "Comece por",
   readTime: (n, min) => `${n} ${n === 1 ? "página" : "páginas"}, cerca de ${min} min de leitura`,
+  search: "Buscar no manual",
+  searchResults: { zero: "Nenhuma página com esse termo", one: "1 página com esse termo", many: "{n} páginas com esse termo" },
 };
 
 const EN: Labels = {
@@ -60,6 +65,8 @@ const EN: Labels = {
   openOriginal: "Open the image at full size",
   start: "Start with",
   readTime: (n, min) => `${n} ${n === 1 ? "page" : "pages"}, about ${min} min to read`,
+  search: "Search the manual",
+  searchResults: { zero: "No pages with this term", one: "1 page with this term", many: "{n} pages with this term" },
 };
 
 /** Manual em português (pt, pt-BR, pt-PT) recebe os textos em português; os outros, em inglês. */
