@@ -33,11 +33,14 @@ export function ExportFindings({ findings, onOpenPage }: { findings: CheckFindin
                   </span>
                   <button
                     type="button"
+                    aria-label={t("Abrir página {titulo}: {tipo}", {
+                      titulo: f.title || t("Sem título"),
+                      tipo: kindLabel(f.kind),
+                    })}
                     onClick={() => onOpenPage(f.pageId)}
                     className="flex min-h-11 shrink-0 cursor-pointer items-center gap-1 text-xs font-bold text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
                   >
                     {t("Abrir página")}
-                    <span className="sr-only">{f.title}</span>
                     <ArrowUpRight className="size-3.5" aria-hidden />
                   </button>
                 </li>
