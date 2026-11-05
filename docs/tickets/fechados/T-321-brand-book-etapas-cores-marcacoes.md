@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: aberto
+- Status: feito
 - Agente: design
 - Marco: 0.9 (depois de T-193, T-194 e T-195)
 - Origem: conferência do brand book, 2026-11-04
@@ -20,3 +20,4 @@ Comparar os valores do brand book com `tokens.css` e a paleta do T-195; página 
 
 ## Registro
 <!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+2026-11-05: feito no PR #2 do explicai-brandbook (rodada final, PR #112 do Studio). Paleta nova do marca-texto (T-482) vai no T-428.

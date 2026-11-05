@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: M
-- Status: fechado
+- Status: feito
 - Agente: frontend
 - Origem: 2026-11-04, relatório do lote de medição, diagnóstico do T-129 (`studio.reduzir.e2e.ts:78`)
 

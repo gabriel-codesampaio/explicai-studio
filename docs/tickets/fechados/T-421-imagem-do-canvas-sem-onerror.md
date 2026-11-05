@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: P
-- Status: fechado
+- Status: feito
 - Agente: frontend
 - Origem: lote de medição, 2026-11-04
 
