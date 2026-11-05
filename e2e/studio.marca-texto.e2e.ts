@@ -37,7 +37,7 @@ test("marca-texto: botão aplica <mark>, salva ==alvo== e mantém ao recarregar"
   await btn.click();
   await expect(btn).toHaveAttribute("aria-pressed", "true");
   await expect(editor(page).locator("mark")).toHaveText("alvo");
-  await expect(page.getByRole("status")).toContainText("Salvo às");
+  await expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
 
   const body = ((await (await request.get(`/api/manuals/${manual.slug}/pages/${created.id}`)).json()) as { body: string }).body;
   expect(body).toContain("veja ==alvo==");

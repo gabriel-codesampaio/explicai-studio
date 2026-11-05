@@ -16,7 +16,7 @@ const codeBtn = (page: Page) => toolbar(page).getByRole("button", { name: "Códi
 const linkBtn = (page: Page) => toolbar(page).getByRole("button", { name: "Link" });
 const dialog = (page: Page) => page.getByRole("dialog", { name: "Editar link" });
 const field = (page: Page) => page.getByLabel("Link para uma página ou endereço");
-const saved = (page: Page) => expect(page.getByRole("status")).toContainText("Salvo às");
+const saved = (page: Page) => expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
 
 /**
  * Seleciona a palavra "alvo" com duplo clique. Com Shift+setas o ProseMirror lê a seleção depois (selectionchange)

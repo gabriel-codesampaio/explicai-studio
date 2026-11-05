@@ -20,7 +20,7 @@ async function setup(request: APIRequestContext, title: string, pages: { title: 
 const editor = (page: Page) => page.getByRole("textbox", { name: "Conteúdo da página" });
 const images = (page: Page) => editor(page).locator(".node-image img");
 const fileInput = (page: Page) => page.locator('input[type="file"]');
-const saved = (page: Page) => expect(page.getByRole("status")).toContainText("Salvo às");
+const saved = (page: Page) => expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
 const serial = (files: Upload[]) => files.map((f) => ({ name: f.name, type: f.mimeType, b64: f.buffer.toString("base64") }));
 
 /** Cola arquivos (e texto, se houver) no editor como se viessem da área de transferência. */

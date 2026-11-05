@@ -63,7 +63,7 @@ async function primeiroUso(page: Page, url: string) {
   await expect(editor(page)).toBeFocused();
   await page.keyboard.type("Clique em Novo cliente.");
 
-  await expect(page.getByRole("status")).toContainText("Salvo às");
+  await expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
   await expect(page.getByText("manual-do-primeiro-uso/pages/cadastrar-cliente.md")).toBeVisible({ timeout: 10_000 }); // T-094: o arquivo só é renomeado 5 s depois do último título gravado
 
   await page.reload();
@@ -248,7 +248,7 @@ test("barra da seleção: selecionar texto abre a barra, pinta de vermelho, põe
   const red = editor(page).locator('[data-color="red"]');
   await expect(red).toHaveText("Excluir");
   await expect(editor(page).locator("strong")).toHaveText("Excluir");
-  await expect(page.getByRole("status")).toContainText("Salvo às");
+  await expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
 
   await page.reload();
   await expect(editor(page).locator('[data-color="red"]')).toHaveText("Excluir");
@@ -346,7 +346,7 @@ test("versões: guarda, edita, restaura e o texto anterior vira versão", async 
   await page.goto(`/#/${slug}/${pages[0]?.id}`);
   await editor(page).click();
   await page.keyboard.type("Texto aprovado.");
-  await expect(page.getByRole("status")).toContainText("Salvo às");
+  await expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
 
   await page.getByRole("button", { name: /^Versões/ }).click();
   const dialog = page.getByRole("dialog", { name: "Versões desta página" });
@@ -1047,7 +1047,7 @@ test("alerta: entra pelo / e pelo seletor de bloco, troca o tipo no próprio blo
   await expect(callouts.nth(1)).toHaveAttribute("data-callout", "caution");
   await expect(callouts.nth(1).getByRole("button", { name: "Tipo de alerta: Erro" })).toBeVisible();
 
-  await expect(page.getByRole("status")).toContainText("Salvo às");
+  await expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
   await page.reload();
   await expect(callouts).toHaveCount(2);
   await expect(callouts.nth(0)).toContainText("Salve antes de sair.");

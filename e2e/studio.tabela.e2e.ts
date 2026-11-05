@@ -13,7 +13,7 @@ async function open(page: Page, request: APIRequestContext, title: string) {
 
 const editor = (page: Page) => page.getByRole("textbox", { name: "Conteúdo da página" });
 const table = (page: Page) => editor(page).locator("table");
-const saved = (page: Page) => expect(page.getByRole("status")).toContainText("Salvo às");
+const saved = (page: Page) => expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible();
 const cell = (page: Page, text: string) =>
   table(page)
     .locator("td, th")
