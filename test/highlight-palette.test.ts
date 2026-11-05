@@ -36,6 +36,21 @@ describe("paleta de marca-texto", () => {
   );
 
   it.each(Object.entries(HIGHLIGHT_PALETTE))(
+    "%s: borda no escuro 3:1 contra o fundo e a superfície do Studio (T-482)",
+    (_k, p) => {
+      for (const bg of ["#0e1120", "#161a2e"]) expect(contrast(p.borderDark, bg)).toBeGreaterThanOrEqual(3);
+    },
+  );
+
+  it("no Studio a borda troca com o tema; no export fica a clara", () => {
+    const st = { color: "pink", fill: "soft" } as const;
+    expect(styleVars(st, true, "highlight")["--hl-borda"]).toBe(
+      `light-dark(${HIGHLIGHT_PALETTE.pink.border},${HIGHLIGHT_PALETTE.pink.borderDark})`,
+    );
+    expect(styleVars(st, false, "highlight")["--hl-borda"]).toBe(HIGHLIGHT_PALETTE.pink.border);
+  });
+
+  it.each(Object.entries(HIGHLIGHT_PALETTE))(
     "%s: em escala de cinza cheio, suave e sem se distinguem (>= 12 níveis)",
     (_k, p) => {
       const g = (a: number) => gray(overWhite(p.fill, a));

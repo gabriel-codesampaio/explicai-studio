@@ -15,7 +15,8 @@ const MARKERS = {
 };
 
 async function bigPng(page: Page): Promise<Buffer> {
-  await page.goto("/");
+  // about:blank, não "/": o Studio abriria o 1º manual da lista (de outro worker) e gravaria o endereço dele no hash (T-425).
+  await page.goto("about:blank");
   const b64 = await page.evaluate(async () => {
     const c = document.createElement("canvas");
     c.width = 2400;

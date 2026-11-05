@@ -135,6 +135,7 @@ export function useStudio() {
 
   /** Número da última abertura de página: resposta de uma abertura antiga não pode sobrescrever a atual. */
   const openSeq = useRef(0);
+  const manualSeq = useRef(0); // só outra abertura de manual descarta uma abertura (clicar em página não)
 
   const showPage = useCallback(
     async (slug: string, pageId: string | null) => {
@@ -158,11 +159,15 @@ export function useStudio() {
   /** `pageId` que não está no manual abre a tela "não achamos esta página", em vez de cair em outra sem avisar. */
   const openManual = useCallback(
     async (slug: string, pageId: string | null = null) => {
+      const seq = ++manualSeq.current;
       try {
         await flush();
         setCreatingManual(false);
         setOpenError(null);
-        const detail = await refreshManual(slug);
+        const detail = await api.getManual(slug);
+        // Outra abertura começou durante a leitura: a vencedora cuida do resto (senão o editor montaria com o slug errado).
+        if (seq !== manualSeq.current) return;
+        setManual(detail);
         const found = pageId ? findItem(detail.pages, pageId)?.id : undefined;
         if (pageId && !found) {
           setPage(null);
@@ -171,13 +176,14 @@ export function useStudio() {
         }
         await showPage(slug, found ?? detail.pages[0]?.id ?? null);
       } catch (err) {
+        if (seq !== manualSeq.current) return;
         if (isOffline(err)) return setServerDown(true);
         setManual(null);
         setPage(null);
         setOpenError({ slug, error: err });
       }
     },
-    [flush, refreshManual, showPage],
+    [flush, showPage],
   );
 
   /** Abre o que o endereço (hash) pede. Manual que não existe vira a tela 404; sem endereço, o primeiro manual. */

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   type Annotations,
   addShape,
@@ -10,6 +11,7 @@ import {
   type Point,
   type Tool,
 } from "@/lib/annotations";
+import { t } from "@/lib/i18n";
 import { addRedaction, moveRedaction, type RedactStyle } from "@/lib/redact";
 import { cn } from "@/lib/utils";
 import { AnnotationOverlay } from "./AnnotationOverlay";
@@ -76,6 +78,8 @@ function drawn(draft: Draft, tool: Exclude<Tool, "select">, a: Point, b: Point, 
  */
 export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTarget, redactStyle, onChange, onSelect }: Props) {
   const box = useRef<HTMLDivElement>(null);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
   const [drag, setDrag] = useState<{ from: Point; to: Point } | null>(null);
   const [grab, setGrab] = useState<{ id: string; handle: Handle; from: Point; to: Point } | null>(null);
   const drawing = tool !== "select";
@@ -117,6 +121,26 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
 
   const shown = preview ?? draft;
 
+  // Imagem que não abre deixaria o canvas vazio, sem aviso: mostra o motivo e deixa tentar de novo.
+  if (failedSrc === src) {
+    return (
+      <div role="alert" className="grid justify-items-center gap-2 text-sm text-destructive">
+        <span>{t("Não foi possível carregar a imagem para marcar.")}</span>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            setFailedSrc(null);
+            setAttempt((n) => n + 1);
+          }}
+          className="[@media(pointer:coarse)]:h-11"
+        >
+          {t("Tentar de novo")}
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div
       ref={box}
@@ -146,7 +170,14 @@ export function AnnotationCanvas({ src, alt, draft, tool, selectedId, defaultTar
       }}
       onPointerUp={(e) => box.current && finish(pointIn(box.current, e))}
     >
-      <img src={src} alt={alt} draggable={false} className="block max-h-[70vh] max-w-full rounded-md border border-border" />
+      <img
+        key={attempt}
+        src={src}
+        alt={alt}
+        draggable={false}
+        onError={() => setFailedSrc(src)}
+        className="block max-h-[70vh] max-w-full rounded-md border border-border"
+      />
       <AnnotationOverlay
         annotations={shown.ann}
         redactions={shown.redact}

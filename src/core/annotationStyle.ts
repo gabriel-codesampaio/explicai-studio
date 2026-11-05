@@ -35,15 +35,16 @@ export const STYLE_PALETTE: Record<StyleColor, { claro: string; sobre: string; e
 };
 
 /**
- * Marca-texto: `fill` é a cor do preenchimento, `border` a borda derivada, mais escura (3:1 contra branco).
+ * Marca-texto: `fill` é a cor do preenchimento, `border` a borda derivada, mais escura (3:1 contra branco);
+ * `borderDark` é a borda no Studio escuro (3:1 contra o fundo e a superfície escuros; o export é sempre claro).
  * Medido em test/highlight-palette.test.ts, junto com o texto escuro sobre o preenchimento.
  */
-export const HIGHLIGHT_PALETTE: Record<HighlightColor, { fill: string; border: string }> = {
-  yellow: { fill: "#ffd43b", border: "#8a6d00" },
-  green: { fill: "#5ed38a", border: "#1a7a3c" },
-  pink: { fill: "#ff7eb6", border: "#b0245f" },
-  blue: { fill: "#6cb8ff", border: "#1d5fa8" },
-  orange: { fill: "#ffab5e", border: "#a84400" },
+export const HIGHLIGHT_PALETTE: Record<HighlightColor, { fill: string; border: string; borderDark: string }> = {
+  yellow: { fill: "#ffd43b", border: "#8a6d00", borderDark: "#ffd43b" },
+  green: { fill: "#5ed38a", border: "#1a7a3c", borderDark: "#5ed38a" },
+  pink: { fill: "#ff7eb6", border: "#b0245f", borderDark: "#ff7eb6" },
+  blue: { fill: "#6cb8ff", border: "#1d5fa8", borderDark: "#6cb8ff" },
+  orange: { fill: "#ffab5e", border: "#a84400", borderDark: "#ffab5e" },
 };
 
 /** Opacidade do preenchimento do destaque (sem `multiply`: o texto do print continua legível sobre o azul). */
@@ -150,7 +151,7 @@ export function styleVars(style: AnnotationStyle | undefined, adaptive = false, 
       style.color && Object.hasOwn(HIGHLIGHT_PALETTE, style.color) ? HIGHLIGHT_PALETTE[style.color as HighlightColor] : undefined;
     vars["--hl-mistura"] = "normal";
     if (p) {
-      vars["--hl-borda"] = p.border;
+      vars["--hl-borda"] = adaptive ? `light-dark(${p.border},${p.borderDark})` : p.border;
       vars["--hl-fundo"] = alpha(p.fill, pct);
     } else {
       // Só o preenchimento: a cor base é a do destaque do tema (--marca).

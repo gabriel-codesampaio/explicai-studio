@@ -40,7 +40,12 @@ export function isDescendant(items: TreeItem[], ancestorId: string, targetId: st
 }
 
 export function renameItem(items: TreeItem[], id: string, title: string): TreeItem[] {
-  return items.map((i) => (i.id === id ? { ...i, title } : { ...i, children: renameItem(i.children, id, title) }));
+  // Ramos sem a página mantêm a identidade, para as linhas memoizadas da árvore não re-renderizarem.
+  return items.map((i) => {
+    if (i.id === id) return { ...i, title };
+    const children = renameItem(i.children, id, title);
+    return children.every((c, k) => c === i.children[k]) ? i : { ...i, children };
+  });
 }
 
 export type DropZone = "before" | "inside" | "after";

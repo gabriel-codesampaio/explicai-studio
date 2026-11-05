@@ -15,7 +15,7 @@ beforeEach(async () => {
 });
 afterEach(() => rm(tmp, { recursive: true, force: true }));
 
-describe.each(["0.1", "0.2", "0.3"])("manual da versão %s", (version) => {
+describe.each(["0.1", "0.2", "0.3", "1.0"])("manual da versão %s", (version) => {
   it("abre, edita uma página, salva e exporta HTML e Markdown", async () => {
     const dir = path.join(tmp, version);
     await cp(new URL(`${version}/`, FIXTURES), dir, { recursive: true });
@@ -67,5 +67,23 @@ describe("manual 0.3 com público", () => {
     expect(outro.pages).toBe(0);
     expect(outroText).not.toContain("Bem-vindo");
     expect(outroText).not.toContain("versão publicada");
+  });
+});
+
+describe("manual 1.0 (T-483: qualquer 1.x abre)", () => {
+  it("guarda capa, rodapé, style por marcador e fonte de trecho pelo export e pela edição", async () => {
+    const dir = path.join(tmp, "1.0");
+    await cp(new URL("1.0/", FIXTURES), dir, { recursive: true });
+    const meta = JSON.parse(await readFile(path.join(dir, "manual.json"), "utf8"));
+    expect(meta.cover.author).toBe("Time de Finanças");
+    expect(meta.footer).toEqual({ text: "Confidencial · Acme", pageNumbers: true });
+    const ann = JSON.parse(await readFile(path.join(dir, "assets/tela.png.json"), "utf8"));
+    expect(ann.markers[0].style).toEqual({ color: "green", size: "l", border: "m" });
+    expect(ann.highlights[0].style).toEqual({ color: "pink", fill: "soft", border: "l" });
+    expect((await readPage(dir, A)).body).toContain('<span data-font="lora">');
+    const html = await readFile(path.join(dir, (await exportManual(dir, "html")).file), "utf8");
+    expect(html).toContain("Time de Finanças");
+    expect(html).toContain("Confidencial · Acme");
+    expect(html).toContain("serifada no trecho");
   });
 });

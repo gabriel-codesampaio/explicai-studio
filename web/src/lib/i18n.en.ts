@@ -52,6 +52,7 @@ export const EN: Record<string, string> = {
   "Isto troca o print por uma versão com menos pixels. O original será apagado e não dá para voltar. As marcações continuam no mesmo lugar.":
     "This replaces the screenshot with a version with fewer pixels. The original is deleted and cannot be restored. Annotations stay in place.",
   "Não foi possível reduzir. A imagem não foi alterada.": "Could not reduce. The image was not changed.",
+  "Não foi possível carregar a imagem para marcar.": "Could not load the image to annotate.",
   "Não foi possível carregar a imagem. O servidor não entregou o arquivo.":
     "Could not load the image. The server did not deliver the file.",
   "Não foi possível carregar a imagem. O navegador não conseguiu abrir o arquivo.":

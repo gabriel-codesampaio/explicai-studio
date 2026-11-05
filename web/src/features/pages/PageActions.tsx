@@ -20,7 +20,8 @@ export type PageAction = { kind: "addChild" } | { kind: "remove" } | { kind: "sh
 
 interface Props {
   item: TreeItem;
-  pages: TreeItem[];
+  /** Árvore atual, lida só quando o submenu "Mover" abre; função estável para a linha poder ser memoizada. */
+  getPages: () => TreeItem[];
   /** Página aberta: as ações ficam à vista. */
   selected: boolean;
   /** O menu "⋯" é controlado pela árvore, que também abre ele pelo teclado (Shift+F10). */
@@ -40,12 +41,27 @@ const SHIFTS: { shift: Shift; label: string; keys: string; Icon: typeof ArrowUp 
 const iconButton =
   "grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary";
 
+/** Só monta com o submenu aberto: calcular os 4 destinos em toda linha custava O(n) por linha, a cada render. */
+function ShiftItems({ itemId, getPages, onAction }: Pick<Props, "getPages" | "onAction"> & { itemId: string }) {
+  const pages = getPages();
+  return SHIFTS.map(({ shift, label, keys, Icon }) => (
+    <DropdownMenuItem
+      key={shift}
+      disabled={!shiftTarget(pages, itemId, shift)}
+      onSelect={() => onAction({ kind: "shift", shift })}
+    >
+      <Icon /> {label}
+      <DropdownMenuShortcut>{keys}</DropdownMenuShortcut>
+    </DropdownMenuItem>
+  ));
+}
+
 /**
  * "+" para subpágina e o menu "⋯" da página. Aparecem ao passar o mouse, com o foco na linha
  * e na página aberta, para quem chega não precisar adivinhar que eles existem. Em telas de toque,
  * onde não existe "passar o mouse", ficam sempre à vista.
  */
-export function PageActions({ item, pages, menuOpen, onMenuOpenChange, onAction }: Props) {
+export function PageActions({ item, getPages, menuOpen, onMenuOpenChange, onAction }: Props) {
   const name = item.title || t("Sem título");
   const sub = flattenItems(item.children).length;
 
@@ -86,16 +102,7 @@ export function PageActions({ item, pages, menuOpen, onMenuOpenChange, onAction 
               <Move className="size-4 text-muted-foreground" /> {t("Mover")}
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="w-64">
-              {SHIFTS.map(({ shift, label, keys, Icon }) => (
-                <DropdownMenuItem
-                  key={shift}
-                  disabled={!shiftTarget(pages, item.id, shift)}
-                  onSelect={() => onAction({ kind: "shift", shift })}
-                >
-                  <Icon /> {label}
-                  <DropdownMenuShortcut>{keys}</DropdownMenuShortcut>
-                </DropdownMenuItem>
-              ))}
+              <ShiftItems itemId={item.id} getPages={getPages} onAction={onAction} />
             </DropdownMenuSubContent>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
