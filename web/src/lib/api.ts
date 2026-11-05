@@ -73,8 +73,9 @@ export interface FontInfo {
 export interface ManualDetail extends ManualSummary {
   /** Cores do manual exportado; campo ausente = a da marca. */
   theme: ManualTheme;
-  cover: ManualCover;
-  footer: ManualFooter;
+  /** Ausentes em manual que nunca teve capa ou rodapé salvos. */
+  cover?: ManualCover;
+  footer?: ManualFooter;
   /** Perfis conhecidos do manual (`admin`, `cliente`…). */
   audiences: string[];
   /** Formato do manual quando é mais novo que o do Studio: abre só para leitura. */

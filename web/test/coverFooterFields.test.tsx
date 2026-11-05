@@ -20,6 +20,18 @@ afterEach(() => {
 });
 
 describe("CoverFooterFields", () => {
+  it("abre em manual que nunca salvou capa nem rodapé", () => {
+    const saved = studio.manual;
+    studio.manual = { title: "Guia" };
+    try {
+      render(<CoverFooterFields />);
+      expect((screen.getByLabelText("Texto do rodapé") as HTMLInputElement).value).toBe("");
+      expect(screen.queryByText("2 / 8")).toBeNull();
+    } finally {
+      studio.manual = saved;
+    }
+  });
+
   it("mostra o que está salvo e a prévia da capa em ordem, sem campo vazio", () => {
     render(<CoverFooterFields />);
     expect((screen.getByLabelText("Autor ou equipe") as HTMLInputElement).value).toBe("Time X");
