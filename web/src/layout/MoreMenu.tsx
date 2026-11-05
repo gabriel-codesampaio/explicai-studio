@@ -1,5 +1,5 @@
-import { Keyboard, Languages, Palette, Settings, SunMoon, Trash2, Users } from "lucide-react";
-import { useState } from "react";
+import { CircleHelp, Languages, Palette, Settings, SunMoon, Trash2, Users } from "lucide-react";
+import { useRef, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { TrashPanel } from "@/features/pages/TrashPanel";
@@ -17,34 +17,48 @@ type Panel = "trash" | "audiences" | "manualAppearance" | "appearance" | "langua
 const TOUCH = "group/item [@media(pointer:coarse)]:min-h-11";
 /** Ícone só ajuda a achar o item (T-045): o texto é o nome acessível. */
 const ICON = "size-3.5 text-muted-foreground group-data-[highlighted]/item:text-foreground";
+/** Botão de ícone do rodapé: o nome acessível vem de aria-label; 44 px em tela de toque. */
+const FOOT_BTN =
+  "flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground [@media(pointer:coarse)]:size-11";
 const MODE_LABELS: Record<Mode, string> = { light: "Claro", dark: "Escuro", system: "Sistema" };
 
-/** Menu "Ajustes" do rodapé da barra lateral: Lixeira, Públicos, Aparência do manual, Tema do Studio, Idioma e Atalhos, cada um abrindo seu painel. */
+/** Rodapé da barra lateral: o menu "Ajustes" (Públicos, Aparência, Tema, Idioma) e, ao lado, Lixeira e Ajuda direto, cada um abrindo seu painel. */
 export function MoreMenu() {
   const { manual, restorePage, flush } = useStudioContext();
   const [panel, setPanel] = useState<Panel | null>(null);
   // Lido ao abrir o menu: o tema pode ter mudado no painel de Aparência.
   const [mode, setMode] = useState<Mode>(() => readAppearance().mode);
-  const bind = (id: Panel) => ({ open: panel === id, onOpenChange: (open: boolean) => setPanel(open ? id : null) });
+  // Lixeira e Ajuda abrem sem gatilho de diálogo: devolve o foco ao botão que abriu quando o painel fecha.
+  const opener = useRef<HTMLElement | null>(null);
+  const bind = (id: Panel) => ({
+    open: panel === id,
+    onOpenChange: (open: boolean) => {
+      setPanel(open ? id : null);
+      if (!open && opener.current) {
+        const back = opener.current;
+        opener.current = null;
+        requestAnimationFrame(() => back.focus());
+      }
+    },
+  });
+  const openFrom = (id: Panel) => (e: React.MouseEvent<HTMLElement>) => {
+    opener.current = e.currentTarget;
+    setPanel(id);
+  };
 
   return (
-    <div className="flex h-(--rodape-h) shrink-0 flex-col justify-center border-t border-border bg-card px-3">
+    <div className="flex h-(--rodape-h) shrink-0 items-center gap-1 border-t border-border bg-card px-3">
       <DropdownMenu onOpenChange={(open) => open && setMode(readAppearance().mode)}>
         <DropdownMenuTrigger asChild>
           {/* Mesmo jeito de "Buscar página": linha com texto, não um ⋯ igual ao da árvore. */}
           <button
             type="button"
-            className="flex w-full cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted [@media(pointer:coarse)]:min-h-11"
+            className="flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-muted hover:text-foreground data-[state=open]:bg-muted [@media(pointer:coarse)]:min-h-11"
           >
             <Settings className="size-3.5" aria-hidden /> {t("Ajustes")}
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent side="top" align="start" className="w-(--radix-dropdown-menu-trigger-width)">
-          {manual && (
-            <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("trash")}>
-              <Trash2 className={ICON} aria-hidden /> {t("Lixeira")}
-            </DropdownMenuItem>
-          )}
           {manual && (
             <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("audiences")}>
               <Users className={ICON} aria-hidden /> {t("Públicos")}
@@ -63,11 +77,16 @@ export function MoreMenu() {
             <Languages className={ICON} aria-hidden /> {t("Idioma")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{LANGS.find((l) => l.id === lang)?.label}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("shortcuts")}>
-            <Keyboard className={ICON} aria-hidden /> {t("Atalhos")}
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {manual && (
+        <button type="button" className={FOOT_BTN} aria-label={t("Lixeira")} title={t("Lixeira")} onClick={openFrom("trash")}>
+          <Trash2 className="size-4" aria-hidden />
+        </button>
+      )}
+      <button type="button" className={FOOT_BTN} aria-label={t("Ajuda")} title={t("Ajuda")} onClick={openFrom("shortcuts")}>
+        <CircleHelp className="size-4" aria-hidden />
+      </button>
       {manual && (
         <TrashPanel
           slug={manual.slug}

@@ -49,13 +49,13 @@ const GROUPS: { title: string; keys: [string, string][] }[] = [
 const SPELLCHECK_HELP =
   "O corretor é o do navegador e segue o idioma do manual. Para ensinar uma palavra, clique nela com o botão direito, sublinhada em vermelho, e escolha Adicionar ao dicionário.";
 
-/** Painel "Atalhos" (aberto pelo menu "⋯" da barra lateral): lista as teclas do Studio, agrupadas pelo que a pessoa está fazendo. */
+/** Painel "Ajuda" (botão ? no rodapé da barra lateral): lista as teclas do Studio, agrupadas pelo que a pessoa está fazendo. */
 export function ShortcutsDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Atalhos de teclado")}</DialogTitle>
+          <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Ajuda")}</DialogTitle>
           <DialogDescription>{t("No Mac, use Cmd no lugar de Ctrl.")}</DialogDescription>
         </DialogHeader>
         {GROUPS.map((group) => (

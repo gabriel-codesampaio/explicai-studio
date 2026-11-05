@@ -35,3 +35,10 @@ it("o passo a passo do primeiro print tem tradução em inglês", async () => {
   const texts = [FIRST_STEP.title, ...FIRST_STEP.steps, FIRST_STEP.exportLine, FIRST_STEP.exportButton];
   expect(texts.filter((text) => !(text in EN))).toEqual([]);
 });
+
+const vars = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
+
+it("toda tradução em inglês é não vazia e mantém os mesmos {marcadores} do português", () => {
+  const bad = Object.entries(EN).filter(([pt, en]) => !en.trim() || vars(pt).join() !== vars(en).join());
+  expect(bad.map(([pt]) => pt)).toEqual([]);
+});
