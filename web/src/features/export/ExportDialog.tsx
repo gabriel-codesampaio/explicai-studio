@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -20,10 +21,22 @@ import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
 import { busyLabel, ExportStatus } from "./ExportStatus";
 
-const FORMATS: { id: ExportFormat; label: string; hint: string; ext: string }[] = [
-  { id: "html", label: t("Site (HTML)"), hint: t("Um arquivo para publicar ou abrir no navegador."), ext: ".html" },
-  { id: "pdf", label: "PDF", hint: t("Para imprimir ou mandar por e-mail."), ext: ".pdf" },
-  { id: "markdown", label: t("Markdown para IA"), hint: t("Um arquivo só, com a legenda dos prints em texto."), ext: ".md" },
+const FORMATS: { id: ExportFormat; label: string; short: string; hint: string; ext: string }[] = [
+  {
+    id: "html",
+    label: t("Site (HTML)"),
+    short: "HTML",
+    hint: t("Um arquivo para publicar ou abrir no navegador."),
+    ext: ".html",
+  },
+  { id: "pdf", label: "PDF", short: "PDF", hint: t("Para imprimir ou mandar por e-mail."), ext: ".pdf" },
+  {
+    id: "markdown",
+    label: t("Markdown para IA"),
+    short: "Markdown",
+    hint: t("Um arquivo só, com a legenda dos prints em texto."),
+    ext: ".md",
+  },
 ];
 
 /** Botão "Exportar manual" do topo da página: escolhe o formato, exporta e mostra onde ficou. */
@@ -122,7 +135,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
       >
         <DialogHeader className="px-6 pt-6 pr-12 pb-4">
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-balance">
             {pinnedCount > 0
               ? tn(pinnedCount, "{n} página usa versão fixada.", "{n} páginas usam versão fixada.")
               : t("Cada página entra com o texto atual.")}
@@ -230,7 +243,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
         </div>
 
         {/* Rodapé fixo: o botão e o resultado ficam à vista; só o miolo acima rola. */}
-        <DialogFooter className="max-h-[45vh] flex-col overflow-y-auto border-t px-6 py-4 sm:justify-start">
+        <DialogFooter className="max-h-[45vh] flex-col overflow-y-auto border-t px-6 py-4 sm:flex-col sm:justify-start">
           <div ref={feedback} tabIndex={-1} className="grid gap-2 outline-none empty:hidden">
             {error && (
               <p role="alert" className="text-sm text-destructive">
@@ -244,10 +257,22 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
               result={result}
             />
           </div>
-          <Button onClick={() => void run()} disabled={busy} className="[@media(pointer:coarse)]:h-11 sm:self-end">
-            {busy && <Loader2 className="animate-spin motion-reduce:animate-none" aria-hidden />}
-            {busy ? busyLabel(format) : error ? t("Tentar de novo") : t("Exportar")}
-          </Button>
+          <div className="flex justify-end gap-2">
+            {/* Cancelar e o primário à direita, como no editor de imagem. Em andamento, o Esc e o X também esperam. */}
+            <DialogClose asChild>
+              <Button type="button" variant="outline" disabled={busy} className="[@media(pointer:coarse)]:h-11">
+                {t("Cancelar")}
+              </Button>
+            </DialogClose>
+            <Button onClick={() => void run()} disabled={busy} className="[@media(pointer:coarse)]:h-11">
+              {busy && <Loader2 className="animate-spin motion-reduce:animate-none" aria-hidden />}
+              {busy
+                ? busyLabel(format)
+                : error
+                  ? t("Tentar de novo")
+                  : t("Exportar {formato}", { formato: FORMATS.find((f) => f.id === format)?.short ?? "" })}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

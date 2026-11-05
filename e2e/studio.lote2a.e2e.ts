@@ -54,3 +54,31 @@ test("dica Ctrl+P: visível no desktop, escondida em toque", async ({ page, requ
   await expect(mobile.getByRole("button", { name: /Buscar página/ }).locator("kbd")).toBeHidden();
   await touch.close();
 });
+
+// T-557: legenda do status na árvore. T-558: Ajustes em grupos sem quebra; Exportar com formato e Cancelar.
+test("legenda de status, menu Ajustes sem quebra e diálogo Exportar padronizado", async ({ page, request }) => {
+  const { slug, id } = await novoManual(request, "Acabamento");
+  await page.goto(`/#/${slug}/${id}`);
+  await expect(page.getByText("Em revisão").first()).toBeVisible();
+
+  await page.getByRole("button", { name: "Ajustes" }).click();
+  const menu = page.getByRole("menu");
+  await expect(menu.getByRole("separator")).toHaveCount(2);
+  const tema = menu.getByRole("menuitem", { name: /Tema do Studio/ });
+  const h = await tema.evaluate((el) => el.getBoundingClientRect().height);
+  expect(h).toBeLessThan(36); // uma linha
+  await page.keyboard.press("Escape");
+
+  await page.getByRole("button", { name: "Exportar manual" }).click();
+  const dialog = page.getByRole("dialog", { name: "Exportar manual" });
+  const primario = dialog.getByRole("button", { name: "Exportar HTML" });
+  const cancelar = dialog.getByRole("button", { name: "Cancelar" });
+  const [p, c] = await Promise.all([primario.boundingBox(), cancelar.boundingBox()]);
+  expect(c?.x).toBeLessThan(p?.x ?? 0);
+  const box = await dialog.boundingBox();
+  expect((box?.x ?? 0) + (box?.width ?? 0) - ((p?.x ?? 0) + (p?.width ?? 0))).toBeLessThan(40); // primário à direita
+  await dialog.getByText("Para imprimir ou mandar por e-mail.").click();
+  await expect(dialog.getByRole("button", { name: "Exportar PDF" })).toBeVisible();
+  await cancelar.click();
+  await expect(dialog).toBeHidden();
+});

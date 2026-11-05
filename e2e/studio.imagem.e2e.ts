@@ -731,7 +731,7 @@ test.describe("exportação com imagem", () => {
     await page.getByRole("button", { name: "Exportar manual" }).click();
     const dialog = page.getByRole("dialog");
     await dialog.getByText("Site (HTML)", { exact: true }).click();
-    await dialog.getByRole("button", { name: "Exportar", exact: true }).click();
+    await dialog.getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ }).click();
     await expect(dialog.getByText(/Atenção: 1 aviso/)).toBeVisible();
     await expect(dialog).toContainText("assets/sumiu.png");
   });

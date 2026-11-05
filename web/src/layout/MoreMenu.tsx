@@ -1,6 +1,12 @@
 import { CircleHelp, Languages, Palette, Route, Settings, SunMoon, Trash2, Users } from "lucide-react";
 import { useRef, useState } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
 import { TOUR_EVENT } from "@/features/help/tourSteps";
 import { TrashPanel } from "@/features/pages/TrashPanel";
@@ -59,7 +65,13 @@ export function MoreMenu() {
             <Settings className="size-3.5" aria-hidden /> {t("Ajustes")}
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="top" align="start" className="w-(--radix-dropdown-menu-trigger-width)">
+        {/* Largura mínima: "Tema do Studio" + o modo ("Sistema") não cabem na largura do botão e quebravam a linha. */}
+        <DropdownMenuContent
+          side="top"
+          align="start"
+          className="min-w-(--radix-dropdown-menu-trigger-width) [&_[role=menuitem]]:whitespace-nowrap"
+        >
+          {/* Três grupos: o manual aberto, o app e a ajuda. */}
           {manual && (
             <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("audiences")}>
               <Users className={ICON} aria-hidden /> {t("Públicos")}
@@ -70,6 +82,7 @@ export function MoreMenu() {
               <Palette className={ICON} aria-hidden /> {t("Aparência do manual")}
             </DropdownMenuItem>
           )}
+          {manual && <DropdownMenuSeparator />}
           <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("appearance")}>
             <SunMoon className={ICON} aria-hidden /> {t("Tema do Studio")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{t(MODE_LABELS[mode])}</span>
@@ -78,6 +91,7 @@ export function MoreMenu() {
             <Languages className={ICON} aria-hidden /> {t("Idioma")}
             <span className="ml-auto font-mono text-[11px] text-muted-foreground">{LANGS.find((l) => l.id === lang)?.label}</span>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem className={TOUCH} onSelect={() => window.dispatchEvent(new Event(TOUR_EVENT))}>
             <Route className={ICON} aria-hidden /> {t("Passeio guiado")}
           </DropdownMenuItem>

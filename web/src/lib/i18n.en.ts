@@ -249,6 +249,7 @@ export const EN: Record<string, string> = {
   "Copiar caminho": "Copy path",
   "Caminho copiado": "Path copied",
   Exportar: "Export",
+  "Exportar {formato}": "Export {formato}",
   "Exportar manual": "Export manual",
   "Falta o domínio, por exemplo: exemplo.com.br": "The domain is missing, for example: example.com",
   "Ferramentas de marcação": "Markup tools",
