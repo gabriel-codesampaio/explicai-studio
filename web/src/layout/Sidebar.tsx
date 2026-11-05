@@ -8,6 +8,7 @@ import { ManualSwitcher } from "@/features/manuals/ManualSwitcher";
 import { RenameManualDialog } from "@/features/manuals/RenameManualDialog";
 import type { PageAction } from "@/features/pages/PageActions";
 import { PageTree } from "@/features/pages/PageTree";
+import { StatusLegend } from "@/features/pages/StatusMenu";
 import { useStudioContext } from "@/hooks/StudioContext";
 import type { TreeItem } from "@/lib/api";
 import { t } from "@/lib/i18n";
@@ -134,6 +135,7 @@ export function Sidebar({ onCollapse, onNavigate, onSearch }: Props) {
                 <Plus className="size-3.5" aria-hidden /> {t("Nova página")}
               </button>
             </div>
+            <StatusLegend className="mb-2 px-2" />
             {manual.pages.length === 0 ? (
               <p className="px-2 text-sm text-muted-foreground">{t("Nenhuma página ainda.")}</p>
             ) : (

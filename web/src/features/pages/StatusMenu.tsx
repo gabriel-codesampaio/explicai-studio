@@ -1,4 +1,5 @@
 import { Check, ChevronDown } from "lucide-react";
+import type { CSSProperties } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,15 +13,18 @@ import { t } from "@/lib/i18n";
 import { STATUSES, statusOf } from "@/lib/status";
 import { cn } from "@/lib/utils";
 
-/** Bolinha de cor do status. Rascunho é anel vazio, para a forma também diferenciar. Sempre vem com o nome escrito. */
-export function StatusDot({ status, className }: { status: PageStatus; className?: string }) {
+/** Bolinha do status. Rascunho é anel vazio, publicado é alvo (anel com miolo), os outros são cheios: a forma também diferencia. Sempre vem com o nome escrito. */
+export function StatusDot({ status, className, style }: { status: PageStatus; className?: string; style?: CSSProperties }) {
   return (
     <span
       className={cn(
         "inline-block size-2 shrink-0 rounded-full",
-        status === "rascunho" ? "border-[1.5px] border-current" : "bg-current",
+        status === "rascunho" && "border-[1.5px] border-current",
+        status === "publicado" && "border-[1.5px] border-current bg-[radial-gradient(currentColor_35%,transparent_40%)]",
+        status !== "rascunho" && status !== "publicado" && "bg-current",
         className,
       )}
+      style={style}
       aria-hidden
     />
   );
@@ -49,6 +53,25 @@ export function StatusMark({ status, className }: { status: PageStatus; classNam
       <StatusDot status={status} />
       <span className="sr-only">{info.label}</span>
     </span>
+  );
+}
+
+const LEGEND: PageStatus[] = ["revisao", "aprovado", "publicado"];
+
+/** Legenda de uma linha para a árvore: rascunho não tem marca, os outros mostram bolinha. */
+export function StatusLegend({ className }: { className?: string }) {
+  return (
+    <p
+      className={cn("flex flex-wrap gap-x-2.5 text-[11px] text-muted-foreground", className)}
+      title={t("Bolinha ao lado da página: etapa dela. Sem bolinha, é rascunho.")}
+    >
+      {LEGEND.map((id) => (
+        <span key={id} className="inline-flex items-center gap-1">
+          <StatusDot status={id} style={{ color: `var(--${statusOf(id).token})` }} />
+          {statusOf(id).label}
+        </span>
+      ))}
+    </p>
   );
 }
 

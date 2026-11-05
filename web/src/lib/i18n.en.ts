@@ -207,6 +207,7 @@ export const EN: Record<string, string> = {
   "Destaques e setas": "Highlights and arrows",
   "Destino da área {n}": "Target of area {n}",
   "Editar link": "Edit link",
+  "Bolinha ao lado da página: etapa dela. Sem bolinha, é rascunho.": "Dot next to a page: its stage. No dot means draft.",
   "Em revisão": "In review",
   "Endereço da área {n}": "Address of area {n}",
   "Endereço inválido. Exemplo: https://exemplo.com.br": "Invalid address. Example: https://example.com",
