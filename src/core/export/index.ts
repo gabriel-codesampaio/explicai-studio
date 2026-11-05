@@ -13,7 +13,7 @@ import { FONTS_DIR, type FontSpec, fontFiles, inlineFonts } from "./fonts.js";
 import { type FooterPatch, mergeFooter } from "./footer.js";
 import { renderHtml } from "./html.js";
 import { checkLogoFile, checkLogoPath, LOGO_EXT, LOGO_MAX_BYTES, logoSizeError, logoTypeError } from "./logo.js";
-import { renderMarkdown } from "./markdown.js";
+import { renderMarkdown, renderMarkdownPages } from "./markdown.js";
 import { chromeWarning, printPdf } from "./pdf.js";
 import { hiddenLinkWarnings, type ImageInfo, loadImages } from "./refs.js";
 import { mergeTheme, type ThemePatch, usedFonts } from "./theme.js";
@@ -80,6 +80,10 @@ export async function exportManual(dir: string, format: ExportFormat, opts: Coll
     const out = await buildThenSwap(path.join(root, `markdown${profile}`), async (tmp) => {
       await copyImages(dir, images, tmp);
       await atomicWrite(path.join(tmp, "manual.md"), renderMarkdown(collected, images));
+      const split = renderMarkdownPages(collected, images);
+      await atomicWrite(path.join(tmp, "llms.txt"), split.llms);
+      await mkdir(path.join(tmp, "paginas"));
+      for (const p of split.pages) await atomicWrite(path.join(tmp, "paginas", p.file), p.content);
     });
     return result(path.join(out, "manual.md"));
   }
