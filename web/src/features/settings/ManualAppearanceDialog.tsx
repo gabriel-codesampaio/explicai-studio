@@ -48,7 +48,7 @@ export function ManualAppearanceDialog({
           </DialogDescription>
         </div>
         <div className="grid min-h-0 flex-1 content-start gap-6 overflow-y-auto px-6 pb-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          {/* Em telas largas a amostra fica na 2ª coluna; abaixo disso, depois das seções (sem sticky). */}
+          {/* Em telas largas a amostra fica na 2ª coluna, fixa enquanto a esquerda rola; abaixo disso, depois das seções. */}
           <div className="grid content-start gap-6 lg:col-start-1 lg:row-start-1">
             <ThemeFields theme={manual.theme} />
             <FontFields theme={manual.theme} />
@@ -83,7 +83,7 @@ export function ManualAppearanceDialog({
               </label>
             </section>
           </div>
-          <div className="lg:col-start-2 lg:row-start-1">
+          <div className="lg:sticky lg:top-0 lg:col-start-2 lg:row-start-1 lg:self-start">
             <ThemeSample slug={manual.slug} theme={manual.theme} />
           </div>
         </div>

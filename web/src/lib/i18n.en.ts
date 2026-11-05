@@ -540,6 +540,8 @@ export const EN: Record<string, string> = {
   "O logo passa de {max} MB. Reduza o arquivo e envie de novo.":
     "The logo is over {max} MB. Shrink the file and upload it again.",
   "Cor de realce": "Highlight color",
+  "Cor dos títulos": "Heading color",
+  "Ajustar por nível": "Adjust by level",
   "Cor de destaque": "Accent color",
   "Cor do texto": "Text color",
   "Marca-texto": "Highlighter",
