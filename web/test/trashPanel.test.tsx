@@ -13,7 +13,10 @@ it("limpar imagens sem uso grava a fila do autosave antes de chamar o servidor",
     calls.push("limpar");
     return { moved: 1, folder: ".lixeira/imagens-x" };
   });
-  const flush = vi.fn(async () => (calls.push("flush"), true));
+  const flush = vi.fn(async () => {
+    calls.push("flush");
+    return true;
+  });
 
   render(<TrashPanel slug="m" open onOpenChange={() => {}} onRestore={async () => {}} flush={flush} />);
   fireEvent.click(await screen.findByRole("button", { name: /Limpar imagens sem uso/ }));
