@@ -45,12 +45,32 @@ const TOOLS: { tool: Tool; label: string; hint: string; Icon: LucideIcon }[] = [
     hint: t("Clique numa marcação para selecionar e arraste para mover; Delete exclui"),
     Icon: MousePointer2,
   },
-  { tool: "marker", label: t("Marcador"), hint: t("Clique onde o número deve ficar"), Icon: Hash },
-  { tool: "highlight", label: t("Destaque"), hint: t("Arraste sobre o que merece atenção"), Icon: Highlighter },
-  { tool: "arrow", label: t("Seta"), hint: t("Arraste do início até a ponta da seta"), Icon: ArrowUpRight },
-  { tool: "hotspot", label: t("Área clicável"), hint: t("Arraste sobre a área que leva a outra página"), Icon: Link2 },
-  { tool: "redact", label: t("Ocultar"), hint: t("Arraste sobre o dado que deve sumir"), Icon: EyeOff },
-  { tool: "crop", label: t("Recortar"), hint: t("Arraste sobre a parte da imagem que deve ficar"), Icon: Crop },
+  { tool: "marker", label: t("Marcador"), hint: t("Clique onde o número deve ficar. Ou Tab, setas e Enter."), Icon: Hash },
+  {
+    tool: "highlight",
+    label: t("Destaque"),
+    hint: t("Arraste sobre o que merece atenção. Ou Tab, setas e Enter."),
+    Icon: Highlighter,
+  },
+  {
+    tool: "arrow",
+    label: t("Seta"),
+    hint: t("Arraste do início até a ponta da seta. Ou Tab, setas e Enter."),
+    Icon: ArrowUpRight,
+  },
+  {
+    tool: "hotspot",
+    label: t("Área clicável"),
+    hint: t("Arraste sobre a área que leva a outra página. Ou Tab, setas e Enter."),
+    Icon: Link2,
+  },
+  { tool: "redact", label: t("Ocultar"), hint: t("Arraste sobre o dado que deve sumir. Ou Tab, setas e Enter."), Icon: EyeOff },
+  {
+    tool: "crop",
+    label: t("Recortar"),
+    hint: t("Arraste sobre a parte da imagem que deve ficar. Ou Tab, setas e Enter."),
+    Icon: Crop,
+  },
 ];
 
 /** Janela de marcação de uma imagem. Trabalha num rascunho e só grava ao clicar em "Salvar marcações". */
