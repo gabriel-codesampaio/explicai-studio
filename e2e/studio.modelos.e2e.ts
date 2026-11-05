@@ -50,6 +50,8 @@ test("menu de modelos: tarefa e referência em pt, pelo teclado, com axe limpo",
 
   await trigger.click();
   await page.getByRole("menuitem", { name: "Em branco" }).click();
+  // T-569: o Radix não devolve o foco ao gatilho; ele fica no título da página criada.
+  await expect(page.getByRole("textbox", { name: /título/i }).first()).toBeFocused();
   await expect.poll(async () => (await bodies(request, slug)).length).toBe(4);
   await page.waitForTimeout(1500); // deixa o salvamento automático correr
   const all = (await bodies(request, slug)).join("\n=====\n");

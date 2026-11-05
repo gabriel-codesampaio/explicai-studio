@@ -47,7 +47,9 @@ export const pageRoutes: Route[] = [
       const text = optionalString(body.body);
       const status = optionalString(body.status) as PageStatus | undefined;
       const audience = optionalAudience(body.audience);
+      const reviewed = optionalString(body.reviewed);
       const patch = {
+        ...(reviewed === undefined ? {} : { reviewed }),
         ...(audience === undefined ? {} : { audience }),
         ...(title === undefined ? {} : { title }),
         ...(text === undefined ? {} : { body: text }),

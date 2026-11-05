@@ -14,7 +14,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     target: '[data-passeio="nova-pagina"]',
     title: "Crie uma página",
-    body: "Uma página por tela ou tarefa. Clique em Nova página para começar.",
+    body: "Uma página por tela ou tarefa. Clique em Criar a primeira página para começar.",
   },
   {
     target: ".tiptap",

@@ -8,6 +8,7 @@ import { PageOutline, PageOutlineButton } from "@/features/editor/PageOutline";
 import { ExportDialog } from "@/features/export/ExportDialog";
 import { AudienceMenu } from "@/features/pages/AudienceMenu";
 import { FirstStepHint } from "@/features/pages/FirstStepHint";
+import { ReviewedControl } from "@/features/pages/ReviewedControl";
 import { StatusMenu } from "@/features/pages/StatusMenu";
 import { ManualAppearanceDialog } from "@/features/settings/ManualAppearanceDialog";
 import { PinnedNotice } from "@/features/versions/PinnedNotice";
@@ -84,6 +85,7 @@ export function PageView({ manual, page }: Props) {
                     slug={manual.slug}
                     pageId={page.id}
                     pageTitle={page.title}
+                    flush={studio.flush}
                     onSave={studio.saveVersion}
                     onRestore={studio.restoreVersion}
                     onPublish={studio.publishVersion}
@@ -94,6 +96,7 @@ export function PageView({ manual, page }: Props) {
                     known={manual.audiences}
                     onChange={(a) => studio.setPageAudience(a)}
                   />
+                  <ReviewedControl reviewed={page.reviewed} onMark={() => void studio.markPageReviewed()} />
                   <StatusMenu status={page.status} onChange={(s) => void studio.setPageStatus(s)} />
                 </>
               )}
@@ -173,7 +176,7 @@ export function PageView({ manual, page }: Props) {
       </div>
       <StatusBar
         path={`${manual.slug}/${page.file}`}
-        state={studio.save.state}
+        state={studio.serverDown && studio.save.state === "error" ? "offline" : studio.save.state}
         savedAt={studio.save.savedAt}
         onRetry={() => void studio.save.retry()}
       />

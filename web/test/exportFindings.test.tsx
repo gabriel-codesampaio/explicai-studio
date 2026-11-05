@@ -25,8 +25,8 @@ it("sem achados diz 'Nenhum achado.'", () => {
   expect(screen.getByText("Nenhum achado.")).toBeTruthy();
 });
 
-it("not-reviewed (T-545) tem texto claro mesmo sem o tipo no CheckKind", () => {
-  expect(kindLabel("not-reviewed" as CheckKind)).toBe("Página ainda sem conferência");
+it("not-reviewed tem rótulo e dica", () => {
+  expect(kindLabel("not-reviewed")).toBe("Página sem conferência");
   render(<ExportFindings findings={[f("not-reviewed")]} onOpenPage={vi.fn()} />);
   expect(screen.getByText("Leia a página e marque como conferida.")).toBeTruthy();
 });

@@ -8,6 +8,8 @@
   --superficie: #ffffff;
   --tinta: #151a33;
   --grafite: #575e78;
+  /* Nanquim fixo, para texto sobre marca-texto (amarelo nos dois temas); --tinta muda no escuro. */
+  --nanquim: #151a33;
   --linha: #dce0eb;
   --cobalto: #2b4fe0;
   --sobre-cobalto: #ffffff;
@@ -124,6 +126,9 @@
   --color-sobre-anotacao: var(--sobre-anotacao);
   --color-marca-faixa: var(--marca-faixa);
   --color-superficie: var(--superficie);
+  --color-tinta: var(--tinta);
+  --color-grafite: var(--grafite);
+  --color-nanquim: var(--nanquim);
 
   --font-sans: var(--fonte-texto);
   --font-display: var(--fonte-display);

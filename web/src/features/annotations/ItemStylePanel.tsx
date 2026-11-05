@@ -44,7 +44,7 @@ export function ItemStylePanel({ kind, name, style, imageStyle, onChange, onDele
   const colors = hl ? HIGHLIGHT_COLORS : COLORS;
   const swatch = (id: StyleColor | HighlightColor) =>
     hl
-      ? { background: HIGHLIGHT_PALETTE[id as HighlightColor].fill, color: "#151a33" }
+      ? { background: HIGHLIGHT_PALETTE[id as HighlightColor].fill, color: "var(--nanquim)" }
       : { background: STYLE_PALETTE[id as StyleColor].claro, color: STYLE_PALETTE[id as StyleColor].sobre };
   const color: StyleColor | HighlightColor | undefined = hl ? style?.color : (style?.color ?? imageStyle?.color ?? "cobalt");
   const border: StyleBorder = style?.border ?? imageStyle?.border ?? "m";

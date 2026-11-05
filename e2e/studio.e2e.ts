@@ -51,7 +51,11 @@ async function primeiroUso(page: Page, url: string) {
   await page.getByLabel("Nome do manual").fill("Manual do Primeiro Uso");
   await page.getByRole("button", { name: "Criar manual" }).click();
 
+  // T-539: manual vazio tem um botão só para criar a página.
+  await expect(page.getByRole("button", { name: /^(Criar a primeira página|Nova página)$/ })).toHaveCount(1);
   await page.getByRole("button", { name: "Criar a primeira página" }).click();
+  // T-539: página vazia tem uma dica só para colar print (o cartão; o placeholder não repete).
+  await expect(page.getByText(/Cole um print com Ctrl\+V/)).toHaveCount(1);
   const title = page.getByRole("textbox", { name: "Título da página" });
   await expect(title).toBeFocused();
   await title.fill("Cadastrar cliente");
@@ -730,26 +734,27 @@ test.describe("botão Exportar manual no topo, em 375 px e em toque", () => {
     await page.goto(`/#/${slug}`);
     await expect(page.getByRole("button", { name: "Exportar manual" })).toBeVisible();
     const { buttons, rowRight, scrollW, innerW } = await topButtons(page);
-    expect(buttons.map((b) => b.name.replace(/:.*/, "").replace(/\s+/g, " "))).toEqual([
-      "Versões",
-      "Público",
-      "Status da página",
-      "Nesta página",
-      "Exportar manual",
-    ]);
-    const exportBtn = buttons[4];
+    expect(
+      buttons.map((b) =>
+        b.name
+          .replace(/:.*/, "")
+          .replace(/\s+/g, " ")
+          .replace(/(?<=\D)\d+$/, ""),
+      ),
+    ).toEqual(["Versões", "Público", "Marcar como conferida", "Status da página", "Nesta página", "Exportar manual"]);
+    const exportBtn = buttons[5];
     // Sem espaço na linha, o Exportar desce para uma linha própria; abaixo de sm o grupo fica à esquerda (T-078), nunca no meio.
-    const others = buttons.slice(0, 4);
+    const others = buttons.slice(0, 5);
     expect(exportBtn?.top ?? 0).toBeGreaterThanOrEqual(Math.max(...others.map((b) => b.top)) - 1);
-    if (exportBtn && Math.abs(exportBtn.top - (others[3]?.top ?? 0)) < 1)
-      expect(exportBtn.left).toBeGreaterThan(others[3]?.left ?? 0);
+    if (exportBtn && Math.abs(exportBtn.top - (others[4]?.top ?? 0)) < 1)
+      expect(exportBtn.left).toBeGreaterThan(others[4]?.left ?? 0);
     expect(exportBtn?.left ?? 0).toBeLessThan(rowRight / 2);
     // Alvo de toque: todos os itens do topo têm 44 px.
     for (const b of buttons) expect(b.height).toBeGreaterThanOrEqual(44);
     expect(scrollW).toBeLessThanOrEqual(innerW);
 
     await page.getByRole("button", { name: "Versões" }).focus();
-    for (const name of [/^Público:/, /Status da página/, /Nesta página/, /Exportar manual/]) {
+    for (const name of [/^Público:/, /Marcar como conferida/, /Status da página/, /Nesta página/, /Exportar manual/]) {
       await page.keyboard.press("Tab");
       await expect(page.getByRole("button", { name })).toBeFocused();
     }
@@ -762,7 +767,8 @@ test("botão Exportar manual em 1280 px: último à direita, altura de botão pr
   await page.goto(`/#/${slug}`);
   await expect(page.getByRole("button", { name: "Exportar manual" })).toBeVisible();
   const { buttons, rowRight } = await topButtons(page);
-  expect(buttons.at(-1)?.name).toBe("Exportar manual");
+  // Sem número: o achado "nunca conferida" põe a contagem no botão.
+  expect(buttons.at(-1)?.name.replace(/\d+$/, "")).toBe("Exportar manual");
   expect(Math.abs((buttons.at(-1)?.right ?? 0) - rowRight)).toBeLessThan(1);
   expect(buttons.at(-1)?.height).toBe(36);
   // Só ele tem fundo sólido: os vizinhos são texto.
@@ -873,10 +879,7 @@ test.describe("rodapés alinhados", () => {
   test.describe("toque", () => {
     test.use({ viewport: { width: 375, height: 800 }, hasTouch: true, isMobile: true });
 
-    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar de novo tem 44 px", async ({
-      page,
-      request,
-    }) => {
+    test("375 px: o rodapé da gaveta tem a altura do rodapé da página e o Tentar agora tem 44 px", async ({ page, request }) => {
       const { slug } = await setup(request, "Manual Rodape Celular", ["Início"]);
       await page.goto(`/#/${slug}`);
       // offsetHeight ignora a escala da animação de abertura da gaveta.
@@ -889,14 +892,33 @@ test.describe("rodapés alinhados", () => {
       await expect.poll(async () => ((await side.boundingBox())?.y ?? 0) + (await height(side))).toBeGreaterThanOrEqual(799);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
       await page.keyboard.press("Escape");
-      // Servidor fora: o salvamento falha e a barra de status mostra o botão.
+      // Servidor fora: o salvamento falha e a faixa de conexão mostra o botão.
       await page.route("**/api/manuals/*/pages/*", (r) => (r.request().method() === "PUT" ? r.abort() : r.continue()));
       await editor(page).click();
       await page.keyboard.type("x");
-      const retry = page.getByRole("button", { name: "Tentar de novo" }).first();
+      const retry = page.getByRole("button", { name: "Tentar agora" });
       await expect(retry).toBeVisible({ timeout: 10_000 });
       const b = await retry.boundingBox();
       expect(b?.height ?? 0).toBeGreaterThanOrEqual(44);
+    });
+
+    test("375 px: os controles da gaveta de páginas têm alvo de 44 px (T-536)", async ({ page, request }) => {
+      const { slug } = await setup(request, "Manual Alvos Gaveta", ["Início", "Outra"]);
+      await page.goto(`/#/${slug}`);
+      await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
+      const drawer = page.getByRole("dialog", { name: "Páginas do manual" });
+      await expect(drawer.getByRole("button", { name: "Nova página" })).toBeVisible();
+      const small = await drawer.locator("button:visible").evaluateAll((els) =>
+        els
+          .map((el) => ({
+            n: el.getAttribute("aria-label") || el.textContent?.trim().slice(0, 30),
+            h: { width: (el as HTMLElement).offsetWidth, height: (el as HTMLElement).offsetHeight },
+          }))
+          .filter(({ h }) => h.height < 44 || h.width < 44)
+          .map(({ n, h }) => `${n} ${Math.round(h.width)}x${Math.round(h.height)}`),
+      );
+      expect(small).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
     });
   });
 });

@@ -76,7 +76,13 @@ test("servidor cai com o Studio aberto: aviso no topo, texto continua e salva so
   await expect(banner).toBeVisible();
   // Sem faixa colorida na lateral: o aviso se destaca pelo ícone, pelo texto e pela borda de baixo.
   await expect(banner).toHaveCSS("border-left-width", "0px");
-  await expect(page.getByText("Não foi possível salvar. O texto continua na tela.")).toBeVisible();
+  // Uma mensagem só (T-538): o rodapé espera o servidor, sem "Não foi possível salvar" nem "Tentar de novo".
+  await expect(page.getByRole("status").filter({ hasText: "Aguardando o servidor" })).toBeVisible();
+  await expect(page.getByText("Não foi possível salvar. O texto continua na tela.")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Tentar de novo" })).toHaveCount(0);
+  // A faixa cobre a largura toda, barra lateral incluída.
+  expect((await banner.boundingBox())?.x).toBe(0);
+  expect((await banner.boundingBox())?.width).toBe(page.viewportSize()?.width);
   await expect(editor).toContainText("Texto digitado sem servidor.");
   down = false;
   await expect(page.getByRole("status").filter({ hasText: "Salvo às" })).toBeVisible({ timeout: 8000 });

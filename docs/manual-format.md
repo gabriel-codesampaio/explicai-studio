@@ -120,6 +120,8 @@ O nome do arquivo acompanha o título: quando o título muda, o arquivo é renom
 
 O frontmatter pode ter `status`, a etapa da página no fluxo de aprovação: `revisao`, `aprovado` ou `publicado`. Sem ele, a página é rascunho, e por isso página escrita à mão continua válida. A exportação pode levar só as páginas aprovadas ou publicadas.
 
+O campo opcional `reviewed` do frontmatter guarda o dia em que alguém confirmou que a página ainda vale, no formato `AAAA-MM-DD` (`reviewed: 2026-11-05`). Sem ele, a página nunca foi conferida, e por isso página escrita à mão continua válida. O Studio grava a data de hoje em "Marcar como conferida", filtra a árvore pelas páginas sem data ou com data de mais de 90 dias e o checar manual lista essas páginas como achado `not-reviewed`. Nada bloqueia a edição nem a exportação. Data que não seja um dia real do calendário vale como sem data e volta ao arquivo como veio. O campo é aditivo: o formato do `manual.json` e a `FORMAT_VERSION` não mudam.
+
 Campos do frontmatter que o Studio não conhece (`sources:`, `owner:` ou qualquer outro) voltam intactos quando a página é salva. Comentários YAML não sobrevivem, porque o arquivo é regravado.
 
 ### Público

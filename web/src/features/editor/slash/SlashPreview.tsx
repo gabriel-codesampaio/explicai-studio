@@ -9,7 +9,7 @@ const CALLOUT_COLOR: Record<string, string> = {
   "callout-note": "var(--aviso-note)",
 };
 const HEADING_SIZE: Record<string, string> = { h1: "text-[22px]", h2: "text-[18px]", h3: "text-[15px]" };
-const mono = "font-mono text-[10px] font-bold";
+const mono = "font-mono text-xs font-bold";
 
 /** Miniatura do resultado, desenhada com os mesmos tokens do conteúdo do manual. Sem ícone: o que aparece é o que será inserido. */
 function sample(block: Block): ReactNode {
