@@ -6,6 +6,8 @@
 - Agente: supervisor
 - Origem: pedido da pessoa (2026-11-04)
 
+Studio: 0.3.0 (2026-11-04) e 1.0.0 (2026-11-05) publicados. Resta só a parte do MCP, fora da fila do Studio por ora.
+
 ## Problema
 O MCP depende de `explicai` >=0.3.0, que não está no npm (hoje 0.2.1). Os dois pacotes estão preparados (CHANGELOG, versão, metadados, CI), faltando só o ok da pessoa e os pré-requisitos.
 
