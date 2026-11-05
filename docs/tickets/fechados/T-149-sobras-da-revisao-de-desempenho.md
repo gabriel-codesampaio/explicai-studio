@@ -21,3 +21,5 @@ Teste com dois processos gravando no mesmo manual, se a fila entrar. Tamanho do 
 - Fila entre processos: decidido que não vale o custo (exigiria lock de arquivo; uso simultâneo Studio+MCP no mesmo manual é raro). Comentário `shortcut:` em `src/core/manuals.ts`. Fora deste repo: aviso no README do MCP (`explicai-mcp`) fica pendente.
 - Bundle: maior chunk 1.240,97 kB (gzip 382,65) antes, 1.210,73 kB (gzip 374,14) depois. Corte barato: `AnnotationEditor` virou `React.lazy` em `Editor.tsx` (chunk próprio de 32,7 kB, carregado só ao anotar imagem). Abertura do editor não piora (só perde código).
 - Ficou: o peso restante é Tiptap/ProseMirror + lucide + Radix, todos no caminho de abertura do editor. Cortar mais exige dividir o editor (ex.: manualChunks de vendor, ganho só de cache, não de carga) ou trocar ícones por imports pontuais; não é barato. Sem visualizer instalado; análise por imports.
+
+- Revertido o lazy do AnnotationEditor (ganho 30 kB): 4 e2e de atalhos (V/M/D/S/A, O, R) falharam no CI com ele. Maior chunk volta a ~1,24 MB; peso restante e Tiptap/ProseMirror, lucide e Radix. Reabrir so com e2e dos atalhos verde.
