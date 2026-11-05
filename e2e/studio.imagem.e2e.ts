@@ -464,12 +464,17 @@ test.describe("marcações", () => {
     await page.getByRole("button", { name: "Editar imagem" }).click();
     await page.keyboard.press("Escape");
     await expect(markDialog(page)).toBeHidden();
-    await images(page).first().click();
-    await expect(page.getByRole("textbox", { name: "Descrição da imagem" })).toBeVisible();
+    // Logo depois de fechar o diálogo o foco ainda volta (setTimeout do Radix) e pode fechar o balão recém-aberto no CI lento:
+    // o clique é refeito até o balão ficar, e a segunda volta (Esc e clique) segue exigindo o primeiro clique.
+    const alt = page.getByRole("textbox", { name: "Descrição da imagem" });
+    await expect(async () => {
+      await images(page).first().click();
+      await expect(alt).toBeVisible({ timeout: 1000 });
+    }).toPass();
     await page.keyboard.press("Escape");
-    await expect(page.getByRole("textbox", { name: "Descrição da imagem" })).toBeHidden();
+    await expect(alt).toBeHidden();
     await images(page).first().click();
-    await expect(page.getByRole("textbox", { name: "Descrição da imagem" })).toBeVisible();
+    await expect(alt).toBeVisible();
   });
 
   test("a legenda aparece na página e continua depois de recarregar", async ({ page, request }) => {

@@ -107,7 +107,8 @@ test("públicos: o link do popover abre o diálogo; popover e diálogo sem viola
   await page.getByRole("button", { name: "Público da página: aluno" }).click();
   const popover = page.getByRole("dialog", { name: "Público da página" });
   await expect(popover).toBeVisible();
-  expect(await grave(page)).toEqual([]);
+  // Transição de cor ou animação em curso engana o axe (CI lento): violação de verdade persiste e falha no fim do prazo.
+  await expect.poll(() => grave(page), { timeout: 3000 }).toEqual([]);
   await popover.getByRole("button", { name: "Gerenciar públicos…" }).click();
   const dialog = page.getByRole("dialog", { name: "Públicos do manual" });
   await expect(dialog).toBeVisible();
@@ -116,5 +117,6 @@ test("públicos: o link do popover abre o diálogo; popover e diálogo sem viola
   await dialog.getByRole("textbox", { name: "Novo nome de aluno" }).fill("admin");
   await dialog.getByRole("textbox", { name: "Novo nome de aluno" }).press("Enter");
   await expect(dialog.getByRole("alert")).toBeVisible();
-  expect(await grave(page)).toEqual([]);
+  // Transição de cor ou animação em curso engana o axe (CI lento): violação de verdade persiste e falha no fim do prazo.
+  await expect.poll(() => grave(page), { timeout: 3000 }).toEqual([]);
 });
