@@ -28,6 +28,8 @@ test("checar manual: achados por página, teclado, axe, clique abre a página e 
   await expect(dialog.getByText("A confirmar", { exact: true })).toBeVisible();
   await expect(dialog.getByText("Passo sem resultado")).toBeVisible();
   await expect(dialog.getByRole("alert")).toHaveCount(0); // "A confirmar" não é erro
+  // axe no meio do fade de abertura lê cor misturada e acusa contraste falso
+  await dialog.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)));
   expect((await new AxeBuilder({ page }).include("[role=dialog]").analyze()).violations).toEqual([]);
 
   // Só teclado: o foco fica preso no diálogo e Esc devolve ao seletor do manual.
@@ -45,6 +47,8 @@ test("checar manual: achados por página, teclado, axe, clique abre a página e 
   const exp = page.getByRole("dialog", { name: "Exportar manual" });
   await expect(exp.getByRole("heading", { name: /Checagem do manual · 3 achados/ })).toBeVisible();
   await expect(exp.getByText(/não impedem de exportar/)).toBeVisible();
+  // axe no meio do fade de abertura lê cor misturada e acusa contraste falso
+  await exp.evaluate((el) => Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)));
   expect((await new AxeBuilder({ page }).include("[role=dialog]").analyze()).violations).toEqual([]);
   await exp
     .getByRole("button", { name: /Abrir página Página ruim/ })
