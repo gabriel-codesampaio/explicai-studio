@@ -22,3 +22,10 @@ it("o perfil vê as páginas sem restrição e as que o citam; a filha herda a m
   expect(ids(visibleFor(tree, "admin"))).toEqual(["a", "b", "b1"]);
   expect(ids(visibleFor(tree, "cliente"))).toEqual(["a", "c", "c1"]);
 });
+
+it("ramo sem página escondida volta com a mesma identidade (memo das linhas)", () => {
+  const out = visibleFor(tree, "admin");
+  expect(out[0]).toBe(tree[0]);
+  const all = [item("x", ["admin"], [item("x1", ["admin"])])];
+  expect(visibleFor(all, "admin")).toBe(all);
+});

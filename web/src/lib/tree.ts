@@ -16,12 +16,19 @@ export function findItem(items: TreeItem[], id: string): TreeItem | null {
   return null;
 }
 
-/** O que o perfil vê na árvore: página sem `audience` ou que o cita; filha de página escondida some junto. */
+/**
+ * O que o perfil vê na árvore: página sem `audience` ou que o cita; filha de página escondida some junto.
+ * Ramo que não mudou volta com a mesma identidade, para o `memo` das linhas funcionar.
+ */
 export function visibleFor(items: TreeItem[], profile: string | null): TreeItem[] {
   if (!profile) return items;
-  return items
-    .filter((i) => !i.audience || i.audience.includes(profile))
-    .map((i) => ({ ...i, children: visibleFor(i.children, profile) }));
+  const shown = items.filter((i) => !i.audience || i.audience.includes(profile));
+  const next = shown.map((i) => {
+    const children = visibleFor(i.children, profile);
+    return children === i.children ? i : { ...i, children };
+  });
+  // shortcut: ramo com filha escondida ganha array novo a cada chamada; cachear por WeakMap se pesar.
+  return next.length === items.length && next.every((n, k) => n === items[k]) ? items : next;
 }
 
 export function locate(items: TreeItem[], id: string, parentId: string | null = null): Location | null {
