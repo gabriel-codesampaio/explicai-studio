@@ -46,8 +46,8 @@ function stepsWithoutResult(body: string): string[] {
     if (fence) continue;
     if (STEP.test(line)) {
       close();
-      cur = { head: line.replace(STEP, "").trim().slice(0, 60), ok: /resultado:/i.test(line) };
-    } else if (cur && /resultado:/i.test(line) && !/^\s*#/.test(line)) cur.ok = true;
+      cur = { head: line.replace(STEP, "").trim().slice(0, 60), ok: /result(?:ado)?:/i.test(line) };
+    } else if (cur && /result(?:ado)?:/i.test(line) && !/^\s*#/.test(line)) cur.ok = true;
     else if (cur && BREAK.test(line)) {
       close();
       cur = null;
