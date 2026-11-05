@@ -2,11 +2,11 @@
 
 Estado do trabalho para a próxima sessão. Só o que importa agora; o histórico fica no git.
 
-## Agora (2026-11-04)
-- MCP: fases 1 a 3 mergeadas e prova real feita no CodeLab (T-125). Falta publicar `explicai` 0.3.0 e depois `explicai-mcp` no npm, com o ok da pessoa e passando antes pelo agente `seguranca`.
-- Fila: [tickets/README.md](tickets/README.md).
+## Agora (2026-11-05)
+- `explicai` 1.0.0 publicado. Fila do Studio: só o [T-426](tickets/T-426-tirar-tolerancia-dos-e2e.md). A próxima versão só sai com a fila vazia ([release.md](release.md)).
+- MCP pausado: os tickets T-150, T-178, T-197, T-202, T-220 e T-402 esperam. Retomar só quando a pessoa pedir.
+- Fila: [tickets/README.md](tickets/README.md). Mapa do código: [arquitetura/README.md](arquitetura/README.md).
 
 ## Cuidados
-- `node_modules` do `explicai-mcp` aponta para uma worktree local do Studio: antes de removê-la, refaça o link.
-- Worktree com junção de `node_modules`: apague a junção pelo PowerShell com `(Get-Item <wt>\node_modules -Force).Delete()`, confira que sumiu e só então rode `git worktree remove`, sem `--force`.
-- Teste instável conhecido: `e2e/studio.reduzir.e2e.ts:78` (T-129). Rode de novo só o job que falhou.
+- Worktree com junção de `node_modules`: remova só com `remover-worktree.ps1` (pasta Manual). Nunca rode `npm ci` ou `npm install` dentro dela.
+- `node_modules` do `explicai-mcp` pode apontar para uma worktree local do Studio: antes de removê-la, refaça o link.
