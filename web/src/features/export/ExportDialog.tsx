@@ -19,6 +19,7 @@ import { type ExportFormat, type ExportResult, errorMessage } from "@/lib/api";
 import { t, tn } from "@/lib/i18n";
 import { flattenItems } from "@/lib/tree";
 import { cn } from "@/lib/utils";
+import { ExportFindings } from "./ExportFindings";
 import { busyLabel, ExportStatus } from "./ExportStatus";
 
 const FORMATS: { id: ExportFormat; label: string; short: string; hint: string; ext: string }[] = [
@@ -110,6 +111,9 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
         <Button
           data-passeio="exportar"
           aria-describedby={checkCount > 0 ? "export-check-count" : undefined}
+          title={
+            checkCount > 0 ? tn(checkCount, "{n} achado na checagem do manual.", "{n} achados na checagem do manual.") : undefined
+          }
           className="font-semibold [@media(pointer:coarse)]:h-11"
         >
           {t("Exportar manual")}
@@ -231,6 +235,15 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
                 {t("Aparência do manual")}
               </button>
             </p>
+          )}
+          {check.findings && (
+            <ExportFindings
+              findings={check.findings}
+              onOpenPage={(id) => {
+                onOpenChange?.(false);
+                void studio.selectPage(id);
+              }}
+            />
           )}
           <ManualAppearanceDialog
             open={appearanceOpen}

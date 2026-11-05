@@ -22,6 +22,34 @@ export function kindLabel(kind: CheckKind): string {
       return t("A confirmar");
     case "not-reviewed":
       return t("Página sem conferência");
+    default:
+      return String(kind);
+  }
+}
+
+/** Como resolver, em uma frase para quem escreve o manual. Tipo desconhecido: sem dica. */
+export function kindFix(kind: CheckKind): string {
+  switch (kind) {
+    case "no-image":
+      return t("Cole um print que mostre o passo, ou tire os passos se não precisar deles.");
+    case "step-without-result":
+      return t('Acrescente uma linha "Resultado:" dizendo o que a pessoa vê depois do passo.');
+    case "dead-link":
+      return t("Troque o link por uma página que existe, ou tire o link.");
+    case "missing-image":
+      return t("Envie a imagem de novo ou troque por outra.");
+    case "hotspot-missing-page":
+      return t("Escolha outra página de destino para a área clicável, ou tire a área.");
+    case "image-without-markers":
+      return t("Marque na imagem o que a pessoa deve olhar.");
+    case "marker-without-label":
+      return t("Escreva uma descrição para cada marcador.");
+    case "to-confirm":
+      return t('Confirme a informação e tire o "A confirmar".');
+    case "not-reviewed":
+      return t("Leia a página e marque como conferida.");
+    default:
+      return "";
   }
 }
 
@@ -58,5 +86,7 @@ export function findingDetail(kind: CheckKind, detail: string): string {
       return m ? t("Arquivo {arquivo}, marcadores {numeros}", { arquivo: a, numeros: b }) : detail;
     case "hotspot-missing-page":
       return m ? t("Arquivo {arquivo}, página de destino {id}", { arquivo: a, id: b }) : detail;
+    default:
+      return (kind as string) === "not-reviewed" ? t("Ninguém conferiu esta página ainda.") : detail;
   }
 }

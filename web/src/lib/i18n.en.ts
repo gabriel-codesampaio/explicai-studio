@@ -4,6 +4,23 @@
  */
 export const EN: Record<string, string> = {
   "Checar manual": "Check manual",
+  "Ninguém conferiu esta página ainda.": "Nobody has reviewed this page yet.",
+  "Leia a página e marque como conferida.": "Read the page and mark it as reviewed.",
+  "Cole um print que mostre o passo, ou tire os passos se não precisar deles.":
+    "Paste a screenshot that shows the step, or remove the steps if you do not need them.",
+  'Acrescente uma linha "Resultado:" dizendo o que a pessoa vê depois do passo.':
+    'Add a "Resultado:" line saying what people see after the step.',
+  "Troque o link por uma página que existe, ou tire o link.": "Point the link to a page that exists, or remove the link.",
+  "Envie a imagem de novo ou troque por outra.": "Upload the image again or replace it with another.",
+  "Escolha outra página de destino para a área clicável, ou tire a área.":
+    "Pick another target page for the clickable area, or remove the area.",
+  "Marque na imagem o que a pessoa deve olhar.": "Mark on the image what people should look at.",
+  "Escreva uma descrição para cada marcador.": "Write a description for each marker.",
+  'Confirme a informação e tire o "A confirmar".': 'Confirm the information and remove the "A confirmar" mark.',
+  "Checagem do manual": "Manual check",
+  "Nenhum achado.": "No findings.",
+  "Problemas que podem deixar o manual incompleto. Eles não impedem de exportar.":
+    "Problems that may leave the manual incomplete. They do not stop you from exporting.",
   "Confere o manual inteiro sem mudar nada. Clique num achado para abrir a página.":
     "Checks the whole manual without changing anything. Click a finding to open the page.",
   "Conferindo o manual…": "Checking the manual…",
