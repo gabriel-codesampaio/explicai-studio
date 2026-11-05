@@ -56,7 +56,10 @@ const markdown = async (request: APIRequestContext, slug: string, id: string) =>
 
 async function exportedHtml(page: Page, request: APIRequestContext) {
   await page.getByRole("button", { name: "Exportar manual" }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Exportar", exact: true }).click();
+  await page
+    .getByRole("dialog")
+    .getByRole("button", { name: /^Exportar (HTML|PDF|Markdown)$/ })
+    .click();
   const file = page.getByRole("dialog").getByRole("link", { name: "Abrir o arquivo" });
   await expect(file).toBeVisible();
   return (await request.get((await file.getAttribute("href")) ?? "")).text();
