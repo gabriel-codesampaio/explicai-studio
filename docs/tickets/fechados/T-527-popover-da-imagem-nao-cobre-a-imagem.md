@@ -4,7 +4,7 @@
 - Tamanho: P
 - Status: fechado
 - Agente: frontend
-- Origem: [relatório UI/UX 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), achado M2 (Médio)
+- Origem: [relatório UI/UX 2026-11-05](../../discovery/2026-11-05-relatorio-ui-ux-e-features.md), achado M2 (Médio)
 
 ## Problema
 `web/src/features/editor/ImagePopover.tsx`: o painel de 320 px nasce sobre o canto superior esquerdo do print e termina colado na barra de status, cortando "Remover imagem" em tela baixa (print `21-img-click.png`). Quem escreve a descrição não vê a imagem. Relacionado: T-063 (popover não pode encostar no rodapé), já fechado; este caso é outro.

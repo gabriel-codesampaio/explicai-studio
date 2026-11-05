@@ -4,7 +4,7 @@
 - Tamanho: M
 - Status: fechado
 - Agente: frontend
-- Origem: [critique 2026-11-05 (27/40)](../../.impeccable/critique/2026-11-05T12-50-20Z__web-src-app-tsx.md)
+- Origem: [critique 2026-11-05 (27/40)](../../../.impeccable/critique/2026-11-05T12-50-20Z__web-src-app-tsx.md)
 
 ## Problema
 O público tem 3 nomes: lateral "Ver como público", botão da página "Todos" (só ícone de pessoas), Exportar "Público do export".

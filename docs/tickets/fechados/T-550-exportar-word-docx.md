@@ -2,9 +2,9 @@
 
 - Prioridade: P3
 - Tamanho: G
-- Status: aberto
+- Status: fechado (adiado)
 - Agente: core (+ qa)
-- Origem: [relatório de features 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 11 (esforço G, risco M)
+- Origem: [relatório de features 2026-11-05](../../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 11 (esforço G, risco M)
 
 ## Problema
 Cliente de software house pede "manda em Word" para editar. O Confluence exporta Word, e há apps pagos que melhoram esse export: indício de demanda, não evidência para o nosso público (nenhuma fonte em `PRODUCT.md`).
@@ -30,8 +30,9 @@ Nenhum que valha: Word ruim é pior que não ter.
 ## Como verificar
 Abrir o `.docx` gerado do exemplo no Word e no LibreOffice; comparar com o HTML.
 
-## Decisões pendentes
-4. **Exportar Word: esperar pedido?** Recomendação do relatório: esperar dois pedidos reais. Sem usuário medido, é aposta. Este ticket não começa sem a decisão da pessoa.
+## Decisão
+Decidido em 2026-11-05: não por enquanto. Espera dois pedidos reais. Fechado como adiado; ideia no caderno.
 
 ## Registro
+- 2026-11-05: Decidido em 2026-11-05: não por enquanto. Espera dois pedidos reais. Fechado como adiado; ideia no caderno.
 <!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
