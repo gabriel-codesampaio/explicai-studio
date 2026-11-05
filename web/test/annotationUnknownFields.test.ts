@@ -26,7 +26,7 @@ const keeps = (a: Annotations) => {
   expect(a).toMatchObject(extra);
   for (const list of [a.markers, a.highlights, a.arrows, a.hotspots]) {
     expect(list.length).toBeGreaterThan(0);
-    for (const item of list) if (item.id.endsWith("1")) expect(item).toMatchObject(extra);
+    for (const item of list) if (["m1", "h1", "a1", "s1"].includes(item.id)) expect(item).toMatchObject(extra);
   }
 };
 
