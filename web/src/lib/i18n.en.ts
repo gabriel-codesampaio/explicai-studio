@@ -156,8 +156,6 @@ export const EN: Record<string, string> = {
   "Buscar página pelo título…": "Find page by title…",
   "Cada manual vira uma pasta com uma página em Markdown para cada tela ou tarefa. Dá para versionar no git junto com o código.":
     "Each manual becomes a folder with one Markdown page per screen or task. You can version it in git next to the code.",
-  'Cada página entra com a "Versão do manual" ou, sem ela, com o texto atual.':
-    'Each page goes in with the "Manual version" or, without one, with the current text.',
   "Caminho da página": "Page path",
   Cancelar: "Cancel",
   "Carregando as marcações…": "Loading markups…",
@@ -237,8 +235,8 @@ export const EN: Record<string, string> = {
   Formato: "Format",
   Grafite: "Graphite",
   "Guardar versão da página": "Save page version",
-  'Estas versões são só desta página, não do manual inteiro. Guarde o texto como está agora para voltar a ele depois. A "Versão do manual" é a que esta página usa no manual final. Sem ela, vale o texto atual.':
-    'These versions belong to this page only, not to the whole manual. Save the text as it is now to come back to it later. The "Manual version" is the one this page uses in the final manual. Without one, the current text is used.',
+  'Estas versões são só desta página, não do manual inteiro. Guarde o texto como está agora para voltar a ele depois. A versão "Fixada no manual" é a que esta página usa no manual final. Sem ela, vale o texto atual.':
+    'These versions belong to this page only, not to the whole manual. Save the text as it is now to come back to it later. The version "Pinned in manual" is the one this page uses in the final manual. Without one, the current text is used.',
   Idioma: "Language",
   "Idioma da interface": "Interface language",
   "Muda só o Studio, neste navegador.": "Changes only the Studio, in this browser.",
@@ -316,8 +314,6 @@ export const EN: Record<string, string> = {
   "Nova subpágina": "New subpage",
   "Nova subpágina em {nome}": "New subpage in {nome}",
   "Novo manual": "New manual",
-  "O manual final usa a Versão do manual desta página. O que você escrever aqui só entra nele quando você voltar para o texto atual.":
-    "The final manual uses this page's Manual version. What you write here only goes into it when you switch back to the current text.",
   "O que a pessoa vê depois do passo": "What the person sees after the step",
   "O que este marcador mostra?": "What does this marker show?",
   "O que o marcador {n} mostra": "What marker {n} shows",
@@ -354,7 +350,6 @@ export const EN: Record<string, string> = {
   "Adicionar coluna à direita": "Add column to the right",
   "Adicionar linha abaixo": "Add row below",
   Restaurar: "Restore",
-  "Restaurar na página": "Restore on this page",
   "Resultado esperado": "Expected result",
   "Salvando…": "Saving…",
   "Salvar marcações": "Save markups",
@@ -452,12 +447,18 @@ export const EN: Record<string, string> = {
   "Algo que exige cuidado": "Something that needs care",
   "Um risco que não dá para desfazer": "A risk that cannot be undone",
   "Uma informação a mais": "Extra information",
-  "Tirar da página do manual": "Remove page from manual",
   Remover: "Remove",
+  "Fixada no manual": "Pinned in manual",
+  "Usar texto atual": "Use current text",
+  Desafixar: "Unpin",
+  "Fixar no manual": "Pin in manual",
+  "Desafixe antes de remover": "Unpin before removing",
+  "Mais ações da versão {nome}": "More actions for version {nome}",
+  "{n} página usa versão fixada.": "{n} page uses a pinned version.",
+  "{n} páginas usam versão fixada.": "{n} pages use a pinned version.",
+  "Cada página entra com o texto atual.": "Each page goes in with the current text.",
   "Remover a versão {nome}?": "Delete version {nome}?",
-  "Remover versão {nome}": "Delete version {nome}",
   "Apagar não tem volta.": "This cannot be undone.",
-  "Escolha outra versão antes": "Choose another version first",
   "Título {n}": "Heading {n}",
   "Título da página": "Page title",
   "Título vazio": "Empty heading",
@@ -469,11 +470,8 @@ export const EN: Record<string, string> = {
   "Um passo por linha, na ordem de uso": "One step per line, in the order of use",
   "Uma página por tela ou tarefa do sistema funciona bem. Comece pela que as pessoas mais usam.":
     "One page per screen or task works well. Start with the one people use most.",
-  "Usar na página do manual": "Use on the manual page",
-  "Usar o texto atual": "Use the current text",
   "Use um endereço http, https ou mailto.": "Use an http, https or mailto address.",
   Ver: "View",
-  "Versão do manual": "Manual version",
   "Versão guardada.": "Version saved.",
   'Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".':
     'Version restored. The previous text was saved as "Before restoring".',
@@ -600,7 +598,6 @@ export const EN: Record<string, string> = {
   "Se continuar, feche o comando explicai no terminal e rode de novo.":
     "If it keeps happening, stop the explicai command in the terminal and run it again.",
   Todos: "Everyone",
-  "Público da página: {publico}": "Page audience: {publico}",
   "Público da página": "Page audience",
   "Novo público": "New audience",
   "Ex.: admin": "E.g. admin",
@@ -632,11 +629,11 @@ export const EN: Record<string, string> = {
   "e mais {n}": "and {n} more",
   "Sem nenhum público marcado, a página vale para todos. Só filtra o que você exporta: os arquivos do manual guardam tudo.":
     "With no audience checked, the page is for everyone. It only filters what you export: the manual's files keep everything.",
-  "Público do export": "Export audience",
   "Todos (o manual inteiro)": "Everyone (the whole manual)",
   "Só entram as páginas desse público e as sem restrição. Links para as outras viram texto. Não é controle de acesso.":
     "Only this audience's pages and the unrestricted ones are included. Links to the others become plain text. This is not access control.",
-  "Ver como público": "View as audience",
+  "Visualizar como": "View as",
+  "Público: {publico}": "Audience: {publico}",
   Amostra: "Preview",
   "Como o manual fica com estas cores e fontes.": "How the manual looks with these colors and fonts.",
   "Um título de página": "A page heading",
@@ -663,4 +660,8 @@ export const EN: Record<string, string> = {
   "Exporte o manual": "Export the manual",
   "Com o manual pronto, exporte em HTML ou PDF por este botão.":
     "When the manual is ready, export it as HTML or PDF with this button.",
+  "Imagem para marcar": "Image to mark up",
+  "Setas movem o cursor e Enter cria a marcação.": "Arrow keys move the cursor and Enter creates the mark.",
+  "Nova marcação: {kind}, em {x}% da largura e {y}% da altura. Setas movem.":
+    "New mark: {kind}, at {x}% across and {y}% down. Arrow keys move it.",
 };

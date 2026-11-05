@@ -45,11 +45,10 @@ export function AudienceMenu({
         <PopoverTrigger asChild>
           <button
             type="button"
-            aria-label={t("Público da página: {publico}", { publico: summary })}
             className="flex max-w-48 items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium [@media(pointer:coarse)]:min-h-11 hover:bg-muted data-[state=open]:bg-muted"
           >
             <Users className="size-3.5 shrink-0 text-muted-foreground" aria-hidden />
-            <span className="truncate">{summary}</span>
+            <span className="truncate">{t("Público: {publico}", { publico: summary })}</span>
             <ChevronDown className="size-3 shrink-0 text-muted-foreground" aria-hidden />
           </button>
         </PopoverTrigger>

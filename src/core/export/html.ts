@@ -25,6 +25,7 @@ import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safe
 import { liftResult } from "./resultado.js";
 import { colorSpanOpen } from "./textColors.js";
 import { DEFAULT_TEXT, fontFacesCss, themeCss } from "./theme.js";
+import { TOC_SEARCH_CSS, TOC_SEARCH_SCRIPT, tocSearchHtml } from "./tocSearch.js";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
@@ -66,12 +67,13 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
 <style>${fontFacesCss(meta.theme, inline)}
-${CSS}${extraCss(meta)}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}${inline.map((f) => `[data-font="${f.id}"]{font-family:${fontStack(f)}}`).join("")}</style>
+${CSS}${TOC_SEARCH_CSS}${extraCss(meta)}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}${inline.map((f) => `[data-font="${f.id}"]{font-family:${fontStack(f)}}`).join("")}</style>
 </head>
 <body>
 <div class="layout">
 <nav class="toc" id="sumario" aria-label="${L.toc}">
 ${logoImg}<p class="toc-title">${esc(meta.title)}</p>
+${tocSearchHtml(L)}
 <details open>
 <summary>${L.toc}</summary>
 <ol>
@@ -88,6 +90,7 @@ ${sections}
 ${foot ? `<footer class="colophon">${foot}</footer>` : ""}
 </main>
 </div>
+<script>${TOC_SEARCH_SCRIPT}</script>
 </body>
 </html>
 `;

@@ -36,8 +36,11 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
   const approved = flattenItems(studio.manual?.pages ?? []).filter((p) => ["aprovado", "publicado"].includes(p.status)).length;
   // Sem página aprovada a opção fica desligada, mesmo que tenha sido marcada antes.
   const onlyApprovedOn = onlyApproved && approved > 0;
+  const pinnedCount = flattenItems(studio.manual?.pages ?? []).filter((p) => p.published).length;
   const audiences = studio.manual?.audiences ?? [];
-  const [audience, setAudience] = useState("");
+  // Pré-seleciona o público visto agora; a pessoa pode trocar só para este export.
+  const [chosen, setChosen] = useState<string | null>(null);
+  const audience = chosen ?? studio.viewAs;
   const audienceOn = audiences.includes(audience) ? audience : "";
   const [appearanceOpen, setAppearanceOpen] = useState(false);
   const appearanceBtn = useRef<HTMLButtonElement>(null);
@@ -75,6 +78,7 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
         if (!next && busy) return;
         onOpenChange?.(next);
         if (next) return;
+        setChosen(null);
         setResult(null);
         setError(null);
       }}
@@ -95,7 +99,11 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
       >
         <DialogHeader className="px-6 pt-6 pr-12 pb-4">
           <DialogTitle className="font-display text-xl font-extrabold tracking-tight">{t("Exportar manual")}</DialogTitle>
-          <DialogDescription>{t('Cada página entra com a "Versão do manual" ou, sem ela, com o texto atual.')}</DialogDescription>
+          <DialogDescription>
+            {pinnedCount > 0
+              ? tn(pinnedCount, "{n} página usa versão fixada.", "{n} páginas usam versão fixada.")
+              : t("Cada página entra com o texto atual.")}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto px-6 pb-4">
@@ -152,8 +160,8 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
 
           {audiences.length > 0 && (
             <label htmlFor="para-quem" className="grid gap-1.5 text-sm">
-              <span className="font-bold">{t("Público do export")}</span>
-              <Select value={audienceOn || TODOS} onValueChange={(v) => setAudience(v === TODOS ? "" : v)} disabled={busy}>
+              <span className="font-bold">{t("Visualizar como")}</span>
+              <Select value={audienceOn || TODOS} onValueChange={(v) => setChosen(v === TODOS ? "" : v)} disabled={busy}>
                 <SelectTrigger id="para-quem">
                   <SelectValue />
                 </SelectTrigger>

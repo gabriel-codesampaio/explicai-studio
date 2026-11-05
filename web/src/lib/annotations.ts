@@ -185,10 +185,10 @@ const KEY_STEP: Record<string, [number, number]> = {
   ArrowDown: [0, 1],
 };
 
-/** Seta `id` deslocada pela tecla de seta: 1% da imagem, 5% com Shift. Null se a tecla ou a marcação não servem. */
+/** Marcação `id` deslocada pela tecla de seta: 1% da imagem, 5% com Shift. Null se a tecla ou a marcação não servem. */
 export function nudge(ann: Annotations, id: string, key: string, big: boolean): Annotations | null {
   const dir = KEY_STEP[key];
-  if (!dir || !ann.arrows.some((a) => a.id === id)) return null;
+  if (!dir || !findItem(ann, id)) return null;
   const step = big ? 0.05 : 0.01;
   return moveAnnotation(ann, id, "move", dir[0] * step, dir[1] * step);
 }

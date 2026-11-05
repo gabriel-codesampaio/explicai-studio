@@ -43,7 +43,8 @@ describe("marcações de imagem", () => {
     };
     expect(nudge(ann, "a", "ArrowRight", false)?.arrows[0]?.to.x).toBeCloseTo(0.41);
     expect(nudge(ann, "a", "ArrowUp", true)?.arrows[0]?.from.y).toBeCloseTo(0.15);
-    expect(nudge(ann, "m", "ArrowLeft", false)).toBeNull();
+    expect(nudge(ann, "m", "ArrowLeft", false)?.markers[0]?.x).toBeCloseTo(0.49);
+    expect(nudge(ann, "zz", "ArrowLeft", false)).toBeNull();
     expect(nudge(ann, "a", "a", false)).toBeNull();
   });
 

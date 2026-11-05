@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: M
-- Status: aberto
+- Status: fechado
 - Agente: frontend
 - Origem: [critique 2026-11-05 (27/40)](../../.impeccable/critique/2026-11-05T12-50-20Z__web-src-app-tsx.md)
 
@@ -21,4 +21,4 @@ A mesma coisa tem vários nomes e o aviso acima do título empurra o texto. No d
 Teste de unidade do que for lógica; conferir a tela com script Playwright (uma largura, um tema) e medir com `evaluate_script`/script.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Fechado na branch feat/ui-versoes-publico. Nome único "Fixada no manual" (en: Pinned in manual); aviso virou selo ao lado do título com "Usar texto atual"; diálogo Versões com Ver, Restaurar, Fixar/Desafixar e Remover no menu ⋯; Exportar mostra só "N páginas usam versão fixada". Mesmo comportamento. Teste e e2e atualizados (e2e não rodado aqui).
