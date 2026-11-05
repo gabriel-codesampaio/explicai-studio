@@ -81,7 +81,9 @@ export function ExportDialog({ open, onOpenChange }: { open?: boolean; onOpenCha
     >
       <DialogTrigger asChild>
         {/* Primário do topo: mais peso que os vizinhos de texto e 44 px em tela de toque. */}
-        <Button className="font-semibold [@media(pointer:coarse)]:h-11">{t("Exportar manual")}</Button>
+        <Button data-passeio="exportar" className="font-semibold [@media(pointer:coarse)]:h-11">
+          {t("Exportar manual")}
+        </Button>
       </DialogTrigger>
       <DialogContent
         className="flex max-h-[90vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg"

@@ -9,6 +9,7 @@ import { DiskConflictBanner } from "@/features/errors/DiskConflictBanner";
 import { NotFoundScreen } from "@/features/errors/NotFoundScreen";
 import { RequestErrorScreen } from "@/features/errors/RequestErrorScreen";
 import { ServerDownScreen } from "@/features/errors/ServerDownScreen";
+import { GuidedTour } from "@/features/help/GuidedTour";
 import { CreateManual } from "@/features/manuals/CreateManual";
 import { PageSearch } from "@/features/pages/PageSearch";
 import { StudioProvider, useStudioContext } from "@/hooks/StudioContext";
@@ -106,6 +107,7 @@ function Shell() {
           )}
         </main>
       </div>
+      {manual && !firstRun && !studio.creatingManual && <GuidedTour />}
       {manual && <PageSearch open={searchOpen} onOpenChange={setSearchOpen} />}
       {/* Acima da linha de status, para o aviso não cobrir o "Salvo às…". */}
       <Toaster theme={theme} position="bottom-right" offset={{ bottom: 56, right: 24 }} />

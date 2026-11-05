@@ -1,7 +1,8 @@
-import { Keyboard, Languages, Palette, Settings, SunMoon, Trash2, Users } from "lucide-react";
+import { Keyboard, Languages, Palette, Route, Settings, SunMoon, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ShortcutsDialog } from "@/features/help/ShortcutsDialog";
+import { TOUR_EVENT } from "@/features/help/tourSteps";
 import { TrashPanel } from "@/features/pages/TrashPanel";
 import { AppearancePanel } from "@/features/settings/AppearancePanel";
 import { AudiencesDialog } from "@/features/settings/AudiencesDialog";
@@ -65,6 +66,9 @@ export function MoreMenu() {
           </DropdownMenuItem>
           <DropdownMenuItem className={TOUCH} onSelect={() => setPanel("shortcuts")}>
             <Keyboard className={ICON} aria-hidden /> {t("Atalhos")}
+          </DropdownMenuItem>
+          <DropdownMenuItem className={TOUCH} onSelect={() => window.dispatchEvent(new Event(TOUR_EVENT))}>
+            <Route className={ICON} aria-hidden /> {t("Passeio guiado")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
