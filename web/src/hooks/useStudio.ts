@@ -3,24 +3,22 @@ import { toast } from "sonner";
 import {
   ApiError,
   api,
-  type CoverPatch,
-  type ExportFormat,
   errorMessage,
-  type FooterPatch,
   isOffline,
   type ManualDetail,
   type ManualSummary,
   type Page,
   type PagePatch,
   type PageStatus,
-  type ThemePatch,
   type TreeItem,
 } from "../lib/api";
 import { conflictDiff } from "../lib/conflictDiff";
 import { readLocation, writeLocation } from "../lib/hashRoute";
 import { locale, t, tn } from "../lib/i18n";
 import { findItem, flattenItems, renameItem } from "../lib/tree";
+import { withTransition } from "../lib/withTransition";
 import { useAutosave } from "./useAutosave";
+import { useManualActions } from "./useManualActions";
 import { useOnFocus } from "./useOnFocus";
 import { useReconnect } from "./useReconnect";
 
@@ -287,7 +285,7 @@ export function useStudio() {
     run(async () => {
       if (!manual || id === page?.id) return;
       await flush();
-      await showPage(manual.slug, id);
+      await withTransition(() => showPage(manual.slug, id));
     });
 
   /** Página nova nasce sem título, com o cursor no campo de título (ver PageView). */
@@ -333,42 +331,6 @@ export function useStudio() {
         action: { label: t("Desfazer"), onClick: () => void restorePage(slug, trashId, item.id) },
       });
     });
-
-  /** Guarda o texto atual como versão. Antes, grava o que ainda está na fila do salvamento automático. */
-  const saveVersion = (note: string) =>
-    run(async () => {
-      if (!manual || !page) return;
-      await flush();
-      await api.saveVersion(manual.slug, page.id, note);
-      toast.success(t("Versão guardada."));
-    });
-
-  const restoreVersion = (versionId: string) =>
-    run(async () => {
-      if (!manual || !page) return;
-      await flush();
-      const restored = await api.restoreVersion(manual.slug, page.id, versionId);
-      await refreshManual(manual.slug);
-      remember(restored);
-      setPage(restored);
-      setRevision((r) => r + 1);
-      toast(t('Versão restaurada. O texto que estava antes foi guardado como "Antes de restaurar".'));
-    });
-
-  /** Escolhe a versão do manual final (`null` volta ao texto atual) e atualiza a árvore, que mostra a escolha. */
-  const publishVersion = (versionId: string | null) =>
-    run(async () => {
-      if (!manual || !page) return;
-      await api.publishVersion(manual.slug, page.id, versionId);
-      await refreshManual(manual.slug);
-    });
-
-  /** Grava o que ainda está na fila e exporta. O diálogo mostra o resultado ou o erro. */
-  const exportManual = async (format: ExportFormat, onlyApproved: boolean, audience?: string) => {
-    if (!manual) throw new Error(t("Abra um manual para exportar."));
-    await flush();
-    return api.exportManual(manual.slug, format, onlyApproved, audience);
-  };
 
   /** Perfis da página aberta. Lista vazia = todos. Grava na hora e atualiza a árvore e a lista de perfis do manual. */
   const audienceQueue = useRef<Promise<void>>(Promise.resolve());
@@ -436,31 +398,16 @@ export function useStudio() {
       await refreshManual(manual.slug);
     });
 
-  /** Cores do manual exportado. Lança se o core recusar a cor: quem chama mostra o motivo no campo. */
-  const setManualTheme = async (patch: ThemePatch) => {
-    if (!manual) return;
-    await api.setTheme(manual.slug, patch);
-    await refreshManual(manual.slug);
-  };
-
-  /** Capa e rodapé do manual exportado. Lançam com o motivo se o core recusar o texto. */
-  const setManualCover = async (patch: CoverPatch) => {
-    if (!manual) return;
-    await api.setCover(manual.slug, patch);
-    await refreshManual(manual.slug);
-  };
-  const setManualFooter = async (patch: FooterPatch) => {
-    if (!manual) return;
-    await api.setFooter(manual.slug, patch);
-    await refreshManual(manual.slug);
-  };
-
-  /** Envia o logo do manual exportado. Lança com o motivo se o core recusar o arquivo. */
-  const uploadManualLogo = async (file: File) => {
-    if (!manual) return;
-    await api.uploadLogo(manual.slug, file);
-    await refreshManual(manual.slug);
-  };
+  const {
+    saveVersion,
+    restoreVersion,
+    publishVersion,
+    exportManual,
+    setManualTheme,
+    setManualCover,
+    setManualFooter,
+    uploadManualLogo,
+  } = useManualActions({ manual, page, run, flush, refreshManual, remember, setPage, setRevision });
 
   const movePage = (id: string, parentId: string | null, index: number) =>
     run(async () => {

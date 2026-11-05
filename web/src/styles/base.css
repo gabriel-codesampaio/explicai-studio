@@ -64,6 +64,18 @@
   }
 }
 
+/* Fade da troca de página no Studio (withTransition). Não vale para o manual exportado. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 120ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 /* Wordmark do logo: o acento do "í" é desenhado aqui, como no brand book. */
 @layer components {
   .wordmark {

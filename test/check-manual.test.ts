@@ -69,4 +69,25 @@ describe("checkManual", () => {
     await addPage(dir, { title: "P", body: "1. Clique.\nResultado: ok." });
     expect((await checkManual(dir)).map((f) => f.kind)).toEqual(["no-image"]);
   });
+
+  it("aceita Resultado em citação logo depois do passo", async () => {
+    const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
+    const { dir } = await createManual(ws, { title: "M", language: "pt-BR" });
+    const ok = await saveAsset(dir, "ok.png", PNG);
+    await appendAnnotations(dir, ok, { markers: [{ x: 0.5, y: 0.5, label: "Botão" }] });
+    await addPage(dir, { title: "Citação", body: `1. Clique.\n> **Resultado:** abre.\n\n![](../${ok})` });
+    expect(await checkManual(dir)).toEqual([]);
+  });
+
+  it("ignora link e imagem dentro de bloco de código", async () => {
+    const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
+    const { dir } = await createManual(ws, { title: "M", language: "pt-BR" });
+    const ok = await saveAsset(dir, "ok.png", PNG);
+    await appendAnnotations(dir, ok, { markers: [{ x: 0.5, y: 0.5, label: "Botão" }] });
+    await addPage(dir, {
+      title: "Código",
+      body: `\`\`\`md\n[x](./nao-existe.md)\n![](../assets/some.png)\n\`\`\`\n\n1. Clique.\nResultado: ok.\n\n![](../${ok})`,
+    });
+    expect(await checkManual(dir)).toEqual([]);
+  });
 });

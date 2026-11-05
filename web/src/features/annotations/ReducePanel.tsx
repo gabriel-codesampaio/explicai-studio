@@ -17,6 +17,17 @@ interface Props {
 
 const kb = (bytes: number) => `${Math.max(1, Math.round(bytes / 1024))} KB`;
 
+/** Lê tamanho e peso. Cada etapa tem a sua mensagem, para dizer qual falhou. */
+async function readImage(src: string) {
+  const res = await fetch(src).catch(() => null);
+  if (!res?.ok) throw new Error(t("Não foi possível carregar a imagem. O servidor não entregou o arquivo."));
+  const blob = await res.blob();
+  const img = await loadImage(src).catch(() => {
+    throw new Error(t("Não foi possível carregar a imagem. O navegador não conseguiu abrir o arquivo."));
+  });
+  return { w: img.naturalWidth, h: img.naturalHeight, bytes: blob.size };
+}
+
 /** Linha "Reduzir imagem": mostra tamanho atual, largura sugerida e peso previsto. Só aparece quando dá para diminuir. */
 export function ReducePanel({ slug, asset, src, pending, inGit, onApplied }: Props) {
   const [info, setInfo] = useState<{ w: number; h: number; bytes: number } | null>(null);
@@ -27,15 +38,17 @@ export function ReducePanel({ slug, asset, src, pending, inGit, onApplied }: Pro
   const [busy, setBusy] = useState(false);
   const [rev, setRev] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const type = redactableType(asset);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: `rev` força reler tamanho e peso depois de reduzir (a src não muda).
   useEffect(() => {
     if (!type) return;
     let live = true;
-    Promise.all([loadImage(src), fetch(src).then((r) => r.blob())])
-      .then(([img, blob]) => live && setInfo({ w: img.naturalWidth, h: img.naturalHeight, bytes: blob.size }))
-      .catch(() => {});
+    setLoadError(null);
+    readImage(src)
+      .then((next) => live && setInfo(next))
+      .catch((e: Error) => live && setLoadError(e.message));
     return () => {
       live = false;
     };
@@ -58,7 +71,21 @@ export function ReducePanel({ slug, asset, src, pending, inGit, onApplied }: Pro
     };
   }, [info, asset, src, width, quality]);
 
-  if (!type || !info) return null;
+  if (!type) return null;
+  if (loadError) {
+    return (
+      <section className="grid gap-2 rounded-md border border-border p-3" aria-label={t("Reduzir imagem")}>
+        <h3 className="rotulo">{t("Reduzir imagem")}</h3>
+        <p role="alert" className="text-sm text-destructive">
+          {loadError}
+        </p>
+        <Button size="sm" variant="outline" onClick={() => setRev((n) => n + 1)} className="[@media(pointer:coarse)]:h-11">
+          {t("Tentar de novo")}
+        </Button>
+      </section>
+    );
+  }
+  if (!info) return null;
   const size = reducedSize(info.w, info.h, width);
   // Imagem que já cabe na largura sugerida não oferece reduzir.
   if (info.w <= SUGGESTED_WIDTH) return null;

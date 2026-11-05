@@ -11,8 +11,8 @@
 Cinco defeitos pequenos do `checkManual` e do `add_pages`, sem perda de dados.
 
 ## Critérios de aceite
-- [ ] `> **Resultado:**` logo depois de um passo não gera falso `step-without-result`.
-- [ ] Link e imagem dentro de bloco de código não entram no `checkManual`.
+- [x] `> **Resultado:**` logo depois de um passo não gera falso `step-without-result`.
+- [x] Link e imagem dentro de bloco de código não entram no `checkManual`.
 - [ ] `add_pages` avisa segredo no título, como `add_page` avisa no corpo.
 - [ ] `add_pages` que falha no meio devolve os títulos com os ids já criados.
 - [ ] `add_pages` tem limite total de profundidade e de tamanho (hoje só 100 nós no nível de cima).
@@ -24,4 +24,6 @@ Cinco defeitos pequenos do `checkManual` e do `add_pages`, sem perda de dados.
 Teste de cada caso em `test/check-manual.test.ts` e no `explicai-mcp/test/`. `npm run check` nos dois repos.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+- Commit: `fix(core): corrigir falsos positivos do checkManual (T-130)` (hash na branch feat/lote-codigo-2).
+- Feito: critérios 1 e 2 (citação `> **Resultado:**` depois do passo; link e imagem em bloco de código ignorados), com testes em `test/check-manual.test.ts`.
+- add_pages (3 critérios) pendentes: repo explicai-mcp.
