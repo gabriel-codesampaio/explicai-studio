@@ -14,7 +14,7 @@ export function ReviewedControl({ reviewed, onMark }: { reviewed: string | undef
         onClick={onMark}
         className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm font-medium [@media(pointer:coarse)]:min-h-11 hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
       >
-        <CheckCheck className="size-3.5 text-muted-foreground" aria-hidden /> {t("Marcar como conferida")}
+        <CheckCheck className="size-3.5 text-muted-foreground max-sm:hidden" aria-hidden /> {t("Marcar como conferida")}
       </button>
     </div>
   );
