@@ -895,6 +895,25 @@ test.describe("rodapés alinhados", () => {
       const b = await retry.boundingBox();
       expect(b?.height ?? 0).toBeGreaterThanOrEqual(44);
     });
+
+    test("375 px: os controles da gaveta de páginas têm alvo de 44 px (T-536)", async ({ page, request }) => {
+      const { slug } = await setup(request, "Manual Alvos Gaveta", ["Início", "Outra"]);
+      await page.goto(`/#/${slug}`);
+      await page.getByRole("button", { name: /Mostrar as páginas/ }).click();
+      const drawer = page.getByRole("dialog", { name: "Páginas do manual" });
+      await expect(drawer.getByRole("button", { name: "Nova página" })).toBeVisible();
+      const small = await drawer.locator("button:visible").evaluateAll((els) =>
+        els
+          .map((el) => ({
+            n: el.getAttribute("aria-label") || el.textContent?.trim().slice(0, 30),
+            h: { width: (el as HTMLElement).offsetWidth, height: (el as HTMLElement).offsetHeight },
+          }))
+          .filter(({ h }) => h.height < 44 || h.width < 44)
+          .map(({ n, h }) => `${n} ${Math.round(h.width)}x${Math.round(h.height)}`),
+      );
+      expect(small).toEqual([]);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+    });
   });
 });
 

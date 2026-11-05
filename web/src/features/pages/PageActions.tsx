@@ -39,7 +39,7 @@ const SHIFTS: { shift: Shift; label: string; keys: string; Icon: typeof ArrowUp 
 ];
 
 const iconButton =
-  "grid size-7 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary";
+  "grid size-7 pointer-coarse:size-11 place-items-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground data-[state=open]:bg-secondary";
 
 /** Só monta com o submenu aberto: calcular os 4 destinos em toda linha custava O(n) por linha, a cada render. */
 function ShiftItems({ itemId, getPages, onAction }: Pick<Props, "getPages" | "onAction"> & { itemId: string }) {

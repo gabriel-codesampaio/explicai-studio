@@ -89,7 +89,7 @@ const TreeRow = memo(function TreeRow({
         tabIndex={tabStop ? 0 : -1}
         aria-current={selected ? "page" : undefined}
         onClick={() => onSelect(item.id)}
-        className="flex min-w-0 flex-1 items-center py-1.5 pl-2 text-left text-[14.5px]"
+        className="flex min-w-0 flex-1 items-center py-1.5 pl-2 text-left text-[14.5px] pointer-coarse:min-h-11"
       >
         {num && (
           <span aria-hidden className="mr-1.5 inline-block shrink-0 font-mono text-xs tabular-nums text-primary">
