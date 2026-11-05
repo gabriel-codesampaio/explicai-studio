@@ -250,6 +250,20 @@ it("manual em inglês sai com os textos da exportação em inglês", async () =>
   expect(html).not.toContain("no description");
 });
 
+describe("exportação: ícone e landmarks", () => {
+  it("HTML tem favicon inline na cor de destaque e navs com nome único", async () => {
+    const m = await createManual(workspace, { title: "Landmarks", language: "pt-BR" });
+    await addPage(m.dir, { title: "Um", body: "a" });
+    await addPage(m.dir, { title: "Dois", body: "b" });
+    await setManualTheme(m.dir, { accent: "#aa3300" });
+    const html = await readFile(path.join(m.dir, (await exportManual(m.dir, "html")).file), "utf8");
+    expect(html).toMatch(/<link rel="icon" href="data:image\/svg\+xml,[^"]*%23aa3300/);
+    const labels = [...html.matchAll(/<nav [^>]*aria-label="([^"]+)"/g)].map((x) => x[1]);
+    expect(labels.length).toBeGreaterThanOrEqual(3);
+    expect(new Set(labels).size).toBe(labels.length);
+  });
+});
+
 describe("exportação: cor do texto", () => {
   const body =
     'Clique em <span data-color="red">**Excluir**</span>, <span data-color="hotpink">rosa</span> e <span style="x">solto</span>.';

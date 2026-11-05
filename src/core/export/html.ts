@@ -24,13 +24,19 @@ import { type Labels, labelsFor } from "./labels.js";
 import { assetFromSrc, headingAnchor, type ImageInfo, pageAnchor, pageLink, safeHref } from "./refs.js";
 import { liftResult } from "./resultado.js";
 import { colorSpanOpen } from "./textColors.js";
-import { DEFAULT_TEXT, fontFacesCss, themeCss } from "./theme.js";
+import { DEFAULT_ACCENT, DEFAULT_TEXT, fontFacesCss, themeCss } from "./theme.js";
 import { TOC_SEARCH_CSS, TOC_SEARCH_SCRIPT, tocSearchHtml } from "./tocSearch.js";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
 
 /** Um arquivo HTML com o manual inteiro: sumário ao lado, uma seção por página, marcações sobre os prints. */
+/** Ícone inline (quadrado arredondado na cor de destaque): evita o 404 de /favicon.ico. */
+function faviconHref(accent: string | undefined): string {
+  const c = accent && HEX.test(accent) ? accent : DEFAULT_ACCENT;
+  return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='${c.replace("#", "%23")}'/%3E%3C/svg%3E`;
+}
+
 export function renderHtml(collected: Collected, images: Map<string, ImageInfo>, logo: string | null = null): string {
   const { meta, pages } = collected;
   const L = labelsFor(meta.language);
@@ -66,6 +72,7 @@ export function renderHtml(collected: Collected, images: Map<string, ImageInfo>,
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="generator" content="Explicaí Studio">
 <title>${esc(meta.title)}</title>
+<link rel="icon" href="${faviconHref(meta.theme?.accent)}">
 <style>${fontFacesCss(meta.theme, inline)}
 ${CSS}${TOC_SEARCH_CSS}${extraCss(meta)}${styles.length ? ANNOTATION_STYLE_CSS : ""}${styles.some((st) => st.border) ? ANNOTATION_BORDER_CSS : ""}${themeCss(meta.theme)}${inline.map((f) => `[data-font="${f.id}"]{font-family:${fontStack(f)}}`).join("")}</style>
 </head>
@@ -202,7 +209,7 @@ ${this.parser.parse(callout.body)}</div>
   return `<section class="page" id="${pageAnchor(page.id)}">
 <h${titleLevel} class="page-title"><span class="num">${page.number}</span> ${esc(page.title)}</h${titleLevel}>
 <div class="page-body">${body}</div>
-<nav class="page-nav" aria-label="${L.pageNav}">
+<nav class="page-nav" aria-label="${L.pageNav}: ${esc(page.title)}">
 ${prev ? `<a rel="prev" href="#${pageAnchor(prev.id)}">← ${L.prev}: ${esc(prev.title)}</a>` : ""}<a class="back" href="#sumario">${L.backToToc}</a>${next ? `<a rel="next" href="#${pageAnchor(next.id)}">${L.next}: ${esc(next.title)} →</a>` : ""}
 </nav>
 </section>`;
