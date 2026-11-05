@@ -76,6 +76,23 @@
   }
 }
 
+/* Passeio guiado: o balão desliza de um alvo ao outro e o alvo pulsa. Com reduced-motion, a regra global zera tudo. */
+[data-radix-popper-content-wrapper]:has(> .passeio) {
+  transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[data-passeio-alvo] {
+  border-radius: var(--radius);
+  animation: passeio-alvo 1.4s ease-out 2;
+}
+@keyframes passeio-alvo {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--cobalto) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--cobalto) 0%, transparent);
+  }
+}
+
 /* Wordmark do logo: o acento do "í" é desenhado aqui, como no brand book. */
 @layer components {
   .wordmark {
