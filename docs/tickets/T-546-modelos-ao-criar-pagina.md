@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: M
-- Status: aberto
+- Status: feito (aguardando revisão de design)
 - Agente: frontend
 - Origem: [relatório de features 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 7 (esforço P, risco B)
 
@@ -33,4 +33,8 @@ e2e: criar página em cada modelo e conferir o texto; teste de unidade do conte�
 `docs/marca-resumo.md`; revisão de voz com `humanizer`.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+Feito na branch `feat/modelos-ao-criar-pagina`.
+- "Nova página" segue criando em branco, num clique. Ao lado, um menu (botão "Escolher um modelo de página") lista Em branco, Tarefa passo a passo e Referência de campos. O modelo é só o corpo inicial enviado no POST de criar página; sem rota, flag nem formato novo.
+- Conteúdo em `web/src/lib/templates.ts`, no idioma do manual (como o "Resultado:"), não da interface. Rótulos do menu seguem a interface.
+- `check` passou a aceitar "Result:" (manual em inglês já gerava esse rótulo e era apontado).
+- Ficou de fora: menu para subpágina (`addChild` da árvore) e "Criar a primeira página"; seguem em branco. Modelos do usuário.
