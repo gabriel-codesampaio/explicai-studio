@@ -23,3 +23,4 @@ O botão "Exportar manual" mostra um número (achados do checkManual) sem dizer 
 
 ## Registro
 Feito em `feat/export-achados`.
+- 2026-11-05: O tipo `not-reviewed` saiu com a remoção da feature "conferida" (T-545).
