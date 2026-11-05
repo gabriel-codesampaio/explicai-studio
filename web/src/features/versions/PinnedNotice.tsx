@@ -1,12 +1,12 @@
 import { t } from "@/lib/i18n";
 
 /**
- * Selo ao lado do título da página fixada: o manual final usa a versão guardada, então o que se
+ * Selo da página fixada, logo abaixo do título: o manual final usa a versão guardada, então o que se
  * escreve aqui só entra nele quando a pessoa volta ao texto atual.
  */
 export function PinnedNotice({ onUseCurrent }: { onUseCurrent: () => void }) {
   return (
-    <div className="mt-2 flex shrink-0 items-center gap-2 text-[13px]">
+    <div className="mb-3 flex items-center gap-2 text-[13px]">
       <span className="rounded-sm bg-marca px-1.5 py-0.5 text-xs font-bold whitespace-nowrap text-[#151a33]">
         {t("Fixada no manual")}
       </span>

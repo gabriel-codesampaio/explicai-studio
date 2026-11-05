@@ -111,7 +111,6 @@ export function PageView({ manual, page }: Props) {
                 onEnter={() => editor?.commands.focus("start")}
               />
             </div>
-            {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
             {!readOnly && (
               <>
                 {/* Edita a capa do manual, não o título da página. Sempre ocupa o lugar: aparecer não desloca nada. */}
@@ -137,6 +136,9 @@ export function PageView({ manual, page }: Props) {
               </>
             )}
           </div>
+
+          {/* Selo logo abaixo do título: ele não perde largura nem desce. */}
+          {pinned && <PinnedNotice onUseCurrent={() => void studio.publishVersion(null)} />}
 
           {empty && !readOnly && <FirstStepHint onExport={() => setExportOpen(true)} />}
 
