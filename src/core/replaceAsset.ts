@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { copyFile, mkdir, readdir, readFile, rename, rm, rmdir, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rename, rm, rmdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { assetFile } from "./assets.js";
 import { ExplicaiError } from "./errors.js";

@@ -71,8 +71,11 @@ it("alvo oculto aponta para o botão do menu lateral, se ele aparece", () => {
   const box = (id: string, w: number) => {
     document.body.innerHTML = `<i id="alvo"></i><b data-passeio="menu"></b>`;
     const rect = (width: number) => () => ({ width, height: width }) as DOMRect;
-    document.getElementById("alvo")!.getBoundingClientRect = rect(0);
-    document.querySelector("[data-passeio=menu]")!.getBoundingClientRect = rect(w);
+    for (const [el, width] of [
+      [document.getElementById("alvo"), 0],
+      [document.querySelector("[data-passeio=menu]"), w],
+    ] as const)
+      if (el) el.getBoundingClientRect = rect(width);
     return findTarget({ target: `#${id}`, title: "", body: "" });
   };
   expect(box("alvo", 40)?.getAttribute("data-passeio")).toBe("menu");
