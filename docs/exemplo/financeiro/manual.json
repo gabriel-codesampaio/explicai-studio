@@ -21,7 +21,5 @@
       ]
     }
   ],
-  "audiences": [
-    "administrador"
-  ]
+  "audiences": ["administrador"]
 }
