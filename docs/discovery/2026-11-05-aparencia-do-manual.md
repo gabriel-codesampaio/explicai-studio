@@ -1,5 +1,7 @@
 # Discovery: experiência da modal "Aparência do manual" (2026-11-05)
 
+Status: **aceito**. Opção A aprovada pela pessoa, com as decisões 1 a 3 (padrão nanquim `#151a33` com linha no CHANGELOG; cores dos títulos recolhidas). Tickets: [T-565](../tickets/T-565-amostra-da-aparencia-fixa-em-lg.md), [T-566](../tickets/T-566-cor-unica-dos-titulos-e-padrao-nanquim.md), [T-567](../tickets/T-567-erro-de-cor-sem-pulo-de-layout.md), [T-568](../tickets/T-568-foco-volta-ao-ajustes-ao-fechar.md).
+
 Pedido: melhorar o uso da modal "Aparência do manual" (Ajustes). Só leitura: nenhum código alterado, nenhum ticket criado. Complementa o item 5 das sugestões de [UI/UX e features do 1.0.0](2026-11-05-relatorio-ui-ux-e-features.md) ("dividir em abas") e não repete [aparência e públicos](archives/aparencia-sidebar-e-perfis.md) nem [capa e rodapé](archives/capa-e-rodape.md). O `caderno.md` não tinha entrada sobre isso.
 
 ## Problema
