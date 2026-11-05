@@ -15,6 +15,9 @@ interface Props {
   onEditLink: () => void;
 }
 
+// No celular (T-524) a barra vira para baixo em vez de cobrir a de formatação; no desktop fica por cima dela, sem cobrir o texto (T-165).
+const NARROW = () => window.matchMedia("(max-width: 639px)").matches;
+
 const MENU_KEY = "selectionMenu";
 
 const Divider = () => <span className="mx-1 h-5 w-px bg-border" aria-hidden />;
@@ -39,8 +42,8 @@ export function SelectionMenu({ editor, pickImage, onEditLink }: Props) {
     <BubbleMenu
       editor={editor}
       pluginKey={MENU_KEY}
-      // Abre para cima e só vira para baixo se subiria sobre a barra fixa de formatação (T-524); antes, sem flip (T-165), cobria essa barra.
-      options={{ placement: "top-start", offset: 8, flip: () => ({ padding: collisionPadding() }) }}
+      // Abre para cima; em tela estreita vira para baixo se subiria sobre a barra fixa de formatação.
+      options={{ placement: "top-start", offset: 8, flip: NARROW() ? () => ({ padding: collisionPadding() }) : false }}
       // Só em texto selecionado: o print selecionado tem o seu próprio menu (ImagePopover), e no bloco de código não há cor.
       shouldShow={({ view, state, from, to }) =>
         view.hasFocus() &&

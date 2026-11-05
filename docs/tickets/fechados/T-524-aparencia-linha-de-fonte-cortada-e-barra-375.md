@@ -15,3 +15,4 @@ Linha 'Source Serif 4 / Lora' quebra e corta no rodapé do diálogo a 1024x737; 
 ## Registro
 - Achado na revisão/matriz da 1.0.0; não bloqueia a versão.
 - Fechado na branch fix/ultimos-1-0. Medida: 1024x737 última linha de fontes visível, base 711 > 699 -> 690 <= 720 (diálogo max-h 100dvh-2rem); 375 sobreposição das barras 7502 px2 -> 0 (seleção vira para baixo ao colidir com a barra fixa).
+- Correção (e2e do T-165 falhou no CI): a barra só vira para baixo em tela estreita (<640 px); no desktop continua por cima da barra fixa, como o T-165 exige. 375: interseção 7502 -> 0.
