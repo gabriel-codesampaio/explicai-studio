@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: M
-- Status: feito
+- Status: removido por decisão da pessoa
 - Agente: frontend
 - Origem: achado de revisão dos PRs de 2026-11-05
 
@@ -17,3 +17,6 @@ Ao marcar a página como conferida, a data muda na tela e o leitor de tela não 
 
 ## Como verificar
 Teste de unidade: a região existe e muda de texto depois do clique.
+
+## Registro
+- 2026-11-05: Removido por decisão da pessoa em 2026-11-05: a feature "conferida" (botão, "Conferida em", filtro "Só não conferidas", campo `reviewed`, achado `not-reviewed`) saiu na branch chore/remove-conferida. Manual antigo com `reviewed:` no frontmatter abre e o campo volta ao arquivo como campo desconhecido.

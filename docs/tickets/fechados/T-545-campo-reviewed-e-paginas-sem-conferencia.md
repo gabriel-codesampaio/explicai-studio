@@ -2,7 +2,7 @@
 
 - Prioridade: P1
 - Tamanho: G
-- Status: feito
+- Status: removido por decisão da pessoa
 - Agente: core (+ frontend)
 - Origem: [relatório de features 2026-11-05](../discovery/2026-11-05-relatorio-ui-ux-e-features.md), feature 6 (esforço P, risco B)
 
@@ -38,3 +38,4 @@ Decidido em 2026-11-05: sim, campo `reviewed` no frontmatter (em inglês, como `
 ## Registro
 - 2026-11-05: Decidido em 2026-11-05: sim, campo `reviewed` no frontmatter (em inglês, como `status` e `audience`), rótulo "Conferida em" na interface.
 Feito em `feat/pagina-conferida`. Núcleo: `src/core/reviewed.ts` (`isReviewedDate`, `isStale`, 90 dias), `Page.reviewed`/`PageTreeNode.reviewed`, `updatePage({ reviewed })` valida AAAA-MM-DD, data inválida no arquivo vale como sem data e volta intacta (fica em `extra`). Achado `not-reviewed` no `checkManual`. UI: `ReviewedControl` ao lado do status (rótulo "Conferida em …" e botão), botão "Só não conferidas" na árvore (`staleOnly`, mantém a mãe de página pendente). Doc em `docs/manual-format.md`. Testes: `test/reviewed.test.ts`, `web/test/reviewed.test.ts`, `e2e/studio.conferida.e2e.ts`; e2e do checar e testes de check ajustados (página nova agora tem o achado). Fora: marcar conferida em lote, N configurável, ferramenta MCP própria (o MCP preserva o campo pelo núcleo).
+- 2026-11-05: Removido por decisão da pessoa em 2026-11-05: a feature "conferida" (botão, "Conferida em", filtro "Só não conferidas", campo `reviewed`, achado `not-reviewed`) saiu na branch chore/remove-conferida. Manual antigo com `reviewed:` no frontmatter abre e o campo volta ao arquivo como campo desconhecido.

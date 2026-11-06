@@ -1,14 +1,21 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, expect, it } from "vitest";
-import { StatusDot, StatusLegend } from "../src/features/pages/StatusMenu";
+import { StatusDot, StatusMark } from "../src/features/pages/StatusMenu";
 
 afterEach(cleanup);
 
-it("legenda nomeia as três etapas com bolinha e tem title", () => {
-  const { container } = render(<StatusLegend />);
-  for (const nome of ["Em revisão", "Aprovado", "Publicado"]) expect(screen.getByText(nome)).toBeTruthy();
-  expect(container.querySelector("p")?.getAttribute("title")).toMatch(/rascunho/);
+it("marca da árvore diz a etapa em title e em texto para leitor de tela, sem legenda", () => {
+  for (const [status, nome] of [
+    ["revisao", "Em revisão"],
+    ["aprovado", "Aprovado"],
+    ["publicado", "Publicado"],
+  ] as const) {
+    const { container } = render(<StatusMark status={status} />);
+    expect(container.querySelector("span")?.getAttribute("title")).toBe(nome);
+    expect(screen.getByText(nome).className).toContain("sr-only");
+    cleanup();
+  }
 });
 
 it("publicado tem forma própria (anel com miolo), diferente de cheia e de anel vazio", () => {

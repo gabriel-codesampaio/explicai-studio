@@ -6,7 +6,6 @@ import { ExplicaiError } from "./errors.js";
 import { joinFrontmatter, splitFrontmatter } from "./frontmatter.js";
 import { atomicWrite, readText, relativePosix, resolveInside, uniquePath } from "./fs.js";
 import { inQueue, PAGES_DIR, readManual, updateManual } from "./manuals.js";
-import { isReviewedDate } from "./reviewed.js";
 import { slugify } from "./text.js";
 import { childrenOf, clampIndex, findIn, findNode, flatten } from "./tree.js";
 import { PAGE_STATUSES, type Page, type PageNode, type PageStatus } from "./types.js";
@@ -75,8 +74,6 @@ export interface PageTreeNode {
   file: string;
   /** Perfis que veem a página; sem o campo, todos. */
   audience?: string[];
-  /** Dia da última conferência (`reviewed`, AAAA-MM-DD). */
-  reviewed?: string;
   /** Preenchido quando o arquivo da página sumiu ou está com erro: a página aparece, com o aviso. */
   problem?: string;
   /** Versão escolhida para o manual final, quando há uma (ver versions.ts). */
@@ -99,8 +96,8 @@ export async function readPageTree(dir: string, opts?: ReadOpts): Promise<PageTr
           children: await walk(n.children),
         };
         try {
-          const { title, status, audience, reviewed } = await readPageFile(dir, n.file);
-          return { ...base, title, status, ...(audience ? { audience } : {}), ...(reviewed ? { reviewed } : {}) };
+          const { title, status, audience } = await readPageFile(dir, n.file);
+          return { ...base, title, status, ...(audience ? { audience } : {}) };
         } catch (err) {
           return { ...base, title: "", status: "rascunho" as const, problem: err instanceof Error ? err.message : String(err) };
         }
@@ -119,7 +116,6 @@ async function readPageFile(
   body: string;
   rev: string;
   audience?: string[];
-  reviewed?: string;
   extra?: Record<string, unknown>;
 }> {
   let text: string;
@@ -136,9 +132,6 @@ async function readPageFile(
     const status = PAGE_STATUSES.includes(data.status as PageStatus) ? (data.status as PageStatus) : "rascunho";
     const rev = createHash("sha256").update(text).digest("hex").slice(0, 16);
     const { id: _id, title, status: _s, audience, ...extra } = data;
-    // Data inválida vale como sem data, mas fica em `extra` e volta como veio.
-    const reviewed = isReviewedDate(extra.reviewed) ? extra.reviewed : undefined;
-    if (reviewed) delete extra.reviewed;
     if (!isValidAudience(audience)) throw new Error("audience deve ser um texto ou uma lista de textos, como [admin, operador].");
     const aud = parseAudience(audience);
     return {
@@ -147,7 +140,6 @@ async function readPageFile(
       body,
       rev,
       ...(aud ? { audience: aud } : {}),
-      ...(reviewed ? { reviewed } : {}),
       ...(Object.keys(extra).length ? { extra } : {}),
     };
   } catch (err) {
@@ -165,7 +157,7 @@ async function readPageFile(
 export async function updatePage(
   dir: string,
   id: string,
-  patch: { title?: string; body?: string; status?: PageStatus; audience?: string[] | null; reviewed?: string },
+  patch: { title?: string; body?: string; status?: PageStatus; audience?: string[] | null },
   opts: {
     fileName?: "keep" | "sync" | undefined;
     ifMatch?: string | undefined;
@@ -178,12 +170,8 @@ export async function updatePage(
   if (patch.status !== undefined && !PAGE_STATUSES.includes(patch.status)) {
     throw new Error(`Status inválido: ${patch.status}. Use ${PAGE_STATUSES.join(", ")}.`);
   }
-  if (patch.reviewed !== undefined && !isReviewedDate(patch.reviewed)) {
-    throw new Error(`Data inválida em reviewed: ${patch.reviewed}. Use AAAA-MM-DD.`);
-  }
   const next: Page = {
     ...page,
-    ...(patch.reviewed === undefined ? {} : { reviewed: patch.reviewed }),
     ...(patch.status === undefined ? {} : { status: patch.status }),
     ...(patch.title === undefined ? {} : { title: patch.title.trim() }),
     ...(patch.body === undefined ? {} : { body: patch.body }),
@@ -283,7 +271,6 @@ async function writePageFile(dir: string, page: Page): Promise<void> {
   const status = page.status === "rascunho" ? {} : { status: page.status };
   const audience = page.audience?.length ? { audience: page.audience } : {};
   // Campos que o Studio não conhece voltam como vieram; os conhecidos vêm por último e vencem.
-  const reviewed = page.reviewed ? { reviewed: page.reviewed } : {};
-  const data = { ...page.extra, id: page.id, title: page.title, ...status, ...audience, ...reviewed };
+  const data = { ...page.extra, id: page.id, title: page.title, ...status, ...audience };
   await atomicWrite(resolveInside(dir, page.file), joinFrontmatter(data, page.body));
 }

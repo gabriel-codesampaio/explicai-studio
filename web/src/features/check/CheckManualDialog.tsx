@@ -87,7 +87,7 @@ export function CheckManualDialog({ slug, onOpenPage, onClose }: Props) {
 
 function FindingRow({ finding, onOpen }: { finding: CheckFinding; onOpen: () => void }) {
   // "A confirmar" é lembrete, não defeito: ícone neutro em vez de alerta. Defeito leva a cor de erro (o formato do ícone também muda, cor não é o único sinal).
-  const reminder = finding.kind === "to-confirm" || finding.kind === "not-reviewed";
+  const reminder = finding.kind === "to-confirm";
   const Icon = reminder ? CircleHelp : AlertTriangle;
   return (
     <button

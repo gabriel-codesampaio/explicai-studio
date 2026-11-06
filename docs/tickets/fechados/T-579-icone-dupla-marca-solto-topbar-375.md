@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: feito
+- Status: removido por decisão da pessoa
 - Agente: frontend
 - Origem: revisão de design do PR #149
 
@@ -21,3 +21,6 @@ A prévia da capa/rodapé no escuro está coberta pelo T-577.
 
 ## Feito
 O ícone já ficava dentro do botão, mas sem borda parecia solto ao lado do texto "Nunca conferida". Abaixo de `sm` ele some (`max-sm:hidden`); o texto do botão basta. Nome acessível e alvo de 44 px em toque ficam como estavam.
+
+## Registro
+- 2026-11-05: Removido por decisão da pessoa em 2026-11-05: a feature "conferida" (botão, "Conferida em", filtro "Só não conferidas", campo `reviewed`, achado `not-reviewed`) saiu na branch chore/remove-conferida. Manual antigo com `reviewed:` no frontmatter abre e o campo volta ao arquivo como campo desconhecido.
