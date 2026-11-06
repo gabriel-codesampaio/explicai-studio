@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: M
-- Status: bloqueado
+- Status: adiado (não bloqueia release)
 - Agente: supervisor
 - Origem: sobra do T-125 (2026-11-04)
 

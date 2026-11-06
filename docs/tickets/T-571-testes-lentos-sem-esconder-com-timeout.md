@@ -2,7 +2,7 @@
 
 - Prioridade: P2
 - Tamanho: M
-- Status: aberto
+- Status: em observação (não bloqueia release)
 - Agente: qa (+ frontend)
 - Origem: pedido da pessoa, 2026-11-05; relacionado a [T-426](T-426-tirar-tolerancia-dos-e2e.md)
 

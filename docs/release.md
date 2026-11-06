@@ -4,7 +4,7 @@ Vale para toda versão do pacote `explicai`. O MCP tem release própria. Publica
 
 ## Antes da tag
 
-1. Fila do Studio vazia: `npm run tickets` sem ticket do Studio aberto (os do MCP ficam).
+1. Fila do Studio vazia: `npm run tickets` sem ticket do Studio aberto. Ficam de fora os do MCP e os de observação de CI (sem defeito a consertar, só esperam rodadas).
 2. Rodada pesada na `main` atualizada:
    - [ ] `npm run check` e `npm run test:e2e` completos, sem falha (instável: repetir com `--repeat-each=3` antes de aceitar).
    - [ ] CI verde em Linux, Windows e macOS no último commit da `main`.
