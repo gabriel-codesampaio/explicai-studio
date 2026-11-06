@@ -39,9 +39,10 @@ async function selectWord(page: Page, container: string) {
       throw new Error("alvo não encontrado");
     });
   await page.mouse.dblclick(box.x, box.y);
-  // O ProseMirror guarda a seleção no selectionchange; dois quadros depois ela já está nele.
   await expect.poll(() => page.evaluate(() => getSelection()?.toString())).toBe("alvo");
-  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+  // T-582: espera o ProseMirror igualar a seleção do navegador (e não dois quadros); uma transação com o cursor antigo apagava a palavra e a barra nunca abria.
+  await settleEditor(page);
+  expect(await page.evaluate(() => getSelection()?.toString())).toBe("alvo");
 }
 
 async function typeAndSelect(page: Page, text: string) {
