@@ -99,4 +99,16 @@ describe("checkManual", () => {
     });
     expect(await findings(dir)).toEqual([]);
   });
+
+  it("acusa #âncora sem título na página e aceita a que existe", async () => {
+    const ws = await mkdtemp(path.join(tmpdir(), "expl-"));
+    const { dir } = await createManual(ws, { title: "M", language: "pt-BR" });
+    const page = await addPage(dir, {
+      title: "P",
+      body: "## Relatório diário\n\n[ok](#relatorio-diario) [ok2](#Relat%C3%B3rio-di%C3%A1rio) [x](#relatorio)\n\n```\n[c](#no-codigo)\n```",
+    });
+    expect(await findings(dir)).toEqual([
+      { pageId: page.id, title: "P", kind: "dead-link", detail: "Âncora sem título na página: #relatorio" },
+    ]);
+  });
 });
