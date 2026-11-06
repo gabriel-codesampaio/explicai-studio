@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: M
-- Status: aberto
+- Status: bloqueado
 - Agente: supervisor
 - Origem: sobra do T-125 (2026-11-04)
 
@@ -18,4 +18,8 @@ O T-125 acabou no CodeLab porque o banco do app de terceiro recusou a credencial
 Abrir o manual no Studio com a pessoa.
 
 ## Registro
-<!-- preenchido ao fechar: commit, o que foi feito, o que ficou de fora -->
+2026-11-06, tentativa parou no bloqueio. App: KingFix (`C:\Users\PC\Desktop\Kingfix\kingfix-app`; CLAUDE.md lido, nada alterado, `.env` e `senhas.txt` não abertos). Stack Next 15 + Prisma/Postgres + Clerk + Stripe. Bloqueios concretos:
+1. Postgres local: não há Postgres instalado; o Docker existe mas o daemon está parado (`failed to connect to the docker API ... dockerDesktopLinuxEngine`). Subir exige iniciar o Docker Desktop e baixar a imagem `postgres`: ok da pessoa, com o agente `seguranca` antes.
+2. Login: as telas autenticadas passam por Clerk (`@clerk/nextjs` 6) e exigem chaves de um projeto Clerk; sem elas o middleware não sobe. As chaves reais estão no `.env` do app (proibido usar). O modo sem chaves do Clerk cria um projeto de desenvolvimento na nuvem da Clerk: efeito externo, precisa de ok.
+3. O repositório de terceiros já traz um manual à mão (`manual/manual-administrador.md`, ~37 KB) para a comparação, quando houver app rodando.
+Para destravar: a pessoa inicia o Docker Desktop e libera uma chave Clerk de teste (ou aceita o modo sem chaves); aí o ticket segue (cópia do app em pasta temporária, banco descartável, `prisma migrate` + `seed`, dois perfis cliente/admin).
