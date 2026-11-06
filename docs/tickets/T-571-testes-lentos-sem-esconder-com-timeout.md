@@ -37,3 +37,4 @@ Parcial (2026-11-05, Windows local, vitest --maxWorkers=2, 905 testes, 0 falhas)
 - Causa do `ECONNREFUSED :3000`: `web/test/exportAudience.test.tsx` montava o ExportDialog com `useManualCheck` real (fetch). Agora mocka o hook; o log fica limpo.
 - `testTimeout` voltou a 10 s; suíte passa.
 - Fica: medir no Windows do CI (3 execuções) e reduzir pageTreeNumbers/pageTreeMemo (medir a função pura) se ainda passarem de 5 s lá. Ticket segue aberto.
+- 2026-11-06: contagem de CI da main seguida sem falha de tempo: 2 (#160, #161; o #159 falhou 1 e2e, não de tempo: T-582). Faltam 1 para os 3 seguidos; não confirmei por job (Windows/macOS/Linux) além do conclusion geral. Segue aberto.
