@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto (conserto aplicado, em observação)
+- Status: em observação (não bloqueia release)
 - Agente: qa
 - Origem: CI da main, push do #159 (2026-11-06)
 

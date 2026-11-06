@@ -179,7 +179,10 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, page
           ) : (
             <ul ref={list} className="grid gap-1">
               {items.map((v) => (
-                <li key={v.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md px-2 py-2 hover:bg-muted">
+                <li
+                  key={v.id}
+                  className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 rounded-md px-2 py-2 hover:bg-muted"
+                >
                   <span className="grid min-w-32 flex-1 basis-40 leading-tight">
                     <span className="flex items-center gap-2 text-sm">
                       <span className="truncate">{noteLabel(v.note)}</span>
@@ -207,7 +210,7 @@ export function VersionsPanel({ slug, pageId, onSave, onRestore, onPublish, page
                     </fieldset>
                   ) : (
                     // Um grupo só: se faltar largura, as ações descem juntas, na mesma linha.
-                    <div className="ml-auto flex items-center gap-1">
+                    <div className="ml-auto flex flex-wrap items-center gap-1">
                       <Button variant="ghost" size="sm" className={TOUCH} onClick={() => void view(v.id)}>
                         <Eye aria-hidden /> {t("Ver")}
                       </Button>

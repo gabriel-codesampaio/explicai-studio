@@ -6,17 +6,36 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-11-06
+
 ### Adicionado
 
-- `AnnotationsPatch` (`explicai/core`) aceita `style` em cada item, e os tipos do estilo saem de `explicai/core`; é o que o `annotate_image` do MCP usa. / `AnnotationsPatch` takes a per-item `style`; style types are exported from `explicai/core`.
+- Checagem do manual no Studio: os achados do `check` aparecem explicados no diálogo Exportar e dá para ver tudo antes de exportar. A checagem também acusa `#âncora` quebrada.
+- Linha de comando: subcomandos `check` e `export`.
+- Busca por texto no Ctrl+P e campo de busca no sumário do HTML exportado.
+- Modelos ao criar uma página; comparar uma versão guardada com o texto atual; data de conferência por página.
+- Trocar uma imagem mantendo as marcações, com Desfazer.
+- Marcações pelo teclado, foco e cursor do canvas visíveis sobre qualquer imagem, tamanho atual destacado no seletor de tamanho.
+- Exportação Markdown gera `llms.txt` e um arquivo por página em `paginas/`.
+- `AnnotationsPatch` (`explicai/core`) aceita `style` em cada item, e os tipos do estilo saem de `explicai/core`; é o que o `annotate_image` do MCP usa.
 
 ### Alterado
 
 - Aparência do manual: a cor dos títulos é uma só ("Cor dos títulos"), com "Ajustar por nível" para mudar cada um. O padrão dos títulos passou de preto (`#000000`) para o nanquim da marca (`#151a33`): manuais que nunca escolheram cor de título saem no HTML e no PDF com os títulos em nanquim. Quem quer o preto escolhe `#000000`.
+- Público tem um nome só na interface e vem pré-selecionado no Exportar; Versões fica mais enxuta ("Fixada no manual").
+- Em celular (toque), botões, campos e itens de lista têm pelo menos 44 px de alvo.
+- Lote de acabamento de UI/UX nas telas Versões, Aparência, editor de imagem e textos.
+
+### Corrigido
+
+- Lixeira move os arquivos antes de tirar a página da árvore; nomes de arquivo novos são reservados contra criação simultânea.
+- HTML exportado: ícone inline e nome único em cada `nav` (acessibilidade).
+- Região `aria-live` na conferência; menus e popovers com foco e Esc corretos.
+- Servidor de desenvolvimento: o proxy do Vite só reescreve o `Origin` de `localhost`/`127.0.0.1:5173`.
 
 ### English summary
 
-Manual appearance has a single "Heading color" with "Adjust by level" for per-level colors. The default heading color changed from black (`#000000`) to the brand ink (`#151a33`), so manuals that never set a heading color export with ink headings in HTML and PDF.
+Manual check findings are explained in the Export dialog and now flag broken `#anchors`. New CLI subcommands `check` and `export`, text search in Ctrl+P and in the exported HTML table of contents, page templates, compare a saved version with the current text, per-page review date, replace an image keeping its marks, keyboard-created marks, and Markdown export with `llms.txt` plus one file per page. The default heading color is now the brand ink (`#151a33`) instead of black. Touch targets are at least 44 px on phones. Fixes: trash ordering, unique file names, exported HTML landmarks, `aria-live` in the check, dev-proxy Origin rewrite limited to Vite's own origin.
 
 ## [1.0.0] - 2026-11-05
 

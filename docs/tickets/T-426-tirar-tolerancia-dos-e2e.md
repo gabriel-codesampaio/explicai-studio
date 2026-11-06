@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: aberto
+- Status: em observação (não bloqueia release)
 - Agente: qa
 - Origem: sobras do T-129 e do lote de regressões, 2026-11-05
 
