@@ -132,6 +132,28 @@ describe("gravar, acrescentar (annotate_image) e exportar", () => {
     expect(after.markers[1]).not.toHaveProperty("style");
   });
 
+  it("appendAnnotations grava o style do patch por tipo e ignora o inválido", async () => {
+    const { dir } = await createManual(workspace, { title: "MCP", language: "pt-BR" });
+    const asset = "assets/tela.png";
+    const r = { x: 0.1, y: 0.1, w: 0.2, h: 0.2 };
+    const bad = { color: "rosa" } as never;
+    await appendAnnotations(dir, asset, {
+      markers: [
+        { ...A, style: { color: "red", size: "l" } },
+        { ...B, style: bad },
+      ],
+      highlights: [{ ...r, style: { color: "pink", fill: "soft", border: "none" } }],
+      arrows: [{ from: A, to: B, style: { stroke: "l" } }],
+      hotspots: [{ ...r, target: { type: "url", href: "https://a.b" }, style: { fill: "none", border: "none" } }],
+    });
+    const a = await readAnnotations(dir, asset);
+    expect(a.markers[0]?.style).toEqual({ color: "red", size: "l" });
+    expect(a.markers[1]).not.toHaveProperty("style");
+    expect(a.highlights[0]?.style).toEqual({ color: "pink", fill: "soft", border: "none" });
+    expect(a.arrows[0]?.style).toEqual({ stroke: "l" });
+    expect(a.hotspots[0]?.style).toEqual({ fill: "none", border: "s" });
+  });
+
   it("sem style de item o HTML é o mesmo de sempre (sem regra nova, sem variável)", async () => {
     const h = await html(plain);
     expect(h).not.toMatch(/--disco|--borda|--preenchimento|<g style/);

@@ -6,6 +6,10 @@ All notable changes to Explicaí Studio are listed here, in Portuguese first wit
 
 ## [Unreleased]
 
+### Adicionado
+
+- `AnnotationsPatch` (`explicai/core`) aceita `style` em cada item, e os tipos do estilo saem de `explicai/core`; é o que o `annotate_image` do MCP usa. / `AnnotationsPatch` takes a per-item `style`; style types are exported from `explicai/core`.
+
 ### Alterado
 
 - Aparência do manual: a cor dos títulos é uma só ("Cor dos títulos"), com "Ajustar por nível" para mudar cada um. O padrão dos títulos passou de preto (`#000000`) para o nanquim da marca (`#151a33`): manuais que nunca escolheram cor de título saem no HTML e no PDF com os títulos em nanquim. Quem quer o preto escolhe `#000000`.
