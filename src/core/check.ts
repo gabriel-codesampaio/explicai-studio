@@ -3,6 +3,7 @@ import { readAnnotations } from "./assets.js";
 import { exists } from "./fs.js";
 import { readManual } from "./manuals.js";
 import { readPage } from "./pages.js";
+import { slugify } from "./text.js";
 import { flatten } from "./tree.js";
 
 export type CheckKind =
@@ -24,6 +25,7 @@ export interface CheckFinding {
 
 const IMAGE = /!\[[^\]]*\]\(([^)\s]+)\)/g;
 const LINK = /(?<!!)\[[^\]]*\]\(([^)\s]+)\)/g;
+const HEADING = /^#{1,6}\s+(.+?)\s*#*\s*$/gm;
 const STEP = /^\s*\d+\.\s/;
 const BREAK = /^(#{1,6}\s|\s*>)/;
 
@@ -87,7 +89,12 @@ export async function checkManual(dir: string, opts: { allowNewer?: boolean } = 
     const text = prose(page.body);
     const images = [...new Set([...text.matchAll(IMAGE)].map((m) => decode(m[1] as string).replace(/^(\.\.\/)+/, "")))];
     if (images.length === 0 && /^\s*\d+\.\s/m.test(page.body)) add("no-image", "A página tem passos e nenhum print.");
+    const headings = new Set([...text.matchAll(HEADING)].map((m) => slugify((m[1] as string).replace(/[*_`]/g, ""))));
     for (const href of [...text.matchAll(LINK)].map((m) => m[1] as string)) {
+      // shortcut: só âncora da própria página; `arquivo.md#x` não confere o título da outra página.
+      if (href.startsWith("#") && href.length > 1 && !headings.has(slugify(decode(href.slice(1))))) {
+        add("dead-link", `Âncora sem título na página: ${href}`);
+      }
       const m = /^(?:\.\/)?([^/#?]+\.md)(?:#.*)?$/.exec(href);
       if (m && !files.has(m[1] as string)) add("dead-link", `Link para página que não existe: ${href}`);
     }

@@ -2,7 +2,7 @@
 
 - Prioridade: P3
 - Tamanho: P
-- Status: bloqueado (sem repro)
+- Status: descartado (não reproduzível)
 - Agente: qa
 - Origem: rodada 2026-11-05 (`studio.menus-axe.e2e.ts`, auditoria 1.0 dark)
 
@@ -13,8 +13,8 @@
 Sem causa medida. O `toBeVisible` já espera 5 s; o provável é montagem lenta do editor (TipTap) sob carga com o teste criando manual, páginas e asset antes. Não é uma linha óbvia: consertar com timeout maior seria mascarar.
 
 ## Critérios de aceite
-- [ ] Reproduzir (`--repeat-each` com 2 workers, sob carga) e medir o que atrasa a montagem (rede, hash route, editor).
-- [ ] Conserto na causa, sem retry nem `toPass`.
+- [ ] ~~Reproduzir (`--repeat-each` com 2 workers, sob carga) e medir o que atrasa a montagem (rede, hash route, editor).
+- [ ] ~~Conserto na causa, sem retry nem `toPass`.
 
 ## Onde
 `e2e/studio.menus-axe.e2e.ts` (~linha 164).
@@ -24,3 +24,6 @@ Sem causa medida. O `toBeVisible` já espera 5 s; o provável é montagem lenta 
 - 25 rodadas do mesmo preparo (manual, páginas, asset, delete) com 3 núcleos ocupados, medindo `goto` até o textbox visível: `goto` 144 a 395 ms, textbox 194 a 610 ms. Margem de uns 8x sobre os 5 s do `toBeVisible`.
 - A falha de 1 em 194 não vem da montagem do editor em carga comum: é uma parada rara de fora (CPU/Chrome). Aumentar timeout mascararia; retry/`toPass` proibidos. Não mexi no teste.
 - Próximo passo: na próxima falha no CI, ler o trace (`retain-on-failure`) para ver se o editor montou e ficou oculto ou se a página nem carregou. Sem trace, fechar como não reproduzível depois de 2 rodadas limpas do CI.
+
+## Registro de fechamento (2026-11-06)
+Critério do próprio ticket: "sem trace, fechar como não reproduzível depois de 2 rodadas limpas do CI". CI da main: #160 (2822f9a) e #161 (f796971) verdes, e2e completo local 194/194 (--workers=2). Nenhuma nova falha de `studio.menus-axe.e2e.ts` desde 2026-11-05. Fechado como não reproduzível; se voltar, abrir ticket novo com o trace do CI.
